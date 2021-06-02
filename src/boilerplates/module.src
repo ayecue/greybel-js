@@ -1,0 +1,11 @@
+MODULES["$0"] = function(r)
+module = {}
+if (EXPORTED.hasIndex(r)) then
+module = EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+"$1"
+end if
+EXPORTED[r] = module
+return EXPORTED[r]
+end function

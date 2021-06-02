@@ -1,0 +1,11 @@
+BACKSLASH_CODE = 92
+NEW_LINE_OPERATOR = char(BACKSLASH_CODE) + "n"
+MODULES = {}
+EXPORTED = {}
+__REQUIRE = function(r)
+if (not MODULES.hasIndex(r)) then
+exit("Module " + r + " cannot be found...")
+end if
+module = MODULES[r]
+return @module(r).exports
+end function

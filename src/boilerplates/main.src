@@ -1,0 +1,4 @@
+MAIN = function()
+"$0"
+end function
+MAIN()

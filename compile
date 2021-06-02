@@ -1,0 +1,39 @@
+#! /usr/bin/env node
+const Parser = require('./src/parser');
+const build = require('./src/build');
+const path = require('path');
+const fs = require('fs');
+const program = require('commander').program;
+const version = require('./package.json').version;
+let options = {};
+
+program.version(version);
+program
+	.arguments('<filepath>')
+	.arguments('[output]')
+	.description('Compiler for Greyscript.', {
+		filepath: 'File to compile',
+		output: 'Output directory'
+	})
+	.action(function (filepath, output) {
+		options.filepath = filepath;
+
+		if (output) {
+			options.output = output;
+		}
+	})
+	.option('-ev, --env-files <file...>', 'Environment varibales files')
+	.option('-vr, --env-vars <vars...>', 'Environment varibales')
+	.option('-u, --uglify', 'Uglify your code');
+
+program.parse(process.argv);
+
+(function() {
+	options = Object.assign(options, program.opts());
+
+	build(options.filepath, options.output, {
+		envFiles: options.envFiles,
+		envVars: options.envVars,
+		uglify: options.uglify
+	});
+})();
