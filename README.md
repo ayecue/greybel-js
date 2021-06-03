@@ -1,4 +1,4 @@
-# Greybel-JS 0.1.2
+# Greybel-JS 0.1.3
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
@@ -7,15 +7,16 @@ Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/packag
 Also party based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
 
 Features:
+- supports math shortcuts
 - import files, used to load other files into script
 - wraps imported files in function block to prevent variable shadowing
 - include which unlike import just copy paste its content
 - envar which puts values from one file or multiple env files into the script
 - minimizing your script, depending on the size of your project you can save up to 40%
--- optimizing literals (strings, booleans, numbers)
--- minifying namespaces
--- removing whitespaces + tabs
--- obfuscate your code (even though that's just a side effect of all the steps above)
+	- optimizing literals (strings, booleans, numbers)
+	- minifying namespaces
+	- removing whitespaces + tabs
+	- obfuscate your code (even though that's just a side effect of all the steps above)
 
 # Install
 
@@ -26,7 +27,7 @@ npm i greybel-js
 # CLI Usage
 ```
 Compiler CLI
-Version: 0.1.2
+Version: 0.1.3
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -48,6 +49,26 @@ Options:
 ```
 
 # Syntax
+
+## Math shortcuts
+```
+a++
+a--
+++a
+--a
+a /= b
+a *= b
+a -= b
+a += b
+a << b
+a >> b
+w = a >>> (b << c) >> a++
+a | b
+a & b
+a ^ b
+a=a++ + ++b
+a=++a + --b
+```
 
 ## Importing
 Import will use the relative path from the file it imports to. Also keep in mind to not use the `.src` extension. It will automatically add the extension.

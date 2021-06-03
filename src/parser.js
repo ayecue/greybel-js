@@ -166,6 +166,39 @@ Parser.prototype.parsePrefixExpression = function(flowContext) {
     return base;
 };
 
+Parser.prototype.parseMathShorthandLeftOperator = function(flowContext) {
+	const me = this;
+	const operator = me.token.value.charAt(0);
+	me.next();
+	const base = me.parseExpectedExpression(flowContext);
+	const number = AST.literal('NumericLiteral', 1, 1);
+	return AST.binaryExpression(operator, number, base);
+};
+
+Parser.prototype.parseMathShorthandRightOperator = function(base) {
+	const me = this;
+	const operator = me.previousToken.value.charAt(0);
+	const number = AST.literal('NumericLiteral', 1, 1);
+	return AST.binaryExpression(operator, base, number);
+};
+
+Parser.prototype.parseAssignmentShorthandOperator = function(base, flowContext) {
+	const me = this;
+	const operator = me.previousToken.value.charAt(0);
+	const value = me.parseSubExpression(0, flowContext);
+	const expression = AST.binaryExpression(operator, base, value);
+	return AST.assignmentStatement([base], expression);
+};
+
+Parser.prototype.parseBitwiseOperator = function(base, flowContext) {
+	const me = this;
+	const operator = me.previousToken.value;
+	const operationArg = AST.literal('StringLiteral', operator, '"' + operator + '"');
+	const lastArg = me.parseSubExpression(0, flowContext);
+	const fn = AST.identifier('bitwise');
+	return AST.callExpression(fn, [operationArg, base, lastArg]);
+};
+
 Parser.prototype.parsePrefixExpressionPart = function(base, flowContext) {
 	const me = this;
     let expression;
@@ -175,7 +208,16 @@ Parser.prototype.parsePrefixExpressionPart = function(base, flowContext) {
     if (TOKENS.Punctuator === type) {
     	const value = me.token.value;
 
-    	if ('[' === value) {
+    	if ('++' === value || '--' === value) {
+			me.next();
+			return  me.parseMathShorthandRightOperator(base);
+		} else if ('+=' === value || '-=' === value || '*=' === value || '/=' === value) {
+			me.next();
+			return  me.parseAssignmentShorthandOperator(base, flowContext);
+		} else if ('<<' === value || '>>' === value || '>>>' === value || '|' === value || '&' === value || '^' === value) {
+			me.next();
+			return  me.parseBitwiseOperator(base, flowContext);
+		} else if ('[' === value) {
 			me.next();
 			expression = me.parseExpectedExpression(flowContext);
 			me.expect(']');
@@ -282,6 +324,8 @@ Parser.prototype.parseSubExpression = function (minPrecedence, flowContext, isWr
 		me.next();
 		const argument = me.parseSubExpression(10, flowContext);
 		expression = AST.unaryExpression(operator, argument);
+    } else if (operator === '++' || operator === '--') {
+		expression = me.parseMathShorthandLeftOperator(flowContext);
     }
     if (null == expression) {
       expression = me.parsePrimaryExpression(flowContext);
@@ -301,7 +345,6 @@ Parser.prototype.parseSubExpression = function (minPrecedence, flowContext, isWr
 		}
 
 		if (precedence === 0 || precedence <= minPrecedence) break;
-		if ('^' === operator) --precedence;
 		me.next();
 		let right = me.parseSubExpression(precedence, flowContext);
 		if (null == right) {
@@ -556,18 +599,21 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
     while (true) {
     	last = me.token;
 
-    	if (TOKENS.Identifier === me.token.type) {
+    	if (TOKENS.Identifier === last.type) {
 			base = me.parseIdentifier();
 			lvalue = true;
-		} else if ('(' === me.token.value) {
+		} else if ('++' === last.value || '--' === last.value) {
+			base = me.parseMathShorthandLeftOperator(flowContext);
+			lvalue = null;
+		} else if ('(' === last.value) {
 			me.next();
 			base = me.parseExpectedExpression(flowContext, true);
 			me.expect(')');
 			lvalue = false;
-		} else if (NON_NIL_LITERALS.indexOf(me.token.type) !== -1) {
+		} else if (NON_NIL_LITERALS.indexOf(last.type) !== -1) {
 			base = me.parseExpectedExpression(flowContext);
 			lvalue = null;
-		} else if ('[' === me.token.value || '{' === me.token.value) {
+		} else if ('[' === me.token.value || '{' === last.value) {
 			base = me.parseExpectedExpression(flowContext);
 			lvalue = null;
 		} else {
@@ -581,7 +627,7 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
 
 			if ('.' === value || '[' === value) {
 				lvalue = true;
-			} else if ('(' === value || '{' === value || '"' === value) {
+			} else if ('(' === value || '{' === value || '"' === value || '++' === value || '--' === value || '+=' === value || '-=' === value || '<<' === value || '>>' === value || '>>>' === value || '|' === value || '&' === value || '^' === value || '*=' === value || '/=' === value) {
 				lvalue = null;
 			} else {
 				break;

@@ -20,23 +20,45 @@ const SCAN_MAP = {
 	[CHAR_CODES.ARROW_LEFT]: function(code, nextCode) {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('<=');
+		if (CHAR_CODES.ARROW_LEFT === nextCode) return me.scanPunctuator('<<');
 		return me.scanPunctuator('<');
 	},
-	[CHAR_CODES.ARROW_RIGHT]: function(code, nextCode) {
+	[CHAR_CODES.ARROW_RIGHT]: function(code, nextCode, lastCode) {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('>=');
+		if (CHAR_CODES.ARROW_RIGHT === nextCode) {
+			if (CHAR_CODES.ARROW_RIGHT === lastCode) return me.scanPunctuator('>>>');
+			return me.scanPunctuator('>>');
+		}
 		return me.scanPunctuator('>');
 	},
 	[CHAR_CODES.EXCLAMATION_MARK]: function(code, nextCode) {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('!=');
+		
 		return null;
 	},
-	[CHAR_CODES.AT_SIGN]: function() {
-        return this.scanPunctuator('@');
+	[CHAR_CODES.MINUS]: function(code, nextCode) {
+		const me = this;
+		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('-=');
+		if (CHAR_CODES.MINUS === nextCode) return me.scanPunctuator('--');
+		return me.scanPunctuator('-');
 	},
-	[CHAR_CODES.COLON]: function() {
-        return this.scanPunctuator(':');
+	[CHAR_CODES.PLUS]: function(code, nextCode) {
+		const me = this;
+		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('+=');
+		if (CHAR_CODES.PLUS === nextCode) return me.scanPunctuator('++');
+		return me.scanPunctuator('+');
+	},
+	[CHAR_CODES.ASTERISK]: function(code, nextCode) {
+		const me = this;
+		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('*=');
+		return me.scanPunctuator('*');
+	},
+	[CHAR_CODES.SLASH]: function(code, nextCode) {
+		const me = this;
+		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('/=');
+		return me.scanPunctuator('/');
 	}
 };
 
@@ -47,10 +69,9 @@ for (number of CHAR_CODES.NUMBERS) {
 }
 
 const FALL_THROUGH = [
-	CHAR_CODES.ASTERISK,
 	CHAR_CODES.CARET,
 	CHAR_CODES.PERCENT,
-	CHAR_CODES.COMMA,,
+	CHAR_CODES.COMMA,
 	CHAR_CODES.CURLY_BRACKET_LEFT,
 	CHAR_CODES.CURLY_BRACKET_RIGHT,
 	CHAR_CODES.SQUARE_BRACKETS_LEFT,
@@ -58,9 +79,10 @@ const FALL_THROUGH = [
 	CHAR_CODES.PARENTHESIS_LEFT,
 	CHAR_CODES.PARENTHESIS_RIGHT,
 	CHAR_CODES.SEMICOLON,
-	CHAR_CODES.MINUS,
-	CHAR_CODES.PLUS,
-	CHAR_CODES.SLASH
+	CHAR_CODES.AT_SIGN,
+	CHAR_CODES.COLON,
+	CHAR_CODES.AMPERSAND,
+	CHAR_CODES.VERTICAL_LINE
 ];
 
 for (code of FALL_THROUGH) {
@@ -280,6 +302,7 @@ Lexer.prototype.next = function() {
 
 	const code = me.codeAt();
 	const nextCode = me.codeAt(1);
+	const lastCode = me.codeAt(2);
 
 	me.tokenStart = me.index;
 
@@ -305,7 +328,7 @@ Lexer.prototype.next = function() {
 
 	scan = SCAN_MAP[code];
 
-	if (scan) return scan.call(me, code, nextCode);
+	if (scan) return scan.call(me, code, nextCode, lastCode);
 
 	throw new Error('Invalid char ' + code + ':' + String.fromCharCode(code));
 };
