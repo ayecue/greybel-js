@@ -1,11 +1,12 @@
 const varNamespaces = require('../var-namespaces');
 const envs = require('../envs');
 const literals = require('../literals');
+const logger = require('node-color-log');
 
 const mapper = function(make, stack, context) {
 	return {
 		'AssignmentStatement': function(item) {
-			const varibale = item.variable[0];
+			const varibale = item.variable;
 			const init = item.init;
 			const left = make(varibale);
 			const right = make(init);

@@ -1,23 +1,16 @@
+const Stack = require('../../utils/stack');
+
 const Transformer = function(mapper) {
 	const me = this;
 
-	me.currentStack = [];
+	me.currentStack = new Stack();
 	me.context = {
 		mapper: mapper
 	};
-	me.buildMap = mapper(me.make.bind(me), me.stack.bind(me), me.context);
+	me.buildMap = mapper(me.make.bind(me), me.currentStack.get.bind(me.currentStack), me.context);
 
 	return me;
 }
-
-Transformer.prototype.stack = function(offset) {
-	const me = this;
-	const currentStack = me.currentStack;
-	if (offset == null) offset = 0;
-	const index = currentStack.length - offset - 1;
-	if (index < 0) return null;
-	return currentStack[index];
-};
 
 Transformer.prototype.make = function(o) {
 	const me = this;

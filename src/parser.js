@@ -1,16 +1,14 @@
 const Lexer = require('./lexer');
 const TOKENS = require('./lexer/tokens');
-const CHAR_CODES = require('./lexer/codes');
-const LITERAL_MAPS = require('./lexer/literals');
-const NON_NIL_LITERALS = LITERAL_MAPS.NON_NIL_LITERALS;
-const LITERALS = LITERAL_MAPS.LITERALS;
-const FlowContext = require('./parser/flow-context');
+const Stack = require('./utils/stack');
 const AST = require('./parser/ast');
 const util = require('util');
 const varNamespaces = require('./build/var-namespaces');
 const literals = require('./build/literals');
 const envs = require('./build/envs');
-const NATIVE_FUNCTIONS = ['abs', 'floor', 'range', 'round', 'sign', 'str', 'ceil', 'acos', 'asin', 'atan', 'tan', 'cos', 'sin','launch_path', 'hasIndex', 'rnd', 'slice', 'pi', 'typeof', 'self', 'params', 'char', 'globals', 'locals', 'print', 'wait', 'time', 'typeof', 'md5', 'get_router', 'get_shell', 'nslookup', 'whois', 'is_valid_ip', 'is_lan_ip', 'command_info', 'current_date', 'current_path', 'parent_path', 'home_dir', 'program_path', 'active_user', 'user_mail_address', 'user_bank_number', 'format_columns', 'user_input', 'include_lib', 'bitwise', 'clear_screen', 'exit'];
+const validator = require('./parser/validator');
+const logger = require('node-color-log');
+const statements = require('./parser/statements');
 
 const Parser = function(content, collectAll) {
 	const me = this;
@@ -89,7 +87,7 @@ Parser.prototype.parseIdentifier = function() {
 	const me = this;
 	const identifier = me.token.value;
 	if (TOKENS.Identifier === me.token.type) {
-		if (me.collectAll && !me.namespaces.hasOwnProperty(identifier) && NATIVE_FUNCTIONS.indexOf(identifier) === -1) {
+		if (me.collectAll && !me.namespaces.hasOwnProperty(identifier) && validator.isNative(identifier)) {
 			me.namespaces[identifier] = true;
 			varNamespaces.createNamespace(identifier);
 		}
@@ -130,8 +128,7 @@ Parser.prototype.parseListConstructor = function(flowContext) {
 
 	while (true) {
 		value = me.parseExpression(flowContext)
-		if (null == value) break;
-		fields.push(AST.listValue(value));
+		if (value != null) fields.push(AST.listValue(value));
 		if (',;'.indexOf(me.token.value) >= 0) {
 			me.next();
 			continue;
@@ -142,7 +139,19 @@ Parser.prototype.parseListConstructor = function(flowContext) {
 	return AST.listConstructorExpression(fields);
 };
 
-Parser.prototype.parsePrefixExpression = function(flowContext) {
+Parser.prototype.parseRighthandExpressionGreedy = function(base, flowContext) {
+	const me = this;
+
+	while (true) {
+		const newBase = me.parseRighthandExpressionPart(base, flowContext);
+		if (newBase === null) break;
+		base = newBase;
+	}
+
+	return base;
+};
+
+Parser.prototype.parseRighthandExpression = function(flowContext) {
 	const me = this;
     let base;
     let name;
@@ -157,22 +166,19 @@ Parser.prototype.parsePrefixExpression = function(flowContext) {
       return null;
     }
 
-    while (true) {
-      const newBase = me.parsePrefixExpressionPart(base, flowContext);
-      if (newBase === null) break;
-      base = newBase;
-    }
-
-    return base;
+	return me.parseRighthandExpressionGreedy(base, flowContext);
 };
 
-Parser.prototype.parseMathShorthandLeftOperator = function(flowContext) {
+Parser.prototype.parseMathShorthandLeftOperator = function(flowContext, isWrapped) {
 	const me = this;
-	const operator = me.token.value.charAt(0);
+	const operatorToken = me.token;
+	const operator = operatorToken.value.charAt(0);
 	me.next();
+	const scopeBody = flowContext.get();
 	const base = me.parseExpectedExpression(flowContext);
 	const number = AST.literal('NumericLiteral', 1, 1);
-	return AST.binaryExpression(operator, number, base);
+	logger.warn('Lefthand "' +  operatorToken.value + '" not fully supported. Will only put the math operation in front. (Line: ' + me.token.line + ')');
+	return AST.binaryExpression(operator, number, base, isWrapped);
 };
 
 Parser.prototype.parseMathShorthandRightOperator = function(base) {
@@ -185,21 +191,21 @@ Parser.prototype.parseMathShorthandRightOperator = function(base) {
 Parser.prototype.parseAssignmentShorthandOperator = function(base, flowContext) {
 	const me = this;
 	const operator = me.previousToken.value.charAt(0);
-	const value = me.parseSubExpression(0, flowContext);
+	const value = me.parseSubExpression(flowContext);
 	const expression = AST.binaryExpression(operator, base, value);
-	return AST.assignmentStatement([base], expression);
+	return AST.assignmentStatement(base, expression);
 };
 
 Parser.prototype.parseBitwiseOperator = function(base, flowContext) {
 	const me = this;
 	const operator = me.previousToken.value;
 	const operationArg = AST.literal('StringLiteral', operator, '"' + operator + '"');
-	const lastArg = me.parseSubExpression(0, flowContext);
+	const lastArg = me.parseSubExpression(flowContext);
 	const fn = AST.identifier('bitwise');
 	return AST.callExpression(fn, [operationArg, base, lastArg]);
 };
 
-Parser.prototype.parsePrefixExpressionPart = function(base, flowContext) {
+Parser.prototype.parseRighthandExpressionPart = function(base, flowContext) {
 	const me = this;
     let expression;
     let identifier;
@@ -214,7 +220,7 @@ Parser.prototype.parsePrefixExpressionPart = function(base, flowContext) {
 		} else if ('+=' === value || '-=' === value || '*=' === value || '/=' === value) {
 			me.next();
 			return  me.parseAssignmentShorthandOperator(base, flowContext);
-		} else if ('<<' === value || '>>' === value || '>>>' === value || '|' === value || '&' === value || '^' === value) {
+		} else if (validator.isBinaryOperator(value)) {
 			me.next();
 			return  me.parseBitwiseOperator(base, flowContext);
 		} else if ('[' === value) {
@@ -229,8 +235,6 @@ Parser.prototype.parsePrefixExpressionPart = function(base, flowContext) {
 		} else if ('(' === value) {
 			return me.parseCallExpression(base, flowContext);
 		}
-	} else if (TOKENS.StringLiteral === type) {
-		return me.parseCallExpression(base, flowContext);
 	}
 
 	return null;
@@ -266,12 +270,23 @@ Parser.prototype.parseCallExpression = function(base, flowContext) {
 	me.exception('Unexpected arguments');
 };
 
+Parser.prototype.parseFloatExpression = function(baseValue) {
+	if (baseValue === 0) baseValue = '';
+	const me = this;
+	me.next();
+	const floatValue = [baseValue, me.token.value].join('.');
+	me.next();
+	const base = AST.literal(TOKENS.NumericLiteral, floatValue, floatValue);
+	if (me.collectAll) literals.add(base);
+	return base;
+};
+
 Parser.prototype.parsePrimaryExpression = function(flowContext) {
 	const me = this;
 	const value = me.token.value;
 	const type = me.token.type;
 
-	if (LITERALS.indexOf(type) != -1) {
+	if (validator.isLiteral(type)) {
 		const raw = me.content.slice(me.token.range[0], me.token.range[1]);
 		let base = AST.literal(type, value, raw);
 
@@ -279,22 +294,24 @@ Parser.prototype.parsePrimaryExpression = function(flowContext) {
 
 		if (TOKENS.NilLiteral !== type && me.lookahead.value === '.') {
 			me.next();
-			while (true) {
-				const newBase = me.parsePrefixExpressionPart(base, flowContext);
-				if (newBase === null) break;
-				base = newBase;
+			if (TOKENS.NumericLiteral === type && TOKENS.NumericLiteral === me.lookahead.type) {
+				base = me.parseFloatExpression(value);
+			} else {
+				base = me.parseRighthandExpressionGreedy(base, flowContext);
 			}
 		} else {
 			me.next();
 		}
 
 		return base;
+	} else if ('.' === value && TOKENS.NumericLiteral === me.lookahead.type) {
+		return me.parseFloatExpression(0);
 	} else if (TOKENS.Keyword === type && '#envar' === value) {
 		me.next();
 		return me.parseFeatureEnvarStatement(flowContext);
 	} else if (TOKENS.Keyword === type && 'function' === value) {
 		me.next();
-		return me.parseFunctionDeclaration(null);
+		return me.parseFunctionDeclaration(flowContext);
 	} else if (me.consumeMany(['{', '['])) {
 		let base;
 		if ('{' === value) {
@@ -303,50 +320,38 @@ Parser.prototype.parsePrimaryExpression = function(flowContext) {
 			base = me.parseListConstructor(flowContext);
 		}
 
-		if (me.token.value === '.') {
-			while (true) {
-				const newBase = me.parsePrefixExpressionPart(base, flowContext);
-				if (newBase === null) break;
-				base = newBase;
-			}
-		}
+		base = me.parseRighthandExpressionGreedy(base, flowContext);
 
 		return base;
 	}
 };
 
-Parser.prototype.parseSubExpression = function (minPrecedence, flowContext, isWrapped) {
+Parser.prototype.parseSubExpression = function (flowContext, isWrapped) {
 	const me = this;
     let operator = me.token.value;
     let expression = null;
 
     if (me.isUnary(me.token)) {
 		me.next();
-		const argument = me.parseSubExpression(10, flowContext);
+		const argument = me.parseSubExpression(flowContext);
 		expression = AST.unaryExpression(operator, argument);
-    } else if (operator === '++' || operator === '--') {
-		expression = me.parseMathShorthandLeftOperator(flowContext);
+    } else if (TOKENS.Punctuator === me.token.type && (operator === '++' || operator === '--')) {
+		expression = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
     }
     if (null == expression) {
       expression = me.parsePrimaryExpression(flowContext);
 
       if (null == expression) {
-        expression = me.parsePrefixExpression(flowContext);
+        expression = me.parseRighthandExpression(flowContext);
       }
     }
 
-    let precedence;
 	while (true) {
 		operator = me.token.value;
-		precedence = 0;
+		if (!validator.isExpressionOperator(me.token.value)) break;
 
-		if (TOKENS.Punctuator === me.token.type || TOKENS.Keyword === me.token.type) {
-			precedence = me.binaryPrecedence(operator);
-		}
-
-		if (precedence === 0 || precedence <= minPrecedence) break;
 		me.next();
-		let right = me.parseSubExpression(precedence, flowContext);
+		let right = me.parseSubExpression(flowContext);
 		if (null == right) {
 			right = AST.emptyExpression();
 		}
@@ -418,7 +423,7 @@ Parser.prototype.parseFeatureEnvarStatement = function(flowContext) {
 	let base = AST.featureEnvarExpression(name);
 	if ('.' === me.token.value) {
 		while (true) {
-			const newBase = me.parsePrefixExpressionPart(base, flowContext);
+			const newBase = me.parseRighthandExpressionPart(base, flowContext);
 			if (newBase === null) break;
 			base = newBase;
 		}
@@ -430,16 +435,14 @@ Parser.prototype.parseFeatureEnvarStatement = function(flowContext) {
 Parser.prototype.parseWhileStatement = function(flowContext) {
 	const me = this;
 	const condition = me.parseExpectedExpression(flowContext);
-	flowContext.pushScope(true);
 	const body = me.parseBlock(flowContext);
-	flowContext.popScope();
 	me.expect('end while');
 	return AST.whileStatement(condition, body);
 };
 
 Parser.prototype.parseExpression = function(flowContext, isWrapped) {
 	const me = this;
-	const expression = me.parseSubExpression(0, flowContext, isWrapped);
+	const expression = me.parseSubExpression(flowContext, isWrapped);
 	return expression;
 };
 
@@ -486,24 +489,18 @@ Parser.prototype.parseIfStatement = function(flowContext) {
 
 	if (TOKENS.EOL !== me.token.type) return me.parseIfShortcutStatement(flowContext, condition);
 
-	flowContext.pushScope();
 	body = me.parseBlock(flowContext);
-	flowContext.popScope();
 	clauses.push(AST.ifClause(condition, body));
 
 	while (me.consume('else if')) {
 		condition = me.parseExpectedExpression(flowContext);
 		me.expect('then');
-		flowContext.pushScope();
 		body = me.parseBlock(flowContext);
-		flowContext.popScope();
 		clauses.push(AST.elseifClause(condition, body));
 	}
 
 	if (me.consume('else')) {
-		flowContext.pushScope();
 		body = me.parseBlock(flowContext);
-		flowContext.popScope();
 		clauses.push(AST.elseClause(body));
 	}
 
@@ -545,128 +542,45 @@ Parser.prototype.parseFunctionName = function() {
 	return base;
 };
 
-const BINARY_PRECEDENCE_MAP = {
-	'1': {
-		[CHAR_CODES.CARET]: 12,
-		[CHAR_CODES.ASTERISK]: 10,
-		[CHAR_CODES.SLASH]: 10,
-		[CHAR_CODES.PERCENT]: 10,
-		[CHAR_CODES.PLUS]: 9,
-		[CHAR_CODES.MINUS]: 9,
-		[CHAR_CODES.ARROW_LEFT]: 3,
-		[CHAR_CODES.ARROW_RIGHT]: 3,
-		[CHAR_CODES.COLON]: 9
-	},
-	'2': {
-		[CHAR_CODES.ARROW_LEFT]: 3,
-		[CHAR_CODES.ARROW_RIGHT]: 3,
-		[CHAR_CODES.EQUAL]: 3,
-		[CHAR_CODES.EXCLAMATION_MARK]: 3,
-		'111': 1 // or
-	},
-	'3': {
-		'97': 2 // and
-		//'110': 2 // not
-	}
-};
-
-
-Parser.prototype.binaryPrecedence = function(operator) {
-    const code = operator.charCodeAt(0);
-    const length = operator.length;
-    const values = BINARY_PRECEDENCE_MAP[length];
-
-    if (values) {
-    	const value = values[code];
-    	
-    	if (value) {
-    		if (length === 3 && 'and' === operator) return value;
-    		else if (length < 3) return value;
-    	}
-    }
-
-    return 0;
-};
-
 Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
     const me = this;
-    let lvalue;
     let base;
-    let last;
+    let last = me.token;
 
-    const targets = [];
-
-    while (true) {
-    	last = me.token;
-
-    	if (TOKENS.Identifier === last.type) {
-			base = me.parseIdentifier();
-			lvalue = true;
-		} else if ('++' === last.value || '--' === last.value) {
-			base = me.parseMathShorthandLeftOperator(flowContext);
-			lvalue = null;
-		} else if ('(' === last.value) {
-			me.next();
-			base = me.parseExpectedExpression(flowContext, true);
-			me.expect(')');
-			lvalue = false;
-		} else if (NON_NIL_LITERALS.indexOf(last.type) !== -1) {
-			base = me.parseExpectedExpression(flowContext);
-			lvalue = null;
-		} else if ('[' === me.token.value || '{' === last.value) {
-			base = me.parseExpectedExpression(flowContext);
-			lvalue = null;
-		} else {
-			me.exception('Unexpected assignment or call');
-		}
-
-		while (true) {
-			let value = me.token.value;
-
-			if (TOKENS.StringLiteral === me.token.type) value = '"';
-
-			if ('.' === value || '[' === value) {
-				lvalue = true;
-			} else if ('(' === value || '{' === value || '"' === value || '++' === value || '--' === value || '+=' === value || '-=' === value || '<<' === value || '>>' === value || '>>>' === value || '|' === value || '&' === value || '^' === value || '*=' === value || '/=' === value) {
-				lvalue = null;
-			} else {
-				break;
-			}
-
-			last = me.token;
-			base = me.parsePrefixExpressionPart(base, flowContext);
-		}
-
-		targets.push(base);
-
-		if (',' !== me.token.value) {
-			break;
-		}
-
-		if (!lvalue) {
-			me.exception('Unexpected token');
-		}
-
+	if (TOKENS.Identifier === last.type) {
+		base = me.parseIdentifier();
+	} else if ('++' === last.value || '--' === last.value) {
+		base = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
+	} else if ('(' === last.value) {
 		me.next();
-    }
+		base = me.parseExpectedExpression(flowContext, true);
+		me.expect(')');
+	} else if (validator.isNonNilLiteral(last.type)) {
+		base = me.parseExpectedExpression(flowContext);
+	} else if ('[' === me.token.value || '{' === last.value) {
+		base = me.parseExpectedExpression(flowContext);
+	} else {
+		me.exception('Unexpected assignment or call');
+	}
 
-    if (targets.length === 1 && (lvalue === null || me.consume(';') || me.consume('<eof>'))) {
-    	const target = targets[0];
+	while (TOKENS.Punctuator === me.token.type && '=' !== me.token.value) {
+		last = me.token;
+		base = me.parseRighthandExpressionGreedy(base, flowContext);
+	}
 
-    	if (LITERALS.indexOf(last.type) !== -1) {
-    		return target;
+    if (';' === me.token.value || '<eof>' === me.token.value) {
+    	if (validator.isLiteral(last.type)) {
+    		return base;
     	}
 
-		return AST.callStatement(target);
-    } else if (!lvalue) {
-		me.exception('Unexpected token');
+		return AST.callStatement(base);
     }
 
     me.expect('=');
 
 	const value = me.parseExpectedExpression(flowContext);
 
-	return AST.assignmentStatement(targets, value);
+	return AST.assignmentStatement(base, value);
 };
 
 Parser.prototype.parseForStatement = function(flowContext) {
@@ -675,19 +589,14 @@ Parser.prototype.parseForStatement = function(flowContext) {
 
 	me.expect('in');
 	const iterator = me.parseExpectedExpression(flowContext);
-	flowContext.pushScope(true);
 	const body = me.parseBlock(flowContext);
-	flowContext.popScope();
 	me.expect('end for');
 
 	return AST.forGenericStatement(variable, iterator, body);
 };
 
-Parser.prototype.parseFunctionDeclaration = function(name, isLocal) {
+Parser.prototype.parseFunctionDeclaration = function(flowContext, name) {
 	const me = this;
-	const flowContext = new FlowContext();
-	flowContext.pushScope();
-
 	const parameters = [];
 	me.expect('(');
 
@@ -698,7 +607,7 @@ Parser.prototype.parseFunctionDeclaration = function(name, isLocal) {
 				const value = parameter.value;
 				if (me.consume('=')) {
 					const value = me.parseExpectedExpression(flowContext);
-					parameter = AST.assignmentStatement([parameter], value);
+					parameter = AST.assignmentStatement(parameter, value);
 				}
 				parameters.push(parameter);
 				if (me.consume(',')) continue;
@@ -712,53 +621,20 @@ Parser.prototype.parseFunctionDeclaration = function(name, isLocal) {
 	}
 
 	const body = me.parseBlock(flowContext);
-	flowContext.popScope();
 	me.expect('end function');
 
-	if (isLocal == null) isLocal = false;
-	return AST.functionStatement(name, parameters, isLocal, body);
+	return AST.functionStatement(name, parameters, body);
 };
 
 Parser.prototype.parseStatement = function(flowContext, isShortcutStatement) {
 	if (isShortcutStatement == null) isShortcutStatement = false;
 	const me = this;
-	let value;
 
 	if (TOKENS.Keyword === me.token.type) {
-		value = me.token.value;
+		const value = me.token.value;
+		const statement = statements.call(me, value, flowContext, isShortcutStatement);
 
-		if ('if' === value) {
-			me.next();
-			return me.parseIfStatement(flowContext);
-		} else if ('return' === value) {
-			me.next();
-			return me.parseReturnStatement(flowContext, isShortcutStatement);
-		} else if ('function' === value) {
-			me.next();
-			const name = me.parseFunctionName();
-			return me.parseFunctionDeclaration(name);
-		} else if ('while' === value) {
-			me.next();
-			return me.parseWhileStatement(flowContext);
-		} else if ('for' === value) {
-			me.next();
-			return me.parseForStatement(flowContext);
-		} else if ('continue' === value) {
-			me.next();
-			return AST.continueStatement();
-		} else if ('break' === value) {
-			me.next();
-			return AST.breakStatement();
-		} else if ('#include' === value) {
-			me.next();
-			return me.parseFeatureIncludeStatement();
-		} else if ('#import' === value) {
-			me.next();
-			return me.parseFeatureImportStatement();
-		} else if ('#envar' === value) {
-			me.next();
-			return me.parseFeatureEnvarStatement(flowContext);
-		}
+		if (statement) return statement;
     } else if (TOKENS.EOL === me.token.type) {
     	me.next();
     	return null;
@@ -773,6 +649,7 @@ Parser.prototype.parseBlock = function(flowContext) {
     let statement;
     let value;
 
+	flowContext.push(block);
     while (!me.isBlockFollow(me.token)) {
       value = me.token.value;
       if ('return' === value || 'break' === value) {
@@ -783,6 +660,7 @@ Parser.prototype.parseBlock = function(flowContext) {
       me.consume(';');
       if (statement) block.push(statement);
     }
+	flowContext.pop();
 
     return block;
 };
@@ -790,10 +668,7 @@ Parser.prototype.parseBlock = function(flowContext) {
 Parser.prototype.parseChunk = function() {
 	const me = this;
 	me.next();
-	const flowContext = new FlowContext();
-	flowContext.pushScope();
-	const body = me.parseBlock(flowContext);
-	flowContext.popScope();
+	const body = me.parseBlock(new Stack());
 	if (TOKENS.EOF !== me.token.type) {
 		me.exception('Unexpected EOF');
 	}

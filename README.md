@@ -1,4 +1,4 @@
-# Greybel-JS 0.1.3
+# Greybel-JS 0.1.4
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
@@ -7,6 +7,8 @@ Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/packag
 Also party based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
 
 Features:
+- supports multiline lists
+- supports multiline maps
 - supports math shortcuts
 - import files, used to load other files into script
 - wraps imported files in function block to prevent variable shadowing
@@ -27,7 +29,7 @@ npm i greybel-js
 # CLI Usage
 ```
 Compiler CLI
-Version: 0.1.3
+Version: 0.1.4
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -49,6 +51,33 @@ Options:
 ```
 
 # Syntax
+
+## Multiline lists
+```
+test = [
+	[
+		"value1",
+		"value3",
+		true
+	],
+	false,
+	null
+]
+```
+
+## Multiline maps
+```
+test = {
+	"test": {
+		"level2": {
+			"enough": true
+		}
+	},
+	"somelist": [
+		0, 1, 2
+	]
+}
+```
 
 ## Math shortcuts
 ```
