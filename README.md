@@ -7,6 +7,8 @@ Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/packag
 Also party based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
 
 Features:
+- supports multiline lists
+- supports multiline maps
 - supports math shortcuts
 - import files, used to load other files into script
 - wraps imported files in function block to prevent variable shadowing
@@ -49,6 +51,33 @@ Options:
 ```
 
 # Syntax
+
+## Multiline lists
+```
+test = [
+	[
+		"value1",
+		"value3",
+		true
+	],
+	false,
+	null
+]
+```
+
+## Multiline maps
+```
+test = {
+	"test": {
+		"level2": {
+			"enough": true
+		}
+	},
+	"somelist": [
+		0, 1, 2
+	]
+}
+```
 
 ## Math shortcuts
 ```

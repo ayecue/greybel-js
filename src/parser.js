@@ -128,8 +128,7 @@ Parser.prototype.parseListConstructor = function(flowContext) {
 
 	while (true) {
 		value = me.parseExpression(flowContext)
-		if (null == value) break;
-		fields.push(AST.listValue(value));
+		if (value != null) fields.push(AST.listValue(value));
 		if (',;'.indexOf(me.token.value) >= 0) {
 			me.next();
 			continue;
@@ -271,6 +270,17 @@ Parser.prototype.parseCallExpression = function(base, flowContext) {
 	me.exception('Unexpected arguments');
 };
 
+Parser.prototype.parseFloatExpression = function(baseValue) {
+	if (baseValue === 0) baseValue = '';
+	const me = this;
+	me.next();
+	const floatValue = [baseValue, me.token.value].join('.');
+	me.next();
+	const base = AST.literal(TOKENS.NumericLiteral, floatValue, floatValue);
+	if (me.collectAll) literals.add(base);
+	return base;
+};
+
 Parser.prototype.parsePrimaryExpression = function(flowContext) {
 	const me = this;
 	const value = me.token.value;
@@ -284,12 +294,18 @@ Parser.prototype.parsePrimaryExpression = function(flowContext) {
 
 		if (TOKENS.NilLiteral !== type && me.lookahead.value === '.') {
 			me.next();
-			base = me.parseRighthandExpressionGreedy(base, flowContext);
+			if (TOKENS.NumericLiteral === type && TOKENS.NumericLiteral === me.lookahead.type) {
+				base = me.parseFloatExpression(value);
+			} else {
+				base = me.parseRighthandExpressionGreedy(base, flowContext);
+			}
 		} else {
 			me.next();
 		}
 
 		return base;
+	} else if ('.' === value && TOKENS.NumericLiteral === me.lookahead.type) {
+		return me.parseFloatExpression(0);
 	} else if (TOKENS.Keyword === type && '#envar' === value) {
 		me.next();
 		return me.parseFeatureEnvarStatement(flowContext);
