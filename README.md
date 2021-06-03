@@ -47,7 +47,7 @@ Options:
 ## Examples:
 ### Most common build command:
 ```
-./compile /my/code/file.src $(cwd)
+greybel /my/code/file.src
 ```
 
 # Syntax
