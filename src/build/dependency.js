@@ -1,7 +1,7 @@
 const Parser = require('../parser');
 const moduleNamespaces = require('./module-namespaces');
 const path = require('path');
-const md5 = require('./md5');
+const md5 = require('../utils/md5');
 const fs = require('fs');
 const GLOBAL_DEPENDENCY_MAP = {};
 

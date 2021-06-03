@@ -1,4 +1,4 @@
-const NamespaceGenerator = require('./namespace-generator');
+const NamespaceGenerator = require('../utils/namespace-generator');
 const CHARSET = require('./charset').VARS;
 const DEFAULT_NAMESPACES = [
 	'BACKSLASH_CODE',

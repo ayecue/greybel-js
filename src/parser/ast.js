@@ -89,11 +89,10 @@ const AST = {
             expression: expression
         };
     },
-    functionStatement: function(identifier, parameters, isLocal, body) {
+    functionStatement: function(identifier, parameters, body) {
         return {
             type: 'FunctionDeclaration',
             identifier: identifier,
-            isLocal: isLocal,
             parameters: parameters,
             body: body
         };

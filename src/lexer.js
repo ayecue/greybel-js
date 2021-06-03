@@ -179,7 +179,6 @@ Lexer.prototype.readDecLiteral = function() {
     if ('.' === me.codeAt()) {
       foundFraction = true;
       me.nextIndex()
-      // Fraction part defaults to 0
       while (validator.isDecDigit(me.codeAt())) me.nextIndex();
     }
 

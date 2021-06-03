@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const envs = require('./build/envs');
 const literals = require('./build/literals');
+const logger = require('node-color-log');
 
 const Builder = function(filepath, output) {
 	const me = this;
@@ -53,10 +54,10 @@ Builder.prototype.compile = function(options) {
 	const words = code.length;
 
 	if (words > options.maxWords) {
-		console.warn('WARNING: Exceeding max word limit by ' + (words - options.maxWords) + ' signs. Building anyway.');
+		logger.warn('WARNING: Exceeding max word limit by ' + (words - options.maxWords) + ' signs. Building anyway.');
 	}
 
-	console.log('Created file:', me.output);
+	logger.info('Created file:', me.output);
 	fs.writeFileSync(me.output, code, {
 		encoding: 'utf-8'
 	});

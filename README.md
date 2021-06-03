@@ -1,4 +1,4 @@
-# Greybel-JS 0.1.3
+# Greybel-JS 0.1.4
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
@@ -27,7 +27,7 @@ npm i greybel-js
 # CLI Usage
 ```
 Compiler CLI
-Version: 0.1.3
+Version: 0.1.4
 Example: greybel <myscriptfile> [output]
 
 Arguments:
