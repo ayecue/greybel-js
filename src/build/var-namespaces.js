@@ -1,5 +1,4 @@
 const NamespaceGenerator = require('../utils/namespace-generator');
-const CHARSET = require('./charset').VARS;
 const DEFAULT_NAMESPACES = [
 	'BACKSLASH_CODE',
 	'NEW_LINE_OPERATOR',
@@ -9,6 +8,6 @@ const DEFAULT_NAMESPACES = [
 	'MAIN',
 	'module'
 ];
-const varNamespaces = new NamespaceGenerator(CHARSET, [], DEFAULT_NAMESPACES);
+const varNamespaces = new NamespaceGenerator(null, [], DEFAULT_NAMESPACES);
 
 module.exports = varNamespaces;

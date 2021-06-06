@@ -4,6 +4,7 @@ const path = require('path');
 const md5 = require('../utils/md5');
 const fs = require('fs');
 const GLOBAL_DEPENDENCY_MAP = {};
+const logger = require('node-color-log');
 
 const Dependency = function(filepath, chunk, collectAll, isInclude) {
 	if (isInclude == null) isInclude = false;
@@ -54,6 +55,8 @@ Dependency.prototype.findDependencies = function() {
 		const content = fs.readFileSync(depFilepath, {
 			encoding: 'utf-8'
 		});
+
+		logger.info('Parsing: ' + depFilepath);
 		const parser = new Parser(content, me.collectAll);
 		const chunk = parser.parseChunk();
 		item.chunk = chunk;

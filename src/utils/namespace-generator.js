@@ -6,7 +6,12 @@ const NamespaceGenerator = function(characters, forbidden, defaultNamespaces) {
 	me.forbidden = forbidden;
 	me.characters = characters;
 	me.defaultNamespaces = defaultNamespaces;
-	me.preset();
+	return me;
+};
+
+NamespaceGenerator.prototype.setCharset = function(characters) {
+	const me = this;
+	me.characters = characters;
 	return me;
 };
 
@@ -15,13 +20,14 @@ NamespaceGenerator.prototype.reset = function() {
 	me.buffer = [0];
 	me.mapping = {};
 	me.rmapping = {};
-	me.preset();
 	return me;
 };
 
-NamespaceGenerator.prototype.preset = function() {
+NamespaceGenerator.prototype.preset = function(characters) {
 	const me = this;
 	let defaultNamespace;
+
+	if (characters) me.setCharset(characters);
 
 	for (defaultNamespace of me.defaultNamespaces) {
 		me.createNamespace(defaultNamespace);

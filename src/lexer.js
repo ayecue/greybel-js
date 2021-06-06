@@ -253,10 +253,10 @@ Lexer.prototype.scanIdentifierOrKeyword = function() {
 			}
 			value = me.content.slice(me.tokenStart, me.index);
 		} else if ('else' === value) {
-			const suffix = me.content.slice(me.index + 1, me.index + 3)
-			if ('if' === suffix) {
+			const elseIfStatement = me.content.slice(me.tokenStart, me.index + 3)
+			if ('else if' === elseIfStatement) {
 				me.nextIndex(3);
-				value = me.content.slice(me.tokenStart, me.index);
+				value = elseIfStatement;
 			}
 		}
     } else if ('true' === value || 'false' === value) {

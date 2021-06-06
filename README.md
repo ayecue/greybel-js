@@ -1,4 +1,4 @@
-# Greybel-JS 0.1.4
+# Greybel-JS 0.1.5
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
@@ -7,6 +7,7 @@ Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/packag
 Also party based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
 
 Features:
+- supports shortcuts for blocks
 - supports multiline lists
 - supports multiline maps
 - supports math shortcuts
@@ -19,6 +20,9 @@ Features:
 	- minifying namespaces
 	- removing whitespaces + tabs
 	- obfuscate your code (even though that's just a side effect of all the steps above)
+- comes with a scuffed emulator it's completly work in progress though, most of the GreyHack API is not supported yet
+	- `greybel-console --path "<your-own-path>\SteamLibrary\steamapps\common\Grey Hack"`
+	- transforms GreyScript into JS
 
 # Install
 
@@ -29,7 +33,7 @@ npm i greybel-js
 # CLI Usage
 ```
 Compiler CLI
-Version: 0.1.4
+Version: 0.1.5
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -51,6 +55,10 @@ greybel /my/code/file.src
 ```
 
 # Syntax
+## Block shortcuts
+```
+while(true) if (true) then print("hello"); print("world"); return false;
+```
 
 ## Multiline lists
 ```

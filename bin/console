@@ -1,0 +1,22 @@
+#! /usr/bin/env node
+const emulator = require('../src/emulator');
+const program = require('commander').program;
+const version = require('../package.json').version;
+let options = {};
+
+program.version(version);
+program
+	.description('Emulator for Grey Hack.')
+	.option('-p, --path <path>', 'Path to Grey Hack');
+
+program.parse(process.argv);
+
+(function() {
+	options = Object.assign(options, program.opts());
+
+	if (options.path !== null) {
+		process.env['GREY_HACK_PATH'] = options.path;
+	}
+
+	emulator();
+})();
