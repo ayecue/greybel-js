@@ -3,7 +3,7 @@ const envs = require('../envs');
 const literals = require('../literals');
 const logger = require('node-color-log');
 
-const mapper = function(make, stack, context) {
+const mapper = function(make, stack, depth, context) {
 	return {
 		'AssignmentStatement': function(item) {
 			const varibale = item.variable;

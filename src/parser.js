@@ -87,7 +87,7 @@ Parser.prototype.parseIdentifier = function() {
 	const me = this;
 	const identifier = me.token.value;
 	if (TOKENS.Identifier === me.token.type) {
-		if (me.collectAll && !me.namespaces.hasOwnProperty(identifier) && validator.isNative(identifier)) {
+		if (me.collectAll && !me.namespaces.hasOwnProperty(identifier) && !validator.isNative(identifier)) {
 			me.namespaces[identifier] = true;
 			varNamespaces.createNamespace(identifier);
 		}
@@ -333,7 +333,7 @@ Parser.prototype.parseSubExpression = function (flowContext, isWrapped) {
 
     if (me.isUnary(me.token)) {
 		me.next();
-		const argument = me.parseSubExpression(flowContext);
+		const argument = me.parseSubExpression(flowContext, isWrapped);
 		expression = AST.unaryExpression(operator, argument);
     } else if (TOKENS.Punctuator === me.token.type && (operator === '++' || operator === '--')) {
 		expression = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
@@ -435,8 +435,16 @@ Parser.prototype.parseFeatureEnvarStatement = function(flowContext) {
 Parser.prototype.parseWhileStatement = function(flowContext) {
 	const me = this;
 	const condition = me.parseExpectedExpression(flowContext);
-	const body = me.parseBlock(flowContext);
-	me.expect('end while');
+
+	let body;
+	if (TOKENS.EOL === me.token.type) {
+		body = me.parseBlock(flowContext);
+		me.expect('end while');
+	} else {
+		body = me.parseBlockShortcut(flowContext);
+		me.expectMany(['end while', ';', '<eof>']);
+	}
+
 	return AST.whileStatement(condition, body);
 };
 
@@ -456,26 +464,47 @@ Parser.prototype.parseExpectedExpression = function(flowContext, isWrapped) {
 Parser.prototype.parseIfShortcutStatement = function(flowContext, condition) {
 	const me = this;
 	const clauses = [];
-	let statement;
+	let body = [];
 
-	statement = me.parseStatement(flowContext, true);
-	clauses.push(AST.ifShortcutClause(condition, statement));
+	body = me.parseBlockShortcut(flowContext);
+
+	const isActuallyShortcut = body.length === 1;
+
+	if (isActuallyShortcut) {
+		clauses.push(AST.ifShortcutClause(condition, body[0]));
+	} else {
+		clauses.push(AST.ifClause(condition, body));
+	}
 
     while (me.consume('else if')) {
 		condition = me.parseExpectedExpression(flowContext);
 		me.expect('then');
-		statement = me.parseStatement(flowContext, true);
-		clauses.push(AST.elseifShortcutClause(condition, statement));
+		body = me.parseBlockShortcut(flowContext);
+
+		if (isActuallyShortcut) {
+			clauses.push(AST.elseifShortcutClause(condition, body[0]));
+		} else {
+			clauses.push(AST.elseifClause(condition, body));
+		}
 	}
 
 	if (me.consume('else')) {
-		statement = me.parseStatement(flowContext, true);
-		clauses.push(AST.elseShortcutClause(statement));
+		body = me.parseBlockShortcut(flowContext);
+
+		if (isActuallyShortcut) {
+			clauses.push(AST.elseShortcutClause(body[0]));
+		} else {
+			clauses.push(AST.elseClause(body));
+		}
 	}
 
-	me.consumeMany([';', '<eof>']);
+	me.consumeMany(['end if', ';', '<eof>']);
 
-	return AST.ifShortcutStatement(clauses);
+	if (isActuallyShortcut) {
+		return AST.ifShortcutStatement(clauses);
+	}
+
+	return AST.ifStatement(clauses);
 }
 
 Parser.prototype.parseIfStatement = function(flowContext) {
@@ -563,7 +592,7 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
 		me.exception('Unexpected assignment or call');
 	}
 
-	while (TOKENS.Punctuator === me.token.type && '=' !== me.token.value) {
+	while (TOKENS.Punctuator === me.token.type && '=' !== me.token.value && ';' !== me.token.value && '<eof>' !== me.token.value) {
 		last = me.token;
 		base = me.parseRighthandExpressionGreedy(base, flowContext);
 	}
@@ -585,12 +614,21 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
 
 Parser.prototype.parseForStatement = function(flowContext) {
 	const me = this;
+	me.consume('(');
 	const variable = me.parseIdentifier();
 
 	me.expect('in');
 	const iterator = me.parseExpectedExpression(flowContext);
-	const body = me.parseBlock(flowContext);
-	me.expect('end for');
+	me.consume(')')
+
+	let body;
+	if (TOKENS.EOL === me.token.type) {
+		body = me.parseBlock(flowContext);
+		me.expect('end for');
+	} else {
+		body = me.parseBlockShortcut(flowContext);
+		me.expectMany(['end for', ';', '<eof>']);
+	}
 
 	return AST.forGenericStatement(variable, iterator, body);
 };
@@ -620,8 +658,14 @@ Parser.prototype.parseFunctionDeclaration = function(flowContext, name) {
 		}
 	}
 
-	const body = me.parseBlock(flowContext);
-	me.expect('end function');
+	let body;
+	if (TOKENS.EOL === me.token.type) {
+		body = me.parseBlock(flowContext);
+		me.expect('end function');
+	} else {
+		body = me.parseBlockShortcut(flowContext);
+		me.expectMany(['end function', ';', '<eof>']);
+	}
 
 	return AST.functionStatement(name, parameters, body);
 };
@@ -643,26 +687,50 @@ Parser.prototype.parseStatement = function(flowContext, isShortcutStatement) {
     return me.parseAssignmentOrCallStatement(flowContext);
 };
 
+Parser.prototype.parseBlockShortcut = function(flowContext) {
+	const me = this;
+	const block = [];
+	let statement;
+	let value;
+
+	flowContext.push(block);
+	while (true) {
+		value = me.token.value;
+		if (TOKENS.EOL === me.token.type || validator.isBreakingBlockShortcutKeyword(value)) {
+			break;
+		}
+		statement = me.parseStatement(flowContext, 'return' === value);
+		if (statement) block.push(statement);
+		if (TOKENS.EOL === me.token.type) {
+			break;
+		}
+		me.consume(';');
+	}
+	flowContext.pop();
+
+	return block;
+};
+
 Parser.prototype.parseBlock = function(flowContext) {
 	const me = this;
 	const block = [];
-    let statement;
-    let value;
+	let statement;
+	let value;
 
 	flowContext.push(block);
-    while (!me.isBlockFollow(me.token)) {
-      value = me.token.value;
-      if ('return' === value || 'break' === value) {
-        block.push(me.parseStatement(flowContext));
-        break;
-      }
-      statement = me.parseStatement(flowContext);
-      me.consume(';');
-      if (statement) block.push(statement);
-    }
+	while (!me.isBlockFollow(me.token)) {
+		value = me.token.value;
+		if ('return' === value || 'break' === value) {
+			block.push(me.parseStatement(flowContext));
+			break;
+		}
+		statement = me.parseStatement(flowContext);
+		me.consume(';');
+		if (statement) block.push(statement);
+	}
 	flowContext.pop();
 
-    return block;
+	return block;
 };
 
 Parser.prototype.parseChunk = function() {

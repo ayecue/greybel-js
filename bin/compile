@@ -1,10 +1,10 @@
 #! /usr/bin/env node
-const Parser = require('./src/parser');
-const build = require('./src/build');
+const Parser = require('../src/parser');
+const build = require('../src/build');
 const path = require('path');
 const fs = require('fs');
 const program = require('commander').program;
-const version = require('./package.json').version;
+const version = require('../package.json').version;
 let options = {};
 
 program.version(version);
@@ -24,7 +24,8 @@ program
 	})
 	.option('-ev, --env-files <file...>', 'Environment varibales files')
 	.option('-vr, --env-vars <vars...>', 'Environment varibales')
-	.option('-u, --uglify', 'Uglify your code');
+	.option('-u, --uglify', 'Uglify your code')
+	.option('-n, --name', 'Output filename');
 
 program.parse(process.argv);
 
@@ -34,6 +35,7 @@ program.parse(process.argv);
 	build(options.filepath, options.output, {
 		envFiles: options.envFiles,
 		envVars: options.envVars,
-		uglify: options.uglify
+		uglify: options.uglify,
+		name: options.name
 	});
 })();

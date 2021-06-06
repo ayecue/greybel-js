@@ -7,7 +7,7 @@ const Transformer = function(mapper) {
 	me.context = {
 		mapper: mapper
 	};
-	me.buildMap = mapper(me.make.bind(me), me.currentStack.get.bind(me.currentStack), me.context);
+	me.buildMap = mapper(me.make.bind(me), me.currentStack.get.bind(me.currentStack), me.currentStack.depth.bind(me.currentStack), me.context);
 
 	return me;
 }

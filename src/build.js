@@ -11,8 +11,9 @@ const path = require('path');
 const envs = require('./build/envs');
 const literals = require('./build/literals');
 const logger = require('node-color-log');
+const charset = require('./build/charset');
 
-const Builder = function(filepath, output) {
+const Builder = function(filepath, output, name) {
 	const me = this;
 
 	if (filepath == null || !fs.existsSync(filepath)) {
@@ -27,24 +28,30 @@ const Builder = function(filepath, output) {
 
 	const parsed = path.parse(me.filepath);
 
-	me.output = path.resolve(output || parsed.dir, parsed.name + '.output.src');
+	me.output = path.resolve(output || parsed.dir, name || parsed.name + '.output.src');
 
 	return me;
 };
 
 Builder.prototype.compile = function(options) {
 	const me = this;
+	const charsetMap = charset(options.obfuscation);
 	let mapper = defaultMapper;
 
 	if (options.uglify) mapper = uglifyMapper;
 
-	varNamespaces.reset();
-	moduleNamespaces.reset();
+	varNamespaces
+		.reset()
+		.preset(charsetMap.VARS);
+	moduleNamespaces
+		.reset()
+		.preset(charsetMap.MODULES);
 	literals.reset();
 
 	const content = fs.readFileSync(me.filepath, {
 		encoding: 'utf-8'
 	});
+	logger.info('Parsing: ' + me.filepath);
 	const parser = new Parser(content, options.uglify);
 	const chunk = parser.parseChunk();
 	const dependency = new Dependency(me.filepath, chunk, options.uglify);
@@ -66,9 +73,10 @@ Builder.prototype.compile = function(options) {
 module.exports = function(filepath, output, options) {
 	const buildOptions = Object.assign({
 		uglify: false,
-		maxWords: 80000
+		maxWords: 80000,
+		obfuscation: true
 	}, options);
-	const builder = new Builder(filepath, output);
+	const builder = new Builder(filepath, output, options.name);
 
 	envs.load(options.envFiles, options.envVars);
 

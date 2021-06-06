@@ -1,8 +1,8 @@
 {
     "name": "greybel-js",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Compile greyscript.",
-    "main": "NodeCjsDeps.js",
+    "main": "src/index.js",
     "homepage": "https://github.com/ayecue/greybel-js",
     "repository": {
         "type": "git",
@@ -19,14 +19,22 @@
         }
     ],
     "dependencies": {
+        "chalk": "^4.1.1",
         "commander": "^7.2.0",
-        "node-color-log": "^5.3.0"
+        "expr-eval": "^2.0.2",
+        "inquirer": "^8.1.0",
+        "inquirer-command-prompt": "^0.1.0",
+        "node-color-log": "^5.3.0",
+        "sequelize": "^6.6.2",
+        "sqlite3": "^5.0.2",
+        "string-argv": "^0.3.1"
     },
     "bugs": {
         "url": "https://github.com/ayecue/greybel-js/issues"
     },
     "bin": {
-        "greybel": "./compile"
+        "greybel": "./bin/compile",
+        "greybel-console": "./bin/console"
     },
     "directories": {},
     "keywords": [
