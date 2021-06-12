@@ -1,5 +1,5 @@
 const EXPRESSION_OPERATORS = [
-	'+', '*', '-', '/', '%', '<', '>', '<=', '>=', '!=', '==', 'or', 'and'
+	'+', '*', '-', '/', '%', '<', '>', '<=', '>=', '!=', '==', 'or', 'and', 'not'
 ];
 
 exports.EXPRESSION_OPERATORS = EXPRESSION_OPERATORS;

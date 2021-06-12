@@ -32,10 +32,6 @@ exports.isLiteral = function(type) {
 	return LITERALS.indexOf(type) !== -1;
 };
 
-exports.isBinaryOperator = function(value) {
-	return BINARY_OPERATORS.indexOf(value) !== -1;
-};
-
 exports.isExpressionOperator = function(value) {
 	return EXPRESSION_OPERATORS.indexOf(value) !== -1;
 };

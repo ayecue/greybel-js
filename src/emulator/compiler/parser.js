@@ -99,7 +99,7 @@ Parser.prototype.isUnary = function(token) {
 	const type = token.type;
 	const value = token.value;
 	if (TOKENS.Punctuator === type) return '@'.indexOf(value) >= 0;
-	if (TOKENS.Keyword === type) return 'not' === value || 'new' === value;
+	if (TOKENS.Keyword === type) return 'new' === value;
 	return false;
 };
 

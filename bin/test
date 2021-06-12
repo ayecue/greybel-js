@@ -1,0 +1,3633 @@
+BACKSLASH_CODE=92
+NEW_LINE_OPERATOR=char(BACKSLASH_CODE) + "n"
+MODULES={}
+EXPORTED={}
+__REQUIRE=function (r)
+if (not MODULES.hasIndex(r)) then
+exit("Module " + r + " cannot be found...")
+end if
+module=MODULES[r]
+return @module(r).exports
+end function
+MODULES["B"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Error = __REQUIRE("C")
+Crypto={}
+Crypto.defaultCharset="QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-"
+Crypto.maxCharCode=55295
+Crypto.Error=Error
+Crypto.constructor=function (defaultSecret,hashFn,charset)
+me=self
+me.defaultSecret=defaultSecret
+me.table=charset
+me.hashFn=@hashFn
+if (@(hashFn == null)) then me.hashFn=@md5
+if (charset == null) then me.table=me.defaultCharset
+if (me.table.len != 64) then (new me.Error).constructor("Invalid charset $0...",[me.table]).throw()
+return me
+end function
+Crypto.getHash=function (pw)
+me=self
+hash=[]
+x=me.hashFn(pw)
+for (char in x)
+hash.push(char.code)
+end for
+hash.reverse
+return hash
+end function
+Crypto.encrypt=function (str,pw)
+me=self
+if ((pw == null)) then pw=me.defaultSecret
+hash=me.getHash(pw)
+hashPointer=0
+output=[]
+position=0
+padding=str.len % 3
+max=str.len - padding
+get=function (v)
+if (not me.table.hasIndex(v)) then
+(new me.Error).constructor("Invalid index $0...",[v]).throw()
+end if
+return me.table[v]
+end function
+AND=function (a,b)
+return bitwise("&",a,b)
+end function
+LSHIFT=function (a,b)
+return bitwise("<<",a,b)
+end function
+RSHIFT=function (a,b)
+return bitwise(">>",a,b)
+end function
+while (position < max)
+m=hash[position % hash.len - 1]
+a=LSHIFT(str[position].code + m,16)
+b=LSHIFT(str[position + 1].code + m,8)
+c=str[position + 2].code + m
+buffer=a + b + c
+output.push(get(AND(RSHIFT(buffer,18),63)))
+output.push(get(AND(RSHIFT(buffer,12),63)))
+output.push(get(AND(RSHIFT(buffer,6),63)))
+output.push(get(AND(buffer,63)))
+position=position + 3
+end while
+if ((padding == 2)) then
+m=hash[position % hash.len - 1]
+a=LSHIFT(str[position].code + m,8)
+b=str[position + 1].code + m
+buffer=a + b
+output.push(get(RSHIFT(buffer,10)))
+output.push(get(AND(RSHIFT(buffer,4),63)))
+output.push(get(AND(LSHIFT(buffer,2),63)))
+output.push("=")
+else if ((padding == 1)) then
+m=hash[position % hash.len - 1]
+buffer=str[position].code + m
+output.push(get(RSHIFT(buffer,2)))
+output.push(get(AND(LSHIFT(buffer,4),63)))
+output.push("==")
+end if
+return output.join("")
+end function
+Crypto.decrypt=function (str,pw)
+me=self
+if ((pw == null)) then pw=me.defaultSecret
+hash=me.getHash(pw)
+hashPointer=0
+hashLength=hash.len
+output=[]
+bitCounter=0
+bitStorage=0
+position=0
+hashPointer=0
+max=str.len
+AND=function (a,b)
+return bitwise("&",a,b)
+end function
+RSHIFT=function (a,b)
+return bitwise(">>",a,b)
+end function
+while (position < max)
+buffer=me.table.indexOf(str[position])
+currentBit=bitCounter
+bitCounter=bitCounter + 1
+if ((currentBit % 4)) then
+bitStorage=bitStorage * 64 + buffer
+else
+bitStorage=buffer
+end if
+if ((currentBit % 4)) then
+expectedHashIndex=(floor(hashPointer / 3) * 3) % hashLength - 1
+if (not hash.hasIndex(expectedHashIndex)) then break
+m=hash[expectedHashIndex]
+operation=AND( - 2 * bitCounter,6)
+operation=RSHIFT(bitStorage,operation)
+operation=AND(255,operation)
+if ((operation != 0)) then
+charCode=operation - m
+if ((charCode > me.maxCharCode)) then break
+output.push(char(charCode))
+end if
+hashPointer=hashPointer + 1
+end if
+position=position + 1
+end while
+return output.join("")
+end function
+module.exports=Crypto
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["C"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+String = __REQUIRE("D")
+Error={}
+Error.String=String
+Error.constructor=function (message,values)
+m=self
+m.message=message
+if ((values != null)) then
+m.message=(new m.String).constructor(message).parse(values).toString()
+end if
+return m
+end function
+Error.throw=function ()
+exit("<color=#ff0000>" + self.message + "</color>")
+end function
+module.exports=Error
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["D"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+String={}
+String.constructor=function (str)
+self.str=str
+return self
+end function
+String.parse=function (values)
+result=self.str
+index=0
+maxIndex=values.len
+while (index < maxIndex)
+result=result.replace("$" + index,values[index])
+index=index + 1
+end while
+return (new self).constructor(result)
+end function
+String.startsWith=function (str)
+return self.str.indexOf(str) == 0
+end function
+String.substr=function (startIndex,endIndex)
+return (new self).constructor(slice(self.str,startIndex,endIndex))
+end function
+String.indexOf=function (str)
+return self.str.indexOf(str)
+end function
+String.replace=function (str,newStr)
+return (new self).constructor(self.str.replace(str,newStr))
+end function
+String.remove=function (str)
+return (new self).constructor(self.str.remove(str))
+end function
+String.toString=function ()
+return self.str
+end function
+String.length=function ()
+return self.str.len
+end function
+String.split=function (seperator)
+return self.str.split(seperator)
+end function
+String.trim=function (seperator)
+return (new self).constructor(self.str.trim())
+end function
+module.exports=String
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["E"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (seed)
+h = __REQUIRE("F")
+debug = __REQUIRE("L")
+if ((seed == null)) then seed=""
+id=h(current_date + time + seed)
+id=id[id.len / 2 : ]
+debug("Generated " + id + " with " + seed)
+return id
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["F"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+envs = __REQUIRE("G")
+module.exports=function (str)
+CustomCrypto = __REQUIRE("B")
+customCrypto=(new CustomCrypto).constructor(eDBSecret)
+return md5(customCrypto.encrypt(str))
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["G"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Cast = __REQUIRE("H")
+frontend = __REQUIRE("I")
+backend = __REQUIRE("K")
+envs={}
+globals.eFRONTEND=frontend
+envs.frontend=frontend
+globals.eBACKEND=backend
+envs.backend=backend
+globals.eSECRET=null
+envs.secret=eSECRET
+globals.eRELAUNCH_SECRET=null
+envs.relaunchSecret=eRELAUNCH_SECRET
+globals.eINITIAL_ADMIN_NAME=null
+envs.initialAdminName=eINITIAL_ADMIN_NAME
+globals.eINITIAL_ADMIN_PASSWORD=null
+envs.initialAdminPassword=eINITIAL_ADMIN_PASSWORD
+globals.eGENERAL_THREAD_ID=null
+envs.generalThreadId=eGENERAL_THREAD_ID
+globals.ePUBLIC_THREAD_ID=null
+envs.publicThreadId=ePUBLIC_THREAD_ID
+globals.eCLIENT_VERSION=null
+envs.clientVersion=eCLIENT_VERSION
+globals.eENABLE_TRAIL=Cast(null,"boolean")
+envs.enableTrail=eENABLE_TRAIL
+globals.eHVERSION=null
+envs.hVersion=eHVERSION
+globals.eDBSecret=null
+envs.dbSecret=eDBSecret
+module.exports=envs
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["H"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (value,type)
+valueType=typeof(value)
+tString="string"
+tNumber="number"
+tBoolean="boolean"
+tMap="map"
+tList="list"
+tNull="null"
+if ((type == tNumber)) then
+if ((valueType == tString)) then
+value=value.to_int
+if ((typeof(value) == tString)) then value=0
+else if ((valueType == tList)) then
+value=value.join("").to_int
+else if ((valueType == tMap and value.hasIndex("toNumber"))) then
+value=value.toNumber()
+else if ((valueType == tNull)) then
+value=0
+else if ((valueType == tBoolean)) then
+if (value) then
+value=1
+else
+value=0
+end if
+end if
+return value
+else if ((type == tString)) then
+if ((valueType == tNumber)) then
+value=value + ""
+else if ((valueType == tList)) then
+value=value.join("")
+else if ((valueType == tMap and value.hasIndex("toString"))) then
+value=value.toString()
+else if ((valueType == tNull)) then
+value=""
+else if ((valueType == tBoolean)) then
+if (value) then
+value="1"
+else
+value="0"
+end if
+end if
+return value
+else if ((type == tList)) then
+if ((valueType == tNumber or valueType == tString or valueType == tBoolean)) then
+value=[value]
+else if ((valueType == tMap and value.hasIndex("toList"))) then
+value=value.toList()
+else if ((valueType == tNull)) then
+value=[]
+end if
+return value
+else if ((type == tBoolean)) then
+if ((valueType == tNumber)) then
+value=value != 0
+else if ((valueType == tString)) then
+value=value == "1"
+else if ((valueType == tMap and value.hasIndex("toBoolean"))) then
+value=value.toBoolean()
+else if ((valueType == tNull)) then
+value=false
+end if
+return value
+end if
+return null
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["I"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Cast = __REQUIRE("H")
+union = __REQUIRE("J")
+keys=["ip","port","user","pw"]
+ip=null
+port=Cast(null,"number")
+user=null
+pw=null
+exploitKeys=["port","address","unsec","localIp"]
+exploit=null
+exploitPort=Cast(null,"number")
+exploitAddress=null
+exploitUnsec=null
+exploitLanAdress=null
+server=union(keys,[ip,port,user,pw])
+usesExploit=Cast(exploit,"boolean")
+if (usesExploit) then
+exploit=union(exploitKeys,[exploitPort,exploitAddress,exploitUnsec,exploitLanAdress])
+server.exploit=exploit
+end if
+module.exports=server
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["J"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (keys,values)
+map={}
+index=0
+for (key in keys)
+map[key]=values[index]
+index=index + 1
+end for
+return map
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["K"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Cast = __REQUIRE("H")
+union = __REQUIRE("J")
+keys=["ip","port","user","pw"]
+ip=null
+port=Cast(null,"number")
+user=null
+pw=null
+exploitKeys=["port","address","unsec","localIp"]
+exploit=null
+exploitPort=Cast(null,"number")
+exploitAddress=null
+exploitUnsec=null
+exploitLanAdress=null
+server=union(keys,[ip,port,user,pw])
+usesExploit=Cast(exploit,"boolean")
+if (usesExploit) then
+exploit=union(exploitKeys,[exploitPort,exploitAddress,exploitUnsec,exploitLanAdress])
+server.exploit=exploit
+end if
+module.exports=server
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["L"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (message,level)
+Cast = __REQUIRE("H")
+colors={}
+colors[0]="00FFFF"
+colors[1]="FFFF00"
+colors[2]="FF0040"
+if ((level == null or not colors.hasIndex(level))) then level=0
+isDebugMode=Cast(null,"boolean")
+if (isDebugMode) then print("<color=#" + colors[level] + ">" + message + "</color>")
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["M"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+sshConnect = __REQUIRE("N")
+proxies = __REQUIRE("S")
+random = __REQUIRE("P")
+copy = __REQUIRE("T")
+union = __REQUIRE("J")
+SSHConnectStack={}
+SSHConnectStack.proxies=proxies
+SSHConnectStack.random=random
+SSHConnectStack.sshConnect=@sshConnect
+SSHConnectStack.copy=@copy
+SSHConnectStack.union=@union
+shellTypes={}
+shellTypes.LOCAL=0
+shellTypes.SSH=1
+shellTypes.EXPLOIT=2
+SSHConnectStack.SHELL_TYPE=shellTypes
+SSHConnectStack.createShell=function (shell,type,meta)
+return self.union(["shell","type","meta"],[shell,type,meta])
+end function
+SSHConnectStack.constructor=function (shell)
+me=self
+shellTypes=me.SHELL_TYPE
+if ((shell == null)) then shell=get_shell
+me.stack=[me.createShell(shell,shellTypes.LOCAL)]
+return me
+end function
+SSHConnectStack.connect=function (options)
+me=self
+sshConnect=@me.sshConnect
+copy=@me.copy
+lastShell=me.stack[ - 1]
+nextOptions=copy(options)
+nextOptions.shell=lastShell.shell
+nextShell=sshConnect(nextOptions)
+if ((nextShell != null)) then me.stack.push(nextShell)
+return nextShell
+end function
+SSHConnectStack.next=function ()
+me=self
+random=me.random
+proxies=me.proxies
+length=proxies.len
+if ((length == 0)) then return null
+seed=md5(current_date + " " + time)
+index=random.gen(0,length - 1,seed)
+nextOptions=proxies[index]
+connection=me.connect(nextOptions)
+if ((connection == null)) then
+proxies.remove(index)
+return me.next()
+end if
+return connection
+end function
+SSHConnectStack.lastShellOfType=function (type)
+me=self
+stack=me.stack
+index=stack.len - 1
+while (index >= 0)
+item=stack[index]
+if ((item.type == type)) then return item
+index=index - 1
+end while
+return null
+end function
+SSHConnectStack.final=function (type)
+me=self
+return me.stack[ - 1]
+end function
+SSHConnectStack.local=function ()
+me=self
+return me.lastShellOfType(me.SHELL_TYPE.LOCAL)
+end function
+SSHConnectStack.escalate=function (user,pw)
+me=self
+shellStack=me.local()
+shellStack.shell=get_shell(user,pw)
+return shellStack
+end function
+module.exports=SSHConnectStack
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["N"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+globals.metaxploit=include_lib("/lib/metaxploit.so")
+if ((globals.metaxploit == null)) then globals.metaxploit=include_lib(current_path + "/metaxploit.so")
+module.exports=function (options)
+calcPassword = __REQUIRE("O")
+Cast = __REQUIRE("H")
+union = __REQUIRE("J")
+hasPort = __REQUIRE("Q")
+hasLanPort = __REQUIRE("R")
+debug = __REQUIRE("L")
+TYPE_SSH=1
+TYPE_EXPLOIT=2
+metaxploit=globals.metaxploit
+createShell=function (shell,type,meta)
+return union(["shell","type","meta"],[shell,type,meta])
+end function
+debug(options)
+ip=options.ip
+user=options.user
+password=options.pw
+port=22
+if (options.hasIndex("port")) then port=Cast(options.port,"number")
+exploit=null
+if (options.hasIndex("exploit")) then
+exploit=options.exploit
+if (exploit.hasIndex("port")) then
+exploit.port=Cast(exploit.port,"number")
+if ((exploit.port == 0)) then exploit.remove("port")
+end if
+end if
+shell=get_shell
+if (options.hasIndex("shell")) then shell=options.shell
+if ((exploit != null and not (exploit.hasIndex("port") or hasPort(ip,exploit.port)))) then
+if ((metaxploit == null)) then exit("Metaxploit missing...")
+netsession=null
+if (not exploit.hasIndex("port")) then
+netsession=metaxploit.net_use(ip)
+else
+netsession=metaxploit.net_use(ip,exploit.port)
+end if
+if ((netsession == null)) then return null
+metalib=netsession.dump_lib
+if ((metalib == null)) then return null
+exploitShell=metalib.overflow(exploit.address,exploit.unsec)
+if ((typeof(exploitShell) != "shell")) then return null
+if (not hasLanPort(ip,exploit.localIp,port)) then
+debug("Port does not exist. Using exploit shell.")
+return createShell(exploitShell,TYPE_EXPLOIT,options)
+end if
+expectedPassword=calcPassword(password)
+rshell=exploitShell.connect_service(exploit.localIp,port,user,expectedPassword)
+if ((rshell != null)) then return createShell(rshell,TYPE_SSH,options)
+rshell=exploitShell.connect_service(exploit.localIp,port,user,password)
+if ((rshell == null)) then
+debug("Remote shell failed fallback to exploit shell.")
+return createShell(exploitShell,TYPE_EXPLOIT,options)
+end if
+debug("Unsafe ssh connection. Turn on encryption.")
+return createShell(rshell,TYPE_SSH,options)
+end if
+if (not hasPort(ip,port)) then
+debug("Port does not exist.")
+return null
+end if
+expectedPassword=calcPassword(password)
+rshell=shell.connect_service(ip,port,user,expectedPassword)
+if ((rshell != null)) then return createShell(rshell,TYPE_SSH,options)
+rshell=shell.connect_service(ip,port,user,password)
+if ((rshell != null)) then
+debug("Unsafe ssh connection. Turn on encryption.")
+else
+debug("Unable to establish any connection.")
+end if
+return createShell(rshell,TYPE_SSH,options)
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["O"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (password,inc)
+random = __REQUIRE("P")
+if ((inc == null)) then inc=false
+parsedDate=current_date.split(" ")
+date=parsedDate[0]
+time=parsedDate[1].split(":")[0]
+seed=date + " " + time + password
+seq=random.seq(65,90,seed,6)
+oneTimeCode=""
+for (code in seq)
+oneTimeCode=oneTimeCode + char(code)
+end for
+return [password,oneTimeCode].join(":")
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["P"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+debug = __REQUIRE("L")
+Random={}
+Random.pool={}
+Random.defaultSeed="random"
+Random.debug=@debug
+Random.createPool=function (seed,val)
+return {"seed":seed,"value":val,"generation":0}
+end function
+Random.calcSeed=function (seed)
+seedVal=0
+pos=seed.len
+for (char in seed)
+seedVal=seedVal + char.code + pos
+pos=pos - 1
+end for
+return seedVal
+end function
+Random.gen=function (min,max,seed,inc)
+me=self
+pool=me.pool
+debug=@me.debug
+if ((inc == null)) then inc=true
+if ((seed == null)) then seed=me.defaultSeed
+if (pool.hasIndex(seed)) then
+ps=pool[seed]
+if (not inc) then return ps.value
+ps.generation=ps.generation + 1
+val=floor((rnd(ps.value + ps.generation) * (max - min)) + min)
+ps.value=val
+return val
+end if
+seedVal=me.calcSeed(seed)
+debug("Seed sum " + seedVal)
+val=floor((rnd(seedVal) * (max - min)) + min)
+pool[seed]=me.createPool(seedVal,val)
+return val
+end function
+Random.seq=function (min,max,seed,amount,keepPool)
+me=self
+index=0
+result=[]
+while (index < amount)
+result.push(me.gen(min,max,seed))
+index=index + 1
+end while
+if ((keepPool != true)) then me.pool.remove(seed)
+return result
+end function
+Random.get=function (min,max)
+return self.gen(min,max)
+end function
+module.exports=Random
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["Q"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (ip,port)
+router=get_router(ip)
+routerPorts=router.used_ports
+for (routerPort in routerPorts)
+if ((routerPort.port_number == port)) then return not routerPort.is_closed and router.port_info(routerPort).indexOf("unknown") == null
+end for
+return false
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["R"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (ip,lanIp,port)
+router=get_router(ip)
+devices=router.devices_lan_ip
+for (device in devices)
+if ((device == lanIp)) then
+devicePorts=router.device_ports(device)
+for (devicePort in devicePorts)
+if ((devicePort.port_number == port)) then return router.port_info(devicePort).indexOf("unknown") == null
+end for
+end if
+end for
+return false
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["S"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Cast = __REQUIRE("H")
+union = __REQUIRE("J")
+keys=["ip","port","user","pw"]
+ips=null
+if ((ips == null)) then ips=""
+ports=null
+if ((ports == null)) then ports=""
+users=null
+if ((users == null)) then users=""
+pws=null
+if ((pws == null)) then pws=""
+exploitKeys=["port","address","unsec","localIp"]
+exploits=null
+if ((exploits == null)) then exploits=""
+exploitPorts=null
+if ((exploitPorts == null)) then exploitPorts=""
+exploitAddresses=null
+if ((exploitAddresses == null)) then exploitAddresses=""
+exploitUnsecs=null
+if ((exploitUnsecs == null)) then exploitUnsecs=""
+exploitLanAdresses=null
+if ((exploitLanAdresses == null)) then exploitLanAdresses=""
+ips=ips.split(",")
+ports=ports.split(",")
+users=users.split(",")
+pws=pws.split(",")
+exploits=exploits.split(",")
+exploitPorts=exploitPorts.split(",")
+exploitAddresses=exploitAddresses.split(",")
+exploitUnsecs=exploitUnsecs.split(",")
+exploitLanAdresses=exploitLanAdresses.split(",")
+list=[]
+index=0
+length=ips.len
+while (index < length)
+server=union(keys,[ips[index],Cast(ports[index],"number"),users[index],pws[index]])
+usesExploit=Cast(exploits[index],"boolean")
+if (usesExploit) then
+exploit=union(exploitKeys,[Cast(exploitPorts[index],"number"),exploitAddresses[index],exploitUnsecs[index],exploitLanAdresses[index]])
+server.exploit=exploit
+end if
+list.push(server)
+index=index + 1
+end while
+module.exports=list
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["T"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (map)
+newMap={}
+if ((typeof(map) != "map")) then return newMap
+for (item in map)
+newMap[item.key]=item.value
+end for
+return newMap
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["U"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Error = __REQUIRE("C")
+Parser={}
+Parser.Error=Error
+Parser.DELIMITER=";"
+Parser.PARSE_CHARS=[Parser.DELIMITER,","]
+Parser.UNPARSE_CODES=[]
+for (PARSE_CHAR in Parser.PARSE_CHARS)
+Parser.UNPARSE_CODES.push(PARSE_CHAR.code)
+end for
+Parser.parseInt=function (number)
+if ((number == null or number == "null")) then number=0
+if ((typeof(number) == "string")) then number=number.to_int
+return number
+end function
+Parser.parseValue=function (value,parseChars)
+Error=self.Error
+if ((typeof(value) != "string")) then return value
+if ((parseChars == null)) then parseChars=self.PARSE_CHARS
+parsedValue=value
+for (parseChar in parseChars)
+parsedValue=parsedValue.replace(parseChar,":" + parseChar.code + ":")
+end for
+return parsedValue
+end function
+Parser.unparseValue=function (value,unparseCodes)
+Error=self.Error
+if ((typeof(value) != "string")) then return value
+if ((unparseCodes == null)) then unparseCodes=self.UNPARSE_CODES
+unparseValue=value
+for (unparseCode in unparseCodes)
+unparseValue=unparseValue.replace(":" + unparseCode + ":",char(unparseCode))
+end for
+return unparseValue
+end function
+module.exports=Parser
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["V"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Launcher={}
+Launcher.callCounter=0
+Launcher.WARN_LIMIT=13
+Launcher.MAX_CALLS=15
+Launcher.STATES={}
+Launcher.STATES.SUCCESS=0
+Launcher.STATES.ERROR=1
+Launcher.STATES.LIMIT_REACHED=2
+Launcher.onError=function ()
+
+end function
+Launcher.onLimit=function ()
+
+end function
+Launcher.reset=function ()
+self.callCounter=0
+end function
+Launcher.increase=function ()
+me=self
+callCounter=0
+if (me.hasIndex("callCounter")) then callCounter=me.callCounter
+next=callCounter + 1
+if ((next >= me.MAX_CALLS)) then
+me.onLimit()
+return me.STATES.LIMIT_REACHED
+end if
+me.callCounter=next
+end function
+Launcher.launch=function (shell,path,args)
+if ((args == null)) then args=""
+me=self
+error=shell.launch(path,args)
+if ((error == 0)) then
+Launcher.onError()
+return me.STATES.ERROR
+end if
+me.increase()
+return me.STATES.SUCCESS
+end function
+module.exports=Launcher
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["W"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+String = __REQUIRE("D")
+Error = __REQUIRE("C")
+ArgType={}
+ArgType.FLAG="FLAG"
+ArgType.VALUE="VALUE"
+ArgType.MULTIPLE="MULTIPLE"
+Arg={}
+Arg.String=@String
+Arg.constructor=function (shortcut,command,type,description)
+me=self
+me.shortcut=shortcut
+me.command=command
+me.type=type
+me.description=description
+return me
+end function
+Arg.toString=function ()
+me=self
+str=(new me.String).constructor("-$0 --$1 - <b>$2</b>")
+return str.parse([me.shortcut,me.command,me.description]).toString()
+end function
+Argv={}
+Argv.ArgType=@ArgType
+Argv.Arg=@Arg
+Argv.Error=@Error
+Argv.constructor=function (defs,help)
+me=self
+me.args=params
+me.listed={}
+me.unlisted=params
+me.defs=defs
+me.help=help
+return self
+end function
+Argv.parse=function ()
+me=self
+args=me.args
+defs=me.defs
+listed={}
+unlisted=[]
+index=0
+maxIndex=args.len
+findDef=function (arg)
+for (def in defs)
+if (("--" + def.command == arg or "-" + def.shortcut == arg)) then
+return def
+end if
+end for
+return null
+end function
+isWrapped=function (x)
+return x[0] == "'"
+end function
+getItemsInWrap=function (start)
+i=start
+r=[]
+while (i < maxIndex)
+x=args[i].trim()
+if ((x != "" and x[ - 1] == "'")) then
+r.push(x[:x.len - 1])
+return r
+end if
+r.push(x)
+i=i + 1
+end while
+return r
+end function
+while (index < maxIndex)
+item=args[index].trim()
+if ((item == "")) then
+index=index + 1
+continue
+end if
+def=findDef(item)
+if ((def == null)) then
+if (isWrapped(item)) then
+if ((item[ - 1] == "'")) then
+item=item[1 : item.len - 1]
+else
+wrappedItems=getItemsInWrap(index + 1)
+item=[item[1 : ],wrappedItems.join(" ")].join(" ")
+index=index + wrappedItems.len
+end if
+end if
+unlisted.push(item)
+else
+type=def.type
+command=def.command
+isValue=type == me.ArgType.VALUE
+isMultiple=type == me.ArgType.MULTIPLE
+isFlag=type == me.ArgType.FLAG
+if ((isValue or isMultiple)) then
+index=index + 1
+value=args[index]
+if (isWrapped(value)) then
+wrappedItems=getItemsInWrap(index + 1)
+value=[value[1 : ],wrappedItems.join(" ")].join(" ")
+index=index + wrappedItems.len
+end if
+if (isMultiple) then
+if (listed.hasIndex(command)) then
+listed[command].push(value)
+else
+listed[command]=[value]
+end if
+else
+listed[command]=value
+end if
+else if (isFlag) then
+listed[command]=true
+end if
+end if
+index=index + 1
+end while
+me.listed=listed
+me.unlisted=unlisted
+return me
+end function
+Argv.get=function (index=0,mandatory=false)
+me=self
+if (not me.hasIndex("unlisted")) then
+me.unlisted=params
+end if
+if (not me.hasIndex("help") or me.help == null) then
+me.help="n/a"
+end if
+if (me.unlisted.hasIndex(index)) then
+return me.unlisted[index]
+end if
+if (mandatory) then
+(new me.Error).constructor("Error cannot find param[$0]$1$2$3",[index,NEW_LINE_OPERATOR,NEW_LINE_OPERATOR,me.help]).throw()
+end if
+return null
+end function
+Argv.getWithKey=function (key)
+if (self.listed.hasIndex(key)) then
+return self.listed[key]
+end if
+return null
+end function
+module.exports=Argv
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["X"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Cast = __REQUIRE("H")
+Paginator={}
+Paginator.Cast=@Cast
+Paginator.parse=function (v)
+return {"prev":v.pull(),"next":v.pull(),"count":v.pull(),"offset":v.pull(),"limit":v.pull()}
+end function
+Paginator.generate=function (count,limit,offset)
+prev=null
+next=null
+offset=self.Cast(offset,"number")
+if ((offset > count)) then offset=count - limit
+if ((offset - limit >= 0)) then prev=offset - limit
+if ((offset + limit < count)) then next=offset + limit
+return [prev,next,count,offset,limit]
+end function
+Paginator.get=function (DBService,tableName,limit,offset)
+count=DBService.countAll(tableName)
+return self.generate(count,limit,offset)
+end function
+Paginator.getWithField=function (DBService,tableName,field,value,limit,offset)
+count=DBService.count(tableName,field,value)
+return self.generate(count,limit,offset)
+end function
+Paginator.getForIndex=function (DBService,tableName,indexName,value,limit,offset)
+count=DBService.countIndex(tableName,indexName,value)
+return self.generate(count,limit,offset)
+end function
+module.exports=Paginator
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["Y"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+module.exports=function (path,v,defaultValue)
+path=path.split(".")
+while (v != null)
+currentPath=path.pull()
+if ((typeof(v) == "list")) then
+currentPath=currentPath.to_int
+if ((currentPath > v.len)) then return defaultValue
+end if
+if (not v.hasIndex(currentPath)) then return defaultValue
+v=@v[currentPath]
+if ((path.len == 0)) then break
+end while
+if ((v == null or v == "null")) then return defaultValue
+return v
+end function
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["Z"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+AsciiGen = __REQUIRE("a")
+Math = __REQUIRE("b")
+Cast = __REQUIRE("H")
+PRNTR={}
+dc="d16dff"
+ec="FF0000"
+PRNTR.AG=AsciiGen
+PRNTR.Math=Math
+PRNTR.Cast=@Cast
+PRNTR.isDebugMode=Cast(null,"boolean")
+logo=[]
+logo.push("<color=#008eff>               (  . DERP )</color>")
+logo.push("<color=#008eff>)           (              )</color>")
+logo.push("<color=#95c4ff>.  '   .   '  .  '  .</color>")
+logo.push("<color=#6d9aff>(    , )       (.   )  (   ',    )</color>")
+logo.push("<color=#9a51ff>.' ) ( . )    ,  ( ,     )   ( .</color>")
+logo.push("<color=#c42aff>). , ( .   (  ) ( , ')  .' (  ,    )</color>")
+logo.push("<color=#bc00ff>(_,) . ), ) _) _,')  (, ) '. )  ,. (' )</color>")
+logo.push("<color=#bc00ff>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</color>")
+PRNTR.wl=logo.join(NEW_LINE_OPERATOR)
+PRNTR.dc=dc
+PRNTR.ec=ec
+PRNTR.tc={}
+PRNTR.tc.default=["f7d9ff","d16dff","bc00ff"]
+PRNTR.hc={}
+PRNTR.hc.default=dc
+PRNTR.hc.error=ec
+PRNTR.cc={}
+PRNTR.cc.default=dc
+PRNTR.ic={}
+PRNTR.ic.default=dc
+PRNTR.ic.error=ec
+PRNTR.lc={}
+PRNTR.lc.default=dc
+PRNTR.cT=function (str,color)
+if ((color == null)) then color=self.dc
+return "<color=#" + color + ">" + str + "</color>"
+end function
+PRNTR.mT=function (str,x)
+if ((x > 128)) then return str * 128 + self.mT(str,x - 128)
+return str * x
+end function
+PRNTR.newLineAfter=80
+PRNTR.newLineInterpreter=function (str,color,prefix)
+newLineAfter=self.newLineAfter
+words=str.split(" ")
+paragraphes=[]
+currentLine=""
+for (word in words)
+currentLine=currentLine + " " + word
+if ((currentLine.len > newLineAfter)) then
+paragraphes.push("<color=#" + color + ">" + prefix + currentLine + "</color>")
+currentLine=""
+end if
+end for
+if ((currentLine.len > 0)) then
+paragraphes.push("<color=#" + color + ">" + prefix + currentLine + "</color>")
+end if
+return paragraphes.join("<b" + "r>")
+end function
+PRNTR.err=function (str)
+m=self
+print(m.cT(str,m.ec))
+end function
+PRNTR.w=function (str)
+m=self
+c=m.tc.default
+t=m.AG.gen("  " + str,c)
+x=(t.len / 3) - 20
+if (not m.isDebugMode) then clear_screen
+print(m.wl)
+print(t)
+print(m.cT(m.mT("¯",x),c[2]))
+end function
+PRNTR.t=function (str,style)
+if ((style == null)) then style="default"
+m=self
+c=m.tc[style]
+t=m.AG.gen("  " + str,c)
+x=(t.len / 3) - 20
+if (not m.isDebugMode) then clear_screen
+print(m.cT(m.mT("_",x),c[0]))
+print(t)
+print(m.cT(m.mT("¯",x),c[2]))
+end function
+PRNTR.h=function (str,style)
+if ((style == null)) then style="default"
+m=self
+c=m.hc[style]
+x=str.len + 6
+print(m.cT(m.mT("_",x),c))
+print(m.cT("|  " + str,c))
+print(m.cT(m.mT("¯",x),c))
+end function
+PRNTR.l=function (list,pagination,style)
+m=self
+Math=m.Math
+Cast=@m.Cast
+offset=0
+limit=0
+count=0
+if ((pagination != null)) then
+offset=Cast(pagination.offset,"number")
+limit=Cast(pagination.limit,"number")
+count=Cast(pagination.count,"number")
+end if
+if ((style == null)) then style="default"
+if ((list.len == 0)) then return 
+c=m.lc[style]
+print(m.cT(m.mT("_",50),c))
+for (item in list)
+if ((typeof(item) == "file")) then item=item.path
+print(self.newLineInterpreter(item,c,"-  "))
+end for
+if ((pagination != null)) then
+print(m.cT(m.mT("_",50),c))
+print(m.cT("|  Showing " + offset + "-" + Math.limit(offset + limit,count) + " of " + count + " items",c))
+end if
+print(m.cT(m.mT("¯",50),c))
+end function
+PRNTR.c=function (commands,style)
+if ((style == null)) then style="default"
+if ((commands.len == 0)) then return 
+m=self
+c=m.cc[style]
+r=[]
+x=0
+for (command in commands)
+t=">  [" + command[0] + "] " + command[1]
+if ((t.len > x)) then x=t.len
+r.push(m.cT(t,c))
+end for
+print(m.cT(m.mT("_",x),c))
+print(r.join(NEW_LINE_OPERATOR))
+print(m.cT(m.mT("¯",x),c))
+end function
+PRNTR.i=function (str,pw,style)
+if ((style == null)) then style="default"
+if ((pw == null)) then pw=false
+m=self
+c=m.ic[style]
+return user_input(m.cT(">  " + str,c) + NEW_LINE_OPERATOR + ">  ",pw)
+end function
+module.exports=PRNTR
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["a"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+AsciiGen={}
+map={}
+map.a=["||¯|| ","||_|| ","|| || "]
+map.b=["||¯/ ","|| \ ","||_/ "]
+map.c=["||¯ ","||  ","||_ "]
+map.d=["||¯\\ ","|| // ","||//  "]
+map.e=["||¯ ","||- ","||_ "]
+map.f=["||¯ ","||_ ","||  "]
+map.g=["||¯¯  ","|| \\ ","||_|| "]
+map.h=["|| || ","||-|| ","|| || "]
+map.i=["|| ","|| ","|| "]
+map.j=[" ¯||¯ ","  ||  ","|_||  "]
+map.k=["||  / ","|| /  ","||¯\\ "]
+map.l=["||  ","||  ","||_ "]
+map.m=["||\\/|| ","||   || ","||   || "]
+map.n=["||\\ || ","|| \\|| ","||  \|| "]
+map.o=["||¯|| ","|| || ","||_|| "]
+map.p=["||¯|| ","||_|| ","||    "]
+map.q=["||¯||  ","|| ||  ","||_||¬ "]
+map.r=["||¯|| ","||¯\\ ","|| || "]
+map.s=["||¯¯ "," \\  ","__|| "]
+map.t=["¯||¯ "," ||  "," ||  "]
+map.u=["|| || ","|| || ","||_|| "]
+map.v=["\\ || "," \\|| ","  \\| "]
+map.w=["\\ |\\ | "," \\| \\| ","  \\  \\ "]
+map.x=["\\  / "," \\/  "," //\  "]
+map.y=["\\  // "," \\//  ","  ||   "]
+map.z=["¯// ","//  ","||_ "]
+map["0"]=["||¯|| ","||x|| ","||_|| "]
+map["1"]=["'|| "," || "," || "]
+map["2"]=["¯¯|| ","||¯  ","||_  "]
+map["3"]=["¯|| ","-|| ","_|| "]
+map["4"]=[" /|| ","/_|| ","  || "]
+map["5"]=["||¯¯ "," ¯|| "," _|| "]
+map["6"]=["||¯¯  ","||¯|| ","||_|| "]
+map["7"]=["¯¯// "," //  ","//   "]
+map["8"]=["||¯|| ","||-|| ","||_|| "]
+map["9"]=["||¯|| ","  ¯|| ","  //  "]
+map[" "]=["  ","  ","  "]
+AsciiGen.MAP=map
+AsciiGen.gen=function (str,colors)
+r=[[],[],[]]
+signs=self.MAP
+for (char in str)
+char=char.lower
+if (signs.hasIndex(char)) then
+r[0].push(signs[char][0])
+r[1].push(signs[char][1])
+r[2].push(signs[char][2])
+end if
+end for
+if ((typeof(colors) == "string")) then
+r[0]=["<color=#" + colors + ">"] + r[0] + ["</color>"]
+r[1]=["<color=#" + colors + ">"] + r[1] + ["</color>"]
+r[2]=["<color=#" + colors + ">"] + r[2] + ["</color>"]
+else if ((typeof(colors) == "list")) then
+r[0]=["<color=#" + colors[0] + ">"] + r[0] + ["</color>"]
+r[1]=["<color=#" + colors[1] + ">"] + r[1] + ["</color>"]
+r[2]=["<color=#" + colors[2] + ">"] + r[2] + ["</color>"]
+end if
+return [r[0].join(""),r[1].join(""),r[2].join("")].join(NEW_LINE_OPERATOR)
+end function
+module.exports=AsciiGen
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["b"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Math={}
+Math.max=function (values)
+max=0
+for (value in values)
+if ((value > max)) then max=value
+end for
+return max
+end function
+Math.min=function (values)
+min=0
+for (value in values)
+if ((value < min)) then min=value
+end for
+return min
+end function
+Math.limit=function (a,b)
+if ((a < b)) then return a
+return b
+end function
+module.exports=Math
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["c"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+PRNTR = __REQUIRE("Z")
+FSct={}
+FSct.PRNTR=PRNTR
+FSct.suggest=function (filepath)
+x=self
+p=x.PRNTR
+shell=get_shell
+file=shell.host_computer.File(filepath)
+if ((file == null)) then
+p=filepath.len - 1
+while (p > 0)
+cF=shell.host_computer.File(filepath[:p])
+if ((cF != null)) then
+return x.suggest(cF.path)
+end if
+p=p - 1
+end while
+return false
+else if ((typeof(file) == "file")) then
+if (file.is_folder) then
+p.h("Folder got found in " + file.path + " suggesting any file in there")
+p.l(file.get_files)
+return true
+end if
+p.h("File got found in " + file.path + ". Maybe you wanted to type this?")
+return true
+end if
+p.h("Cannot find or suggest any file","error")
+return false
+end function
+FSct.select=function (max)
+x=self
+p=x.PRNTR
+shell=get_shell
+areFilesSelected=false
+maxFiles=max
+i=0
+files=[]
+exists=function (f)
+for (item in files)
+if ((item.path == f.path)) then
+p.h("You already added the file","error")
+return true
+end if
+end for
+return false
+end function
+while (i < maxFiles and not areFilesSelected)
+filepath=p.i("File path:")
+file=shell.host_computer.File(filepath)
+if ((file == null or file.is_folder)) then
+x.suggest(filepath)
+continue
+end if
+if (exists(file)) then continue
+files.push(file)
+areFilesSelected=p.i("Do you want to add more files? (Y/n)") != "Y"
+i=i + 1
+end while
+return files
+end function
+module.exports=FSct
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["d"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Validator={}
+ALPHABETIC_LOWER="qwertzuiopasdfghjklyxcvbnm"
+ALPHABETIC_UPPER=ALPHABETIC_LOWER.upper
+ALPHABETIC_ALL=ALPHABETIC_LOWER + ALPHABETIC_UPPER
+NUMERIC="0123456789"
+WORD=ALPHABETIC_ALL + NUMERIC
+CODE=ALPHABETIC_ALL + NUMERIC + ":"
+USERNAME="-_" + WORD
+OPERATORS="_ -!?+/:()[]{}$%#*~.,;&="
+PASSWORD=OPERATORS + WORD
+MESSAGE=WORD + OPERATORS
+VERSION=NUMERIC + "."
+TITLE=WORD + OPERATORS
+SCOPES=ALPHABETIC_LOWER + ":,"
+FLAG="01"
+generateCharMap=function (charList)
+map={}
+for (char in charList)
+map[char]=true
+end for
+return map
+end function
+Validator.T={}
+Validator.T.ALPHABETIC_LOWER=generateCharMap(ALPHABETIC_LOWER)
+Validator.T.ALPHABETIC_UPPER=generateCharMap(ALPHABETIC_UPPER)
+Validator.T.ALPHABETIC=generateCharMap(ALPHABETIC_ALL)
+Validator.T.NUMERIC=generateCharMap(NUMERIC)
+Validator.T.WORD=generateCharMap(WORD)
+Validator.T.CODE=generateCharMap(CODE)
+Validator.T.USERNAME=generateCharMap(USERNAME)
+Validator.T.OPERATORS=generateCharMap(OPERATORS)
+Validator.T.MESSAGE=generateCharMap(MESSAGE)
+Validator.T.PASSWORD=generateCharMap(PASSWORD)
+Validator.T.VERSION=generateCharMap(VERSION)
+Validator.T.TITLE=generateCharMap(TITLE)
+Validator.T.SCOPES=generateCharMap(SCOPES)
+Validator.T.FLAG=generateCharMap(FLAG)
+Validator.i=function (str,map,min,max)
+if ((min == null)) then min=1
+if ((max == null)) then max=20
+if ((map == null or str.len < min or str.len > max)) then return false
+for (char in str)
+if (not map.hasIndex(char)) then return false
+end for
+return true
+end function
+Validator.g=function (type)
+m=self
+key=type.upper
+if (not m.T.hasIndex(key)) then return null
+return m.T[key]
+end function
+Validator.c=function (str,type,min,max)
+m=self
+if ((str == null)) then return false
+return m.i(str,m.g(type),min,max)
+end function
+module.exports=Validator
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["e"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+FileManager={}
+INITIAL_DIRECTORIES={}
+INITIAL_DIRECTORIES["services"]=null
+INITIAL_DIRECTORIES["responses"]=null
+INITIAL_DIRECTORIES["downloads"]=null
+INITIAL_DIRECTORIES["website-downloads"]=null
+INITIAL_DIRECTORIES["website-file"]=null
+INITIAL_DIRECTORIES["website-template-file"]=null
+INITIAL_DIRECTORIES["server"]=null
+INITIAL_DIRECTORIES["database"]=null
+INITIAL_DIRECTORIES["local"]=null
+FileManager.directories=INITIAL_DIRECTORIES
+FileManager.get=function (key)
+m=self
+directories=m.directories
+if (not directories.hasIndex(key)) then return null
+return directories[key]
+end function
+FileManager.resolve=function (key,path)
+m=self
+originalPath=m.get(key)
+parsedOriginal=originalPath.split("/")
+parsed=path.split("/")
+for (item in parsed)
+if ((item == "..")) then
+if ((parsedOriginal.len == 0)) then continue
+parsedOriginal.pop()
+else if ((item == ".")) then
+continue
+else
+parsedOriginal.push(item)
+end if
+end for
+return parsedOriginal.join("/")
+end function
+FileManager.last=function (key)
+m=self
+originalPath=m.get(key)
+parsedOriginal=originalPath.split("/")
+return parsedOriginal[ - 1]
+end function
+module.exports=FileManager
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["f"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+debug = __REQUIRE("L")
+PermissionManager={}
+PermissionManager.debug=@debug
+PermissionManager.STRATEGY={}
+PermissionManager.STRATEGY.ROOT=1
+PermissionManager.STRATEGY.USERS=2
+PermissionManager.DEFAULT_RESET=["u-wrx","g-wrx","o-wrx"]
+PermissionManager.constructor=function (client)
+me=self
+me.user=client.user
+me.group=client.user
+strategy=me.STRATEGY.USERS
+if ((client.user == "root")) then strategy=me.STRATEGY.ROOT
+me.strategy=strategy
+return me
+end function
+PermissionManager.getPermissionsOfUser=function (file,userType)
+pos={"u":[1,4],"g":[4,7],"o":[7,10]}
+range=pos[userType]
+from=range[0]
+to=range[1]
+return file.permissions[from : to]
+end function
+PermissionManager.chmod=function (file,permissions,recursive=false)
+me=self
+userType=permissions[0]
+userPermissions=me.getPermissionsOfUser(file,userType)
+isAdditive=permissions[1] == "+"
+flags=permissions[2 : ]
+debug=@me.debug
+debug("About to chmod " + file.path + " with " + file.permissions + " to " + permissions)
+if (isAdditive) then
+flagsMissing=""
+for (flag in flags)
+if ((userPermissions.indexOf(flag) == null)) then flagsMissing=flagsMissing + flag
+end for
+if ((flagsMissing.len == 0)) then return 
+file.chmod(userType + "+" + flagsMissing,recursive)
+debug("Added permissions " + file.path + " with now " + file.permissions)
+return 
+end if
+flagsExisting=""
+for (flag in flags)
+if ((userPermissions.indexOf(flag) != null)) then flagsExisting=flagsExisting + flag
+end for
+if ((flagsExisting.len == 0)) then return 
+file.chmod(userType + "-" + flagsExisting,recursive)
+debug("Removed permissions " + file.path + " with now " + file.permissions)
+end function
+PermissionManager.reset=function (file,recursive=false)
+me=self
+if ((file == null)) then return false
+if ((file.owner != me.user)) then file.set_owner(me.user)
+if ((file.group != me.group)) then file.set_group(me.group)
+for (access in me.DEFAULT_RESET)
+me.chmod(file,access,recursive)
+end for
+return true
+end function
+PermissionManager.rset=function (file,permissions,owner,group,recursive=true)
+me=self
+if ((file == null)) then return false
+if ((permissions == null)) then permissions=[]
+if ((typeof(permissions) == "string")) then permissions=[permissions]
+if ((owner == null)) then owner=me.user
+if ((group == null)) then group=me.group
+isRoot=me.strategy == me.STRATEGY.ROOT
+me.reset(file,recursive)
+if (isRoot) then
+if ((file.owner != me.user)) then file.set_owner(me.user)
+if ((file.group != me.user)) then file.set_group(me.user)
+else
+if ((file.owner != owner)) then file.set_owner(owner)
+if ((file.group != group)) then file.set_group(group)
+end if
+for (access in permissions)
+if ((isRoot and access[0] != "o")) then continue
+me.chmod(file,access,recursive)
+end for
+return true
+end function
+PermissionManager.set=function (file,permissions,owner,group)
+return self.rset(file,permissions,owner,group,false)
+end function
+PermissionManager.hasAccess=function (file,permissions)
+me=self
+if ((file == null)) then return false
+isRoot=me.strategy == me.STRATEGY.ROOT
+if (isRoot) then return true
+for (permission in permissions)
+if (not file.has_permission(permission)) then return false
+end for
+return true
+end function
+PermissionManager.hasAccessImportant=function (file,permissions)
+hasAccess=self.hasAccess(file,permissions)
+if (not hasAccess) then exit("Either file does not exist or not enough permissions " + file.path)
+end function
+module.exports=PermissionManager
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["g"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+Cast = __REQUIRE("H")
+sshConnect = __REQUIRE("N")
+hasPort = __REQUIRE("Q")
+debug = __REQUIRE("L")
+globals.metaxploit=include_lib("/lib/metaxploit.so")
+if ((globals.metaxploit == null)) then globals.metaxploit=include_lib(current_path + "/metaxploit.so")
+GatekeeperClient={}
+GatekeeperClient.Cast=@Cast
+GatekeeperClient.hasPort=@hasPort
+GatekeeperClient.sshConnect=@sshConnect
+GatekeeperClient.debug=@debug
+GatekeeperClient.constructor=function (customCrypto)
+me=self
+me.customCrypto=customCrypto
+return me
+end function
+GatekeeperClient.exec=function (options)
+me=self
+customCrypto=me.customCrypto
+sshConnect=@me.sshConnect
+debug=@me.debug
+Cast=@me.Cast
+debug(options)
+ip=options.ip
+user=options.user
+password=options.pw
+action=options.action
+actionParams=[]
+if (options.hasIndex("actionParams")) then actionParams=options.actionParams
+exploit=null
+if (options.hasIndex("exploit")) then
+exploit=options.exploit
+if (exploit.hasIndex("port")) then
+exploit.port=Cast(exploit.port,"number")
+if ((exploit.port == 0)) then exploit.remove("port")
+end if
+end if
+launchParams=([user,md5(password),action] + actionParams).join(" ")
+encoded=customCrypto.encrypt(launchParams)
+exploitShell=null
+if ((exploit != null and not (exploit.hasIndex("port") or me.hasPort(ip,exploit.port)))) then
+if ((globals.metaxploit == null)) then exit("Metaxploit missing...")
+netsession=null
+if (not exploit.hasIndex("port")) then
+netsession=metaxploit.net_use(ip)
+else
+netsession=metaxploit.net_use(ip,exploit.port)
+end if
+if ((netsession == null)) then return 
+metalib=netsession.dump_lib
+if ((metalib == null)) then return 
+exploitShell=metalib.overflow(exploit.address,exploit.unsec)
+if ((typeof(exploitShell) != "shell")) then return 
+else
+debug("Fallback to alternative shell.")
+alternativeOptions={"ip":ip,"user":user,"pw":password}
+exploitShell=sshConnect(alternativeOptions).shell
+end if
+exploitShell.launch("/server/gatekeeper",encoded)
+end function
+module.exports=GatekeeperClient
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["h"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+HttpStatus={}
+HttpStatus.NOT_FOUND=404
+HttpStatus.BAD_REQUEST=400
+HttpStatus.NO_AUTH=401
+HttpStatus.CREATED=201
+HttpStatus.OK=200
+HttpStatus.NO_CONTENT=204
+HttpStatus.INTERNAL_SERVER_ERROR=500
+HttpStatus.PERMISSION_DENIED=403
+HttpStatus.CONFLICT=409
+module.exports=HttpStatus
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MODULES["i"]=function (r)
+module={}
+if (EXPORTED.hasIndex(r)) then
+module=EXPORTED[r]
+end if
+if (not module.hasIndex("exports")) then
+HttpMethod={}
+HttpMethod.GET="GET"
+HttpMethod.PUT="PUT"
+HttpMethod.POST="POST"
+HttpMethod.DELETE="DELETE"
+module.exports=HttpMethod
+end if
+EXPORTED[r]=module
+return EXPORTED[r]
+end function
+MAIN=function ()
+print("test")
+CustomCrypto = __REQUIRE("B")
+generateUniqueId = __REQUIRE("E")
+SSHConnectStack = __REQUIRE("M")
+Parser = __REQUIRE("U")
+Launcher = __REQUIRE("V")
+Argv = __REQUIRE("W")
+Paginator = __REQUIRE("X")
+get = __REQUIRE("Y")
+PRNTR = __REQUIRE("Z")
+FSct = __REQUIRE("c")
+Cast = __REQUIRE("H")
+copy = __REQUIRE("T")
+Validator = __REQUIRE("d")
+FilesManager = __REQUIRE("e")
+PermissionManager = __REQUIRE("f")
+Envs = __REQUIRE("G")
+GatekeeperClient = __REQUIRE("g")
+HttpStatus = __REQUIRE("h")
+HttpMethod = __REQUIRE("i")
+debug = __REQUIRE("L")
+argv=(new Argv).constructor()
+sshConnectStack=(new SSHConnectStack).constructor(get_shell)
+customCrypto=(new CustomCrypto).constructor(eSECRET)
+gatekeeperClient=(new GatekeeperClient).constructor(customCrypto)
+lPermissionManager=(new PermissionManager).constructor(eFRONTEND)
+encodedArgs=argv.get(0)
+relaunchParams=null
+if ((encodedArgs != null)) then
+decodedArgs=customCrypto.decrypt(encodedArgs,eRELAUNCH_SECRET)
+argv.args=decodedArgs.split(" ")
+argv.parse()
+relaunchParams={}
+relaunchParams.username=argv.get(0,true)
+relaunchParams.password=argv.get(1,true)
+relaunchParams.menu=argv.get(2,true)
+menuContextParams=argv.get(3)
+if ((menuContextParams != null)) then
+menuContextParams=menuContextParams.split(",")
+if ((menuContextParams.len == 1)) then menuContextParams=menuContextParams.pull()
+end if
+relaunchParams.menuContextParams=menuContextParams
+end if
+parseChars=["'"]
+unparseChars=[]
+for (parseChar in parseChars)
+unparseChars.push(parseChar.code)
+end for
+connect=function ()
+debug("Connect")
+result=sshConnectStack.next()
+if ((result == null)) then exit("No proxies available.")
+globals.rshell=sshConnectStack.connect(eBACKEND)
+if ((globals.rshell == null)) then exit("Failed to get shell.")
+end function
+relaunch=function ()
+PRNTR.err("Due to limitations in GreyScript you're about to hit the call stack")
+PRNTR.err("Therefore a relogin link will be posted")
+user=getUser()
+locals.menuContextParams=getMenuContextParams()
+relaunchParams=[]
+relaunchParams.push(user.username)
+relaunchParams.push(user.password)
+relaunchParams.push(getCurrentMenu())
+if ((locals.menuContextParams != null)) then
+if ((typeof(locals.menuContextParams) == "list")) then locals.menuContextParams=locals.menuContextParams.join(",")
+relaunchParams.push("'" + locals.menuContextParams + "'")
+end if
+encodedParams=customCrypto.encrypt(relaunchParams.join(" "),eRELAUNCH_SECRET)
+result=[program_path,encodedParams].join(" ")
+exit(PRNTR.cT(result))
+end function
+Launcher.onLimit=@relaunch
+setVersionOutdated=function (versionOutdated)
+globals.isVersionOutdated=versionOutdated
+end function
+isVersionOutdated=function ()
+if (not globals.hasIndex("isVersionOutdated")) then globals.isVersionOutdated=false
+return globals.isVersionOutdated
+end function
+selectMenu=function (menu,menuContextParams)
+globals.currentMenu=@menu
+globals.menuContextParams=menuContextParams
+return 
+end function
+getCurrentMenu=function ()
+return globals.currentMenu
+end function
+getMenuContextParams=function ()
+return globals.menuContextParams
+end function
+setAuthStatus=function (isAuth,isAdmin,hasTrail,requiresUpdate)
+globals.isAuthenticated=isAuth
+globals.isAdmin=isAdmin
+globals.hasTrail=hasTrail
+globals.requiresUpdate=requiresUpdate
+return 
+end function
+getAuthStatus=function ()
+authStatus={"isAuthenticated":false,"isAdmin":false,"hasTrail":false,"requiresUpdate":false}
+if (globals.hasIndex("isAuthenticated")) then authStatus.isAuthenticated=globals.isAuthenticated
+if (globals.hasIndex("isAdmin")) then authStatus.isAdmin=globals.isAdmin
+if (globals.hasIndex("hasTrail")) then authStatus.hasTrail=globals.hasTrail
+if (globals.hasIndex("requiresUpdate")) then authStatus.requiresUpdate=globals.requiresUpdate
+return authStatus
+end function
+setUser=function (user,pw,userid)
+globals.userid=userid
+globals.username=user
+globals.password=pw
+return 
+end function
+getUser=function ()
+user={"id":"undefined","username":"undefined","password":"undefined"}
+if (globals.hasIndex("userid")) then user.id=globals.userid
+if (globals.hasIndex("username")) then user.username=globals.username
+if (globals.hasIndex("password")) then user.password=globals.password
+return user
+end function
+pColor=function (str,color)
+print(PRNTR.cT(str,color))
+end function
+pError=function (str)
+PRNTR.err(str)
+end function
+pWelcome=function (str)
+return PRNTR.w(str)
+end function
+pTitle=function (str,style)
+return PRNTR.t(str,style)
+end function
+pHeadline=function (str,style)
+return PRNTR.h(str,style)
+end function
+pList=function (list,pagination,style)
+return PRNTR.l(list,pagination,style)
+end function
+pCommand=function (commands,style)
+return PRNTR.c(commands,style)
+end function
+pInput=function (str,pw,style)
+return PRNTR.i(str,pw,style)
+end function
+pValidate=function (str,type,min,max)
+if (not Validator.c(str,type,min,max)) then
+if ((min != null)) then pError("Min chars: " + min)
+if ((max != null)) then pError("Max chars: " + max)
+pError("Invalid characters. Following character are allowed:")
+pError("'" + Validator.g(type).indexes.join("") + "'")
+return false
+end if
+return true
+end function
+parse=function (value)
+return Parser.parseValue(value,parseChars)
+end function
+unparse=function (value)
+return Parser.unparseValue(value,unparseChars)
+end function
+defaultV=function (value,defaultValue)
+if ((value == null or value == "null")) then defaultValue
+return value
+end function
+getService=function (route)
+contains=function (items)
+for (item in items)
+if ((route.indexOf(item) == 0)) then return true
+end for
+return false
+end function
+if (contains(["/user"])) then return "server-user"
+if (contains(["/application"])) then return "server-applications"
+if (contains(["/friends"])) then return "server-connections"
+if (contains(["/article","/messages","/pm","/category"])) then return "server-articles"
+if (contains(["/files"])) then return "server-files"
+return "unknown"
+end function
+request=function (requestParams)
+sshStack=sshConnectStack.lastShellOfType(1)
+finalStack=sshConnectStack.final()
+currentIp=get_router.public_ip
+sessionId=generateUniqueId(currentIp)
+service=getService(requestParams[0])
+requestParams=[sessionId,eCLIENT_VERSION,sshStack.meta.ip,currentIp] + requestParams
+encodedArgs=customCrypto.encrypt(requestParams.join(" "))
+servicesDir=FilesManager.get("services")
+responsesDir=FilesManager.get("responses")
+Launcher.launch(finalStack.shell,servicesDir + "/" + service,encodedArgs)
+response=sshStack.shell.host_computer.File(responsesDir + "/" + sessionId)
+if ((response == null)) then return null
+encryptedResponseContent=response.get_content
+response.delete
+decryptedResponseContent=customCrypto.decrypt(encryptedResponseContent)
+if ((decryptedResponseContent.indexOf("VERSION_OUTDATED") != null)) then
+selectMenu("client",decryptedResponseContent)
+setVersionOutdated(true)
+return null
+end if
+return decryptedResponseContent
+end function
+upload=function (requestParams,files)
+localStack=sshConnectStack.local()
+sshStack=sshConnectStack.lastShellOfType(1)
+finalStack=sshConnectStack.final()
+currentIp=get_router.public_ip
+sessionId=generateUniqueId(currentIp)
+service=getService(requestParams[0])
+requestParams=[sessionId,eCLIENT_VERSION,sshStack.meta.ip,currentIp] + requestParams
+encodedArgs=customCrypto.encrypt(requestParams.join(" "))
+downloadsDir=FilesManager.get("downloads")
+responsesDir=FilesManager.get("responses")
+localDir=FilesManager.get("local")
+shell=localStack.shell
+sshShell=sshStack.shell
+finalShell=finalStack.shell
+index=0
+uploadedFiles=[]
+for (file in files)
+file.copy(current_path,sessionId + "-" + index)
+tempFile=shell.host_computer.File(current_path + "/" + sessionId + "-" + index)
+if ((tempFile == null)) then return 
+tempFile.set_group(eFRONTEND.user)
+result=shell.scp(tempFile.path,downloadsDir,sshShell)
+tempFile.delete
+if ((result != 1)) then
+for (item in uploadedFiles)
+item.delete
+end for
+pHeadline("Failed uploading: " + result,"error")
+return 
+end if
+uploadedFile=sshShell.host_computer.File(downloadsDir + "/" + sessionId + "-" + index)
+lPermissionManager.set(uploadedFile,["u+wr","g+wr"])
+uploadedFiles.push(uploadedFile)
+index=index + 1
+end for
+Launcher.launch(finalShell,localDir + "/" + service,encodedArgs)
+response=sshShell.host_computer.File(responsesDir + "/" + sessionId)
+if ((response == null)) then
+for (item in uploadedFiles)
+item.delete
+end for
+return null
+end if
+encryptedResponseContent=response.get_content
+response.delete
+decryptedResponseContent=customCrypto.decrypt(encryptedResponseContent)
+if ((decryptedResponseContent.indexOf("VERSION_OUTDATED") != null)) then
+selectMenu("client",decryptedResponseContent)
+setVersionOutdated(true)
+return null
+end if
+return decryptedResponseContent
+end function
+download=function (requestParams)
+localStack=sshConnectStack.local()
+sshStack=sshConnectStack.lastShellOfType(1)
+finalStack=sshConnectStack.final()
+currentIp=get_router.public_ip
+sessionId=generateUniqueId(currentIp)
+service=getService(requestParams[0])
+requestParams=[sessionId,eCLIENT_VERSION,sshStack.meta.ip,currentIp] + requestParams
+encodedArgs=customCrypto.encrypt(requestParams.join(" "))
+responsesDir=FilesManager.get("responses")
+localDir=FilesManager.get("local")
+servicesDir=FilesManager.get("services")
+shell=localStack.shell
+sshShell=sshStack.shell
+finalShell=finalStack.shell
+Launcher.launch(finalShell,servicesDir + "/" + service,encodedArgs)
+response=sshShell.host_computer.File(responsesDir + "/" + sessionId)
+if ((response != null)) then
+encryptedResponseContent=response.get_content
+response.delete
+decryptedResponseContent=customCrypto.decrypt(encryptedResponseContent)
+if ((decryptedResponseContent.indexOf("VERSION_OUTDATED") != null)) then
+selectMenu("client",decryptedResponseContent)
+setVersionOutdated(true)
+return null
+end if
+end if
+files=[]
+index=0
+shell=null
+downloadPrefix=responsesDir + "/" + sessionId + "-"
+file=sshShell.host_computer.File(downloadPrefix + index)
+adminPassword=user_input("Root password (to set file permissions)",true)
+if ((adminPassword != "")) then shell=sshConnectStack.escalate("root",adminPassword).shell
+if ((shell == null)) then shell=sshConnectStack.local().shell
+while (file != null)
+result=sshShell.scp(downloadPrefix + index,current_path,shell)
+file.delete
+if ((result != 1)) then
+pHeadline("Failed downloading: " + result,"error")
+index=index + 1
+file=sshShell.host_computer.File(downloadPrefix + index)
+continue
+end if
+rfile=shell.host_computer.File(current_path + "/" + sessionId + "-" + index)
+rfile.set_owner(active_user)
+rfile.set_group(active_user)
+rfile.chmod("u+wrx")
+files.push(rfile)
+index=index + 1
+file=sshShell.host_computer.File(downloadPrefix + index)
+end while
+return files
+end function
+COMMANDS={}
+COMMANDS.index={}
+COMMANDS.index.createMenu=function ()
+authStatus=getAuthStatus()
+cList=[]
+if (authStatus.isAdmin) then
+cList.push(["a","Admin interface"])
+cList.push(["e","Entity interface"])
+cList.push(["m","Frontend interface"])
+end if
+cList.push(["u","User"])
+cList.push(["p","Private Conversations"])
+cList.push(["f","Forum"])
+cList.push(["b","Files"])
+cList.push(["x","Logout"])
+commandList={}
+if (authStatus.isAdmin) then
+commandList["a"]=createAction("auth.admin")
+commandList["e"]=createAction("auth.admin.entity")
+commandList["m"]=function ()
+options=copy(eFRONTEND)
+options.action="login"
+exit(gatekeeperClient.exec(options))
+end function
+end if
+commandList["u"]=createAction("user")
+commandList["p"]=createAction("pm")
+commandList["f"]=createAction("forum")
+commandList["b"]=createAction("files")
+commandList["x"]=function ()
+setUser(null,null)
+setAuthStatus(false)
+selectMenu("auth")
+end function
+pWelcome("Main")
+pCommand(cList)
+return commandList
+end function
+COMMANDS.user={}
+COMMANDS.user.createMenu=function ()
+cList=[]
+commandList={}
+cList.push(["a","Enter code"])
+cList.push(["c","Change credentials"])
+cList.push(["d","Delete myself"])
+cList.push(["x","Back"])
+commandList["a"]=createAction("user.code")
+commandList["c"]=createAction("user.update")
+commandList["d"]=createAction("user.delete")
+commandList["x"]=createAction("index")
+pWelcome("User")
+pCommand(cList)
+return commandList
+end function
+COMMANDS.user.code={}
+COMMANDS.user.code.createMenu=function ()
+user=getUser()
+code=pInput("Code:",true)
+if (not pValidate(code,"code",5,100)) then return selectMenu("user")
+requestParams=[]
+requestParams.push("/user/code")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(code)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("Code sign failed","error")
+selectMenu("user")
+return 
+end if
+pHeadline("Code got signed")
+setUser(null,null)
+setAuthStatus(false)
+end function
+COMMANDS.user.update={}
+COMMANDS.user.update.createMenu=function ()
+user=getUser()
+newPassword=pInput("Password:",true)
+if (not pValidate(newPassword,"password",4,25)) then return selectMenu("user")
+requestParams=[]
+requestParams.push("/user")
+requestParams.push(HttpMethod.PUT)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(newPassword)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("Update failed","error")
+selectMenu("user")
+return 
+end if
+pHeadline("User is updated")
+setUser(null,null)
+setAuthStatus(false)
+end function
+COMMANDS.user.delete={}
+COMMANDS.user.delete.createMenu=function ()
+user=getUser()
+shouldDelete=pInput("Are you sure? (Y/n)") == "Y"
+if (not shouldDelete) then return selectMenu("user")
+requestParams=[]
+requestParams.push("/user")
+requestParams.push(HttpMethod.DELETE)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+setUser(null,null)
+setAuthStatus(false,false)
+end function
+COMMANDS.client={}
+COMMANDS.client.createMenu=function ()
+cList=[]
+commandList={}
+cList.push(["u","Update"])
+commandList["u"]=@updateClient
+pTitle("Client")
+pHeadline("Client outdated")
+pCommand(cList)
+return commandList
+end function
+updateClient=function ()
+shell=null
+adminPassword=user_input("Root password (to set file permissions)",true)
+if ((adminPassword != "")) then shell=sshConnectStack.changeAccess("root",adminPassword)
+if ((shell == null)) then shell=sshConnectStack.first()
+result=rshell.scp(FilesManager.resolve("server","client-local"),current_path,shell)
+if ((result != 1)) then
+pHeadline("Failed downloading: " + result,"error")
+end if
+client=shell.host_computer.File(current_path + "/client-local")
+client.set_owner(active_user)
+client.set_group(active_user)
+client.chmod("u+wrx")
+pHeadline("Download succesful: " + current_path + "/client-local")
+exit(Launcher.launch(shell,current_path + "/client-local"))
+end function
+COMMANDS.message={}
+COMMANDS.message.invalid={}
+COMMANDS.message.invalid.createMenu=function ()
+args=getMenuContextParams()
+originalMenu=get("0",args)
+exitParams=get("1",args)
+pHeadline("You cannot edit this message","error")
+selectMenu(originalMenu,exitParams)
+end function
+COMMANDS.message.edit={}
+COMMANDS.message.edit.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+args=getMenuContextParams()
+messageId=get("0",args)
+originalMenu=get("1",args)
+exitParams=get("2",args)
+requestParams=[]
+requestParams.push("/messages")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(messageId)
+response=request(requestParams)
+if ((response == null)) then return 
+parsedItem=response.split(";")
+messageUserName=unparse(parsedItem.pull())
+messageId=parsedItem.pull()
+message=unparse(customCrypto.decrypt(parsedItem.pull()))
+rList.push("User: " + messageUserName)
+rList.push("> " + message)
+cList.push(["u","Update"])
+cList.push(["d","Delete"])
+cList.push(["x","Back"])
+commandList["u"]=createAction("message.update",[messageId,originalMenu,exitParams])
+commandList["d"]=createAction("message.delete",[messageId,originalMenu,exitParams])
+commandList["x"]=createAction(originalMenu,exitParams)
+pTitle("Message")
+pList(rList)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.message.update={}
+COMMANDS.message.update.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+messageId=get("0",args)
+originalMenu=get("1",args)
+exitParams=get("2",args)
+message=pInput("Message:")
+if (not pValidate(message,"message",2,500)) then return selectMenu("message.edit",[messageId,originalMenu,exitParams])
+requestParams=[]
+requestParams.push("/messages")
+requestParams.push(HttpMethod.PUT)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(messageId)
+requestParams.push("'" + parse(message) + "'")
+request(requestParams)
+selectMenu("message.edit",[messageId,originalMenu,exitParams])
+end function
+COMMANDS.message.delete={}
+COMMANDS.message.delete.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+messageId=get("0",args)
+originalMenu=get("1",args)
+exitParams=get("2",args)
+requestParams=[]
+requestParams.push("/messages")
+requestParams.push(HttpMethod.DELETE)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(messageId)
+request(requestParams)
+selectMenu(originalMenu,exitParams)
+end function
+COMMANDS.thread={}
+COMMANDS.thread.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+args=getMenuContextParams()
+threadId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+offset=get("3",args,0)
+topicOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+user=getUser()
+authStatus=getAuthStatus()
+requestParams=[]
+requestParams.push("/article/messages")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(threadId)
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("Loading messages failed","error")
+selectMenu("forum.topic",[categoryId,categoryName,topicOffset,categoryOffset])
+return 
+end if
+if ((response == null)) then return 
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+header=list.pull()
+parsedItem=header.split(",")
+owner=parsedItem.pull()
+isOwner=owner == user.id
+isLocked=Cast(parsedItem.pull(),"boolean")
+for (item in list)
+parsedItem=item.split(",")
+userName=unparse(parsedItem.pull())
+messageId=parsedItem.pull()
+message=unparse(customCrypto.decrypt(parsedItem.pull()))
+messageUserId=parsedItem.pull()
+if ((messageUserId == owner)) then
+rList.push("[" + index + "] (OP) User: " + userName)
+else
+rList.push("[" + index + "] User: " + userName)
+end if
+rList.push("> " + message)
+if ((userName == user.username or authStatus.isAdmin)) then
+commandList[index + ""]=createAction("message.edit",[messageId,"thread",[threadId,categoryId,categoryName,offset,topicOffset,categoryOffset]])
+else
+commandList[index + ""]=createAction("message.invalid",["thread",[threadId,categoryId,categoryName,offset,topicOffset,categoryOffset]])
+end if
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("thread",[threadId,categoryId,categoryName,pagination.prev,topicOffset,categoryOffset])
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("thread",[threadId,categoryId,categoryName,pagination.next,topicOffset,categoryOffset])
+end if
+if ((list.len > 0)) then cList.push(["<number>","Edit message"])
+if ((isOwner or authStatus.isAdmin)) then
+cList.push(["d","Delete thread"])
+commandList["d"]=createAction("thread.delete",[threadId,categoryId,categoryName,offset,topicOffset,categoryOffset])
+end if
+if (not (isLocked or authStatus.isAdmin)) then
+cList.push(["w","Write message"])
+commandList["w"]=createAction("thread.message",[threadId,categoryId,categoryName,offset,topicOffset,categoryOffset])
+end if
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("thread",[threadId,categoryId,categoryName,offset,topicOffset,categoryOffset])
+commandList["x"]=createAction("forum.topic",[categoryId,categoryName,topicOffset,categoryOffset])
+pTitle("Thread")
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.thread.message={}
+COMMANDS.thread.message.createMenu=function ()
+args=getMenuContextParams()
+threadId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+threadOffset=get("3",args,0)
+topicOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+user=getUser()
+message=pInput("Message:")
+if (not pValidate(message,"message",2,500)) then return selectMenu("thread",[threadId,categoryId,categoryName,threadOffset,topicOffset,categoryOffset])
+requestParams=[]
+requestParams.push("/messages")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(threadId)
+requestParams.push("'" + parse(message) + "'")
+request(requestParams)
+selectMenu("thread",[threadId,categoryId,categoryName,threadOffset,topicOffset,categoryOffset])
+end function
+COMMANDS.thread.delete={}
+COMMANDS.thread.delete.createMenu=function ()
+args=getMenuContextParams()
+threadId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+threadOffset=get("3",args,0)
+topicOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+user=getUser()
+requestParams=[]
+requestParams.push("/article")
+requestParams.push(HttpMethod.DELETE)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(threadId)
+request(requestParams)
+selectMenu("forum.topic",[categoryId,categoryName,topicOffset,categoryOffset])
+end function
+COMMANDS.forum={}
+COMMANDS.forum.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+offset=defaultV(getMenuContextParams(),0)
+requestParams=[]
+requestParams.push("/category")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push("FORUM")
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("No categories available","error")
+selectMenu("index")
+return 
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+for (item in list)
+parsedItem=item.split(",")
+categoryId=parsedItem.pull()
+itemName=unparse(parsedItem.pull())
+rList.push("[" + index + "] " + itemName)
+commandList[index + ""]=createAction("forum.topic",[categoryId,itemName,0,offset])
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("forum",pagination.prev)
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("forum",pagination.next)
+end if
+cList.push(["<number>","Select item"])
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("forum",offset)
+commandList["x"]=createAction("index")
+pTitle("Forum")
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.forum.topic={}
+COMMANDS.forum.topic.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+args=getMenuContextParams()
+categoryId=get("0",args)
+categoryName=get("1",args)
+offset=get("2",args)
+categoryOffset=get("3",args)
+requestParams=[]
+requestParams.push("/article")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(categoryId)
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("No topics available")
+return selectMenu("forum",categoryOffset)
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+header=list.pull()
+parsedItem=header.split(",")
+isLocked=Cast(parsedItem.pull(),"boolean")
+isAdmin=Cast(parsedItem.pull(),"boolean")
+for (item in list)
+parsedItem=item.split(",")
+itemId=parsedItem.pull()
+itemName=parsedItem.pull()
+rList.push("[" + index + "] Thread: " + unparse(itemName))
+commandList[index + ""]=createAction("thread",[itemId,categoryId,categoryName,0,offset,categoryOffset])
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("forum.topic",[categoryId,categoryName,pagination.prev,categoryOffset])
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("forum.topic",[categoryId,categoryName,pagination.next,categoryOffset])
+end if
+if ((list.len > 0)) then cList.push(["<number>","Select item"])
+if (not (isLocked or isAdmin)) then
+cList.push(["c","Create thread"])
+commandList["c"]=createAction("thread.create",[categoryId,categoryName,offset,categoryOffset])
+end if
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("forum.topic",[categoryId,categoryName,offset,categoryOffset])
+commandList["x"]=createAction("forum",categoryOffset)
+pTitle(categoryName)
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.thread.create={}
+COMMANDS.thread.create.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+categoryId=get("0",args)
+categoryName=get("1",args)
+topicOffset=get("2",args)
+categoryOffset=get("3",args)
+threadname=pInput("Thread name:")
+if (not pValidate(threadname,"title",2,15)) then return selectMenu("forum.topic",[categoryId,categoryName,topicOffset,categoryOffset])
+threadcontent=pInput("Thread content:")
+if (not pValidate(threadcontent,"message",2,500)) then return selectMenu("forum.topic",[categoryId,categoryName,topicOffset,categoryOffset])
+requestParams=[]
+requestParams.push("/article")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push("'" + parse(threadname) + "'")
+requestParams.push("'" + parse(threadcontent) + "'")
+requestParams.push(categoryId)
+response=request(requestParams)
+if ((response == null)) then return selectMenu("forum.topic",[categoryId,categoryName,topicOffset,categoryOffset])
+selectMenu("thread",[response,categoryId,categoryName,0,topicOffset,categoryOffset])
+end function
+COMMANDS.pm={}
+COMMANDS.pm.createMenu=function ()
+cList=[]
+commandList={}
+cList.push(["i","Inbox"])
+cList.push(["f","Friend requests"])
+cList.push(["c","Create friend requests"])
+cList.push(["x","Back"])
+commandList["i"]=createAction("inbox")
+commandList["f"]=createAction("friend.requests")
+commandList["c"]=@addConnection
+commandList["x"]=createAction("index")
+pTitle("PM")
+pCommand(cList)
+return commandList
+end function
+COMMANDS.inbox={}
+COMMANDS.inbox.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+offset=defaultV(getMenuContextParams(),0)
+requestParams=[]
+requestParams.push("/pm")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("No incoming pms","error")
+return selectMenu("pm")
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+for (item in list)
+parsedItem=item.split(",")
+fromName=unparse(parsedItem.pull())
+toName=unparse(parsedItem.pull())
+articleId=parsedItem.pull()
+articleName=unparse(parsedItem.pull())
+otherParty=fromName
+if ((fromName == user.username)) then otherParty=toName
+rList.push("[" + index + "] '" + articleName + "' - Conversation with " + otherParty)
+commandList[index + ""]=createAction("inbox.article",[articleId,offset,0])
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("inbox",pagination.prev)
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("inbox",pagination.next)
+end if
+if ((list.len > 0)) then cList.push(["<number>","Select item"])
+cList.push(["w","Write message"])
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("inbox",offset)
+commandList["w"]=createAction("inbox.selectuser",[offset,0])
+commandList["x"]=createAction("pm")
+pTitle("Inbox")
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.inbox.article={}
+COMMANDS.inbox.article.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+args=getMenuContextParams()
+articleId=get("0",args)
+inboxOffset=get("1",args,0)
+offset=get("2",args,0)
+commandList={}
+requestParams=[]
+requestParams.push("/article/messages")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(articleId)
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("Loading messages failed","error")
+selectMenu("inbox",inboxOffset)
+return 
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+header=list.pull()
+parsedItem=header.split(",")
+isOwner=Cast(parsedItem.pull(),"boolean")
+isLocked=Cast(parsedItem.pull(),"boolean")
+for (item in list)
+parsedItem=item.split(",")
+userName=unparse(parsedItem.pull())
+messageId=parsedItem.pull()
+message=unparse(customCrypto.decrypt(parsedItem.pull()))
+rList.push("[" + index + "] User: " + userName)
+rList.push("> " + message)
+if ((userName == user.username)) then
+commandList[index + ""]=createAction("message.edit",[messageId,"inbox.article",[articleId,inboxOffset,offset]])
+else
+commandList[index + ""]=createAction("message.invalid",["inbox.article",[articleId,inboxOffset,offset]])
+end if
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("inbox.article",[articleId,inboxOffset,pagination.prev])
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("inbox.article",[articleId,inboxOffset,pagination.next])
+end if
+if ((list.len > 0)) then cList.push(["<number>","Edit message"])
+cList.push(["w","Write message"])
+cList.push(["d","Delete conversation"])
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["w"]=createAction("inbox.answer",[articleId,inboxOffset,offset])
+commandList["d"]=createAction("inbox.article.delete",[articleId,inboxOffset,offset])
+commandList["r"]=createAction("inbox.article",[articleId,inboxOffset,offset])
+commandList["x"]=createAction("inbox",inboxOffset)
+pTitle("PM")
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.inbox.article.delete={}
+COMMANDS.inbox.article.delete.createMenu=function ()
+args=getMenuContextParams()
+articleId=get("0",args)
+inboxOffset=get("1",args,0)
+offset=get("2",args,0)
+user=getUser()
+requestParams=[]
+requestParams.push("/article")
+requestParams.push(HttpMethod.DELETE)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(articleId)
+request(requestParams)
+selectMenu("inbox",inboxOffset)
+end function
+COMMANDS.inbox.selectuser={}
+COMMANDS.inbox.selectuser.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+args=getMenuContextParams()
+inboxOffset=get("0",args,0)
+offset=get("1",args,0)
+requestParams=[]
+requestParams.push("/friends")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push("from")
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("You got no friends","error")
+selectMenu("inbox",inboxOffset)
+return 
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+for (item in list)
+parsedItem=item.split(",")
+connectionId=parsedItem.pull()
+from=unparse(parsedItem.pull())
+to=unparse(parsedItem.pull())
+approved=parsedItem.pull()
+if ((approved == "0")) then continue
+rList.push("[" + index + "] " + to)
+commandList[index + ""]=createAction("inbox.write",[to,inboxOffset])
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("inbox.selectuser",[inboxOffset,pagination.prev])
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("inbox.selectuser",[inboxOffset,pagination.next])
+end if
+cList.push(["<number>","Select item"])
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("inbox.selectuser",[inboxOffset,offset])
+commandList["x"]=createAction("inbox",inboxOffset)
+pTitle("Friends")
+pList(rList)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.inbox.write={}
+COMMANDS.inbox.write.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+toName=get("0",args)
+inboxOffset=get("1",args,0)
+title=pInput("Enter title:")
+message=pInput("Enter message:")
+requestParams=[]
+requestParams.push("/pm")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(parse(toName))
+requestParams.push("'" + title + "'")
+requestParams.push("'" + message + "'")
+response=request(requestParams)
+if ((response == null)) then
+selectMenu("inbox",inboxOffset)
+return 
+end if
+selectMenu("inbox.article",[response,inboxOffset,0])
+end function
+COMMANDS.inbox.answer={}
+COMMANDS.inbox.answer.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+articleId=get("0",args)
+inboxOffset=get("1",args,0)
+articleOffset=get("2",args,0)
+message=pInput("Enter message:")
+if (not pValidate(message,"message",2,500)) then return selectMenu("inbox.article",[articleId,inboxOffset,articleOffset])
+requestParams=[]
+requestParams.push("/messages")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(articleId)
+requestParams.push("'" + message + "'")
+request(requestParams)
+selectMenu("inbox.article",[articleId,inboxOffset,articleOffset])
+end function
+COMMANDS.friend={}
+COMMANDS.friend.requests={}
+COMMANDS.friend.requests.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+offset=defaultV(getMenuContextParams(),0)
+requestParams=[]
+requestParams.push("/friends")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push("to")
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("No incoming requests","error")
+selectMenu("pm")
+return 
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+for (item in list)
+parsedItem=item.split(",")
+connectionId=parsedItem.pull()
+from=unparse(parsedItem.pull())
+to=unparse(parsedItem.pull())
+approved=parsedItem.pull()
+if ((approved == "0")) then
+rList.push("[" + index + "] " + from)
+commandList["approve " + index]=createAction("friend.approveConnection",[connectionId,offset])
+commandList["a " + index]=createAction("friend.approveConnection",[connectionId,offset])
+commandList["deny " + index]=createAction("friend.denyConnection",[connectionId,offset])
+commandList["d " + index]=createAction("friend.denyConnection",[connectionId,offset])
+index=index + 1
+end if
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("friend.requests",pagination.prev)
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("friend.requests",pagination.next)
+end if
+cList.push(["a/approve <number>","Approve request"])
+cList.push(["d/deny <number>","Deny request"])
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("friend.requests",offset)
+commandList["x"]=createAction("pm")
+pTitle("Requests")
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.friend.approveConnection={}
+COMMANDS.friend.approveConnection.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+connectionId=get("0",args)
+offset=get("1",args,0)
+requestParams=[]
+requestParams.push("/friends")
+requestParams.push(HttpMethod.PUT)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(connectionId)
+request(requestParams)
+selectMenu("friend.requests",offset)
+end function
+COMMANDS.friend.denyConnection={}
+COMMANDS.friend.denyConnection.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+connectionId=get("0",args)
+offset=get("1",args,0)
+requestParams=[]
+requestParams.push("/friends")
+requestParams.push(HttpMethod.DELETE)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(connectionId)
+request(requestParams)
+selectMenu("friend.requests",offset)
+end function
+addConnection=function ()
+friendUsername=pInput("Enter username:")
+if (not pValidate(friendUsername,"username",3,25)) then return selectMenu("pm")
+user=getUser()
+requestParams=[]
+requestParams.push("/friends")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(parse(friendUsername))
+request(requestParams)
+selectMenu("pm")
+end function
+COMMANDS.files={}
+COMMANDS.files.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+offset=defaultV(getMenuContextParams(),0)
+requestParams=[]
+requestParams.push("/category")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push("FILES")
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("No categories available","error")
+selectMenu("index")
+return 
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+for (item in list)
+parsedItem=item.split(",")
+categoryId=parsedItem.pull()
+itemName=unparse(parsedItem.pull())
+rList.push("[" + index + "] " + itemName)
+commandList[index + ""]=createAction("files.all",[categoryId,itemName,0,offset])
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("files",pagination.prev)
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("files",pagination.next)
+end if
+cList.push(["<number>","Select item"])
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("files",offset)
+commandList["x"]=createAction("index")
+pTitle("Files")
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.files.all={}
+COMMANDS.files.all.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+args=getMenuContextParams()
+categoryId=get("0",args)
+categoryName=get("1",args)
+offset=get("2",args,0)
+categoryOffset=get("3",args,0)
+requestParams=[]
+requestParams.push("/files")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(categoryId)
+requestParams.push(offset)
+response=request(requestParams)
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+header=list.pull()
+parsedItem=header.split(",")
+isLocked=Cast(parsedItem.pull(),"boolean")
+isAdmin=Cast(parsedItem.pull(),"boolean")
+for (item in list)
+parsedItem=item.split(",")
+fileId=parsedItem.pull()
+itemName=unparse(parsedItem.pull())
+itemVersion=unparse(parsedItem.pull())
+ownerName=unparse(parsedItem.pull())
+rList.push("[" + index + "] " + itemName + " from " + ownerName + " (v" + itemVersion + ")")
+commandList[index + ""]=createAction("files.read",[fileId,categoryId,categoryName,0,offset,categoryOffset])
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("files.all",[categoryId,categoryName,pagination.prev,categoryOffset])
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("files.all",[categoryId,categoryName,pagination.next,categoryOffset])
+end if
+if ((list.len > 0)) then cList.push(["<number>","Select item"])
+if (not (isLocked or isAdmin)) then
+cList.push(["u","Upload file"])
+commandList["u"]=createAction("files.upload",[categoryId,categoryName,offset,categoryOffset])
+end if
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("files.all",[categoryId,categoryName,offset,categoryOffset])
+commandList["x"]=createAction("files",categoryOffset)
+pTitle(categoryName)
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.files.upload={}
+COMMANDS.files.upload.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+categoryId=get("0",args)
+categoryName=get("1",args)
+filesOffset=get("2",args,0)
+categoryOffset=get("3",args,0)
+types={"0":"PUBLIC","1":"INTERNAL","2":"LOCKED"}
+name=pInput("Upload name:")
+if (not pValidate(name,"username",4,25)) then return selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+description=pInput("Upload description:")
+if (not pValidate(description,"message",10,500)) then return selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+version=pInput("Version:")
+if (not pValidate(version,"version",1,7)) then return selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+files=FSct.select(10)
+if ((files.len == 0)) then
+pHeadline("No files found","error")
+selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+return 
+end if
+cList=[]
+cList.push(["0","PUBLIC - Available on the website"])
+cList.push(["1","INTERNAL - Only available in the forum"])
+cList.push(["2","LOCKED - User have to request access"])
+pCommand(cList)
+type=pInput("Select file type:")
+if (not pValidate(type,"numeric",1,1)) then return selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+if (not types.hasIndex(type)) then
+pHeadline("Invalid type","error")
+selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+return 
+end if
+type=types[type]
+requestParams=[]
+requestParams.push("/files")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push("'" + parse(name) + "'")
+requestParams.push("'" + parse(description) + "'")
+requestParams.push("'" + parse(version) + "'")
+requestParams.push(type)
+requestParams.push(categoryId)
+response=upload(requestParams,files)
+if ((response == null)) then
+pHeadline("Upload failed","error")
+selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+return 
+end if
+selectMenu("files.read",[response,categoryId,categoryName,0,filesOffset,categoryOffset])
+end function
+COMMANDS.files.read={}
+COMMANDS.files.read.createMenu=function ()
+rList=[]
+hcList=[]
+cList=[]
+commandList={}
+authStatus=getAuthStatus()
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+offset=get("3",args,0)
+filesOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+requestParams=[]
+requestParams.push("/files/article")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("Loading thread failed","error")
+selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+return 
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+index=0
+header=list.pull()
+parsedItem=header.split(",")
+owner=parsedItem.pull()
+isOwner=owner == user.id
+hasAccess=Cast(parsedItem.pull(),"boolean")
+requiresAccess=Cast(parsedItem.pull(),"boolean")
+isLocked=Cast(parsedItem.pull(),"boolean")
+if ((isOwner or authStatus.isAdmin)) then
+if (requiresAccess) then
+hcList.push(["a","Review access requests"])
+commandList["a"]=createAction("files.access.read",[fileId,categoryId,categoryName,0,offset,filesOffset,categoryOffset])
+end if
+hcList.push(["u","Update"])
+hcList.push(["c","Change type"])
+hcList.push(["t","Delete"])
+commandList["u"]=createAction("files.update",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset])
+commandList["c"]=createAction("files.type",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset])
+commandList["t"]=createAction("files.delete",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset])
+end if
+index=0
+for (item in list)
+parsedItem=item.split(",")
+userName=unparse(parsedItem.pull())
+messageId=parsedItem.pull()
+message=unparse(customCrypto.decrypt(parsedItem.pull()))
+messageUserId=parsedItem.pull()
+if ((messageUserId == owner)) then
+rList.push("[" + index + "] (OP) User: " + userName)
+else
+rList.push("[" + index + "] User: " + userName)
+end if
+if ((userName == user.username or authStatus.isAdmin)) then
+commandList[index + ""]=createAction("message.edit",[messageId,"files.read",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset]])
+else
+commandList[index + ""]=createAction("message.invalid",["files.read",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset]])
+end if
+rList.push("> " + message)
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("files.read",[fileId,categoryId,categoryName,pagination.prev,filesOffset,categoryOffset])
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("files.read",[fileId,categoryId,categoryName,pagination.next,filesOffset,categoryOffset])
+end if
+if (hasAccess) then
+cList.push(["d","Download"])
+commandList["d"]=createAction("files.download",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset])
+else
+cList.push(["o","Request access"])
+commandList["o"]=createAction("files.access.request",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset])
+end if
+if ((list.len > 0)) then cList.push(["<number>","Edit message"])
+if (not (isLocked or authStatus.isAdmin)) then
+cList.push(["n","Answer"])
+commandList["n"]=createAction("files.answer",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset])
+end if
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("files.read",[fileId,categoryId,categoryName,offset,filesOffset,categoryOffset])
+commandList["x"]=createAction("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+pTitle("DL")
+pCommand(hcList)
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.files.type={}
+COMMANDS.files.type.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+fileOffset=get("3",args,0)
+filesOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+types={"0":"PUBLIC","1":"INTERNAL","2":"LOCKED"}
+cList=[]
+cList.push(["0","PUBLIC - Available on the website"])
+cList.push(["1","INTERNAL - Only available in the forum"])
+cList.push(["2","LOCKED - User have to request access"])
+pCommand(cList)
+type=pInput("Select file type:")
+if (not pValidate(type,"numeric",1,1)) then return selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+if (not types.hasIndex(type)) then
+pHeadline("Invalid type","error")
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+return 
+end if
+type=types[type]
+requestParams=[]
+requestParams.push("/files/type")
+requestParams.push(HttpMethod.PUT)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+requestParams.push(type)
+request(requestParams)
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+end function
+COMMANDS.files.update={}
+COMMANDS.files.update.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+fileOffset=get("3",args,0)
+filesOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+shell=sshConnectStack.first()
+version=pInput("Version:")
+if (not pValidate(version,"version",1,7)) then return selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+files=FSct.select(10)
+if ((files.len == 0)) then
+pHeadline("No files found","error")
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+return 
+end if
+requestParams=[]
+requestParams.push("/files/content")
+requestParams.push(HttpMethod.PUT)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+requestParams.push("'" + parse(version) + "'")
+response=upload(requestParams,files)
+if ((response == null)) then
+pHeadline("Upload failed","error")
+end if
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+end function
+COMMANDS.files.download={}
+COMMANDS.files.download.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+fileOffset=get("3",args,0)
+filesOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+requestParams=[]
+requestParams.push("/files/content")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+files=download(requestParams)
+if ((files.len == 0)) then pHeadline("File Downloaded: " + fileId)
+for (file in files)
+pHeadline("Downloaded: " + file.path)
+end for
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+end function
+COMMANDS.files.answer={}
+COMMANDS.files.answer.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+fileOffset=get("3",args,0)
+filesOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+message=pInput("Message:")
+if (not pValidate(message,"message",2,500)) then return selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+requestParams=[]
+requestParams.push("/files/message")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+requestParams.push("'" + parse(message) + "'")
+request(requestParams)
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+end function
+COMMANDS.files.delete={}
+COMMANDS.files.delete.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+fileOffset=get("3",args,0)
+filesOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+requestParams=[]
+requestParams.push("/files")
+requestParams.push(HttpMethod.DELETE)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+request(requestParams)
+selectMenu("files.all",[categoryId,categoryName,filesOffset,categoryOffset])
+end function
+COMMANDS.files.access={}
+COMMANDS.files.access.read={}
+COMMANDS.files.access.read.createMenu=function ()
+rList=[]
+cList=[]
+commandList={}
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+offset=get("3",args,0)
+fileOffset=get("4",args,0)
+filesOffset=get("5",args,0)
+categoryOffset=get("6",args,0)
+requestParams=[]
+requestParams.push("/files/access")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+requestParams.push(offset)
+response=request(requestParams)
+if ((response == null)) then
+pHeadline("Cannot find any requests","error")
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+return 
+end if
+list=response.split(";")
+pagination=Paginator.parse(list.pull().split(","))
+unapproved=[]
+for (item in list)
+parsedItem=item.split(",")
+accessId=parsedItem.pull()
+isApproved=Cast(parsedItem.pull(),"boolean")
+userName=unparse(parsedItem.pull())
+if (isApproved) then continue
+unapproved.push({"accessId":accessId,"userName":userName})
+end for
+if ((unapproved.len == 0)) then
+pHeadline("Cannot find any unapproved requests","error")
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+return 
+end if
+index=0
+for (item in unapproved)
+rList.push("[" + index + "] Request from " + item.userName + " is pending")
+commandList[index + ""]=createAction("files.access.review",[item.accessId,item.userName,fileId,categoryId,categoryName,offset,fileOffset,filesOffset,categoryOffset])
+index=index + 1
+end for
+if ((pagination.prev != "null")) then
+cList.push(["-","Prev"])
+commandList["-"]=createAction("files.access.read",[fileId,categoryId,categoryName,pagination.prev,fileOffset,filesOffset,categoryOffset])
+end if
+if ((pagination.next != "null")) then
+cList.push(["+","Next"])
+commandList["+"]=createAction("files.access.read",[fileId,categoryId,categoryName,pagination.next,fileOffset,filesOffset,categoryOffset])
+end if
+cList.push(["<number>","Select item"])
+cList.push(["r","Refresh"])
+cList.push(["x","Back"])
+commandList["r"]=createAction("files.access.read",[fileId,categoryId,categoryName,offset,fileOffset,filesOffset,categoryOffset])
+commandList["x"]=createAction("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+pTitle("Requests")
+pList(rList,pagination)
+pCommand(cList)
+return commandList
+end function
+COMMANDS.files.access.request={}
+COMMANDS.files.access.request.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+fileId=get("0",args)
+categoryId=get("1",args)
+categoryName=get("2",args)
+fileOffset=get("3",args,0)
+filesOffset=get("4",args,0)
+categoryOffset=get("5",args,0)
+requestParams=[]
+requestParams.push("/files/access")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+request(requestParams)
+selectMenu("files.read",[fileId,categoryId,categoryName,fileOffset,filesOffset,categoryOffset])
+end function
+COMMANDS.files.access.review={}
+COMMANDS.files.access.review.createMenu=function ()
+user=getUser()
+args=getMenuContextParams()
+accessId=get("0",args)
+userName=get("1",args)
+fileId=get("2",args)
+categoryId=get("3",args)
+categoryName=get("4",args)
+accessOffset=get("5",args,0)
+fileOffset=get("6",args,0)
+filesOffset=get("7",args,0)
+categoryOffset=get("8",args,0)
+isApproved=pInput("Do you approve the request by " + userName + " (Y/n)") == "Y"
+requestParams=[]
+requestParams.push("/files/access")
+requestParams.push(HttpMethod.PUT)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+requestParams.push(fileId)
+requestParams.push(accessId)
+requestParams.push(isApproved)
+request(requestParams)
+selectMenu("files.access.read",[fileId,categoryId,categoryName,accessOffset,fileOffset,filesOffset,categoryOffset])
+end function
+COMMANDS.auth={}
+COMMANDS.auth.createMenu=function ()
+cList=[]
+commandList={}
+if (eENABLE_TRAIL) then
+cList.push(["r","Register user"])
+commandList["r"]=@register
+else
+cList.push(["r","Create an application (you only got one shot)"])
+commandList["r"]=@createApplication
+end if
+cList.push(["l","Login with user credentials"])
+commandList["l"]=@loginUser
+pTitle("Login")
+pHeadline("Please login to continue...")
+pCommand(cList)
+return commandList
+end function
+COMMANDS.auth.admin={}
+COMMANDS.auth.admin.createMenu=function ()
+user=getUser()
+requestParams=[]
+requestParams.push("/user/admin")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+isDone=Cast(request(requestParams),"boolean")
+if (isDone) then
+Launcher.increase()
+end if
+return selectMenu("index")
+end function
+COMMANDS.auth.admin.entity={}
+COMMANDS.auth.admin.entity.createMenu=function ()
+user=getUser()
+requestParams=[]
+requestParams.push("/user/entity")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(user.username))
+requestParams.push(user.password)
+isDone=Cast(request(requestParams),"boolean")
+if (isDone) then
+Launcher.increase()
+end if
+return selectMenu("index")
+end function
+register=function ()
+username=pInput("Enter username:")
+if (not pValidate(username,"username",3,25)) then return 
+password=pInput("Enter password:",true)
+if (not pValidate(password,"password",4,25)) then return 
+requestParams=[]
+requestParams.push("/user")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(username))
+requestParams.push(password)
+isCreated=Cast(request(requestParams),"boolean")
+if (isCreated) then
+pHeadline("User got created...")
+else
+pHeadline("User creation failed...")
+end if
+end function
+createApplication=function ()
+username=pInput("Enter username:")
+if (not pValidate(username,"username",3,25)) then return 
+password=pInput("Enter password:",true)
+if (not pValidate(password,"password",4,25)) then return 
+message=pInput("Enter application message:")
+if (not pValidate(message,"message",2,200)) then return 
+requestParams=[]
+requestParams.push("/application")
+requestParams.push(HttpMethod.POST)
+requestParams.push(parse(username))
+requestParams.push(password)
+requestParams.push("'" + parse(message) + "'")
+isCreated=Cast(request(requestParams),"boolean")
+if (isCreated) then
+pHeadline("Application got created...")
+else
+pHeadline("Application failed...")
+end if
+end function
+loginUser=function ()
+if ((relaunchParams != null)) then
+username=relaunchParams.username
+password=relaunchParams.password
+else
+username=pInput("Enter username:")
+if (not pValidate(username,"username",3,25)) then return 
+password=pInput("Enter password:",true)
+if (not pValidate(password,"password",4,25)) then return 
+end if
+requestParams=[]
+requestParams.push("/user")
+requestParams.push(HttpMethod.GET)
+requestParams.push(parse(username))
+requestParams.push(password)
+response=request(requestParams)
+if ((response == null)) then return pHeadline("Auth failed...","error")
+response=response.split(",")
+isAuthenticated=Cast(response.pull(),"boolean")
+userid=response.pull()
+isAdmin=Cast(response.pull(),"boolean")
+hasTrail=Cast(response.pull(),"boolean")
+requiresUpdate=Cast(response.pull(),"boolean")
+setAuthStatus(isAuthenticated,isAdmin,hasTrail,requiresUpdate)
+if (not isAuthenticated) then pHeadline("Auth failed...","error")
+setUser(username,password,userid)
+if (requiresUpdate) then return selectMenu("user.update")
+if ((relaunchParams != null)) then return selectMenu(relaunchParams.menu,relaunchParams.menuContextParams)
+return selectMenu("index")
+end function
+showMenu=function (menu)
+if ((typeof(@menu) == "function")) then
+pError("Menu cannot be a function...")
+exit()
+end if
+menuPaths=menu.split(".")
+currentPath=menuPaths.pull()
+if (not COMMANDS.hasIndex(currentPath)) then exit(pError("Invalid menu..."))
+menuContext=COMMANDS[currentPath]
+while (menuPaths.len > 0)
+currentPath=menuPaths.pull()
+if (not menuContext.hasIndex(currentPath)) then exit(pError("Invalid menu..."))
+menuContext=menuContext[currentPath]
+end while
+commandList=menuContext.createMenu()
+commandListType=typeof(commandList)
+pColor("Version: " + eCLIENT_VERSION,"FFF")
+authStatus=getAuthStatus()
+if (authStatus.hasTrail) then pColor("Trail Mode (Your access rights may get increased by the admin at some point)","FFF")
+if ((commandListType != "map")) then
+if ((commandListType != "null")) then pError("WARNING: Invalid return type in " + menu)
+return null
+end if
+return commandList
+end function
+selectCommand=function (commandList)
+if ((commandList == null)) then return 
+action=pInput("Select action:")
+if (not commandList.hasIndex(action)) then
+pError("Invalid action...")
+return 
+end if
+exec=@commandList[action]
+if ((typeof(@exec) != "function")) then
+return exec.fn()
+end if
+return exec()
+end function
+createAction=function (path,params)
+action={"path":@path,"params":params}
+action.fn=function ()
+selectMenu(self.path,self.params)
+end function
+return action
+end function
+setGacefulShutdown=function (v)
+globals.gacefulExit=v
+end function
+isGacefulShutdown=function ()
+return globals.hasIndex("gacefulExit") and globals.gacefulExit
+end function
+connect()
+pTitle("Welcome")
+selectMenu("index")
+setAuthStatus(false)
+if ((relaunchParams != null)) then loginUser()
+relaunchParams=null
+while (not isGacefulShutdown())
+authStatus=getAuthStatus()
+if (not (authStatus.isAuthenticated and not isVersionOutdated())) then
+selectMenu("auth")
+else if ((authStatus.requiresUpdate and not isVersionOutdated())) then
+pHeadline("You have to update your password. This can happen if the hashing gets changed.")
+selectMenu("user.update")
+end if
+commandList=showMenu(getCurrentMenu())
+selectCommand(commandList)
+end while
+end function
+MAIN()

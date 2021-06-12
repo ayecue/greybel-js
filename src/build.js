@@ -68,6 +68,11 @@ Builder.prototype.compile = function(options) {
 	fs.writeFileSync(me.output, code, {
 		encoding: 'utf-8'
 	});
+
+	logger.info('Created ast file:', me.output + '.json');
+	fs.writeFileSync(me.output + '.json', JSON.stringify(chunk, null, 4), {
+		encoding: 'utf-8'
+	});
 };
 
 module.exports = function(filepath, output, options) {

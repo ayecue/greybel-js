@@ -59,6 +59,9 @@ const SCAN_MAP = {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('/=');
 		return me.scanPunctuator('/');
+	},
+	[CHAR_CODES.COLON]: function() {
+		return this.scanSliceOperator();
 	}
 };
 
@@ -80,7 +83,6 @@ const FALL_THROUGH = [
 	CHAR_CODES.PARENTHESIS_RIGHT,
 	CHAR_CODES.SEMICOLON,
 	CHAR_CODES.AT_SIGN,
-	CHAR_CODES.COLON,
 	CHAR_CODES.AMPERSAND,
 	CHAR_CODES.VERTICAL_LINE
 ];
@@ -215,6 +217,20 @@ Lexer.prototype.scanPunctuator = function(value) {
 		lineStart: me.lineStart,
 		range: [me.tokenStart, me.index]
     };
+};
+
+Lexer.prototype.scanSliceOperator = function() {
+	const me = this;
+
+	me.index++;
+
+	return {
+		type: TOKENS.SliceOperator,
+		value: ':',
+		line: me.line,
+		lineStart: me.lineStart,
+		range: [me.tokenStart, me.index]
+	};
 };
 
 Lexer.prototype.skipWhiteSpace = function() {

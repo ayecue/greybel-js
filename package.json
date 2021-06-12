@@ -27,7 +27,8 @@
         "node-color-log": "^5.3.0",
         "sequelize": "^6.6.2",
         "sqlite3": "^5.0.2",
-        "string-argv": "^0.3.1"
+        "string-argv": "^0.3.1",
+        "uuid": "^8.3.2"
     },
     "bugs": {
         "url": "https://github.com/ayecue/greybel-js/issues"

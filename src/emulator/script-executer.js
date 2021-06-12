@@ -1,4 +1,5 @@
-const build = require('./compiler/build');
+//const build = require('./compiler/build');
+const interpreter = require('./compiler/interpreter');
 const md5 = require('../utils/md5');
 const fs = require('fs');
 const path = require('path');
@@ -8,12 +9,12 @@ const chalk = require('chalk');
 module.exports = async function(options) {
 	const context = {};
 	const content = options.content || (await options.file.load()).getContent();
-	const code = build(content);
-	const tempFileName = `test-${md5(code)}.js`;
-	const tempFilepath = path.resolve(process.cwd(), tempFileName);
+	//const code = build(content);
+	//const tempFileName = `test-${md5(code)}.js`;
+	//const tempFilepath = path.resolve(process.cwd(), tempFileName);
 
 	try {
-		fs.writeFileSync(tempFilepath, code);
+		/*fs.writeFileSync(tempFilepath, code);
 		console.log(chalk.yellow('Executing ' + tempFilepath));
 		console.log(chalk.yellow('Args ' + options.params.join(', ')));
 		const execute = require(tempFilepath);
@@ -27,12 +28,14 @@ module.exports = async function(options) {
 			context
 		];
 
-		await execute(...args);
+		await execute(...args);*/
+
+		interpreter(content);
 	} catch (err) {
 		if (!(err instanceof ExitError)) console.error(err);
 	}
 
-	setTimeout(function() {
+	/*setTimeout(function() {
 		if (fs.existsSync(tempFilepath)) fs.unlinkSync(tempFilepath);
-	}, 20000);
+	}, 20000);*/
 };

@@ -83,19 +83,6 @@ const mapper = function(make, stack, depth, context) {
 
 			return 'while (' + condition + ')\n' + body.join('\n') + '\nend while';
 		},
-		'BinaryExpression': function(item) {
-			const left = make(item.left);
-			const right = make(item.right);
-			let leftWrapper = '';
-			let rightWrapper = '';
-
-			if (item.isWrapped) {
-				leftWrapper = '(';
-				rightWrapper = ')';
-			}
-
-			return leftWrapper + [left, item.operator, right].join(' ') + rightWrapper;
-		},
 		'CallExpression': function(item) {
 			const base = make(item.base);
 			const args = [];
@@ -110,6 +97,12 @@ const mapper = function(make, stack, depth, context) {
 		'StringLiteral': function(item) {
 			return item.raw;
 		},
+		'SliceExpression': function(item) {
+			const left = make(item.left);
+			const right = make(item.right);
+
+			return [left, right].join(':');
+		},
 		'IndexExpression': function(item) {
 			const base = make(item.base);
 			const index = make(item.index);
@@ -120,9 +113,13 @@ const mapper = function(make, stack, depth, context) {
 			const arg = make(item.argument);
 
 			if ('new' === item.operator) return '(' + item.operator + ' ' + arg + ')';
-			if ('not' === item.operator) return item.operator + ' ' + arg;
 
 			return item.operator + arg;
+		},
+		'NegationExpression': function(item) {
+			const arg = make(item.argument);
+
+			return 'not ' + arg;
 		},
 		'FeatureEnvarExpression': function(item) {
 			const value = make(item.name);
@@ -258,15 +255,30 @@ const mapper = function(make, stack, depth, context) {
 		'LogicalExpression': function(item) {
 			const left = make(item.left);
 			const right = make(item.right);
-			let leftWrapper = '';
-			let rightWrapper = '';
+			let expression = [left, item.operator, right].join(' ');
 
-			if (item.isWrapped) {
-				leftWrapper = '(';
-				rightWrapper = ')';
+			return '(' + expression + ')';
+		},
+		'BinaryExpression': function(item) {
+			const left = make(item.left);
+			const right = make(item.right);
+			const operator = item.operator;
+			let expression = [left, operator, right].join(' ');
+
+			if (
+				'<<' === operator ||
+				'>>' === operator ||
+				'>>>' === operator ||
+				'|' === operator ||
+				'&' === operator ||
+				'^' === operator
+			) {
+				expression = 'bitwise('+ [ '"' + operator + '"', left, right].join(',') + ')';
+			} else {
+				expression = [left, operator, right].join(' ')
 			}
 
-			return leftWrapper + [left, item.operator, right].join(' ') + rightWrapper;
+			return '(' + expression + ')';
 		},
 		'Chunk': function(item) {
 			const body = [];
