@@ -71,7 +71,11 @@ module.exports = function(vm) {
 			}
 		};
 		const computer = {
-			File: fileHandler
+			File: fileHandler,
+			show_procs: function() {
+				console.log('delete is not yet supported');
+				return typer.cast("");
+			}
 		};
 
 		return typer.cast({

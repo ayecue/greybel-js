@@ -16,6 +16,10 @@ NotOperation.prototype.get = async function(operationContext) {
 		arg = me.arg.valueOf();
 	} else if (me.arg?.isExpression) {
 		arg = await me.arg.get(operationContext);
+
+		if (typer.isCustomValue(arg)) {
+			arg = arg.valueOf();
+		}
 	} else {
 		console.error(me.arg);
 		throw new Error('Unexpected not operation');

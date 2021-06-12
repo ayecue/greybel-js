@@ -1,9 +1,11 @@
 const typer = require('../typer');
 
 const toPrimitive = (v) => {
-	console.log('toPrimitive', v);
+	if (typer.isCustomValue(v)) {
+		return v.valueOf();
+	}
 
-	return v?.valueOf() || v;
+	return v;
 };
 
 const OPERATIONS = {
@@ -78,12 +80,16 @@ LogicalAndBinaryExpression.prototype.get = function(operationContext) {
 			case 'LogicalExpression':
 				left = await evaluate(node.left);
 
-				if (typer.isCustomList(left) && left.len() === 0) {
+				if (typer.isCustomList(left) && !left.valueOf()) {
 					left = false;
 				}
 
-				if (node.operator === 'and' && !left) {
+				console.log('>>>', left);
+
+				if (node.operator === 'and' && !toPrimitive(left)) {
 					return false;
+				} else if (node.operator === 'or' && toPrimitive(left)) {
+					return true;
 				}
 
 				right = await evaluate(node.right);
