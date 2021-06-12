@@ -42,12 +42,85 @@ CustomList.prototype[Symbol.iterator] = function() {
 	};
 };
 
+CustomList.prototype.get = async function(path) {
+	const me = this;
+	const traversalPath = [].concat(path);
+	const refs = me.value;
+	let origin = refs;
+	let current;
+
+	while (current = traversalPath.shift()) {
+		if (current in origin) {
+			origin = origin[current];
+
+			if (traversalPath.length > 0 && origin instanceof CustomList) {
+				return origin.get(traversalPath);
+			}
+		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
+			return me[current];
+		} else {
+			console.error(origin, path);
+			throw new Error(`Cannot get path ${path.join('.')}`);
+		}
+	}
+	
+	return origin?.valueOf() || origin;
+};
+
+CustomList.prototype.getCallable = async function(path) {
+	const me = this;
+	const traversalPath = [].concat(path);
+	const refs = me.value;
+	let origin = refs;
+	let context;
+	let current;
+
+	while (current = traversalPath.shift()) {
+		if (current in origin) {
+			context = origin;
+			origin = origin[current];
+
+			if (origin instanceof CustomList) {
+				return origin.getCallable(traversalPath);
+			}
+		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
+			return {
+				origin: me[current],
+				context: me
+			};
+		} else {
+			throw new Error(`Cannot get path ${path.join('.')}`);
+		}
+	}
+
+	return {
+		origin: origin,
+		context: context
+	};
+};
+
 CustomList.prototype.callMethod = function(method, ...args) {
-	if (!EXPOSED_METHODS.includes(method)) {
+	const me = this;
+
+	if (method.length > 1) {
+		const index = method[0];
+
+		if (me.value[index]) {
+			return me.value[index].callMethod(method.slice(1), ...args);
+		}
+
+		throw new Error(`Unexpected method path`);
+	}
+
+	if (me.value[method[0]]) {
+		return me.value[method[0]];
+	}
+
+	if (!EXPOSED_METHODS.includes(method[0])) {
 		throw new Error(`Cannot access ${method} in list`);
 	}
 
-	return this[method].call(this, ...args);
+	return me[method[0]].call(me, ...args);
 };
 
 //exposed methods

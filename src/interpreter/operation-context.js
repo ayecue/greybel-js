@@ -1,8 +1,10 @@
 const CustomMap = require('../cps-evaluator/types/custom-map');
+const CustomList = require('../cps-evaluator/types/custom-list');
 const CustomBoolean = require('../cps-evaluator/types/custom-boolean');
 const CustomString = require('../cps-evaluator/types/custom-string');
 const CustomNumber = require('../cps-evaluator/types/custom-number');
 const CustomNil = require('../cps-evaluator/types/custom-nil');
+const typer = require('../cps-evaluator/typer');
 
 const TYPE = {
 	'API': 'API',
@@ -52,6 +54,7 @@ Scope.prototype.set = async function(path, value) {
 
 			if (
 				origin instanceof CustomMap ||
+				origin instanceof CustomList ||
 				origin instanceof Scope
 			) {
 				return origin.set(traversalPath.concat([last]), value);
@@ -80,18 +83,21 @@ Scope.prototype.get = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
 	const refs = me.refs;
+	let context;
 	let origin = refs;
 	let current;
 
 	while (current = traversalPath.shift()) {
 		if (current in origin) {
+			context = origin;
 			origin = origin[current];
-
+			
 			if (
 				traversalPath.length > 0 &&
 				(
 					origin instanceof CustomMap ||
-					origin instanceof scope
+					origin instanceof CustomList ||
+					origin instanceof Scope
 				)
 			) {
 				return origin.get(traversalPath);
@@ -115,12 +121,13 @@ Scope.prototype.getCallable = async function(path) {
 	let current;
 
 	while (current = traversalPath.shift()) {
-		if (current in refs) {
+		if (current in origin) {
 			context = origin;
 			origin = origin[current];
 
 			if (
 				origin instanceof CustomMap ||
+				origin instanceof CustomList ||
 				origin instanceof Scope
 			) {
 				return origin.getCallable(traversalPath);

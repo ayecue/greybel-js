@@ -38,6 +38,7 @@ FileSystem.prototype.cwd = function() {
 FileSystem.prototype.resolve = function(...args) {
 	//ugly needs work
 	const resolvedPath = path.resolve(...args);
+
 	return resolvedPath && resolvedPath
 		.replace(/\\/g,'/')
 		.replace(/^[a-z]:/i,'')
@@ -47,7 +48,7 @@ FileSystem.prototype.resolve = function(...args) {
 
 FileSystem.prototype.getByPath = function(target) {
 	const me = this;
-	target = me.resolve(target);
+	target = me.resolve(me.cwd(), target);
 	if (me.exists(target)) {
 		return me.map[target];
 	}

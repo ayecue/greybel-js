@@ -74,6 +74,11 @@ CustomMap.prototype.set = async function(path, value) {
 
 CustomMap.prototype.get = async function(path) {
 	const me = this;
+
+	if (path.length === 0) {
+		return me;
+	}
+
 	const traversalPath = [].concat(path);
 	const refs = me.value;
 	let origin = refs;
@@ -89,7 +94,6 @@ CustomMap.prototype.get = async function(path) {
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
 			return me[current];
 		} else {
-			console.error(origin, path);
 			throw new Error(`Cannot get path ${path.join('.')}`);
 		}
 	}
@@ -106,7 +110,7 @@ CustomMap.prototype.getCallable = async function(path) {
 	let current;
 
 	while (current = traversalPath.shift()) {
-		if (current in refs) {
+		if (current in origin) {
 			context = origin;
 			origin = origin[current];
 
@@ -148,11 +152,21 @@ CustomMap.prototype.createInstance = function() {
 };
 
 CustomMap.prototype.callMethod = function(method, ...args) {
-	if (!EXPOSED_METHODS.includes(method)) {
+	if (method.length > 1) {
+		const key = method[0];
+
+		if (me.value[key]) {
+			return me.value[key].callMethod(method.slice(1), ...args);
+		}
+
+		throw new Error(`Unexpected method path`);
+	}
+
+	if (!EXPOSED_METHODS.includes(method[0])) {
 		throw new Error(`Cannot access ${method} in map`);
 	}
 
-	return this[method].call(this, ...args);
+	return this[method[0]].call(this, ...args);
 };
 
 //exposed methods

@@ -77,6 +77,18 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				handle = await current.get(operationContext, me.expr);
 			} else if (current?.type === 'path') {
 				traversedPath.push(current.value);
+
+				if (traverselPath.length > 0) {
+					const origin = await (handle || operationContext).get(traversedPath);
+
+					if (typer.isCustomValue(origin)) {
+						handle = origin;
+						traversedPath = [];
+					} else if (origin instanceof Function) {
+						handle = await origin.call(handle);
+						traversedPath = [];
+					}
+				}
 			} else if (current?.type === 'index') {
 				current = current.value[0];
 
@@ -145,24 +157,25 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 			if (resultExpr.path.length === 0) {
 				return resultExpr.handle;
 			} else if (typer.isCustomMap(resultExpr.handle)) {
-				const handlePath = resultExpr.path.slice(1);
 				const context = resultExpr.handle;
-				const value = await context.get(handlePath);
+				const value = await context.get(resultExpr.path);
  
 		 		if (value?.isOperation) {
 		 			return value.run(operationContext);
-		 		}
+		 		} else if (value instanceof Function) {
+					return await value.call(context);
+				}
 
 		 		return value;
 			}
 
-			return typer.cast(resultExpr.handle.callMethod(resultExpr.path.join('.')));
+			return typer.cast(resultExpr.handle.callMethod(resultExpr.path));
 		}
 
 		const value = await operationContext.get(resultExpr.path);
  
  		if (value instanceof Function) {
- 			const callable = await operationContext.getCallable(pathExpr.path);
+ 			const callable = await operationContext.getCallable(resultExpr.path);
 
  			return callable.origin.call(callable.context);
  		} else if (value?.isOperation) {

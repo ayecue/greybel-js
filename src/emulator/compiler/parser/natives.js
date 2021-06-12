@@ -1,4 +1,0 @@
-//Deactivated globals and locals
-const NATIVES = ['abs', 'floor', 'range', 'round', 'sign', 'str', 'ceil', 'acos', 'asin', 'atan', 'tan', 'cos', 'sin','launch_path', 'hasIndex', 'rnd', 'slice', 'pi', 'typeof', 'self', 'params', 'char', /*'globals', 'locals',*/ 'print', 'wait', 'time', 'typeof', 'md5', 'get_router', 'get_shell', 'nslookup', 'whois', 'is_valid_ip', 'is_lan_ip', 'command_info', 'current_date', 'current_path', 'parent_path', 'home_dir', 'program_path', 'active_user', 'user_mail_address', 'user_bank_number', 'format_columns', 'user_input', 'include_lib', 'bitwise', 'clear_screen', 'exit'];
-
-module.exports = NATIVES;

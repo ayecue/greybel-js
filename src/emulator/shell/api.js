@@ -10,25 +10,9 @@ const API = {
 		const target = params.shift();
 		const cwd = process.cwd();
 		const targetPath = path.resolve(target);
-		const compiledPath = path.resolve(cwd, 'test');
-
-		build(target, cwd, {
-			obfuscation: false,
-			uglify: false,
-			name: 'test'
-		});
-
-		if (!fs.existsSync(compiledPath)) {
-			console.error(`Cannot find ${compiledPath}`)
-			return;
-		}
-
-		const content = fs.readFileSync(compiledPath, {
-			encoding: 'utf-8'
-		});
 
 		return scriptExecuter({
-			content: content,
+			filename: targetPath,
 			params: params,
 			vm: me.computer.vm
 		});

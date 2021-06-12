@@ -1,12 +1,13 @@
 const cpsEvaluator = require('./cps-evaluator');
 const OperationContext = require('./interpreter/operation-context');
-const CodeParser = require('../../parser');
-const logger = require('node-color-log');
-const build = require('../../build');
+const CodeParser = require('./parser');
+const typer = require('./cps-evaluator/typer')
 
-const Interpreter = function(code) {
+const Interpreter = function(code, params, api) {
 	const me = this;
 	me.code = code;
+	me.api = api;
+	me.params = params;
 	return me;
 };
 
@@ -19,24 +20,22 @@ Interpreter.prototype.digest = function() {
 	const mainContext = new OperationContext(true);
 	
 	mainContext.extend({
-		print: console.log.bind(null, '>>> print'),
-		char: (code) => String.fromCharCode(code)
+		...me.api,
+		params: typer.cast(me.params)
+	});
+
+	console.log({
+		...me.api,
+		params: typer.cast(me.params)
 	});
 
 	return cps.run(mainContext)
 		.catch((err) => {
 			console.error(err);
-			process.exit(1);
+			throw err;
 		});
 };
 
-const start /*module.exports*/ = function(code) {
-	return (new Interpreter(code)).digest();
+module.exports = function(code, params, api) {
+	return (new Interpreter(code, params, api)).digest();
 };
-
-const path = require('path');
-
-start(build(path.resolve(__dirname, '../../../test.src'), null, {
-	noWrite: true,
-	uglify: true
-}));

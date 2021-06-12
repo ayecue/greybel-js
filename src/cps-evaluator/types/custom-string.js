@@ -36,11 +36,11 @@ CustomString.prototype[Symbol.iterator] = function() {
 };
 
 CustomString.prototype.callMethod = function(method, ...args) {
-	if (!EXPOSED_METHODS.includes(method)) {
+	if (!EXPOSED_METHODS.includes(method[0])) {
 		throw new Error(`Cannot access ${method} in string`);
 	}
 
-	return this[method].call(this, ...args);
+	return this[method[0]].call(this, ...args);
 };
 
 CustomString.prototype.valueOf = function() {

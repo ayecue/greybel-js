@@ -1,31 +1,37 @@
 const typer = require('../typer');
 
+const toPrimitive = (v) => {
+	console.log('toPrimitive', v);
+
+	return v?.valueOf() || v;
+};
+
 const OPERATIONS = {
 	'+': (a, b) => {
 		if (typer.isCustomList(a) || typer.isCustomList(b)) {
 			return a.concat(b);
 		}
 
-		return a + b;
+		return toPrimitive(a) + toPrimitive(b);
 	},
-	'-': (a, b) => a - b,
-	'/': (a, b) => a / b,
-	'*': (a, b) => a * b,
-	'^': (a, b) => a ^ b,
-	'|': (a, b) => a | b,
-	'<': (a, b) => a < b,
-	'>': (a, b) => a > b,
-	'<<': (a, b) => a << b,
-	'>>': (a, b) => a >> b,
-	'>>>': (a, b) => a >>> b,
-	'&': (a, b) => a & b,
-	'%': (a, b) => a % b,
-	'>=': (a, b) => a >= b,
-	'==': (a, b) => a == b,
-	'<=': (a, b) => a <= b,
-	'!=': (a, b) => a != b,
-	'and': (a, b) => a && b,
-	'or': (a, b) => a || b
+	'-': (a, b) => toPrimitive(a) - toPrimitive(b),
+	'/': (a, b) => toPrimitive(a) / toPrimitive(b),
+	'*': (a, b) => toPrimitive(a) * toPrimitive(b),
+	'^': (a, b) => toPrimitive(a) ^ toPrimitive(b),
+	'|': (a, b) => toPrimitive(a) | toPrimitive(b),
+	'<': (a, b) => toPrimitive(a) < toPrimitive(b),
+	'>': (a, b) => toPrimitive(a) > toPrimitive(b),
+	'<<': (a, b) => toPrimitive(a) << toPrimitive(b),
+	'>>': (a, b) => toPrimitive(a) >> toPrimitive(b),
+	'>>>': (a, b) => toPrimitive(a) >>> toPrimitive(b),
+	'&': (a, b) => toPrimitive(a) & toPrimitive(b),
+	'%': (a, b) => toPrimitive(a) % toPrimitive(b),
+	'>=': (a, b) => toPrimitive(a) >= toPrimitive(b),
+	'==': (a, b) => toPrimitive(a) == toPrimitive(b),
+	'<=': (a, b) => toPrimitive(a) <= toPrimitive(b),
+	'!=': (a, b) => toPrimitive(a) != toPrimitive(b),
+	'and': (a, b) => toPrimitive(a) && toPrimitive(b),
+	'or': (a, b) => toPrimitive(a) || toPrimitive(b)
 };
 
 const LogicalAndBinaryExpression = function(ast, visit) {
@@ -68,9 +74,13 @@ LogicalAndBinaryExpression.prototype.get = function(operationContext) {
 				left = await evaluate(node.left);
 				right = await evaluate(node.right);
 
-				return OPERATIONS[node.operator](left, right);
+				return typer.cast(OPERATIONS[node.operator](left, right));
 			case 'LogicalExpression':
 				left = await evaluate(node.left);
+
+				if (typer.isCustomList(left) && left.len() === 0) {
+					left = false;
+				}
 
 				if (node.operator === 'and' && !left) {
 					return false;
@@ -78,7 +88,7 @@ LogicalAndBinaryExpression.prototype.get = function(operationContext) {
 
 				right = await evaluate(node.right);
 				
-				return !!OPERATIONS[node.operator](left, right);
+				return OPERATIONS[node.operator](left, right);
 			default: 
 		}
 

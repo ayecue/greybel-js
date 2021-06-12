@@ -65,19 +65,20 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 
 		if (pathExpr.handle) {
 			if (typer.isCustomMap(pathExpr.handle)) {
-				const handlePath = pathExpr.path.slice(1);
-				const callable = await operationContext.getCallable(handlePath);
+				const callable = await pathExpr.handle.getCallable(pathExpr.path);
 
 				if (callable.origin?.isOperation) {
 					operationContext.setMemory('args', args);
 					return callable.origin.run(operationContext);
+				} else if (callable.origin instanceof Function) {
+					return callable.origin.call(pathExpr.handle, ...args);
 				}
 
 				console.error(callable);
 				throw new Error('Unexpected handle call');
 			}
 
-			return typer.cast(pathExpr.handle.callMethod(pathExpr.path.join('.'), ...args));
+			return typer.cast(pathExpr.handle.callMethod(pathExpr.path, ...args));
 		}
 		
 		const callable = await operationContext.getCallable(pathExpr.path);

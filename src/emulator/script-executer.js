@@ -1,41 +1,29 @@
-//const build = require('./compiler/build');
-const interpreter = require('./compiler/interpreter');
+const build = require('../build');
+const interpreter = require('../interpreter');
 const md5 = require('../utils/md5');
 const fs = require('fs');
 const path = require('path');
 const ExitError = require('./errors/exit');
 const chalk = require('chalk');
+const polyfills = require('./polyfills');
 
 module.exports = async function(options) {
 	const context = {};
 	const content = options.content || (await options.file.load()).getContent();
-	//const code = build(content);
-	//const tempFileName = `test-${md5(code)}.js`;
-	//const tempFilepath = path.resolve(process.cwd(), tempFileName);
 
 	try {
-		/*fs.writeFileSync(tempFilepath, code);
-		console.log(chalk.yellow('Executing ' + tempFilepath));
-		console.log(chalk.yellow('Args ' + options.params.join(', ')));
-		const execute = require(tempFilepath);
-		const args = [
-			options.vm,
-			options.params,
-			function(message) {
-				if (message) console.log(message);
-				throw new ExitError();
-			},
-			context
-		];
+		let code;
 
-		await execute(...args);*/
+		if (options.filename) {
+			code = build(options.filename, null, {
+				noWrite: true
+			});
+		} else {
+			code = content;
+		}
 
-		interpreter(content);
+		await interpreter(code, options.params, polyfills(options.vm));
 	} catch (err) {
 		if (!(err instanceof ExitError)) console.error(err);
 	}
-
-	/*setTimeout(function() {
-		if (fs.existsSync(tempFilepath)) fs.unlinkSync(tempFilepath);
-	}, 20000);*/
 };
