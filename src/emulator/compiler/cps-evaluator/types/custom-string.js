@@ -47,6 +47,10 @@ CustomString.prototype.valueOf = function() {
 	return this.value;
 };
 
+CustomString.prototype.fork = function() {
+	return new CustomString(this.value);
+};
+
 //exposed methods
 CustomString.prototype.split = function(seperator) {
 	return this.value.split(seperator.valueOf());

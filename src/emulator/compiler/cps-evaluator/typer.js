@@ -14,6 +14,14 @@ const isCustomValue = function(value) {
 			value instanceof CustomString;
 };
 
+const isCustomMap = function(value) {
+	return 	value instanceof CustomMap;
+};
+
+const isCustomList = function(value) {
+	return 	value instanceof CustomList;
+};
+
 const cast = function(value) {
 	if (value == null)  return new CustomNil();
 
@@ -42,5 +50,7 @@ const cast = function(value) {
 	throw new Error('Unexpected type');
 };
 
+exports.isCustomMap = isCustomMap;
+exports.isCustomList = isCustomList;
 exports.isCustomValue = isCustomValue;
 exports.cast = cast;

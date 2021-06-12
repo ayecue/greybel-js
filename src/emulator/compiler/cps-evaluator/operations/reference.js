@@ -6,7 +6,7 @@ const ReferenceOperation = function(ast) {
 	return me;
 };
 
-ReferenceOperation.prototype.run = async function(operationContext) {
+ReferenceOperation.prototype.get = async function(operationContext) {
 	const me = this;
 	let arg;
 

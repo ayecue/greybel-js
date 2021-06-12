@@ -7,7 +7,20 @@ const FunctionOperation = function(ast) {
 	me.args = null;
 	me.body = null;
 	me.isOperation = true;
+	me.context = null;
+	me.isFunction = true;
 	return me;
+};
+
+FunctionOperation.prototype.fork = function(context) {
+	const me = this;
+	const newFunction = new FunctionOperation(me.ast);
+
+	newFunction.args = me.args;
+	newFunction.body = me.body;
+	newFunction.context = context;
+
+	return newFunction;
 };
 
 FunctionOperation.prototype.get = function(operationContext) {
@@ -22,7 +35,8 @@ FunctionOperation.prototype.run = async function(operationContext) {
 	const argMap = {};
 	const functionContext = {
 		value: null,
-		isReturn: false
+		isReturn: false,
+		context: me.context
 	};
 
 	opc.setMemory('functionContext', functionContext);

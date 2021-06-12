@@ -8,4 +8,8 @@ CustomBoolean.prototype.valueOf = function() {
 	return this.value;
 };
 
+CustomBoolean.prototype.fork = function() {
+	return new CustomBoolean(this.value);
+};
+
 module.exports = CustomBoolean;

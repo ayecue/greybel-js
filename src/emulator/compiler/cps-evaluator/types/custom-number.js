@@ -8,4 +8,8 @@ CustomNumber.prototype.valueOf = function() {
 	return this.value;
 };
 
+CustomNumber.prototype.fork = function() {
+	return new CustomNumber(this.value);
+};
+
 module.exports = CustomNumber;

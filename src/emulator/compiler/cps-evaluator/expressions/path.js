@@ -81,8 +81,28 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 
 	const resultExpr = await evaluate(me.expr);
 
+	if (resultExpr.path[0] === 'self') {
+		const functionContext = operationContext.getMemory('functionContext');
+
+		if (functionContext.context) {
+			resultExpr.handle = functionContext.context;
+		}
+	}
+
 	if (!parentExpr) {
 		if (resultExpr.handle) {
+			if (typer.isCustomMap(resultExpr.handle)) {
+				const handlePath = resultExpr.path.slice(1);
+				const context = resultExpr.handle;
+				const value = await context.get(handlePath);
+ 
+		 		if (value?.isOperation) {
+		 			return value.run(operationContext);
+		 		}
+
+		 		return value;
+			}
+
 			return typer.cast(resultExpr.handle.callMethod(resultExpr.path.join('.')));
 		}
 
@@ -91,7 +111,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
  		if (value instanceof Function) {
  			const callable = await operationContext.getCallable(pathExpr.path);
 
- 			return callable.origin.call(callable.context, ...args);
+ 			return callable.origin.call(callable.context);
  		} else if (value?.isOperation) {
  			return value.run(operationContext);
  		}

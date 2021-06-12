@@ -1,5 +1,6 @@
 const CustomMap = function(value) {
 	const me = this;
+	me.isInstance = false;
 	me.value = value;
 	return me;
 };
@@ -48,14 +49,6 @@ CustomMap.prototype.set = async function(path, value) {
 	let current;
 
 	while (current = traversalPath.shift()) {
-		if (current?.isCallable) {
-			current = await current.run(me.context);
-		}
-
-		if (current?.isIdentifier) {
-			current = current.valueOf();
-		}
-
 		if (current in origin) {
 			origin = origin[current];
 
@@ -82,14 +75,6 @@ CustomMap.prototype.get = async function(path) {
 	let current;
 
 	while (current = traversalPath.shift()) {
-		if (current?.isCallable) {
-			current = await current.run(me.context);
-		}
-
-		if (current?.isIdentifier) {
-			current = current.valueOf();
-		}
-
 		if (current in origin) {
 			origin = origin[current];
 
@@ -113,14 +98,6 @@ CustomMap.prototype.getCallable = async function(path) {
 	let current;
 
 	while (current = traversalPath.shift()) {
-		if (current?.isCallable) {
-			current = await current.run(me.context);
-		}
-
-		if (current?.isIdentifier) {
-			current = current.valueOf();
-		}
-
 		if (current in refs) {
 			context = origin;
 			origin = origin[current];
@@ -134,52 +111,27 @@ CustomMap.prototype.getCallable = async function(path) {
 	}
 
 	return {
-		callback: origin,
+		origin: origin,
 		context: context
 	};
 };
 
-CustomMap.prototype.getPath = async function(path) {
+CustomMap.prototype.createInstance = function() {
 	const me = this;
-	const traversalPath = [].concat(path);
-	const refs = me.value;
-	const traversedPath = [];
-	let origin = refs;
-	let current;
+	const value = {};
+	const newInstance = new CustomMap(value);
 
-	while (current = traversalPath.shift()) {
-		if (current?.isCallable) {
-			current = await current.run(me.context);
-		}
-
-		if (current?.isIdentifier) {
-			current = current.valueOf();
-		}
-
-		if (current in origin) {
-			traversedPath.push(current);
-			origin = origin[current];
-
-			if (origin instanceof CustomMap) {
-				const result = await origin.getPath(traversalPath);
-
-				return {
-					completed: result.completed,
-					path: traversedPath.concat(result.path)
-				};
-			}
-		} else {
-			return {
-				completed: traversalPath.length === 0,
-				path: traversedPath.concat(Array.isArray(current) ? current : [current])
-			};
-		}
-	}
+	newInstance.isInstance = true;
 	
-	return {
-		completed: true,
-		path: traversedPath
-	};
+	Object.entries(me.value).forEach(([key, item]) => {
+		if (item?.isFunction) {
+			value[key] = item.fork(newInstance);
+		} else {
+			value[key] = item?.fork() || item;
+		}
+	});
+	
+	return newInstance;
 };
 
 module.exports = CustomMap;

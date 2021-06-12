@@ -1,3 +1,5 @@
+const typer = require('../typer');
+
 const NewOperation = function(ast) {
 	const me = this;
 	me.ast = ast;
@@ -6,9 +8,25 @@ const NewOperation = function(ast) {
 	return me;
 };
 
-NewOperation.prototype.get = function(operationContext) {
+NewOperation.prototype.get = async function(operationContext) {
 	const me = this;
-	
+	let arg;
+
+	if (typer.isCustomValue(me.arg)) {
+		arg = me.arg;
+	} else if (me.arg?.isExpression) {
+		arg = await me.arg.get(operationContext);
+	} else {
+		console.error(me.arg);
+		throw new Error('Unexpected reference');
+	}
+
+	if (!typer.isCustomMap(arg)) {
+		console.error(arg);
+		throw new Error('Unexpected type for new operator');
+	}
+
+	return arg.createInstance();
 };
 
 module.exports = NewOperation;

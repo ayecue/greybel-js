@@ -18,7 +18,7 @@ ReturnOperation.prototype.run = async function(operationContext) {
 	} else if (me.arg?.isExpression) {
 		arg = await me.arg.get(operationContext);
 	} else if (me.arg?.isOperation) {
-		arg = await me.arg.run(operationContext);
+		arg = await me.arg.get(operationContext);
 	} else {
 		console.error(me.arg);
 		throw new Error('Unexpected return value');

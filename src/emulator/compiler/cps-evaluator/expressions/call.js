@@ -53,6 +53,7 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 			if (callResult?.isOperation) {
 				return callResult.run(operationContext);
 			} else {
+				console.error(callResult);
 				throw new Error('Unexpected call result');
 			}
 		}
@@ -61,6 +62,18 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 		const args = await resolveArgs(...node.args);
 
 		if (pathExpr.handle) {
+			if (typer.isCustomMap(pathExpr.handle)) {
+				const handlePath = pathExpr.path.slice(1);
+				const callable = await operationContext.getCallable(handlePath);
+
+				if (callable.origin?.isOperation) {
+					return callable.origin.run(operationContext, ...args);
+				}
+
+				console.error(callable);
+				throw new Error('Unexpected handle call');
+			}
+
 			return typer.cast(pathExpr.handle.callMethod(pathExpr.path.join('.'), ...args));
 		}
 		
