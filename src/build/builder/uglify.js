@@ -303,7 +303,8 @@ const mapper = function(make, stack, depth, context) {
 		'BinaryExpression': function(item) {
 			const left = make(item.left);
 			const right = make(item.right);
-			let expression = [left, item.operator, right].join(' ');
+			const operator = item.operator;
+			let expression = [left, operator, right].join(' ');
 
 			if (
 				'<<' === operator ||
@@ -314,8 +315,6 @@ const mapper = function(make, stack, depth, context) {
 				'^' === operator
 			) {
 				expression = 'bitwise('+ [ '"' + operator + '"', left, right].join(',') + ')';
-			} else {
-				expression = [left, operator, right].join(' ')
 			}
 
 			return '(' + expression + ')';

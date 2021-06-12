@@ -37,5 +37,6 @@ const start /*module.exports*/ = function(code) {
 const path = require('path');
 
 start(build(path.resolve(__dirname, '../../../test.src'), null, {
-	noWrite: true
+	noWrite: true,
+	uglify: true
 }));
