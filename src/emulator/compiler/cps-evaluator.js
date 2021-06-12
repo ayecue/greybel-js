@@ -16,15 +16,12 @@ const {
 	ReferenceOperation,
 	NewOperation,
 	NotOperation,
-	EnvarOperation,
 	IfStatementOperation,
 	IfOperation,
 	ElseIfOperation, 
 	ElseOperation,
 	ContinueOperation,
 	BreakOperation,
-	ImportOperation, 
-	IncludeOperation,
 	BodyOperation,
 	TopOperation
 } = require('./cps-evaluator/operations');
@@ -110,11 +107,7 @@ const mapper = function(visit) {
 			return new PathExpression(item, visit);
 		},
 		'FeatureEnvarExpression': function(item) {
-			const me = this;
-			const op = new EnvarOperation(item);
-
-			op.name = visit(item.name);
-			return op;
+			throw new Error('Not supported');
 		},
 		'IfShortcutStatement': function(item) {
 			const me = this;
@@ -263,36 +256,10 @@ const mapper = function(visit) {
 			return new CallExpression(item, visit);
 		},
 		'FeatureImportExpression': function(item) {
-			const me = this;
-			const op = new ImportOperation(item);
-			const body = new BodyOperation();
-
-			op.name = visit(item.name);
-
-			let bodyItem;
-
-			for (bodyItem of item.body) {
-				body.stack.push(visit(bodyItem));
-			}
-
-			op.body = body;
-
-			return op;
+			throw new Error('Not supported');
 		},
 		'FeatureIncludeExpression': function(item) {
-			const me = this;
-			const op = new IncludeOperation(item);
-			const body = new BodyOperation();
-
-			let bodyItem;
-
-			for (bodyItem of item.body) {
-				body.stack.push(visit(bodyItem));
-			}
-
-			op.body = body;
-
-			return op;
+			throw new Error('Not supported');
 		},
 		'ListConstructorExpression': function(item) {
 			return new ListExpression(item, visit);

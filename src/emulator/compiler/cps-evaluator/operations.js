@@ -8,15 +8,12 @@ module.exports = {
 	ReferenceOperation: require('./operations/reference'),
 	NewOperation: require('./operations/new'),
 	NotOperation: require('./operations/not'),
-	EnvarOperation: require('./operations/envar'),
 	IfStatementOperation: require('./operations/if-statement'),
 	IfOperation: require('./operations/if'),
 	ElseIfOperation: require('./operations/else-if'),
 	ElseOperation: require('./operations/else'),
 	ContinueOperation: require('./operations/continue'),
 	BreakOperation: require('./operations/break'),
-	ImportOperation: require('./operations/import'),
-	IncludeOperation: require('./operations/include'),
 	BodyOperation: require('./operations/body'),
 	TopOperation: require('./operations/top')
 };

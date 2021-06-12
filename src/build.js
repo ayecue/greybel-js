@@ -57,25 +57,24 @@ Builder.prototype.compile = function(options) {
 	const dependency = new Dependency(me.filepath, chunk, options.uglify);
 	dependency.findDependencies();
 
-	const code = builder(dependency, mapper, options.uglify);
+	return builder(dependency, mapper, options.uglify);
+};
+
+Builder.prototype.write = function(code, maxWords) {
+	const me = this;
 	const words = code.length;
 
-	if (words > options.maxWords) {
-		logger.warn('WARNING: Exceeding max word limit by ' + (words - options.maxWords) + ' signs. Building anyway.');
+	if (words > maxWords) {
+		logger.warn('WARNING: Exceeding max word limit by ' + (words - maxWords) + ' signs. Building anyway.');
 	}
 
 	logger.info('Created file:', me.output);
 	fs.writeFileSync(me.output, code, {
 		encoding: 'utf-8'
 	});
+}
 
-	logger.info('Created ast file:', me.output + '.json');
-	fs.writeFileSync(me.output + '.json', JSON.stringify(chunk, null, 4), {
-		encoding: 'utf-8'
-	});
-};
-
-module.exports = function(filepath, output, options) {
+module.exports = function(filepath, output, options = {}) {
 	const buildOptions = Object.assign({
 		uglify: false,
 		maxWords: 80000,
@@ -85,5 +84,11 @@ module.exports = function(filepath, output, options) {
 
 	envs.load(options.envFiles, options.envVars);
 
-	return builder.compile(buildOptions);
+	const code = builder.compile(buildOptions);
+
+	if (options.noWrite) {
+		return code;
+	}
+
+	return builder.write(code, options.maxWords);
 };

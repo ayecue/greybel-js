@@ -41,8 +41,12 @@ FunctionOperation.prototype.run = async function(operationContext) {
 
 	opc.setMemory('functionContext', functionContext);
 
-	for (let arg of args) {
-		opc.set(arg.path[0], incArgs.pop());
+	let index = 0;
+	const max = args.length;
+
+	while (index < max) {
+		await opc.set(args[index].path[0], incArgs[index]);
+		index++;
 	}
 
 	await me.body.run(opc);

@@ -1,3 +1,5 @@
+const typer = require('../typer');
+
 const ReferenceOperation = function(ast) {
 	const me = this;
 	me.ast = ast;
@@ -18,6 +20,11 @@ ReferenceOperation.prototype.get = async function(operationContext) {
 	}
 
 	if (arg.handle) {
+		if (typer.isCustomMap(arg.handle)) {
+			return arg.handle.get(arg.path);
+		}
+
+		console.error(arg.handle, me.ast);
 		throw new Error('Unexpected handle in reference statement');
 	}
 

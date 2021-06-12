@@ -20,7 +20,10 @@ const PathExpression = function(ast, visit) {
 				break;
 			case 'IndexExpression':
 				expression = append(expression, buildExpression(node.base));
-				expression = append(expression, buildExpression(node.index));
+				expression = append(expression, {
+					type: 'index',
+					value: buildExpression(node.index)
+				});
 
 				break;
 			case 'Identifier':
@@ -65,6 +68,19 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				handle = await current.get(operationContext, me.expr);
 			} else if (current?.type === 'path') {
 				traversedPath.push(current.value);
+			} else if (current?.type === 'index') {
+				current = current.value[0];
+
+				if (typer.isCustomValue(current)) {
+					traversedPath.push(current.valueOf());
+				} else if (current?.isExpression) {
+					traversedPath.push(await current.get(operationContext));
+				} else if (current?.type === 'path') {
+					traversedPath.push(await operationContext.get(current.value));
+				} else {
+					console.error(current);
+					throw new Error('Unexpected index');
+				}
 			} else {
 				console.error(current);
 				throw new Error('Unexpected handle');

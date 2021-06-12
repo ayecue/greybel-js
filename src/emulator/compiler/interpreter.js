@@ -2,6 +2,7 @@ const cpsEvaluator = require('./cps-evaluator');
 const OperationContext = require('./interpreter/operation-context');
 const CodeParser = require('../../parser');
 const logger = require('node-color-log');
+const build = require('../../build');
 
 const Interpreter = function(code) {
 	const me = this;
@@ -18,7 +19,8 @@ Interpreter.prototype.digest = function() {
 	const mainContext = new OperationContext(true);
 	
 	mainContext.extend({
-		print: console.log.bind(null, '>>> print')
+		print: console.log.bind(null, '>>> print'),
+		char: (code) => String.fromCharCode(code)
 	});
 
 	return cps.run(mainContext)
@@ -32,12 +34,8 @@ const start /*module.exports*/ = function(code) {
 	return (new Interpreter(code)).digest();
 };
 
-
 const path = require('path');
-const fs = require('fs');
 
-const test = fs.readFileSync(path.resolve(__dirname, '../../../test.src'), {
-	encoding: 'utf-8'
-});
-
-start(test);
+start(build(path.resolve(__dirname, '../../../test.src'), null, {
+	noWrite: true
+}));

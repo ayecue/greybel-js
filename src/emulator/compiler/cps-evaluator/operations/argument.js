@@ -17,7 +17,7 @@ ArgumentOperation.prototype.get = async function(operationContext) {
 		if (typer.isCustomValue(entity)) {
 			args.push(entity);
 		} else if (entity?.isExpression) {
-			args.push(await entity.get(operationContext));
+			args.push(await entity.get(operationContext, me));
 		} else {
 			throw new Error('Unexpected argument');
 		}

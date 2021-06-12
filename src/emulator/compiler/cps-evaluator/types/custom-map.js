@@ -1,3 +1,8 @@
+const EXPOSED_METHODS = [
+	'remove',
+	'hasIndex'
+];
+
 const CustomMap = function(value) {
 	const me = this;
 	me.isInstance = false;
@@ -81,7 +86,10 @@ CustomMap.prototype.get = async function(path) {
 			if (traversalPath.length > 0 && origin instanceof CustomMap) {
 				return origin.get(traversalPath);
 			}
+		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
+			return me[current];
 		} else {
+			console.error(origin, path);
 			throw new Error(`Cannot get path ${path.join('.')}`);
 		}
 	}
@@ -105,6 +113,11 @@ CustomMap.prototype.getCallable = async function(path) {
 			if (origin instanceof CustomMap) {
 				return origin.getCallable(traversalPath);
 			}
+		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
+			return {
+				origin: me[current],
+				context: me
+			};
 		} else {
 			throw new Error(`Cannot get path ${path.join('.')}`);
 		}
@@ -132,6 +145,27 @@ CustomMap.prototype.createInstance = function() {
 	});
 	
 	return newInstance;
+};
+
+CustomMap.prototype.callMethod = function(method, ...args) {
+	if (!EXPOSED_METHODS.includes(method)) {
+		throw new Error(`Cannot access ${method} in map`);
+	}
+
+	return this[method].call(this, ...args);
+};
+
+//exposed methods
+CustomMap.prototype.remove = function(key) {
+	const me = this;
+	key = key.valueOf();
+
+	me.value[key] = null;
+	delete me.value[key];
+};
+
+CustomMap.prototype.hasIndex = function(key) {
+	return this.value.hasOwnProperty(key.valueOf());
 };
 
 module.exports = CustomMap;

@@ -47,10 +47,13 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 			return node.get(operationContext);
 		}
 
+		const args = await resolveArgs(...node.args);
+
 		if (node.path?.type === 'call') {
 			const callResult = await evaluate(node.path);
 
 			if (callResult?.isOperation) {
+				operationContext.setMemory('args', args);
 				return callResult.run(operationContext);
 			} else {
 				console.error(callResult);
@@ -59,7 +62,6 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 		}
 
 		const pathExpr = await node.path.get(operationContext, me.expr);
-		const args = await resolveArgs(...node.args);
 
 		if (pathExpr.handle) {
 			if (typer.isCustomMap(pathExpr.handle)) {
@@ -67,7 +69,8 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 				const callable = await operationContext.getCallable(handlePath);
 
 				if (callable.origin?.isOperation) {
-					return callable.origin.run(operationContext, ...args);
+					operationContext.setMemory('args', args);
+					return callable.origin.run(operationContext);
 				}
 
 				console.error(callable);
@@ -79,11 +82,15 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 		
 		const callable = await operationContext.getCallable(pathExpr.path);
 
+		operationContext.setMemory('args', args);
+
 		if (callable.origin?.isOperation) {
 			return callable.origin.run(operationContext);
+		} else if (callable.origin instanceof Function) {
+			return callable.origin.call(callable.context, ...args);
 		}
 
-		return callable.origin.call(callable.context, ...args);
+		return typer.cast(callable.origin);
 	};
 
 	console.log('CallExpression', 'get', 'expr', me.expr);
