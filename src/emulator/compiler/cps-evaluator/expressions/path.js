@@ -20,10 +20,19 @@ const PathExpression = function(ast, visit) {
 				break;
 			case 'IndexExpression':
 				expression = append(expression, buildExpression(node.base));
-				expression = append(expression, {
-					type: 'index',
-					value: buildExpression(node.index)
-				});
+
+				if (node.index?.type === 'SliceExpression') {
+					expression = append(expression, {
+						type: 'slice',
+						left: buildExpression(node.index.left),
+						right: buildExpression(node.index.right)
+					});
+				} else {
+					expression = append(expression, {
+						type: 'index',
+						value: buildExpression(node.index)
+					});
+				}
 
 				break;
 			case 'Identifier':
@@ -57,7 +66,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 	const me = this;
 	const evaluate = async function(node) {
 		const traverselPath = [].concat(node);
-		const traversedPath = [];
+		let traversedPath = [];
 		let handle;
 		let current;
 
@@ -81,6 +90,32 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 					console.error(current);
 					throw new Error('Unexpected index');
 				}
+			} else if (current?.type === 'slice') {
+				if (!handle) {
+					handle = await operationContext.get(traversedPath);
+					traversedPath = [];
+				} else if (!typer.isCustomList(handle)) {
+					console.error(handle);
+					throw new Error('Invalid type for slice');
+				}
+
+				let left = current.left[0];
+
+				if (typer.isCustomValue(left)) {
+					left = left;
+				} else if (node.left?.isExpression) {
+					left = await left.get(operationContext);
+				}
+
+				let right = current.right[0];
+
+				if (typer.isCustomValue(right)) {
+					right = right;
+				} else if (node.left?.isExpression) {
+					right = await right.get(operationContext);
+				}
+
+				handle = handle.slice(left, right);
 			} else {
 				console.error(current);
 				throw new Error('Unexpected handle');
@@ -107,7 +142,9 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 
 	if (!parentExpr) {
 		if (resultExpr.handle) {
-			if (typer.isCustomMap(resultExpr.handle)) {
+			if (resultExpr.path.length === 0) {
+				return resultExpr.handle;
+			} else if (typer.isCustomMap(resultExpr.handle)) {
 				const handlePath = resultExpr.path.slice(1);
 				const context = resultExpr.handle;
 				const value = await context.get(handlePath);

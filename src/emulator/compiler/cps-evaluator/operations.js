@@ -4,7 +4,6 @@ module.exports = {
 	ForOperation: require('./operations/for'),
 	FunctionOperation: require('./operations/function'),
 	ReturnOperation: require('./operations/return'),
-	SliceOperation: require('./operations/slice'),
 	ReferenceOperation: require('./operations/reference'),
 	NewOperation: require('./operations/new'),
 	NotOperation: require('./operations/not'),

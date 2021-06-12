@@ -1,7 +1,13 @@
 const typer = require('../typer');
 
 const OPERATIONS = {
-	'+': (a, b) => a + b,
+	'+': (a, b) => {
+		if (typer.isCustomList(a) || typer.isCustomList(b)) {
+			return a.concat(b);
+		}
+
+		return a + b;
+	},
 	'-': (a, b) => a - b,
 	'/': (a, b) => a / b,
 	'*': (a, b) => a * b,

@@ -15,6 +15,14 @@ const CustomList = function(value) {
 	return me;
 };
 
+CustomList.prototype.concat = function(arr) {
+	return new CustomList(this.value.concat(arr.value));
+};
+
+CustomList.prototype.slice = function(a, b) {
+	return new CustomList(this.value.slice(a?.valueOf(), b?.valueOf()));
+};
+
 CustomList.prototype[Symbol.iterator] = function() {
 	const me = this;
 	let index = 0;

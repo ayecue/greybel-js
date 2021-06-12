@@ -94,15 +94,6 @@ const mapper = function(visit) {
 		'StringLiteral': function(item) {
 			return new CustomString(item.value);
 		},
-		'SliceExpression': function(item) {
-			const me = this;
-			const op = new SliceOperation(item);
-
-			op.left = visit(item.left);
-			op.right = visit(item.right);
-
-			return op;
-		},
 		'IndexExpression': function(item) {
 			return new PathExpression(item, visit);
 		},
