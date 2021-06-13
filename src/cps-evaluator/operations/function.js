@@ -12,6 +12,10 @@ const FunctionOperation = function(ast) {
 	return me;
 };
 
+FunctionOperation.prototype.getType = function() {
+	return 'function';
+};
+
 FunctionOperation.prototype.fork = function(context) {
 	const me = this;
 	const newFunction = new FunctionOperation(me.ast);

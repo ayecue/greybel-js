@@ -36,6 +36,27 @@ CustomMap.prototype[Symbol.iterator] = function() {
 	};
 };
 
+CustomMap.prototype.valueOf = function() {
+	const me = this;
+	const value = me.value;
+
+	return Object
+		.keys(value)
+		.filter((v) => v !== '__isa')
+		.length === 0 ? null : me;
+};
+
+CustomMap.prototype.getType = function() {
+	const me = this;
+	const value = me.value;
+
+	if (value.__isa) {
+		return value.__isa;
+	}
+
+	return 'map';
+};
+
 CustomMap.prototype.extend = function(value) {
 	const me = this;
 	me.value = {

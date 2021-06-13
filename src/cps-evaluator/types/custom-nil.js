@@ -7,4 +7,8 @@ CustomNil.prototype.valueOf = function() {
 	return null;
 };
 
+CustomNil.prototype.getType = function() {
+	return 'null';
+};
+
 module.exports = CustomNil;

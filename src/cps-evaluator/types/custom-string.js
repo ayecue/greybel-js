@@ -45,8 +45,13 @@ CustomString.prototype.callMethod = function(method, ...args) {
 	return this[member].call(this, ...args);
 };
 
+CustomString.prototype.getType = function() {
+	return 'string';
+};
+
 CustomString.prototype.valueOf = function() {
-	return this.value;
+	const me = this;
+	return me.len() === 0 ? null : me.value;
 };
 
 CustomString.prototype.fork = function() {

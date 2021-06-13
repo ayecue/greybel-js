@@ -15,6 +15,10 @@ const CustomList = function(value) {
 	return me;
 };
 
+CustomList.prototype.getType = function() {
+	return 'list';
+};
+
 CustomList.prototype.valueOf = function() {
 	const me = this;
 	return me.len() === 0 ? null : me;

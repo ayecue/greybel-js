@@ -4,6 +4,10 @@ const CustomBoolean = function(value) {
 	return me;
 };
 
+CustomBoolean.prototype.getType = function() {
+	return 'boolean';
+};
+
 CustomBoolean.prototype.valueOf = function() {
 	return this.value;
 };

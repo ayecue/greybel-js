@@ -37,6 +37,9 @@ module.exports = function(vm) {
 	api.md5 = function(value) {
 		return typer.cast(vm.tools.md5(value));
 	};
+	api.typeof = function(variable) {
+		return typer.cast(typer.cast(variable).getType());
+	};
 
 	return api;
 };

@@ -4,6 +4,10 @@ const CustomNumber = function(value) {
 	return me;
 };
 
+CustomNumber.prototype.getType = function() {
+	return 'number';
+};
+
 CustomNumber.prototype.valueOf = function() {
 	return this.value;
 };
