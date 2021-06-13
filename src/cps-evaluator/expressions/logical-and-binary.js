@@ -84,8 +84,6 @@ LogicalAndBinaryExpression.prototype.get = function(operationContext) {
 					left = false;
 				}
 
-				console.log('>>>', left);
-
 				if (node.operator === 'and' && !toPrimitive(left)) {
 					return false;
 				} else if (node.operator === 'or' && toPrimitive(left)) {

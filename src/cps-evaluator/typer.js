@@ -15,11 +15,11 @@ const isCustomValue = function(value) {
 };
 
 const isCustomMap = function(value) {
-	return 	value instanceof CustomMap;
+	return value instanceof CustomMap;
 };
 
 const isCustomList = function(value) {
-	return 	value instanceof CustomList;
+	return value instanceof CustomList;
 };
 
 const cast = function(value) {

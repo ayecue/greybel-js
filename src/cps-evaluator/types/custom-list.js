@@ -108,12 +108,13 @@ CustomList.prototype.callMethod = function(method, ...args) {
 	const me = this;
 
 	if (method.length > 1) {
-		const index = method[0];
+		const index = method[0].valueOf();
 
 		if (me.value[index]) {
 			return me.value[index].callMethod(method.slice(1), ...args);
 		}
 
+		console.error(method, args);
 		throw new Error(`Unexpected method path`);
 	}
 
@@ -153,6 +154,12 @@ CustomList.prototype.lastIndexOf = function(val) {
 	return index === -1 ? null : index;
 };
 
+CustomList.prototype.push = function(val) {
+	const me = this;
+	me.value.push(val);
+	return me;
+};
+
 CustomList.prototype.pull = function() {
 	return this.value.shift();
 };
@@ -163,6 +170,51 @@ CustomList.prototype.pop = function() {
 
 CustomList.prototype.len = function() {
 	return this.value.length;
+};
+
+CustomList.prototype.shuffle = function() {
+	const me = this;
+	const value = me.value;
+
+	for (let i = value.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[value[i], value[j]] = [value[j], value[i]];
+	}
+};
+
+CustomList.prototype.reverse = function() {
+	this.value.reverse();
+};
+
+CustomList.prototype.sort = function(key) {
+	key = key ? key.valueOf() : null;
+
+	return this.value.sort((a, b) => {
+		a = a.value;
+		b = b.value;
+
+		if (key) {
+			a = a[key].value;
+			b = b[key].value;
+		}
+
+		if (typeof a === 'string' && typeof b === 'string') {
+			return a.localCompare(b);
+		}
+		return a - b;
+	});
+};
+
+CustomList.prototype.indexes = function() {
+	return Object.keys(this.value).map((v) => parseInt(v));
+};
+
+CustomList.prototype.values = function() {
+	return this.value;
+};
+
+CustomList.prototype.sum = function() {
+	return this.value.reduce((result, v) => result + v?.valueOf(), 0);
 };
 
 module.exports = CustomList;

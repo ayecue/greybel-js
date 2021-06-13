@@ -215,9 +215,11 @@ OperationContext.prototype.fork = function(type, state) {
 	opc.type = type;
 	opc.state = state;
 
-	opc.extend({
-		locals: opc.scope
-	});
+	if (me.state === STATE.FUNCTION || me.state === STATE.GLOBAL) {
+		opc.extend({
+			locals: opc.scope
+		});
+	}
 
 	if (type !== TYPE.FUNCTION) {
 		if (type !== TYPE.LOOP) {
