@@ -1,4 +1,5 @@
 const CustomMap = require('../types/custom-map');
+const logger = require('node-color-log');
 
 const MapExpression = function(ast, visit) {
 	const me = this;
@@ -40,7 +41,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 			if (typer.isCustomValue(current.key)) {
 				key = current.key.valueOf();
 			} else {
-				console.error(current.key);
+				logger.error(current.key);
 				throw new Error('Unexpected key');
 			}
 
@@ -49,7 +50,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 			} else if (current.value?.isExpression) {
 				value = await current.value.get(operationContext);
 			} else {
-				console.error(current.value);
+				logger.error(current.value);
 				throw new Error('Unexpected value');
 			}
 

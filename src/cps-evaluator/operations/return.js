@@ -1,4 +1,5 @@
 const typer = require('../typer');
+const logger = require('node-color-log');
 
 const ReturnOperation = function(ast) {
 	const me = this;
@@ -20,7 +21,7 @@ ReturnOperation.prototype.run = async function(operationContext) {
 	} else if (me.arg?.isOperation) {
 		arg = await me.arg.get(operationContext);
 	} else {
-		console.error(me.arg);
+		logger.error(me.arg);
 		throw new Error('Unexpected return value');
 	}
 

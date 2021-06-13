@@ -4,6 +4,12 @@ const stringArgv = require('string-argv').default;
 const chalk = require('chalk');
 const scriptExecuter = require('./script-executer');
 const api = require('./shell/api');
+const logger = require('node-color-log');
+
+const DEFAULT_FOLDERS = [
+	'/bin',
+	'/usr/bin'
+];
 
 const Shell = function(computer) {
 	const me = this;
@@ -35,10 +41,20 @@ Shell.prototype.consume = function(inputMap) {
 		return apiCommand.call(me, argv);
 	}
 
-	const targetPath = fileSystem.resolve(cwd, target);
-	const file = fileSystem.getByPath(targetPath);
+	const folders = [cwd].concat(DEFAULT_FOLDERS);
+	let file;
 
-	if (file == null) return console.log('File not found.');
+	for (let folder of folders) {
+		const targetPath = fileSystem.resolve(folder, target);
+		const foundFile = fileSystem.getByPath(targetPath);
+
+		if (foundFile != null) {
+			file = foundFile;
+			break;
+		}
+	}
+
+	if (file == null) return logger.warn('File not found.');
 
 	if (file.isBinary) {
 		return scriptExecuter({
@@ -48,7 +64,7 @@ Shell.prototype.consume = function(inputMap) {
 		});
 	}
 
-	console.log('File is not a binary.')
+	logger.warn('File is not a binary.')
 };
 
 Shell.prototype.prompt = function(question, isPassword) {

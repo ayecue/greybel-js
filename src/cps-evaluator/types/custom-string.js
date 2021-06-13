@@ -36,11 +36,13 @@ CustomString.prototype[Symbol.iterator] = function() {
 };
 
 CustomString.prototype.callMethod = function(method, ...args) {
-	if (!EXPOSED_METHODS.includes(method[0])) {
-		throw new Error(`Cannot access ${method} in string`);
+	const member = method[0];
+
+	if (!EXPOSED_METHODS.includes(member)) {
+		throw new Error(`Cannot access ${member} in string`);
 	}
 
-	return this[method[0]].call(this, ...args);
+	return this[member].call(this, ...args);
 };
 
 CustomString.prototype.valueOf = function() {

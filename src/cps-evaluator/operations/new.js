@@ -1,4 +1,5 @@
 const typer = require('../typer');
+const logger = require('node-color-log');
 
 const NewOperation = function(ast) {
 	const me = this;
@@ -17,12 +18,12 @@ NewOperation.prototype.get = async function(operationContext) {
 	} else if (me.arg?.isExpression) {
 		arg = await me.arg.get(operationContext);
 	} else {
-		console.error(me.arg);
+		logger.error(me.arg);
 		throw new Error('Unexpected reference');
 	}
 
 	if (!typer.isCustomMap(arg)) {
-		console.error(arg);
+		logger.error(arg);
 		throw new Error('Unexpected type for new operator');
 	}
 

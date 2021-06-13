@@ -17,8 +17,6 @@ module.exports = function(vm) {
 		const fileHandler = function(target) {
 			const targetFile = session.computer.fileSystem.getByPath(target || '');
 
-			console.log('FILE', target, targetFile);
-
 			if (targetFile) {
 				const createInterface = function(file) {
 					const fileInterface = {};

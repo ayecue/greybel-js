@@ -1,4 +1,4 @@
-const EXPOSED_METHODS = [
+	const EXPOSED_METHODS = [
 	'join',
 	'remove',
 	'hasIndex',
@@ -106,27 +106,26 @@ CustomList.prototype.getCallable = async function(path) {
 
 CustomList.prototype.callMethod = function(method, ...args) {
 	const me = this;
+	const member = method[0]?.valueOf ? method[0].valueOf() : method[0];
 
 	if (method.length > 1) {
-		const index = method[0].valueOf();
-
-		if (me.value[index]) {
-			return me.value[index].callMethod(method.slice(1), ...args);
+		if (me.value[member]) {
+			return me.value[member].callMethod(method.slice(1), ...args);
 		}
 
-		console.error(method, args);
+		console.error(method, member, args);
 		throw new Error(`Unexpected method path`);
 	}
 
-	if (me.value[method[0]]) {
-		return me.value[method[0]];
+	if (me.value[member]) {
+		return me.value[member];
 	}
 
-	if (!EXPOSED_METHODS.includes(method[0])) {
+	if (!EXPOSED_METHODS.includes(member)) {
 		throw new Error(`Cannot access ${method} in list`);
 	}
 
-	return me[method[0]].call(me, ...args);
+	return me[member].call(me, ...args);
 };
 
 //exposed methods

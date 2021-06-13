@@ -1,5 +1,6 @@
 const CustomList = require('../types/custom-list');
 const typer = require('../typer');
+const logger = require('node-color-log');
 
 const ListExpression = function(ast, visit) {
 	const me = this;
@@ -37,7 +38,7 @@ ListExpression.prototype.get = function(operationContext, parentExpr) {
 			} else if (current?.isExpression) {
 				list.push(await current.get(operationContext));
 			} else {
-				console.error(current);
+				logger.error(current);
 				throw new Error('Unexpected handle');
 			}
 		}

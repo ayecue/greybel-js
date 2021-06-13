@@ -152,9 +152,9 @@ CustomMap.prototype.createInstance = function() {
 };
 
 CustomMap.prototype.callMethod = function(method, ...args) {
-	if (method.length > 1) {
-		const key = method[0];
+	const key = method[0];
 
+	if (method.length > 1) {
 		if (me.value[key]) {
 			return me.value[key].callMethod(method.slice(1), ...args);
 		}
@@ -162,11 +162,11 @@ CustomMap.prototype.callMethod = function(method, ...args) {
 		throw new Error(`Unexpected method path`);
 	}
 
-	if (!EXPOSED_METHODS.includes(method[0])) {
-		throw new Error(`Cannot access ${method} in map`);
+	if (!EXPOSED_METHODS.includes(key)) {
+		throw new Error(`Cannot access ${key} in map`);
 	}
 
-	return this[method[0]].call(this, ...args);
+	return this[key].call(this, ...args);
 };
 
 //exposed methods

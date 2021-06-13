@@ -1,4 +1,5 @@
 const typer = require('../typer');
+const logger = require('node-color-log');
 
 const AssignExpression = function(ast, visit) {
 	const me = this;
@@ -30,7 +31,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 	const me = this;
 	const evaluate = async function(node) {
 		if (!node.left?.isExpression) {
-			console.error(left);
+			logger.error(left);
 			throw new Error('Unexpected left assignment');
 		}
 
@@ -55,7 +56,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 				}
 			}
 		} else {
-			console.error(right);
+			logger.error(right);
 			throw new Error('Unexpected right assignment');
 		}
 
@@ -68,7 +69,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 
 		 		return true;
 			} else {
-				console.error(left);
+				logger.error(left);
 				throw new Error('Unexpected left assignment');
 			}
 		}
@@ -78,7 +79,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 		return true;
 	};
 
-	console.log('AssignExpression', 'get', 'expr', me.expr);
+	logger.info('AssignExpression', 'get', 'expr', me.expr);
 
 	return await evaluate(me.expr);
 };

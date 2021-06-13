@@ -1,4 +1,5 @@
 const typer = require('../typer');
+const logger = require('node-color-log');
 
 const PathExpression = function(ast, visit) {
 	const me = this;
@@ -99,7 +100,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				} else if (current?.type === 'path') {
 					traversedPath.push(await operationContext.get(current.value));
 				} else {
-					console.error(current);
+					logger.error(current);
 					throw new Error('Unexpected index');
 				}
 			} else if (current?.type === 'slice') {
@@ -107,7 +108,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 					handle = await operationContext.get(traversedPath);
 					traversedPath = [];
 				} else if (!typer.isCustomList(handle)) {
-					console.error(handle);
+					logger.error(handle);
 					throw new Error('Invalid type for slice');
 				}
 
@@ -140,7 +141,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 		};
 	};
 
-	console.log('PathExpression', 'get', 'expr', me.expr);
+	logger.info('PathExpression', 'get', 'expr', me.expr);
 
 	const resultExpr = await evaluate(me.expr);
 

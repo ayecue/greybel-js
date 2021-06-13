@@ -1,4 +1,5 @@
 const typer = require('../typer');
+const logger = require('node-color-log');
 
 const ReferenceOperation = function(ast) {
 	const me = this;
@@ -24,7 +25,7 @@ ReferenceOperation.prototype.get = async function(operationContext) {
 			return arg.handle.get(arg.path);
 		}
 
-		console.error(arg.handle, me.ast);
+		logger.error(arg.handle, me.ast);
 		throw new Error('Unexpected handle in reference statement');
 	}
 
