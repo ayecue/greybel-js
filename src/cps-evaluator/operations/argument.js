@@ -1,10 +1,12 @@
 const typer = require('../typer');
 
-const ArgumentOperation = function(ast) {
+const ArgumentOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.stack = [];
 	me.isOperation = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 
@@ -19,7 +21,7 @@ ArgumentOperation.prototype.get = async function(operationContext) {
 		} else if (entity?.isExpression) {
 			args.push(await entity.get(operationContext, me));
 		} else {
-			throw new Error('Unexpected argument');
+			me.raise('Unexpected argument', me, entity);
 		}
 	}
 

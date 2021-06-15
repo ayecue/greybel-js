@@ -25,9 +25,7 @@ const loadConfigFile = function(filepath, map) {
 		throw new Error('No file: ' + filepath);
 	}
 
-	const content = fs.readFileSync(filepath, {
-		encoding: 'utf-8'
-	});
+	const content = fs.readFileSync(filepath, 'utf8');
 	
 	return readVarLines(content.split('\n'), map);
 };

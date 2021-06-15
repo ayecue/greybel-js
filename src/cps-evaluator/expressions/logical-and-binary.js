@@ -1,5 +1,4 @@
 const typer = require('../typer');
-const logger = require('node-color-log');
 
 const toPrimitive = (v) => {
 	if (typer.isCustomValue(v)) {
@@ -37,7 +36,7 @@ const OPERATIONS = {
 	'or': (a, b) => toPrimitive(a) || toPrimitive(b)
 };
 
-const LogicalAndBinaryExpression = function(ast, visit) {
+const LogicalAndBinaryExpression = function(ast, visit, debug, raise) {
 	const me = this;
 	const buildExpression = function(node) {
 		let expression;
@@ -62,6 +61,8 @@ const LogicalAndBinaryExpression = function(ast, visit) {
 
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
+	me.debug = debug;
+	me.raise = raise;
 
 	return me;
 };
@@ -104,7 +105,7 @@ LogicalAndBinaryExpression.prototype.get = function(operationContext) {
 		return node.get(operationContext);
 	};
 
-	logger.info('LogicalAndBinaryExpression', 'get', 'expr', me.expr);
+	me.debug('LogicalAndBinaryExpression', 'get', 'expr', me.expr);
 
 	return evaluate(me.expr);
 };

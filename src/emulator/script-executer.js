@@ -1,10 +1,6 @@
 const build = require('../build');
 const interpreter = require('../interpreter');
-const md5 = require('../utils/md5');
-const fs = require('fs');
-const path = require('path');
 const ExitError = require('./errors/exit');
-const chalk = require('chalk');
 const polyfills = require('./polyfills');
 
 module.exports = async function(options) {
@@ -22,7 +18,11 @@ module.exports = async function(options) {
 			code = content;
 		}
 
-		await interpreter(code, options.params, polyfills(options.vm));
+		await interpreter({
+			code: code,
+			params: options.params,
+			api: polyfills(options.vm)
+		});
 	} catch (err) {
 		if (!(err instanceof ExitError)) console.error(err);
 	}

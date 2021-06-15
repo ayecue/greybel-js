@@ -1,7 +1,9 @@
-const ContinueOperation = function(ast) {
+const ContinueOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.isOperation = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 

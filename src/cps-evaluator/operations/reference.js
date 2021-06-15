@@ -1,11 +1,12 @@
 const typer = require('../typer');
-const logger = require('node-color-log');
 
-const ReferenceOperation = function(ast) {
+const ReferenceOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.arg = null;
 	me.isOperation = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 
@@ -16,8 +17,7 @@ ReferenceOperation.prototype.get = async function(operationContext) {
 	if (me.arg?.isExpression) {
 		arg = await me.arg.get(operationContext, me);
 	} else {
-		console.error(me.arg);
-		throw new Error('Unexpected reference');
+		me.raise('Unexpected reference', me, me.arg);
 	}
 
 	if (arg.handle) {
@@ -25,8 +25,7 @@ ReferenceOperation.prototype.get = async function(operationContext) {
 			return arg.handle.get(arg.path);
 		}
 
-		logger.error(arg.handle, me.ast);
-		throw new Error('Unexpected handle in reference statement');
+		me.raise('Unexpected handle in reference statement', me, arg.handle);
 	}
 
 	return operationContext.get(arg.path);

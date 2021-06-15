@@ -1,6 +1,6 @@
 const uuidv4 = require('uuid').v4;
 
-const FunctionOperation = function(ast) {
+const FunctionOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.id = uuidv4();
@@ -9,6 +9,8 @@ const FunctionOperation = function(ast) {
 	me.isOperation = true;
 	me.context = null;
 	me.isFunction = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 

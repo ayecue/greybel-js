@@ -1,8 +1,7 @@
 const CustomList = require('../types/custom-list');
 const typer = require('../typer');
-const logger = require('node-color-log');
 
-const ListExpression = function(ast, visit) {
+const ListExpression = function(ast, visit, debug, raise) {
 	const me = this;
 	const buildExpression = function(node) {
 		let expression;
@@ -22,6 +21,8 @@ const ListExpression = function(ast, visit) {
 
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
+	me.debug = debug;
+	me.raise = raise;
 
 	return me;
 };
@@ -38,13 +39,14 @@ ListExpression.prototype.get = function(operationContext, parentExpr) {
 			} else if (current?.isExpression) {
 				list.push(await current.get(operationContext));
 			} else {
-				logger.error(current);
-				throw new Error('Unexpected handle');
+				me.raise('Unexpected handle', me, current);
 			}
 		}
 
 		return new CustomList(list);
 	};
+
+	me.debug('ListExpression', 'get', 'expr', me.expr);
 
 	return evaluate(me.expr);
 };

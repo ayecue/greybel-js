@@ -1,7 +1,6 @@
 const typer = require('../typer');
-const logger = require('node-color-log');
 
-const PathExpression = function(ast, visit) {
+const PathExpression = function(ast, visit, debug, raise) {
 	const me = this;
 	const append = function(expr, v) {
 		if (Array.isArray(v)) {
@@ -51,6 +50,8 @@ const PathExpression = function(ast, visit) {
 
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
+	me.debug = debug;
+	me.raise = raise;
 
 	return me;
 };
@@ -100,16 +101,14 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				} else if (current?.type === 'path') {
 					traversedPath.push(await operationContext.get(current.value));
 				} else {
-					logger.error(current);
-					throw new Error('Unexpected index');
+					me.raise('Unexpected index', me, current);
 				}
 			} else if (current?.type === 'slice') {
 				if (!handle) {
 					handle = await operationContext.get(traversedPath);
 					traversedPath = [];
 				} else if (!typer.isCustomList(handle)) {
-					logger.error(handle);
-					throw new Error('Invalid type for slice');
+					me.raise('Invalid type for slice', me, handle);
 				}
 
 				let left = current.left[0];
@@ -130,8 +129,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 
 				handle = handle.slice(left, right);
 			} else {
-				console.error(current);
-				throw new Error('Unexpected handle');
+				me.raise('Unexpected handle', me, current);
 			}
 		}
 
@@ -141,7 +139,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 		};
 	};
 
-	logger.info('PathExpression', 'get', 'expr', me.expr);
+	me.debug('PathExpression', 'get', 'expr', me.expr);
 
 	const resultExpr = await evaluate(me.expr);
 

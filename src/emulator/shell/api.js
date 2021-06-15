@@ -1,4 +1,3 @@
-const build = require('../../build');
 const scriptExecuter = require('../script-executer');
 const chalk = require('chalk');
 const path = require('path');

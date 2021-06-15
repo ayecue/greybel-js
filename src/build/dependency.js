@@ -52,9 +52,7 @@ Dependency.prototype.findDependencies = function() {
 		}
 
 		const isInclude = item.type === 'FeatureIncludeExpression';
-		const content = fs.readFileSync(depFilepath, {
-			encoding: 'utf-8'
-		});
+		const content = fs.readFileSync(depFilepath, 'utf8');
 
 		logger.info('Parsing: ' + depFilepath);
 		const parser = new Parser(content, me.collectAll);

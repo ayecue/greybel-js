@@ -1,7 +1,6 @@
 const CustomMap = require('../types/custom-map');
-const logger = require('node-color-log');
 
-const MapExpression = function(ast, visit) {
+const MapExpression = function(ast, visit, debug, raise) {
 	const me = this;
 	const buildExpression = function(node) {
 		let expression;
@@ -24,6 +23,8 @@ const MapExpression = function(ast, visit) {
 
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
+	me.debug = debug;
+	me.raise = raise;
 
 	return me;
 };
@@ -41,8 +42,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 			if (typer.isCustomValue(current.key)) {
 				key = current.key.valueOf();
 			} else {
-				logger.error(current.key);
-				throw new Error('Unexpected key');
+				me.raise('Unexpected key', me, current.key);
 			}
 
 			if (typer.isCustomValue(current.value)) {
@@ -50,8 +50,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 			} else if (current.value?.isExpression) {
 				value = await current.value.get(operationContext);
 			} else {
-				logger.error(current.value);
-				throw new Error('Unexpected value');
+				me.raise('Unexpected left assignment', me, left);
 			}
 
 			map[key] = value;
@@ -59,6 +58,8 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 
 		return new CustomMap(map);
 	};
+
+	me.debug('MapExpression', 'get', 'expr', me.expr);
 
 	return evaluate(me.expr);
 };

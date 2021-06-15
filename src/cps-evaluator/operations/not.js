@@ -1,11 +1,12 @@
 const typer = require('../typer');
-const logger = require('node-color-log');
 
-const NotOperation = function(ast) {
+const NotOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.arg = null;
 	me.isOperation = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 
@@ -22,8 +23,7 @@ NotOperation.prototype.get = async function(operationContext) {
 			arg = arg.valueOf();
 		}
 	} else {
-		logger.error(me.arg);
-		throw new Error('Unexpected not operation');
+		me.raise('Unexpected not operation', me, me.arg);
 	}
 
 	return !arg;

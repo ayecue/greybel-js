@@ -2,11 +2,13 @@ const IfOperation = require('./if');
 const ElseIfOperation = require('./else-if');
 const ElseOperation = require('./else');
 
-const IfStatementOperation = function(ast) {
+const IfStatementOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.clauses = [];
 	me.isOperation = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 
@@ -26,7 +28,7 @@ IfStatementOperation.prototype.run = async function(operationContext) {
 			await clause.body.run(operationContext);
 			break;
 		} else {
-			throw new Error('Invalid operation in if statement.');
+			me.raise('Invalid operation in if statement.', me, clause);
 		}
 	}
 };

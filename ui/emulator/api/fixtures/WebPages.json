@@ -1,0 +1,342 @@
+[
+    {
+        "Address": "www.nacca.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "10.0.22.6",
+        "NumVisits": 0,
+        "PublicIp": "208.229.93.236",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.eporthw.info",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "10.0.9.2",
+        "NumVisits": 0,
+        "PublicIp": "125.31.176.180",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.rudente.com",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.3",
+        "NumVisits": 0,
+        "PublicIp": "84.214.57.218",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.graw-h.info",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.2",
+        "NumVisits": 0,
+        "PublicIp": "82.182.62.174",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.scienaltd.net",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "172.16.23.6",
+        "NumVisits": 0,
+        "PublicIp": "216.155.182.184",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.publix.com",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "172.16.23.6",
+        "NumVisits": 0,
+        "PublicIp": "52.212.196.134",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Publix</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAre you tired of keeping the money under the mattress of your bed? It's normal, you should not do it.<br>At Publix we have safes.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www./intexas.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.3",
+        "NumVisits": 0,
+        "PublicIp": "169.239.212.144",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">/Intexas</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nBecause you deserve the best professionals to manage your money.<br>We are /Intexas, one of the best banks in the world. Enter now and meet us.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.elincipa.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.2",
+        "NumVisits": 0,
+        "PublicIp": "2.145.16.41",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Elincipa</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAn honest, safe, cool bank. Just Elincipa.<br>Register an account online.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.premar.info",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.2",
+        "NumVisits": 0,
+        "PublicIp": "214.233.225.124",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Premar</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAre you tired of keeping the money under the mattress of your bed? It's normal, you should not do it.<br>At Premar we have safes.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.yeartfocorp.com",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.2",
+        "NumVisits": 0,
+        "PublicIp": "17.155.92.175",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Yeartfocorp</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAt Yeartfocorp we are at your service every day to offer you the best.<br>Let us be your bank.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.eastman.net",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "10.0.17.4",
+        "NumVisits": 0,
+        "PublicIp": "17.246.78.194",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Eastman</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAt Eastman we know how important it is to know that your savings are in safe hands. Open an account now and you will have access to one of the safest banking services in the world.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.hiliconsta.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.2",
+        "NumVisits": 0,
+        "PublicIp": "69.81.4.73",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Hiliconsta</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAn honest, safe, cool bank. Just Hiliconsta.<br>Register an account online.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.brunswick.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.5.17",
+        "NumVisits": 0,
+        "PublicIp": "166.217.238.248",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Brunswick</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nAt Brunswick we offer you a powerful mail service so you can use it in a professional and private environment.\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.centecolgat.com",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "172.16.10.7",
+        "NumVisits": 0,
+        "PublicIp": "139.151.226.164",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Centecolgat</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nDo not have an email account? Do you live in the past?<br><br>\nLuckily at Centecolgat, we offer you a reliable and secure mail service.<br>Register for free now!\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.adspart.net",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.2",
+        "NumVisits": 0,
+        "PublicIp": "30.113.164.181",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Adspart</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nAt Adspart we offer you a powerful mail service so you can use it in a professional and private environment.\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.ruddiebinc.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "10.0.17.13",
+        "NumVisits": 0,
+        "PublicIp": "198.123.142.68",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Ruddiebinc</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nDo not have an email account? Do you live in the past?<br><br>\nLuckily at Ruddiebinc, we offer you a reliable and secure mail service.<br>Register for free now!\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.perfo.info",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.2",
+        "NumVisits": 0,
+        "PublicIp": "69.141.44.10",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Perfo</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nAt Perfo we offer you a powerful mail service so you can use it in a professional and private environment.\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.centelecti.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.5.7",
+        "NumVisits": 0,
+        "PublicIp": "65.240.42.121",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Centelecti</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nDo not have an email account? Do you live in the past?<br><br>\nLuckily at Centelecti, we offer you a reliable and secure mail service.<br>Register for free now!\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.enternsteonllc.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "172.16.18.5",
+        "NumVisits": 0,
+        "PublicIp": "30.16.155.237",
+        "Web": "<!doctype html>\n<title>Site Maintenance</title>\n<style>\n  body { text-align: center; padding: 25px; }\n  h1 { font-size: 50px; }\n  body { font: 20px Helvetica, sans-serif; color: #333; }\n  article { display: block; text-align: left; width: 650px; margin: 0 auto; }\n  html{\n    background-color: whitesmoke;\n    height:100%;\n  }\n</style>\n<article>\n  <h1>We will be back soon!</h1>\n    <div>\n      <p>Sorry for the inconvenience but we are performing some maintenance at the moment. We will be back online shortly!</p>\n      <p>The Team</p>\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.spectiv.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "172.16.11.2",
+        "NumVisits": 0,
+        "PublicIp": "221.251.89.160",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.rinions.net",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.2",
+        "NumVisits": 0,
+        "PublicIp": "157.202.70.76",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Rinions</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nWelcome, we are Rinions, a company that offers services through the network.<br><br>\n\nWe currently have a mail service available, it's totally free.<br>\nRegister now!<br><br>\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.ratheon.net",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.2",
+        "NumVisits": 0,
+        "PublicIp": "178.183.67.196",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.intect.info",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.3",
+        "NumVisits": 0,
+        "PublicIp": "40.127.200.218",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Intect</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAt Intect we are at your service every day to offer you the best.<br>Let us be your bank.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.a-crefltd.info",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "10.0.19.9",
+        "NumVisits": 0,
+        "PublicIp": "223.202.45.26",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.loball.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "172.16.2.6",
+        "NumVisits": 0,
+        "PublicIp": "11.9.31.165",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.worldcom.com",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.2",
+        "NumVisits": 0,
+        "PublicIp": "220.237.180.175",
+        "Web": "<!doctype html>\n\n<style>\n  h1 { font-size: 40px; text-align: center}\n  body { font: 20px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #006699;\n    border: 1px solid grey;\n    color: white;\n    padding: 8px 36px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font-size: 16px;\n  }\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }  \n  html{\n\t  background-color: darkgray;\n    height:100%;\n  }\n  .btn-group{\n    padding-top: 25px;\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 30px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>\n  <button type=\"button\" class=\"btn btn-primary\">About</button>\n</div>\n\n<article>\n    <div class=\"logo text-center\">\n      <h1>University</h1>\n    </div>    \n    <img src=\"university.jpg\" align=\"middle\">    \n    <div>\n        <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p>\n        <p>&mdash; The Team</p>\n    </div>\n</article>\n"
+    },
+    {
+        "Address": "www.worth.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.2",
+        "NumVisits": 0,
+        "PublicIp": "101.58.248.207",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Worth</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nDo not have an email account? Do you live in the past?<br><br>\nLuckily at Worth, we offer you a reliable and secure mail service.<br>Register for free now!\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.tonagcorp.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.2",
+        "NumVisits": 0,
+        "PublicIp": "132.22.76.130",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Tonagcorp</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nDo you need a reliable bank to store your money?<br>\nIn Tonagcorp we have the solution.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    },
+    {
+        "Address": "www.erprinkerra.net",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "10.0.23.6",
+        "NumVisits": 0,
+        "PublicIp": "122.142.63.182",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.peaboardin.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.20.6",
+        "NumVisits": 0,
+        "PublicIp": "80.18.172.8",
+        "Web": "<!doctype html>\n\n<style>\n  h1 { font-size: 40px; text-align: center}\n  body { font: 20px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #006699;\n    border: 1px solid grey;\n    color: white;\n    padding: 8px 36px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font-size: 16px;\n  }\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }  \n  html{\n\t  background-color: darkgray;\n    height:100%;\n  }\n  .btn-group{\n    padding-top: 25px;\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 30px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>\n  <button type=\"button\" class=\"btn btn-primary\">About</button>\n</div>\n\n<article>\n    <div class=\"logo text-center\">\n      <h1>University</h1>\n    </div>    \n    <img src=\"university.jpg\" align=\"middle\">    \n    <div>\n        <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p>\n        <p>&mdash; The Team</p>\n    </div>\n</article>\n"
+    },
+    {
+        "Address": "www.elcomv.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.4",
+        "NumVisits": 0,
+        "PublicIp": "29.207.167.201",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\nbody { font: 12px Helvetica, sans-serif; margin:0; overflow-y:auto; height:100%; }\n\nhtml{\n\tbackground-color: #607662FF;\n    height:100%;\n    margin:0; overflow-y:auto;\n}\n\n.hackshop { \n    text-align: center;    \n    padding: 100px;\n    padding-top: 25px;\n}\n\n.btn {\n    background-color: #28381EFF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    text-align: center;\n    text-decoration: none;\n    display: inline-block;\n    font: 18;\n    width: 130px;\n  }\n\n.btn-sel{\n    background-color: #3D542FFF;\n}\n.btn-group button:hover {\n    background-color: #3D542FFF;\n}\n\n</style>\n<div style=\"background-color:#768E7AFF;color:white;padding:3px;\">\n<div class=\"btn-group\" style=\"text-align: center;\">\n  <button type=\"button\" class=\"btn btn-primary btn-sel\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"InformaticaShop\">Shop</button>\n</div>\n</div>\n\n  \n  <div class=\"hackshop\">\n    <img src=\"shop_alter.jpg\" width=\"250\" height=\"145\" align=\"center\">\n    <p style=\"font-size:18px;\">Welcome</p>    \n    <p>\nWe are the best computer store in the network.<br>\nEnter and check our stock! We have the best prices!\n    </p>\n  </div>\n"
+    },
+    {
+        "Address": "www.dollyw.org",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "10.0.14.2",
+        "NumVisits": 0,
+        "PublicIp": "139.247.149.201",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Dollyw</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nWelcome, we are Dollyw, a company that offers services through the network.<br><br>\n\nWe currently have a mail service available, it's totally free.<br>\nRegister now!<br><br>\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.udencomptoinc.net",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.0.3",
+        "NumVisits": 0,
+        "PublicIp": "58.65.12.26",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #444444FF;\n    border: 1px solid #B2B2B2FF;\n    color: #C1C1C1FF;\n    padding: 8px 8px;\n    font-size: 18;    \n    width: 130px;\n  }\n  .btn-group button:hover {\n    background-color: #690000FF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; } \n\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .mainText{\n    text-align: center;\n    padding: 10px;\n  }\n\n  .logo{\n    text-align: right;    \n    position: absolute;\n    right: 10px;\n    font-size: 25px;\n    \n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n</style>\n\n</div>\n<div style=\"background-color:#A92222FF;color:white;padding:11px;\">\n  <div class=\"logo\">Udencomptoinc</div>\n<div class=\"btn-group\">\n  <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Main</button>\n  <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterMail\">Email services</button>\n  <button type=\"button\" class=\"btn btn-primary\">News</button>    \n  \n</div>\n\n</div>\n\n<article>\n    <div class=\"mainText\">    \n        <p>\nWelcome, we are Udencomptoinc, a company that offers services through the network.<br><br>\n\nWe currently have a mail service available, it's totally free.<br>\nRegister now!<br><br>\n    </p>\n           <img src=\"email_alter.png\" width=\"85\" height=\"85\" align=\"center\">\n    </div> \n</article>\n"
+    },
+    {
+        "Address": "www.metald.com",
+        "DateCreation": 0,
+        "ExternalPort": 80,
+        "IsRented": 0,
+        "LocalIp": "192.168.1.2",
+        "NumVisits": 0,
+        "PublicIp": "187.154.36.223",
+        "Web": "<!DOCTYPE html>\n<style type='text/css'>\n\n  h1 { font-size: 40px; text-align: center}\n  body { font: 12px Helvetica, sans-serif; color: #333; margin:0; overflow-y:auto; height:100%; }\n  .btn {\n    background-color: #072C3F;\n    border: 1px solid #4B4B4B;\n    color: white;\n    padding: 8px 8px;\n    font-size: 18;\n    width: 130px; \n  }\n  .btn-group button:hover {\n    background-color: #137AACFF;\n  }\n\n  article { display: block; text-align: left; width: 600px; margin: 0 auto; }\n  html{\n    background-color: white;\n    height:100%;\n  }\n  .btn-group{\n    text-align: center;\n  }\n  .logo{\n    text-align: center;\n    padding: 10px;\n  }\n  img{\n    display: block;\n    margin: 0 auto;\n  }\n  </style>\n  <div style=\"background-color:#4A6470;color:white;padding:11px;\">\n    <font size=\"30\">Metald</font>\n  </div>\n  <div style=\"background-color:#00445A;color:white;padding:5px;\">\n    <div class=\"btn-group\">\n      <button type=\"button\" class=\"btn btn-primary\" id=\"Home\">Home</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"RegisterBank\">Register</button>\n      <button type=\"button\" class=\"btn btn-primary\" id=\"LoginBank\">Login</button>\n    </div>\n  </div>\n  <article>\n    <div class=\"logo text-center\">\n      <p>\nAt Metald we know how important it is to know that your savings are in safe hands. Open an account now and you will have access to one of the safest banking services in the world.\n    </p>\n      <img src=\"bank.png\" width=\"120\" height=\"120\" align=\"center\">\n    </div>\n  </article>"
+    }
+]

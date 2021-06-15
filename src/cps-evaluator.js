@@ -29,20 +29,21 @@ const CustomBoolean = require('./cps-evaluator/types/custom-boolean');
 const CustomNumber = require('./cps-evaluator/types/custom-number');
 const CustomString = require('./cps-evaluator/types/custom-string');
 const CustomNil = require('./cps-evaluator/types/custom-nil');
+const EventEmitter = require('events');
 
-const mapper = function(visit) {
+const mapper = function(visit, debug, raise) {
 	return {
 		'AssignmentStatement': function(item) {
-			return new AssignExpression(item, visit);
+			return new AssignExpression(item, visit, debug, raise);
 		},
 		'MemberExpression': function(item) {
-			return new PathExpression(item, visit);
+			return new PathExpression(item, visit, debug, raise);
 		},
 		'FunctionDeclaration': function(item, operation) {
 			const me = this;
-			const op = new FunctionOperation(item);
-			const args = new ArgumentOperation();
-			const body = new BodyOperation();
+			const op = new FunctionOperation(item, debug, raise);
+			const args = new ArgumentOperation(item.parameters, debug, raise);
+			const body = new BodyOperation(item.body, debug, raise);
 
 			for (parameterItem of item.parameters) {
 				args.stack.push(visit(parameterItem));
@@ -58,14 +59,14 @@ const mapper = function(visit) {
 			return op;
 		},
 		'MapConstructorExpression': function(item, operation) {
-			return new MapExpression(item, visit);
+			return new MapExpression(item, visit, debug, raise);
 		},
 		'Identifier': function(item) {
-			return new PathExpression(item, visit);
+			return new PathExpression(item, visit, debug, raise);
 		},
 		'ReturnStatement': function(item) {
 			const me = this;
-			const op = new ReturnOperation(item);
+			const op = new ReturnOperation(item, debug, raise);
 
 			op.arg = visit(item.arguments[0]);
 
@@ -76,8 +77,8 @@ const mapper = function(visit) {
 		},
 		'WhileStatement': function(item) {
 			const me = this;
-			const op = new WhileOperation(item);
-			const body = new BodyOperation();
+			const op = new WhileOperation(item, debug, raise);
+			const body = new BodyOperation(item.body, debug, raise);
 
 			op.condition = visit(item.condition);
 
@@ -95,14 +96,14 @@ const mapper = function(visit) {
 			return new CustomString(item.value);
 		},
 		'IndexExpression': function(item) {
-			return new PathExpression(item, visit);
+			return new PathExpression(item, visit, debug, raise);
 		},
 		'FeatureEnvarExpression': function(item) {
 			throw new Error('Not supported');
 		},
 		'IfShortcutStatement': function(item) {
 			const me = this;
-			const op = new IfStatementOperation(item);
+			const op = new IfStatementOperation(item, debug, raise);
 			let clausesItem;
 
 			for (clausesItem of item.clauses) {
@@ -113,8 +114,8 @@ const mapper = function(visit) {
 		},
 		'IfShortcutClause': function(item) {
 			const me = this;
-			const op = new IfOperation(item);
-			const body = new BodyOperation();
+			const op = new IfOperation(item, debug, raise);
+			const body = new BodyOperation(item.statement, debug, raise);
 
 			op.condition = visit(item.condition);
 
@@ -125,8 +126,8 @@ const mapper = function(visit) {
 		},
 		'ElseifShortcutClause': function(item) {
 			const me = this;
-			const op = new ElseIfOperation(item);
-			const body = new BodyOperation();
+			const op = new ElseIfOperation(item, debug, raise);
+			const body = new BodyOperation(item.statement, debug, raise);
 
 			op.condition = visit(item.condition);
 
@@ -137,8 +138,8 @@ const mapper = function(visit) {
 		},
 		'ElseShortcutClause': function(item) {
 			const me = this;
-			const op = new ElseOperation(item);
-			const body = new BodyOperation();
+			const op = new ElseOperation(item, debug, raise);
+			const body = new BodyOperation(item.statement, debug, raise);
 
 			body.stack.push(visit(item.statement));
 			op.body = body;
@@ -150,8 +151,8 @@ const mapper = function(visit) {
 		},
 		'ForGenericStatement': function(item) {
 			const me = this;
-			const op = new ForOperation(item);
-			const body = new BodyOperation();
+			const op = new ForOperation(item, debug, raise);
+			const body = new BodyOperation(item.body, debug, raise);
 
 			op.variable = visit(item.variable);
 			op.iterator = visit(item.iterator);
@@ -168,7 +169,7 @@ const mapper = function(visit) {
 		},
 		'IfStatement': function(item) {
 			const me = this;
-			const op = new IfStatementOperation(item);
+			const op = new IfStatementOperation(item, debug, raise);
 			let clausesItem;
 
 			for (clausesItem of item.clauses) {
@@ -179,8 +180,8 @@ const mapper = function(visit) {
 		},
 		'IfClause': function(item) {
 			const me = this;
-			const op = new IfOperation(item);
-			const body = new BodyOperation();
+			const op = new IfOperation(item, debug, raise);
+			const body = new BodyOperation(item.body, debug, raise);
 
 			op.condition = visit(item.condition);
 
@@ -196,8 +197,8 @@ const mapper = function(visit) {
 		},
 		'ElseifClause': function(item) {
 			const me = this;
-			const op = new ElseIfOperation(item);
-			const body = new BodyOperation();
+			const op = new ElseIfOperation(item, debug, raise);
+			const body = new BodyOperation(item.body, debug, raise);
 
 			op.condition = visit(item.condition);
 
@@ -213,8 +214,8 @@ const mapper = function(visit) {
 		},
 		'ElseClause': function(item) {
 			const me = this;
-			const op = new ElseOperation(item);
-			const body = new BodyOperation();
+			const op = new ElseOperation(item, debug, raise);
+			const body = new BodyOperation(item.body, debug, raise);
 
 			let bodyItem;
 
@@ -228,23 +229,23 @@ const mapper = function(visit) {
 		},
 		'NegationExpression': function(item) {
 			const me = this;
-			const op = new NotOperation(item);
+			const op = new NotOperation(item, debug, raise);
 
 			op.arg = visit(item.argument);
 
 			return op;
 		},
 		'ContinueStatement': function(item) {
-			return new ContinueOperation(item);
+			return new ContinueOperation(item, debug, raise);
 		},
 		'BreakStatement': function(item) {
-			return new BreakOperation(item);
+			return new BreakOperation(item, debug, raise);
 		},
 		'CallExpression': function(item) {
-			return new CallExpression(item, visit);
+			return new CallExpression(item, visit, debug, raise);
 		},
 		'CallStatement': function(item) {
-			return new CallExpression(item, visit);
+			return new CallExpression(item, visit, debug, raise);
 		},
 		'FeatureImportExpression': function(item) {
 			throw new Error('Not supported');
@@ -253,24 +254,24 @@ const mapper = function(visit) {
 			throw new Error('Not supported');
 		},
 		'ListConstructorExpression': function(item) {
-			return new ListExpression(item, visit);
+			return new ListExpression(item, visit, debug, raise);
 		},
 		'BooleanLiteral': function(item) {
 			return new CustomBoolean(item.value);
 		},
 		'EmptyExpression': function(item) {},
 		'BinaryExpression': function(item) {
-			return new LogicalAndBinaryExpression(item, visit);
+			return new LogicalAndBinaryExpression(item, visit, debug, raise);
 		},
 		'LogicalExpression': function(item) {
-			return new LogicalAndBinaryExpression(item, visit);
+			return new LogicalAndBinaryExpression(item, visit, debug, raise);
 		},
 		'UnaryExpression': function(item) {
 			const me = this;
 			let op;
 
-			if ('@' === item.operator) op = new ReferenceOperation(item);
-			if ('new' === item.operator) op = new NewOperation(item);
+			if ('@' === item.operator) op = new ReferenceOperation(item, debug, raise);
+			if ('new' === item.operator) op = new NewOperation(item, debug, raise);
 
 			op.arg = visit(item.argument);
 
@@ -278,7 +279,7 @@ const mapper = function(visit) {
 		},
 		'Chunk': function(item) {
 			const me = this;
-			const op = new BodyOperation(item);
+			const op = new BodyOperation(item, debug, raise);
 
 			let bodyItem;
 
@@ -291,9 +292,9 @@ const mapper = function(visit) {
 	};
 };
 
-const CPSEvaluatorWalker = function() {
+const CPSEvaluatorWalker = function(debug, raise) {
 	const me = this;
-	me.mapper = mapper(me.visit.bind(me))
+	me.mapper = mapper(me.visit.bind(me), debug, raise);
 	return me;
 }
 
@@ -313,15 +314,19 @@ CPSEvaluatorWalker.prototype.visit = function(o, ...args) {
 	return result;
 };
 
-const CPSEvaluator = function(chunk) {
+const CPSEvaluator = function(options) {
 	const me = this;
-	me.chunk = chunk;
+
+	me.chunk = options.chunk;
+	me.debug = options.debug;
+	me.raise = options.raise;
+
 	return me;
 };
 
 CPSEvaluator.prototype.digest = function() {
 	const me = this;
-	const cpsWalker = new CPSEvaluatorWalker();
+	const cpsWalker = new CPSEvaluatorWalker(me.debug, me.raise);
 	const topOperation = new TopOperation();
 
 	topOperation.body = cpsWalker.visit(me.chunk);
@@ -329,6 +334,6 @@ CPSEvaluator.prototype.digest = function() {
 	return topOperation;
 };
 
-module.exports = function(chunk) {
-	return (new CPSEvaluator(chunk)).digest();
+module.exports = function(options) {
+	return (new CPSEvaluator(options)).digest();
 };

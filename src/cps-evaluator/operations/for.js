@@ -1,12 +1,14 @@
 const BodyOperation = require('./body');
 
-const ForOperation = function(ast) {
+const ForOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.variable = null;
 	me.iterator = null;
 	me.body = null;
 	me.isOperation = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 

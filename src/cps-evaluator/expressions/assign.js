@@ -1,7 +1,6 @@
 const typer = require('../typer');
-const logger = require('node-color-log');
 
-const AssignExpression = function(ast, visit) {
+const AssignExpression = function(ast, visit, debug, raise) {
 	const me = this;
 	const buildExpression = function(node) {
 		let expression;
@@ -23,6 +22,8 @@ const AssignExpression = function(ast, visit) {
 
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
+	me.debug = debug;
+	me.raise = raise;
 
 	return me;
 };
@@ -31,8 +32,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 	const me = this;
 	const evaluate = async function(node) {
 		if (!node.left?.isExpression) {
-			logger.error(left);
-			throw new Error('Unexpected left assignment');
+			me.raise('Unexpected left assignment', me, left);
 		}
 
 		const left = await node.left.get(operationContext, me.expr);
@@ -56,8 +56,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 				}
 			}
 		} else {
-			logger.error(right);
-			throw new Error('Unexpected right assignment');
+			me.raise('Unexpected right assignment', me, right);
 		}
 
 		if (left.handle) {
@@ -69,8 +68,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 
 		 		return true;
 			} else {
-				logger.error(left);
-				throw new Error('Unexpected left assignment');
+				me.raise('Unexpected left assignment', me, left);
 			}
 		}
 
@@ -79,7 +77,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 		return true;
 	};
 
-	logger.info('AssignExpression', 'get', 'expr', me.expr);
+	me.debug('AssignExpression', 'get', 'expr', me.expr);
 
 	return await evaluate(me.expr);
 };

@@ -1,8 +1,10 @@
-const BodyOperation = function(ast) {
+const BodyOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
 	me.stack = [];
 	me.isOperation = true;
+	me.debug = debug;
+	me.raise = raise;
 	return me;
 };
 

@@ -48,9 +48,7 @@ Builder.prototype.compile = function(options) {
 		.preset(charsetMap.MODULES);
 	literals.reset();
 
-	const content = fs.readFileSync(me.filepath, {
-		encoding: 'utf-8'
-	});
+	const content = fs.readFileSync(me.filepath, 'utf8');
 	logger.info('Parsing: ' + me.filepath);
 	const parser = new Parser(content, options.uglify);
 	const chunk = parser.parseChunk();

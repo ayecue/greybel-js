@@ -1,14 +1,31 @@
 const cpsEvaluator = require('./cps-evaluator');
 const OperationContext = require('./interpreter/operation-context');
 const CodeParser = require('./parser');
-const typer = require('./cps-evaluator/typer')
+const typer = require('./cps-evaluator/typer');
+const EventEmitter = require('events');
 
-const Interpreter = function(code, params, api) {
+const Interpreter = function(options) {
 	const me = this;
-	me.code = code;
-	me.api = api;
-	me.params = params;
+
+	me.code = options.code;
+	me.api = options.api;
+	me.params = options.params;
+	me.emitter = options.eventEmitter || new EventEmitter();
+
 	return me;
+};
+
+Interpreter.prototype.raise = function(message, item, ...args) {
+	const me = this;
+	me.emitter.emit('error', message, item, ...args);
+	console.error(`[ERROR][Line: ${item.ast.line}]`, ...args);
+	throw new Error(message);
+};
+
+Interpreter.prototype.debug = function(message, ...args) {
+	const me = this;
+	me.emitter.emit('debug', message, ...args);
+	console.log('[DEBUG]', message, ...args);
 };
 
 Interpreter.prototype.digest = function() {
@@ -16,7 +33,11 @@ Interpreter.prototype.digest = function() {
 
 	const parser = new CodeParser(me.code);
 	const chunk = parser.parseChunk();
-	const cps = cpsEvaluator(chunk);
+	const cps = cpsEvaluator({
+		chunk: chunk,
+		debug: me.debug.bind(me),
+		raise: me.raise.bind(me)
+	});
 	const mainContext = new OperationContext(true);
 	
 	mainContext.extend({
@@ -36,6 +57,6 @@ Interpreter.prototype.digest = function() {
 		});
 };
 
-module.exports = function(code, params, api) {
-	return (new Interpreter(code, params, api)).digest();
+module.exports = function(options) {
+	return (new Interpreter(options)).digest();
 };

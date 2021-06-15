@@ -1,7 +1,6 @@
 const typer = require('../typer');
-const logger = require('node-color-log');
 
-const CallExpression = function(ast, visit) {
+const CallExpression = function(ast, visit, debug, raise) {
 	const me = this;
 	const buildExpression = function(node) {
 		let expression;
@@ -29,6 +28,8 @@ const CallExpression = function(ast, visit) {
 
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
+	me.debug = debug;
+	me.raise = raise;
 
 	return me;
 };
@@ -57,8 +58,7 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 				operationContext.setMemory('args', args);
 				return callResult.run(operationContext);
 			} else {
-				logger.error(callResult);
-				throw new Error('Unexpected call result');
+				me.raise('Unexpected handle result', me, callResult);
 			}
 		}
 
@@ -75,8 +75,7 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 					return callable.origin.call(pathExpr.handle, ...args);
 				}
 
-				logger.error(callable);
-				throw new Error('Unexpected handle call');
+				me.raise('Unexpected handle call', me, callable);
 			}
 
 			return typer.cast(pathExpr.handle.callMethod(pathExpr.path, ...args));
@@ -95,7 +94,7 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 		return typer.cast(callable.origin);
 	};
 
-	logger.info('CallExpression', 'get', 'expr', me.expr);
+	me.debug('CallExpression', 'get', 'expr', me.expr);
 
 	return evaluate(me.expr);
 };
