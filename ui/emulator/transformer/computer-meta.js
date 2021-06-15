@@ -5,24 +5,17 @@ const FileSystem = require('../file-system');
 const fileClient = require('../api/file');
 const resolve = FileSystem.prototype.resolve;
 
-const parseBlob = function(blob) {
-	return JSON.parse(blob.toString());
-};
-
 const sequence = function(items, callback) {
 	return items.reduce(function(list, item) {
-		return callback(item).then(function(x) {
-			list.push(x);
-			return list;
-		});
+		list.push(callback(item));
+		return list;
 	}, []);
 };
 
-const parseFileSystem = function(fileSystemBlob) {
+const parseFileSystem = function(fileSystemData) {
 	const stack = [];
 	const map = {};
-	const fileSystemData = parseBlob(fileSystemBlob);
-	const next = async function(item) {
+	const next = function(item) {
 		const isFolder = item.hasOwnProperty('files') && item.hasOwnProperty('folders');
 
 		if (isFolder) {
@@ -64,9 +57,9 @@ const parseFileSystem = function(fileSystemBlob) {
 	};
 };
 
-module.exports = async function(data) {
+module.exports = function(data) {
 	return {
-		users: Object.values(parseBlob(data.users)).map((item) => new User(item)),
+		users: Object.values(data.users).map((item) => new User(item)),
 		fileSystem: new FileSystem(parseFileSystem(data.fileSystem)),
 		configOS: data.configOS,
 		Hardware: data.Hardware

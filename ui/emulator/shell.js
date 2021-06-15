@@ -13,6 +13,9 @@ const Shell = function(computer) {
 	me.computer = computer;
 	me.instance = null;
 	me.exit = false;
+	me.stdin = null;
+	me.stdout = null;
+	me.history = [];
 
 	me.computer.fileSystem.set(me.computer.getHome());
 
@@ -23,12 +26,11 @@ Shell.prototype.getShellPrefix = function() {
 	return this.computer.fileSystem.cwd() + ' ->';
 };
 
-Shell.prototype.consume = function(inputMap) {
+Shell.prototype.consume = async function(input) {
 	const me = this;
 	const activeUserName = me.computer.getActiveUser().getName();
 	const fileSystem = me.computer.fileSystem;
 	const cwd = me.computer.fileSystem.cwd();
-	const input = inputMap[activeUserName];
 	const argv = stringArgv(input);
 	const target = argv.shift();
 	const apiCommand = api(target);
@@ -63,49 +65,44 @@ Shell.prototype.consume = function(inputMap) {
 	console.log('File is not a binary.')
 };
 
-Shell.prototype.prompt = async function(question, isPassword) {
+Shell.prototype.prompt = function(question, isPassword) {
 	const me = this;
 	const activeUserName = me.computer.getActiveUser().getName();
 	const name = [activeUserName, 'prompt'].join('-');
 
-	return /*inquirer
-		.prompt({
-			prefix: chalk.green.bold('(' + activeUserName + ')'),
-			name: name,
-			message: question,
-			type: isPassword ? 'password' : 'input',
-			loop: true
-		})
-		.then(function(inputMap) {
-			return inputMap[name];
-		})
-		.catch((err) => {
-			throw err;
-		});*/
+	throw new Error('Not supported yet');
 };
 
-Shell.prototype.start = function() {
+Shell.prototype.start = function(stdout, stdin) {
 	const me = this;
 	const next = function() {
 		if (!me.exit) {
 			const activeUserName = me.computer.getActiveUser().getName();
 
-			return /*inquirer
-				.prompt({
-					type: 'command',
-					prefix: chalk.green.bold('(' + activeUserName + ')'),
-					name: activeUserName,
-					message: me.getShellPrefix(),
-					type: 'input'
-				})
-				.then(me.consume.bind(me))
-				.then(next)
-				.catch((err) => {
-					console.error(err);
-					next();
-				});*/
+			me.history.push(me.getShellPrefix());
+			stdout.value = me.history.join('\n');
+			stdin.disabled = false;
+
+			return new Promise((resolve, reject) => {
+				const handler = (evt) => {
+					if (evt.keyCode == 13) {
+						const value = stdin.value;
+
+						stdin.value = '';
+						stdin.disabled = true;
+						stdin.removeEventListener('keydown', handler);
+
+						me.consume(value).then(next, reject);
+					}
+				};
+
+				stdin.addEventListener('keydown', handler);
+			});
 		}
 	}
+
+	me.stdin = stdin;
+	me.stdout = stdout;
 
 	return next();
 };

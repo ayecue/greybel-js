@@ -4,7 +4,7 @@ exports.get = function(id) {
 	let content = '';
 
 	try {
-		const result = computers.find((item) => item.ID === id);
+		const result = files.find((item) => item.ID === id);
 		content = result.Content;
 	} catch (err) {
 	}

@@ -1,6 +1,5 @@
 const build = require('../src/build-light');
-const interpreter = require('../src/interpreter');
-const emulator = require('./emulator');
+const VM = require('./emulator/vm');
 
 hljs.initHighlightingOnLoad();
 
@@ -71,7 +70,19 @@ class Editor extends React.PureComponent {
 	onExecute = () => {
 		const me = this;
 
+	};
 
+	startConsole = () => {
+		const me = this;
+		const stdoutEl = me.consoleStdoutElement;
+		const stdinEl = me.consoleStdinElement;
+
+		if (stdoutEl && stdinEl) {
+			const vm = new VM();
+
+			vm.start(stdoutEl, stdinEl);
+			me.vm = vm;
+		}
 	};
 
 	setToggleUglify = (element) => {
@@ -97,11 +108,13 @@ class Editor extends React.PureComponent {
 	setConsoleStdoutElement = (element) => {
 		const me = this;
 		me.consoleStdoutElement = element;
+		me.startConsole();
 	};
 
 	setConsoleStdinElement = (element) => {
 		const me = this;
 		me.consoleStdinElement = element;
+		me.startConsole();
 	};
 
 	renderIDE = () => {

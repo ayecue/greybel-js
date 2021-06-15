@@ -31,7 +31,6 @@ File.prototype.getAttribute = function(key) {
 File.prototype.load = function() {
 	const me = this;
 	const content = fileClient.get(me.id);
-
 	me.setContent(content);
 	return me;
 };

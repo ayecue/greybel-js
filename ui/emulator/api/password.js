@@ -1,7 +1,7 @@
 const osPasswords = require('./fixtures/OSPasswords.json');
 const passwords = require('./fixtures/Passwords.json');
 
-exports.getOSPassword = async function(id) {
+exports.getOSPassword = function(id) {
 	let password = '';
 
 	try {
@@ -13,7 +13,7 @@ exports.getOSPassword = async function(id) {
 	return password;
 };
 
-exports.getPassword = async function(id) {
+exports.getPassword = function(id) {
 	let password = '';
 
 	try {

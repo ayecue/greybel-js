@@ -12,11 +12,11 @@ const VM = function() {
 	return me;
 };
 
-VM.prototype.createSession = async function(computerId) {
+VM.prototype.createSession = function(computerId) {
 	const me = this;
 	const computer = new Computer(computerId, me);
 
-	await computer.start();
+	computer.start();
 	me.computer = computer;
 
 	const shell = new Shell(computer);
@@ -36,12 +36,12 @@ VM.prototype.getLastSession = function() {
 	return me.sessions[me.sessions.length - 1];
 };
 
-VM.prototype.start = async function() {
+VM.prototype.start = function(stdout, stdin) {
 	const me = this;
-	const p = await player.get();
-	const session = await me.createSession(p.computerId);
+	const p = player.get();
+	const session = me.createSession(p.computerId);
 	
-	return await session.shell.start();
+	return session.shell.start(stdout, stdin);
 };
 
 module.exports = VM;

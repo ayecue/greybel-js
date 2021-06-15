@@ -1,10 +1,10 @@
 const infoGen = require('./fixtures/InfoGen.json');
 
-exports.get = async function(id) {
+exports.get = function(id) {
 	const result = infoGen[0];
 
 	return {
-		versionsControl: result.VersionsControl,
-		exploits: result.Exploits
+		versionsControl: JSON.parse(result.VersionsControl),
+		exploits: JSON.parse(result.Exploits)
 	};
 };
