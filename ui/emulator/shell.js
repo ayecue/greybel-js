@@ -26,6 +26,16 @@ Shell.prototype.getShellPrefix = function() {
 	return this.computer.fileSystem.cwd() + ' ->';
 };
 
+Shell.prototype.run = async function(content) {
+	const me = this;
+
+	return scriptExecuter({
+		content: content,
+		params: [],
+		vm: me.computer.vm
+	});
+};
+
 Shell.prototype.consume = async function(input) {
 	const me = this;
 	const activeUserName = me.computer.getActiveUser().getName();
@@ -62,7 +72,7 @@ Shell.prototype.consume = async function(input) {
 		});
 	}
 
-	console.log('File is not a binary.')
+	console.log('File is not a binary.');
 };
 
 Shell.prototype.prompt = function(question, isPassword) {

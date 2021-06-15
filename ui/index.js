@@ -69,7 +69,13 @@ class Editor extends React.PureComponent {
 
 	onExecute = () => {
 		const me = this;
+		const target = me.codeInputElement;
 
+		if (me.vm) {
+			const session = me.vm.getLastSession();
+
+			session.shell.run(target.value);
+		}
 	};
 
 	startConsole = () => {
@@ -80,8 +86,8 @@ class Editor extends React.PureComponent {
 		if (stdoutEl && stdinEl) {
 			const vm = new VM();
 
-			vm.start(stdoutEl, stdinEl);
 			me.vm = vm;
+			vm.start(stdoutEl, stdinEl);
 		}
 	};
 
