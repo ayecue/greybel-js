@@ -25,7 +25,7 @@ Interpreter.prototype.raise = function(message, item, ...args) {
 Interpreter.prototype.debug = function(message, ...args) {
 	const me = this;
 	me.emitter.emit('debug', message, ...args);
-	console.log('[DEBUG]', message, ...args);
+	//console.log('[DEBUG]', message, ...args);
 };
 
 Interpreter.prototype.digest = function() {

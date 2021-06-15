@@ -7,9 +7,9 @@ module.exports = function(vm) {
 	api.print = function(str) {
 		console.log('#OUTPUT START ------------------');
 		if (str?.useTable) {
-			console.table(str.v.split('\\n'));
+			console.table(str.v.valueOf().toString().split('\\n'));
 		} else {
-			console.log(str.split('\\n').join('\n'));
+			console.log(str.valueOf().toString().split('\\n').join('\n'));
 		}
 		console.log('#OUTPUT END ------------------');
 	};

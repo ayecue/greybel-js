@@ -18,11 +18,15 @@ WhileOperation.prototype.run = async function(operationContext) {
 		isBreak: false,
 		isContinue: false
 	};
-	const resolveCondition = function() {
-		if (typer.isCustomValue(me.condition)) {
+	const resolveCondition = async function() {
+		if (me.condition?.isExpression) {
+			const value = await me.condition.get(opc);
+			return value.valueOf();
+		} else if (typer.isCustomValue(me.condition)) {
 			return me.condition.valueOf();
 		}
-		return me.condition.get(opc);
+		
+		me.raise('Unexpected condition', me, me.condition);
 	};
 
 	opc.setMemory('loopContext', loopContext);
