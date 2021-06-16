@@ -29,9 +29,9 @@ Shell.prototype.getShellPrefix = function() {
 
 Shell.prototype.echo = function(str, formatted) {
 	if (formatted) {
-		console.table(str.split('\\\n'));
+		console.table(str.split('\\n'));
 	} else {
-		console.log(str);
+		console.log(str.split('\\n').join('\n'));
 	}
 };
 

@@ -15,6 +15,7 @@ const Shell = function(computer) {
 	me.exit = false;
 	me.stdin = null;
 	me.stdout = null;
+	me.isPending = false;
 
 	me.computer.fileSystem.set(me.computer.getHome());
 
@@ -22,11 +23,21 @@ const Shell = function(computer) {
 };
 
 Shell.prototype.getShellPrefix = function() {
-	return this.computer.fileSystem.cwd() + ' ->';
+	const me = this;
+	const activeUserName = me.computer.getActiveUser().getName();
+	const cwd = me.computer.fileSystem.cwd();
+
+	return `(${activeUserName}) ${cwd} -> `;
 };
 
 Shell.prototype.run = async function(content) {
 	const me = this;
+	const stdout = me.stdout;
+
+	if (me.isPending) {
+		stdout.write('Another script is already in progress...');
+		return;
+	}
 
 	return scriptExecuter({
 		content: content,
@@ -84,24 +95,38 @@ Shell.prototype.consume = async function(input) {
 	me.stdout.write('File is not a binary.');
 };
 
-Shell.prototype.prompt = function(question, isPassword) {
+Shell.prototype.prompt = async function(question, isPassword) {
 	const me = this;
-	const activeUserName = me.computer.getActiveUser().getName();
-	const name = [activeUserName, 'prompt'].join('-');
+	const stdin = me.stdin;
+	const stdout = me.stdout;
 
-	throw new Error('Not supported yet');
+	stdout.write(question);
+
+	stdin.enable();
+	stdin.focus();
+	stdin.setType(isPassword ? 'password' : 'text');
+
+	await stdin.waitForInput();
+
+	const value = stdin.getValue();
+
+	stdin.clear();
+	stdin.disable();
+	stdin.setType('text');
+
+	return value;
 };
 
 Shell.prototype.start = function(stdout, stdin) {
 	const me = this;
 	const next = async function() {
 		if (!me.exit) {
-			const activeUserName = me.computer.getActiveUser().getName();
-
 			stdout.write(me.getShellPrefix());
 
 			stdin.enable();
 			stdin.focus();
+
+			me.isPending = false;
 
 			await stdin.waitForInput();
 
@@ -110,7 +135,9 @@ Shell.prototype.start = function(stdout, stdin) {
 			stdin.clear();
 			stdin.disable();
 
-			stdout.write(me.getShellPrefix() + ' ' + value);
+			stdout.write(me.getShellPrefix() + value);
+
+			me.isPending = true;
 
 			await me.consume(value);
 

@@ -28,6 +28,11 @@ Stdin.prototype.clear = function() {
 	me.target.value = '';
 };
 
+Stdin.prototype.setType = function(type) {
+	const me = this;
+	me.target.type = type;
+};
+
 Stdin.prototype.waitForInput = function() {
 	const me = this;
 	const target = me.target;
