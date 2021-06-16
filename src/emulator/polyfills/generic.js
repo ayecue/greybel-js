@@ -5,13 +5,13 @@ module.exports = function(vm) {
 	const api = {};
 
 	api.print = function(str) {
-		console.log('#OUTPUT START ------------------');
+		const session = vm.getLastSession();
+
 		if (str?.useTable) {
-			console.table(str.v.valueOf().toString().split('\\n'));
+			vm.getLastSession().shell.echo(str.v.valueOf().toString(), true);
 		} else {
-			console.log(str.valueOf().toString().split('\\n').join('\n'));
+			vm.getLastSession().shell.echo(str.valueOf().toString());
 		}
-		console.log('#OUTPUT END ------------------');
 	};
 	api.exit = function(str) {
 		this.print(str);

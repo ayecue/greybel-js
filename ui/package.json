@@ -10,10 +10,12 @@
     "dependencies": {
         "browserify": "^17.0.0",
         "string-argv": "^0.3.1",
-        "uuid": "^8.3.2"
+        "uuid": "^8.3.2",
+        "watchify": "^4.0.0"
     },
     "scripts": {
-        "build": "browserify ./index.js > bundle.js"
+        "build": "mkdir build || browserify ./src/index.js -o ./build/bundle.js",
+        "watch": "mkdir build || watchify ./src/index.js -o ./build/bundle.js"
     },
     "bin": {},
     "directories": {},

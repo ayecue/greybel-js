@@ -27,6 +27,14 @@ Shell.prototype.getShellPrefix = function() {
 	return this.computer.fileSystem.cwd() + ' ->';
 };
 
+Shell.prototype.echo = function(str, formatted) {
+	if (formatted) {
+		console.table(str.split('\\\n'));
+	} else {
+		console.log(str);
+	}
+};
+
 Shell.prototype.consume = function(inputMap) {
 	const me = this;
 	const activeUserName = me.computer.getActiveUser().getName();

@@ -33,6 +33,21 @@ module.exports = function(options = {}) {
 	const parser = new Parser(options.content, options.uglify);
 	const chunk = parser.parseChunk();
 	const transformer = new Tranformer(mapper);
+	const tempVarForGlobal = varNamespaces.createNamespace('UNIQUE_GLOBAL_TEMP_VAR');
+	const processed = [];
 
-	return transformer.transform(chunk, null);
+	if (options.uglify) {
+		const literalMapping = literals.getMapping();
+
+		processed.push('globals.' + tempVarForGlobal + '=globals');
+
+		Object.values(literalMapping).forEach(function(literal) {
+			if (literal.namespace == null) return;
+			processed.push(tempVarForGlobal + '.' + literal.namespace + '=' + literal.literal.raw);
+		});
+	}
+
+	processed.push(transformer.transform(chunk, null));
+
+	return processed.join('\n');
 };

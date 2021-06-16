@@ -22,6 +22,14 @@ const isCustomList = function(value) {
 	return value instanceof CustomList;
 };
 
+const isCustomString = function(value) {
+	return value instanceof CustomString;
+};
+
+const isCustomNumber = function(value) {
+	return value instanceof CustomNumber;
+};
+
 const cast = function(value) {
 	if (value == null)  return new CustomNil();
 
@@ -52,5 +60,7 @@ const cast = function(value) {
 
 exports.isCustomMap = isCustomMap;
 exports.isCustomList = isCustomList;
+exports.isCustomString = isCustomString;
+exports.isCustomNumber = isCustomNumber;
 exports.isCustomValue = isCustomValue;
 exports.cast = cast;

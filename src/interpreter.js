@@ -18,14 +18,12 @@ const Interpreter = function(options) {
 Interpreter.prototype.raise = function(message, item, ...args) {
 	const me = this;
 	me.emitter.emit('error', message, item, ...args);
-	console.error(`[ERROR][Line: ${item.ast.line}]`, ...args);
 	throw new Error(message);
 };
 
 Interpreter.prototype.debug = function(message, ...args) {
 	const me = this;
 	me.emitter.emit('debug', message, ...args);
-	//console.log('[DEBUG]', message, ...args);
 };
 
 Interpreter.prototype.digest = function() {

@@ -8,17 +8,49 @@ const toPrimitive = (v) => {
 	return v;
 };
 
+const multiplyString = (a, b) => {
+	a = a.valueOf() || '';
+	b = b.valueof();
+
+	return new Array(b)
+		.fill(a)
+		.join('');
+};
+
 const OPERATIONS = {
 	'+': (a, b) => {
 		if (typer.isCustomList(a) || typer.isCustomList(b)) {
 			return a.concat(b);
 		}
 
-		return toPrimitive(a) + toPrimitive(b);
+		if (typer.isCustomString(a)) {
+			a = a.valueOf() || '';
+		} else {
+			a = toPrimitive(a);
+		}
+
+		if (typer.isCustomString(b)) {
+			b = b.valueOf() || '';
+		} else {
+			b = toPrimitive(b);
+		}
+
+		return a + b;
 	},
 	'-': (a, b) => toPrimitive(a) - toPrimitive(b),
 	'/': (a, b) => toPrimitive(a) / toPrimitive(b),
-	'*': (a, b) => toPrimitive(a) * toPrimitive(b),
+	'*': (a, b) => {
+		if (typer.isCustomString(a) && typer.isCustomNumber(b)) {
+			return multiplyString(a, b);
+		} else if (typer.isCustomString(b) && typer.isCustomNumber(a)) {
+			return multiplyString(b, a);
+		}
+
+		a = toPrimitive(a);
+		b = toPrimitive(b);
+
+		return a * b;
+	},
 	'^': (a, b) => toPrimitive(a) ^ toPrimitive(b),
 	'|': (a, b) => toPrimitive(a) | toPrimitive(b),
 	'<': (a, b) => toPrimitive(a) < toPrimitive(b),
