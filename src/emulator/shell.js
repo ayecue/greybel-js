@@ -43,7 +43,7 @@ Shell.prototype.fork = function(username, password) {
 
 Shell.prototype.attach = function() {
 	const me = this;
-	me.vm.attach(me);
+	me.vm.addSession(me);
 	return me;
 };
 
