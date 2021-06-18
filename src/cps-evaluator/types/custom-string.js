@@ -22,6 +22,10 @@ const CustomString = function(value) {
 	return me;
 };
 
+CustomString.prototype.slice = function(a, b) {
+	return new CustomString(this.value.slice(a?.valueOf(), b?.valueOf()));
+};
+
 CustomString.prototype[Symbol.iterator] = function() {
 	const me = this;
 	let index = 0;

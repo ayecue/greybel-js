@@ -1,7 +1,7 @@
 const db = require('./db');
 
 exports.get = async function(id) {
-	const result = await db().get(`
+	const result = await db.client().get(`
 		SELECT
 			VersionsControl,
 			Exploits
@@ -10,7 +10,7 @@ exports.get = async function(id) {
 	`);
 
 	return {
-		versionsControl: result.VersionsControl,
-		exploits: result.Exploits
+		versionsControl: db.parseBlob(result.VersionsControl),
+		exploits: db.parseBlob(result.Exploits)
 	};
 };

@@ -1,7 +1,7 @@
 const typer = require('../../cps-evaluator/typer');
 
-module.exports = function(session, target) {
-	const targetFile = session.computer.fileSystem.getByPath(target || '');
+module.exports = function(shell, target) {
+	const targetFile = shell.getByPath(target || '');
 
 	if (targetFile) {
 		const createInterface = function(file) {
@@ -27,8 +27,7 @@ module.exports = function(session, target) {
 				return typer.cast(true);
 			};
 			fileInterface.parent = function(p) {
-				const parentPath = session.computer.fileSystem.resolve(file.getPath(), '..');
-				return typer.cast(session.computer.fileSystem.getByPath(parentPath));
+				return typer.cast(shell.getByPath('..'));
 			};
 			fileInterface.delete = function() {
 				console.log('delete is not yet supported');

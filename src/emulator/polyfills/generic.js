@@ -1,27 +1,25 @@
 const typer = require('../../cps-evaluator/typer');
-const ExitError = require('../errors/exit');
+const Exit = require('../signals/exit');
 
-module.exports = function(vm) {
+module.exports = function(shell) {
 	const api = {};
 
 	api.print = function(str) {
-		const session = vm.getLastSession();
-
 		if (str?.useTable) {
-			vm.getLastSession().shell.echo(str.v.valueOf().toString(), true);
+			shell.echo(str.v.valueOf().toString(), true);
 		} else {
-			vm.getLastSession().shell.echo(str.valueOf().toString());
+			shell.echo(str.valueOf().toString());
 		}
 	};
 	api.exit = function(str) {
 		this.print(str);
-		throw new ExitError();
+		return Promise.reject(new Exit(str));
 	};
 	api.active_user = function() {
-		return typer.cast(vm.getLastSession().computer.getActiveUser().getName());
+		return typer.cast(shell.getUser().getName());
 	};
 	api.current_path = function() {
-		return typer.cast(vm.getLastSession().computer.fileSystem.cwd());
+		return typer.cast(shell.cwd());
 	};
 	api.format_columns = (v) => ({ v: v, useTable: true });
 	api.command_info = (v) => v;
@@ -29,16 +27,20 @@ module.exports = function(vm) {
 		return typer.cast(eval([a, b].join(' ' + operator + ' ')));
 	};
 	api.user_input = async function(question, isPassword) {
-		const session = vm.getLastSession();
-		const output = await session.shell.prompt(question, isPassword);
+		const output = await shell.prompt(question, isPassword);
 
 		return typer.cast(output);
 	};
 	api.md5 = function(value) {
-		return typer.cast(vm.tools.md5(value));
+		return typer.cast(shell.tools.md5(value));
 	};
 	api.typeof = function(variable) {
 		return typer.cast(typer.cast(variable).getType());
+	};
+	api.slice = function(value, startIndex, endIndex) {
+		if (typer.isCustomList(value) || typer.isCustomString(value)) {
+			return value.slice(startIndex, endIndex);
+		}
 	};
 
 	return api;

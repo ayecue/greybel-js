@@ -1,13 +1,13 @@
 const typer = require('../../cps-evaluator/typer');
 const file = require('./file');
 
-module.exports = function(session) {
+module.exports = function(shell) {
 	const computerInterface = {};
 
 	computerInterface.__isa = 'computer';
-	computerInterface.File = file.bind(null, session);
+	computerInterface.File = file.bind(null, shell);
 	computerInterface.show_procs = function() {
-		console.log('delete is not yet supported');
+		console.log('show_procs is not yet supported');
 		return typer.cast("");
 	};
 

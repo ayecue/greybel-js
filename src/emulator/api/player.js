@@ -1,7 +1,7 @@
 const db = require('./db');
 
 exports.get = async function() {
-	const result = await db().get(`
+	const result = await db.client().get(`
 		SELECT ComputerID, PlayerID 
 		FROM Players;
 	`);

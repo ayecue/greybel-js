@@ -4,7 +4,7 @@ exports.get = async function(id) {
 	let content = '';
 
 	try {
-		const result = await db().get(`
+		const result = await db.client().get(`
 			SELECT Content
 			FROM Files
 			WHERE ID = $0

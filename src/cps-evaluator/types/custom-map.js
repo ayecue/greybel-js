@@ -1,6 +1,16 @@
+const CustomNumber = require('./custom-number');
+
 const EXPOSED_METHODS = [
 	'remove',
-	'hasIndex'
+	'hasIndex',
+	'push',
+	'indexOf',
+	'indexes',
+	'len',
+	'pop',
+	'shuffle',
+	'sum',
+	'values'
 ];
 
 const CustomMap = function(value) {
@@ -195,12 +205,76 @@ CustomMap.prototype.remove = function(key) {
 	const me = this;
 	key = key.valueOf();
 
-	me.value[key] = null;
-	delete me.value[key];
+	if (key in me.value) {
+		me.value[key] = null;
+		delete me.value[key];
+		return 1;
+	}
+
+	return 0;
 };
 
 CustomMap.prototype.hasIndex = function(key) {
 	return this.value.hasOwnProperty(key.valueOf());
+};
+
+CustomMap.prototype.indexOf = function(key) {
+	const me = this;
+	const keys = Object.keys(me.value);
+	const index = keys.indexOf(key);
+
+	if (index === -1) {
+		return null;
+	}
+
+	return keys[index];
+};
+
+CustomMap.prototype.push = function(key) {
+	const me = this;
+	me.value[key.valueOf()] = new CustomNumber(1);
+	return me;
+};
+
+CustomMap.prototype.indexes = function() {
+	const me = this;
+	return Object.keys(me.value);
+};
+
+CustomMap.prototype.len = function() {
+	const me = this;
+	return Object.keys(me.value).length;
+};
+
+CustomMap.prototype.pop = function() {
+	const me = this;
+	const keys = Object.keys(me.value);
+
+	if (keys.length > 0) {
+		me.remove(keys[0]);
+		return me;
+	}
+
+	return me;
+};
+
+CustomMap.prototype.shuffle = function() {
+	const me = this;
+	const value = me.value;
+	const keys = Object.keys(me.value);
+
+	for (let i = keys.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[value[keys[i]], value[keys[j]]] = [value[keys[j]], value[keys[i]]];
+	}
+};
+
+CustomMap.prototype.sum = function() {
+	return Object.values(this.value).reduce((result, v) => result + v?.valueOf(), 0);
+};
+
+CustomMap.prototype.values = function() {
+	return Object.values(this.value);
 };
 
 module.exports = CustomMap;

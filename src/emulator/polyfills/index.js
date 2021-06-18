@@ -2,12 +2,14 @@ const shell = require('./shell');
 const generic = require('./generic');
 const includeLib = require('./include-lib');
 const math = require('./math');
+const router = require('./router');
 
-module.exports = function(vm) {
+module.exports = function(contextShell) {
 	return {
-		...shell(vm),
-		...generic(vm),
-		...includeLib(vm),
-		...math(vm)
+		...shell(contextShell),
+		...generic(contextShell),
+		...includeLib(contextShell),
+		...math(contextShell),
+		...router(contextShell)
 	};
 };

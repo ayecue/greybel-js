@@ -29,13 +29,18 @@ const getDBFilePath = function() {
     return path.resolve(directory);
 };
 
-module.exports = function() {
+exports.client = function() {
     if (!instance) {
         instance = new sqlite3.Database(getDBFilePath());
     }
 
     return {
         run: util.promisify(instance.run.bind(instance)),
-        get: util.promisify(instance.get.bind(instance))
+        get: util.promisify(instance.get.bind(instance)),
+        all: util.promisify(instance.all.bind(instance))
     };
+};
+
+exports.parseBlob = function(blob) {
+    return JSON.parse(blob.toString());
 };

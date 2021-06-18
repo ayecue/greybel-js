@@ -13,14 +13,14 @@ const API = {
 		return scriptExecuter({
 			filename: targetPath,
 			params: params,
-			vm: me.computer.vm
+			shell: me
 		});
 	},
 	cd: function(params) {
 		const me = this;
 		const target = params.shift();
 
-		me.computer.fileSystem.cd(target);
+		me.cd(target);
 	}
 };
 

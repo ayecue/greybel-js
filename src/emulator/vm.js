@@ -1,4 +1,4 @@
-const player = require('./api/player');
+const playerClient = require('./api/player');
 const Shell = require('./shell');
 const Computer = require('./computer');
 const tools = require('./tools');
@@ -7,28 +7,27 @@ const VM = function() {
 	const me = this;
 
 	me.sessions = [];
-	me.tools = tools;
 
 	return me;
 };
 
 VM.prototype.createSession = async function(computerId) {
 	const me = this;
-	const computer = new Computer(computerId, me);
+	const computer = new Computer(computerId);
 
 	await computer.start();
-	me.computer = computer;
 
-	const shell = new Shell(computer);
+	const shell = new Shell(me, computer);
 
-	const session = {
-		computer: computer,
-		shell: shell
-	};
+	me.sessions.push(shell);
 
-	me.sessions.push(session);
+	return shell;
+};
 
-	return session;
+VM.prototype.addSession = async function(shell) {
+	const me = this;
+	me.sessions.push(shell);
+	return me;
 };
 
 VM.prototype.getLastSession = function() {
@@ -38,10 +37,10 @@ VM.prototype.getLastSession = function() {
 
 VM.prototype.start = async function() {
 	const me = this;
-	const p = await player.get();
-	const session = await me.createSession(p.computerId);
+	const p = await playerClient.get();
+	const shell = await me.createSession(p.computerId);
 	
-	return await session.shell.start();
+	return await shell.start();
 };
 
 module.exports = VM;

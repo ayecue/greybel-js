@@ -4,7 +4,7 @@ exports.getOSPassword = async function(id) {
 	let password = '';
 
 	try {
-		const result = await db().get(`
+		const result = await db.client().get(`
 			SELECT PlainPassword
 			FROM OSPasswords
 			WHERE ID = $0
@@ -20,7 +20,7 @@ exports.getPassword = async function(id) {
 	let password = '';
 
 	try {
-		const result = await db().get(`
+		const result = await db.client().get(`
 			SELECT PlainPassword
 			FROM Passwords
 			WHERE ID = $0

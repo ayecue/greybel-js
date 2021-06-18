@@ -33,7 +33,7 @@ const isCustomNumber = function(value) {
 const cast = function(value) {
 	if (value == null)  return new CustomNil();
 
-	if (isCustomValue(value)) {
+	if (isCustomValue(value) || value?.isOperation) {
 		return value;
 	}
 
@@ -52,10 +52,19 @@ const cast = function(value) {
 			return new CustomList(value);
 		}
 
+		value = Object.entries(value).reduce((result, [key, item]) => {
+			return {
+				...result,
+				[key]: cast(item)
+			};
+		}, {});
+
 		return new CustomMap(value);
+	} else if (type === 'function') {
+		return value;
 	}
 
-	throw new Error('Unexpected type');
+	throw new Error(`Unexpected type ${type}`);
 };
 
 exports.isCustomMap = isCustomMap;

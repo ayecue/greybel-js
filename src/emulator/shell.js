@@ -4,27 +4,100 @@ const stringArgv = require('string-argv').default;
 const chalk = require('chalk');
 const scriptExecuter = require('./script-executer');
 const api = require('./shell/api');
+const computerClient = require('./api/computer');
 const logger = require('node-color-log');
+const tools = require('./tools');
+const Computer = require('./computer');
 
 const DEFAULT_FOLDERS = [
 	'/bin',
 	'/usr/bin'
 ];
 
-const Shell = function(computer) {
+const Shell = function(vm, computer, user) {
 	const me = this;
 
+	me.vm = vm;
 	me.computer = computer;
-	me.instance = null;
+	me.user = user || computer.getDefaultUser();
+	me.path = computer.getHome(me.user.getName())
 	me.exit = false;
-
-	me.computer.fileSystem.set(me.computer.getHome());
+	me.tools = tools;
 
 	return me;
 };
 
+Shell.prototype.fork = function(username, password) {
+	const me = this;
+
+	if (username != null && password != null) {
+		const user = me.computer.login(username, password);
+
+		if (user == null) return;
+
+		return new Shell(me.vm, me.computer, user);
+	}
+
+	return me;
+};
+
+Shell.prototype.attach = function() {
+	const me = this;
+	me.vm.attach(me);
+	return me;
+};
+
+Shell.prototype.connect = async function(ip, port, username, password) {
+	const me = this;
+	const computerId = await computerClient.getRemoteComputerId(ip, port);
+
+	if (!computerId) return null;
+	const computer = new Computer(computerId);
+	await computer.start();
+
+	const user = computer.login(username, password);
+	if (!user) return null;
+
+	const shell = new Shell(me.vm, computer, user);
+
+	return shell;
+};
+
+Shell.prototype.setPath = function(target) {
+	const me = this;
+	const fileSystem = me.computer.fileSystem;
+	if (!fileSystem.exists(target)) {
+		console.error(`Path ${target} does not exist.`);
+		return me;
+	}
+	me.path = target;
+	return me;
+};
+
+Shell.prototype.getByPath = function(target) {
+	const me = this;
+	const fileSystem = me.computer.fileSystem;
+	target = fileSystem.resolve(me.cwd(), target);
+	return fileSystem.get(target);
+};
+
+Shell.prototype.getUser = function() {
+	return this.user;
+};
+
+Shell.prototype.cwd = function() {
+	return this.path;
+};
+
+Shell.prototype.cd = function(target) {
+	const me = this;
+	const newPath = me.computer.fileSystem.resolve(me.cwd(), target) || '/';
+	me.setPath(newPath);
+	return me;
+};
+
 Shell.prototype.getShellPrefix = function() {
-	return this.computer.fileSystem.cwd() + ' ->';
+	return this.cwd() + ' ->';
 };
 
 Shell.prototype.echo = function(str, formatted) {
@@ -37,9 +110,9 @@ Shell.prototype.echo = function(str, formatted) {
 
 Shell.prototype.consume = function(inputMap) {
 	const me = this;
-	const activeUserName = me.computer.getActiveUser().getName();
+	const activeUserName = me.getUser().getName();
 	const fileSystem = me.computer.fileSystem;
-	const cwd = me.computer.fileSystem.cwd();
+	const cwd = me.cwd();
 	const input = inputMap[activeUserName];
 	const argv = stringArgv(input);
 	const target = argv.shift();
@@ -54,7 +127,7 @@ Shell.prototype.consume = function(inputMap) {
 
 	for (let folder of folders) {
 		const targetPath = fileSystem.resolve(folder, target);
-		const foundFile = fileSystem.getByPath(targetPath);
+		const foundFile = me.getByPath(targetPath);
 
 		if (foundFile != null) {
 			file = foundFile;
@@ -68,7 +141,7 @@ Shell.prototype.consume = function(inputMap) {
 		return scriptExecuter({
 			file: file,
 			params: argv,
-			vm: me.computer.vm
+			shell: me
 		});
 	}
 
@@ -77,7 +150,7 @@ Shell.prototype.consume = function(inputMap) {
 
 Shell.prototype.prompt = function(question, isPassword) {
 	const me = this;
-	const activeUserName = me.computer.getActiveUser().getName();
+	const activeUserName = me.getUser().getName();
 	const name = [activeUserName, 'prompt'].join('-');
 
 	return inquirer
@@ -100,7 +173,7 @@ Shell.prototype.start = function() {
 	const me = this;
 	const next = function() {
 		if (!me.exit) {
-			const activeUserName = me.computer.getActiveUser().getName();
+			const activeUserName = me.getUser().getName();
 
 			return inquirer
 				.prompt({
@@ -114,7 +187,7 @@ Shell.prototype.start = function() {
 				.then(next)
 				.catch((err) => {
 					console.error(err);
-					next();
+					return next();
 				});
 		}
 	}

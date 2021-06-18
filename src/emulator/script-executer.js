@@ -1,6 +1,7 @@
 const build = require('../build');
 const interpreter = require('../interpreter');
-const ExitError = require('./errors/exit');
+const Exit = require('./signals/exit');
+const NewShell = require('./signals/new-shell');
 const polyfills = require('./polyfills');
 const EventEmitter = require('events');
 
@@ -31,10 +32,16 @@ module.exports = async function(options) {
 		await interpreter({
 			code: code,
 			params: options.params,
-			api: polyfills(options.vm),
+			api: polyfills(options.shell),
 			eventEmitter: emitter
 		});
 	} catch (err) {
-		if (!(err instanceof ExitError)) console.error(err);
+		if (err instanceof Exit) {
+			console.log(`[EXIT] ${err.getMessage()}`);
+		} else if (err instanceof NewShell) {
+			await err.getShell().start();
+		} else {
+			console.error(err);
+		}
 	}
 };
