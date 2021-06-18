@@ -21,6 +21,12 @@ const API = {
 		const target = params.shift();
 
 		me.cd(target);
+	},
+	exit: function() {
+		const me = this;
+
+		me.vm.removeLastSession();
+		me.exit = true;
 	}
 };
 

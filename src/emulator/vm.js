@@ -24,9 +24,15 @@ VM.prototype.createSession = async function(computerId) {
 	return shell;
 };
 
-VM.prototype.addSession = async function(shell) {
+VM.prototype.addSession = function(shell) {
 	const me = this;
 	me.sessions.push(shell);
+	return me;
+};
+
+VM.prototype.removeLastSession = function() {
+	const me = this;
+	me.sessions.pop();
 	return me;
 };
 
