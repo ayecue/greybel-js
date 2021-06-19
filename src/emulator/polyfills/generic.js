@@ -21,11 +21,25 @@ module.exports = function(shell) {
 	api.current_path = function() {
 		return typer.cast(shell.cwd());
 	};
+	api.home_dir = function() {
+		return typer.cast(shell.getHome());
+	};
 	api.format_columns = (v) => ({ v: v, useTable: true });
 	api.command_info = (v) => v;
-	api.bitwise = function(operator, a, b) {
-		return typer.cast(eval([a, b].join(' ' + operator + ' ')));
-	};
+	api.bitwise = (function() {
+		const operatorMap = {
+			'^': (a, b) => a ^ b,
+			'|': (a, b) => a | b,
+			'<<': (a, b) => a << b,
+			'>>': (a, b) => a >> b,
+			'>>>': (a, b) => a >>> b,
+			'&': (a, b) => a & b
+		};
+
+		return function(operator, a, b) {
+			return typer.cast(operatorMap[operator](a.valueOf(), b.valueOf()));
+		};
+	})();
 	api.user_input = async function(question, isPassword) {
 		const output = await shell.prompt(question, isPassword);
 
@@ -41,6 +55,50 @@ module.exports = function(shell) {
 		if (typer.isCustomList(value) || typer.isCustomString(value)) {
 			return value.slice(startIndex, endIndex);
 		}
+	};
+	api.wait = function(time = 1) {
+		return new Promise((r) => setTimeout(r, time * 1000));
+	};
+	api.current_date = function() {
+		const currentDate = shell.vm.getTime();
+		const day = currentDate.getDay();
+		const month = currentDate.getMonth();
+		const year = currentDate.getFullYear();
+		const hours = `0${currentDate.getHours()}`.slice(-2);
+		const minutes = `0${currentDate.getMinutes()}`.slice(-2);
+		const dateStr = `${day}-${month}-${year} ${hours}:${minutes}`;
+		return typer.cast(dateStr);
+	};
+	api.time = (function() {
+		const startDate = shell.vm.getTime();
+
+		return function() {
+			const currentDate = shell.vm.getTime();
+			return typer.cast((currentDate - startDate) / 1000);
+		};
+	})();
+	api.nslookup = function(domain) {
+		return typer.cast(shell.tools.nslookup(domain.valueOf()));
+	};
+	api.whois = function(ip) {
+		return typer.cast(shell.tools.whois(ip.valueOf()));
+	};
+	api.is_valid_ip = function(str) {
+		return typer.cast(shell.tools.isValidIP(str.valueOf()));
+	};
+	api.is_lan_ip = function(str) {
+		return typer.cast(shell.tools.isLanIP(str.valueOf()));
+	};
+	api.user_mail_address = function() {
+		console.error('user_mail_address is not yet supported');
+		return null;
+	};
+	api.user_bank_number = function() {
+		console.error('user_bank_number is not yet supported');
+		return null;
+	};
+	api.clear_screen = function() {
+		shell.clear();
 	};
 
 	return api;

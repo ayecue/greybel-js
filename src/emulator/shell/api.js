@@ -27,6 +27,11 @@ const API = {
 
 		me.vm.removeLastSession();
 		me.exit = true;
+	},
+	clear: function() {
+		const me = this;
+
+		me.clear();
 	}
 };
 

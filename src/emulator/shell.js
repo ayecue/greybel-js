@@ -20,7 +20,7 @@ const Shell = function(vm, computer, user) {
 	me.vm = vm;
 	me.computer = computer;
 	me.user = user || computer.getDefaultUser();
-	me.path = computer.getHome(me.user.getName())
+	me.path = me.getHome();
 	me.exit = false;
 	me.tools = tools;
 
@@ -39,6 +39,15 @@ Shell.prototype.fork = function(username, password) {
 	}
 
 	return me;
+};
+
+Shell.prototype.clear = function() {
+	console.clear();
+};
+
+Shell.prototype.getHome = function() {
+	const me = this;
+	return me.computer.getHome(me.user.getName());
 };
 
 Shell.prototype.attach = function() {
