@@ -6,9 +6,9 @@ module.exports = function(shell) {
 
 	api.print = function(str) {
 		if (str?.useTable) {
-			shell.echo(str.v.valueOf().toString(), true);
+			shell.echo(str.v.valueOf()?.toString() || '', true);
 		} else {
-			shell.echo(str.valueOf().toString());
+			shell.echo(str.valueOf()?.toString() || '');
 		}
 	};
 	api.exit = function(str) {
@@ -77,11 +77,11 @@ module.exports = function(shell) {
 			return typer.cast((currentDate - startDate) / 1000);
 		};
 	})();
-	api.nslookup = function(domain) {
-		return typer.cast(shell.tools.nslookup(domain.valueOf()));
+	api.nslookup = async function(domain) {
+		return typer.cast(await shell.tools.nslookup(domain.valueOf()));
 	};
-	api.whois = function(ip) {
-		return typer.cast(shell.tools.whois(ip.valueOf()));
+	api.whois = async function(ip) {
+		return typer.cast(await shell.tools.whois(ip.valueOf()));
 	};
 	api.is_valid_ip = function(str) {
 		return typer.cast(shell.tools.isValidIP(str.valueOf()));
