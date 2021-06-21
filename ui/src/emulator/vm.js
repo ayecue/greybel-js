@@ -51,7 +51,7 @@ VM.prototype.getLastSession = function() {
 VM.prototype.getTime = function() {
 	const me = this;
 	const clockGame = me.clock.game;
-	const diff = Date.now() - me.start;
+	const diff = Date.now() - me.clock.start;
 	const gameTime = new Date(`${clockGame.year}/${clockGame.mes}/${clockGame.dia} ${clockGame.hora}:${clockGame.minutos}`).getTime();
 
 	return new Date(gameTime + diff);
