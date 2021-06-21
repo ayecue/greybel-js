@@ -89,7 +89,7 @@ Keep in mind that not all functionality is implemented yet. So certain parts of 
 ### Examples:
 #### Most common emulator UI command:
 ```
-greybel-ui --path "./Library/Application\ Support/Steam/steamapps/common/Grey\ Hack"
+greybel-ui
 ```
 
 ![Emulator UI](/assets/emulator-ui-preview.png?raw=true "Emulator UI")
