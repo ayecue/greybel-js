@@ -1,10 +1,10 @@
-# Greybel-JS 0.1.5
+# Greybel-JS 0.2.0
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
 Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/package/luaparse). It's heavily modified though to support GreyScript.
 
-Also party based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
+Also partly based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
 
 Features:
 - supports shortcuts for blocks
@@ -20,9 +20,8 @@ Features:
 	- minifying namespaces
 	- removing whitespaces + tabs
 	- obfuscate your code (even though that's just a side effect of all the steps above)
-- comes with a scuffed emulator it's completly work in progress though, most of the GreyHack API is not supported yet
-	- `greybel-console --path "<your-own-path>\SteamLibrary\steamapps\common\Grey Hack"`
-	- transforms GreyScript into JS
+- includes interpreter + emulator (Grey Hack polyfills) which enables debugging code
+- includes ui for intepreter + emulator and transpiler
 
 # Install
 
@@ -31,9 +30,10 @@ npm i greybel-js
 ```
 
 # CLI Usage
+## Compiler
 ```
 Compiler CLI
-Version: 0.1.5
+Version: 0.2.0
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -48,11 +48,51 @@ Options:
 	-h, --help                  display help for command
 ```
 
-## Examples:
-### Most common build command:
+### Examples:
+#### Most common build command:
 ```
 greybel /my/code/file.src
 ```
+
+## Emulator
+```
+Emulator CLI
+Version: 0.2.0
+Example: greybel-console --path "<path to steam common>/Grey Hack"
+
+Options:
+	-p, --path	Path to Grey Hack
+```
+
+Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API is not there.
+
+### Examples:
+#### Most common emulator command:
+```
+greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Grey\ Hack"
+```
+
+![Emulator](/assets/emulator-preview?raw=true "Emulator")
+
+## Emulator-UI
+```
+Emulator UI CLI
+Version: 0.2.0
+Example: greybel-ui
+
+Options:
+	-r, --refresh	Rebuilds UI.
+```
+
+Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API is not there.
+
+### Examples:
+#### Most common emulator UI command:
+```
+greybel-ui --path "./Library/Application\ Support/Steam/steamapps/common/Grey\ Hack"
+```
+
+![Emulator UI](/assets/emulator-ui-preview?raw=true "Emulator UI")
 
 # Syntax
 ## Block shortcuts
@@ -158,6 +198,7 @@ print(somevar) //prints "SOME_VALUE"
 ```
 
 # Things to come
+- add full support of Grey Hack API to emulator
 - port greybel-js to GreyScript to replace https://github.com/ayecue/greybel
 - clean up codebase
 - use typescript

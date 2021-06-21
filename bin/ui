@@ -1,0 +1,43 @@
+#! /usr/bin/env node
+
+const semver = require('semver');
+const package = require('../package.json');
+
+const engineVersion = package.engines.node;
+
+if (!semver.satisfies(process.version, engineVersion)) {
+	console.log(`Required node version ${engineVersion} not satisfied with current version ${process.version}.`);
+	process.exit(1);
+}
+
+const program = require('commander').program;
+const version = package.version;
+
+let options = {};
+
+program.version(version);
+program
+	.description('Emulator UI.')
+	.option('-r, --refresh', 'Should refresh');
+
+program.parse(process.argv);
+
+(function() {
+	options = Object.assign(options, program.opts());
+
+	const fs = require('fs');
+	const path = require('path');
+	const execSync = require('child_process').execSync;
+	const open = require('open');
+	const projectFolder = path.resolve(__dirname, '..');
+	const uiFolder = path.resolve(projectFolder, './ui');
+	const bundleFile = path.resolve(uiFolder, './build/bundle.js');
+	const indexHTMLFile = path.resolve(uiFolder, './index.html');
+
+	if (!fs.existsSync(bundleFile) || options.refresh) {
+		console.log('Preparing ui...');
+		execSync(`cd ${uiFolder} && npm i && npm run build`);
+	}
+
+	open(indexHTMLFile);
+})();

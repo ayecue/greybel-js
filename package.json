@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "0.1.5",
+    "version": "0.2.0",
     "engines": {
         "node": ">=14.0.0"
     },
@@ -27,6 +27,7 @@
         "inquirer": "^8.1.0",
         "inquirer-command-prompt": "^0.1.0",
         "node-color-log": "^5.3.0",
+        "open": "^8.2.1",
         "semver": "^5.3.0",
         "sqlite3": "^5.0.2",
         "string-argv": "^0.3.1",
@@ -37,13 +38,17 @@
     },
     "bin": {
         "greybel": "./bin/compile",
-        "greybel-console": "./bin/console"
+        "greybel-console": "./bin/console",
+        "greybel-ui": "./bin/ui"
     },
     "directories": {},
     "keywords": [
         "greybel",
         "greyscript",
         "greyhack",
+        "grey hack",
+        "grey",
+        "hack",
         "miniscript",
         "unity",
         "lexer",
