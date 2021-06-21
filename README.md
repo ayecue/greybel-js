@@ -1,4 +1,4 @@
-# Greybel-JS 0.2.0
+# Greybel-JS 0.2.1
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
@@ -33,7 +33,7 @@ npm i greybel-js
 ## Compiler
 ```
 Compiler CLI
-Version: 0.2.0
+Version: 0.2.1
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -57,7 +57,7 @@ greybel /my/code/file.src
 ## Emulator
 ```
 Emulator CLI
-Version: 0.2.0
+Version: 0.2.1
 Example: greybel-console --path "<path to steam common>/Grey Hack"
 
 Options:
@@ -77,7 +77,7 @@ greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Gr
 ## Emulator-UI
 ```
 Emulator UI CLI
-Version: 0.2.0
+Version: 0.2.1
 Example: greybel-ui
 
 Options:
