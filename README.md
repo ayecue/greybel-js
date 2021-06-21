@@ -21,7 +21,7 @@ Features:
 	- removing whitespaces + tabs
 	- obfuscate your code (even though that's just a side effect of all the steps above)
 - includes interpreter + emulator (Grey Hack polyfills) which enables debugging code
-- includes ui for intepreter + emulator and transpiler
+- includes ui for interpreter + emulator and transpiler
 
 # Install
 
@@ -72,7 +72,7 @@ Keep in mind that not all functionality is implemented yet. So certain parts of 
 greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Grey\ Hack"
 ```
 
-![Emulator](/assets/emulator-preview?raw=true "Emulator")
+![Emulator](/assets/emulator-preview.png?raw=true "Emulator")
 
 ## Emulator-UI
 ```
@@ -92,7 +92,7 @@ Keep in mind that not all functionality is implemented yet. So certain parts of 
 greybel-ui --path "./Library/Application\ Support/Steam/steamapps/common/Grey\ Hack"
 ```
 
-![Emulator UI](/assets/emulator-ui-preview?raw=true "Emulator UI")
+![Emulator UI](/assets/emulator-ui-preview.png?raw=true "Emulator UI")
 
 # Syntax
 ## Block shortcuts
