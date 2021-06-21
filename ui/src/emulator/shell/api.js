@@ -3,7 +3,18 @@ const API = {
 		const me = this;
 		const target = params.shift();
 
-		me.computer.fileSystem.cd(target);
+		me.cd(target);
+	},
+	exit: function() {
+		const me = this;
+
+		me.vm.removeLastSession();
+		me.exit = true;
+	},
+	clear: function() {
+		const me = this;
+
+		me.clear();
 	}
 };
 

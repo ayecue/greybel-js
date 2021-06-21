@@ -18,4 +18,12 @@ Stdout.prototype.render = function() {
 	target.scrollTop = target.scrollHeight;
 };
 
+Stdout.prototype.clear = function() {
+	const me = this;
+	const target = me.target;
+	me.history = [];
+	target.value = '';
+	target.scrollTop = target.scrollHeight;
+};
+
 module.exports = Stdout;

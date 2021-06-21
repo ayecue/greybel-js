@@ -2,7 +2,7 @@ const playerClient = require('./api/player');
 const infoGenClient = require('./api/info-gen');
 const Shell = require('./shell');
 const Computer = require('./computer');
-const tools = require('./tools');
+const ExploitManager = require('./exploit-manager');
 
 const VM = function() {
 	const me = this;
@@ -13,6 +13,7 @@ const VM = function() {
 		start: Date.now()
 	};
 	me.infoGen = null;
+	me.exploitManager = null;
 
 	return me;
 };
@@ -72,6 +73,7 @@ VM.prototype.start = async function() {
 	const infoGen = await infoGenClient.get();
 
 	me.infoGen = infoGen;
+	me.exploitManager = new ExploitManager(infoGen);
 	me.initClock();
 
 	const p = await playerClient.get();

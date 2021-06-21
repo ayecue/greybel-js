@@ -1,6 +1,7 @@
 const build = require('../../../src/build-light');
 const interpreter = require('../../../src/interpreter');
-const ExitError = require('../../../src/emulator/errors/exit');
+const Exit = require('../../../src/emulator/signals/exit');
+const NewShell = require('../../../src/emulator/signals/new-shell');
 const polyfills = require('../../../src/emulator/polyfills');
 const EventEmitter = require('events');
 
@@ -25,10 +26,17 @@ module.exports = async function(options) {
 		await interpreter({
 			code: code,
 			params: options.params,
-			api: polyfills(options.vm),
+			api: polyfills(options.shell),
 			eventEmitter: emitter
 		});
 	} catch (err) {
-		if (!(err instanceof ExitError)) console.error(err);
+		if (err instanceof Exit) {
+			console.log(`[EXIT] ${err.getMessage()}`);
+		} else if (err instanceof NewShell) {
+			const shell = err.getShell();
+			await err.shell.start(options.stdout, options.stdin);
+		} else {
+			console.error(err);
+		}
 	}
 };

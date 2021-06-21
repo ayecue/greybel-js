@@ -5,6 +5,7 @@ exports.get = function(id) {
 
 	return {
 		versionsControl: JSON.parse(result.VersionsControl),
-		exploits: JSON.parse(result.Exploits)
+		exploits: JSON.parse(result.Exploits),
+		clock: JSON.parse(result.Clock)
 	};
 };

@@ -1,33 +1,115 @@
 const stringArgv = require('string-argv').default;
+const computerClient = require('./api/computer');
 const scriptExecuter = require('./script-executer');
 const api = require('./shell/api');
+const tools = require('./tools');
 
 const DEFAULT_FOLDERS = [
 	'/bin',
 	'/usr/bin'
 ];
 
-const Shell = function(computer) {
+const Shell = function(vm, computer, user) {
 	const me = this;
 
+	me.vm = vm;
 	me.computer = computer;
-	me.instance = null;
+	me.user = user || computer.getDefaultUser();
+	me.path = me.getHome();
 	me.exit = false;
 	me.stdin = null;
 	me.stdout = null;
 	me.isPending = false;
+	me.tools = tools;
 
-	me.computer.fileSystem.set(me.computer.getHome());
+	return me;
+};
 
+Shell.prototype.fork = function(username, password) {
+	const me = this;
+
+	if (username != null && password != null) {
+		const user = me.computer.login(username, password);
+
+		if (user == null) return;
+
+		return new Shell(me.vm, me.computer, user);
+	}
+
+	return me;
+};
+
+Shell.prototype.clear = function() {
+	const me = this;
+	me.stdout.clear();
+};
+
+Shell.prototype.getHome = function() {
+	const me = this;
+	return me.computer.getHome(me.user.getName());
+};
+
+Shell.prototype.attach = function() {
+	const me = this;
+	me.vm.addSession(me);
+	return me;
+};
+
+Shell.prototype.connect = function(ip, port, username, password) {
+	const me = this;
+	const computerId = computerClient.getRemoteComputerId(ip, port);
+
+	if (!computerId) return null;
+	const computer = new Computer(computerId);
+	computer.start();
+
+	const user = computer.login(username, password);
+	if (!user) return null;
+
+	const shell = new Shell(me.vm, computer, user);
+
+	return shell;
+};
+
+Shell.prototype.setPath = function(target) {
+	const me = this;
+	const fileSystem = me.computer.fileSystem;
+	if (!fileSystem.exists(target)) {
+		console.error(`Path ${target} does not exist.`);
+		return me;
+	}
+	me.path = target;
+	return me;
+};
+
+Shell.prototype.getByPath = function(target) {
+	const me = this;
+	const fileSystem = me.computer.fileSystem;
+	target = fileSystem.resolve(me.cwd(), target);
+	return fileSystem.get(target);
+};
+
+Shell.prototype.getUser = function() {
+	return this.user;
+};
+
+Shell.prototype.cwd = function() {
+	return this.path;
+};
+
+Shell.prototype.cd = function(target) {
+	const me = this;
+	const newPath = me.computer.fileSystem.resolve(me.cwd(), target) || '/';
+	me.setPath(newPath);
 	return me;
 };
 
 Shell.prototype.getShellPrefix = function() {
 	const me = this;
-	const activeUserName = me.computer.getActiveUser().getName();
-	const cwd = me.computer.fileSystem.cwd();
+	const username = me.getUser().getName();
+	const cwd = me.cwd();
 
-	return `(${activeUserName}) ${cwd} -> `;
+	return `(${username}) ${cwd} -> `;
 };
 
 Shell.prototype.run = async function(content) {
@@ -42,7 +124,9 @@ Shell.prototype.run = async function(content) {
 	return scriptExecuter({
 		content: content,
 		params: [],
-		vm: me.computer.vm
+		shell: me,
+		stdout: me.stdout,
+		stdin: me.stdin
 	});
 };
 
@@ -58,9 +142,9 @@ Shell.prototype.echo = function(str, formatted) {
 
 Shell.prototype.consume = async function(input) {
 	const me = this;
-	const activeUserName = me.computer.getActiveUser().getName();
+	const activeUserName = me.getUser().getName();
 	const fileSystem = me.computer.fileSystem;
-	const cwd = me.computer.fileSystem.cwd();
+	const cwd = me.cwd();
 	const argv = stringArgv(input);
 	const target = argv.shift();
 	const apiCommand = api(target);
@@ -74,7 +158,7 @@ Shell.prototype.consume = async function(input) {
 
 	for (let folder of folders) {
 		const targetPath = fileSystem.resolve(folder, target);
-		const foundFile = fileSystem.getByPath(targetPath);
+		const foundFile = me.getByPath(targetPath);
 
 		if (foundFile != null) {
 			file = foundFile;
@@ -88,7 +172,9 @@ Shell.prototype.consume = async function(input) {
 		return scriptExecuter({
 			file: file,
 			params: argv,
-			vm: me.computer.vm
+			shell: me,
+			stdout: me.stdout,
+			stdin: me.stdin
 		});
 	}
 
@@ -143,7 +229,7 @@ Shell.prototype.start = function(stdout, stdin) {
 
 			return next();
 		}
-	}
+	};
 
 	me.stdin = stdin;
 	me.stdout = stdout;

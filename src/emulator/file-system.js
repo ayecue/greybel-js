@@ -5,7 +5,6 @@ const FileSystem = function(fileSystem) {
 
 	me.map = fileSystem.map;
 	me.rootFolder = fileSystem.rootFolder;
-	me.path = null;
 	
 	return me;
 };
