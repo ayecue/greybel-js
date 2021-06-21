@@ -114,6 +114,7 @@ Shell.prototype.getShellPrefix = function() {
 
 Shell.prototype.run = async function(content) {
 	const me = this;
+	const stdin = me.stdin;
 	const stdout = me.stdout;
 
 	if (me.isPending) {
@@ -121,13 +122,26 @@ Shell.prototype.run = async function(content) {
 		return;
 	}
 
-	return scriptExecuter({
+	stdin.clear();
+	stdin.disable();
+	
+	me.isPending = true;
+
+	await scriptExecuter({
 		content: content,
 		params: [],
 		shell: me,
 		stdout: me.stdout,
 		stdin: me.stdin
 	});
+
+	me.isPending = false;
+	stdout.write(me.getShellPrefix());
+
+	stdin.enable();
+	stdin.focus();
+
+	return true;
 };
 
 Shell.prototype.echo = function(str, formatted) {

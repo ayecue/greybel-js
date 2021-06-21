@@ -85,9 +85,9 @@ class Editor extends React.PureComponent {
 		const target = me.codeInputElement;
 
 		if (me.vm) {
-			const session = me.vm.getLastSession();
+			const shell = me.vm.getLastSession();
 
-			session.shell.run(target.value);
+			shell.run(target.value);
 		}
 	};
 
