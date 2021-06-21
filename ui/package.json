@@ -1,0 +1,32 @@
+{
+    "name": "greybel-js-ui",
+    "version": "0.1.0",
+    "description": "Greybel UI.",
+    "main": "index.js",
+    "author": {
+        "name": "ayecue",
+        "email": "soerenwehmeier@googlemail.com"
+    },
+    "dependencies": {
+        "browserify": "^17.0.0",
+        "string-argv": "^0.3.1",
+        "uuid": "^8.3.2",
+        "watchify": "^4.0.0"
+    },
+    "scripts": {
+        "build": "mkdir build || browserify ./src/index.js -o ./build/bundle.js",
+        "watch": "mkdir build || watchify ./src/index.js -o ./build/bundle.js"
+    },
+    "bin": {},
+    "directories": {},
+    "keywords": [
+        "greybel",
+        "greyscript",
+        "greyhack",
+        "miniscript",
+        "unity",
+        "lexer",
+        "parser",
+        "compiler"
+    ]
+}

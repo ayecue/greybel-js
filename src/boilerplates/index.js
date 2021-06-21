@@ -11,12 +11,10 @@ const transform = function(content) {
 	return parser.parseChunk();
 };
 
-exports.HEADER_BOILERPLATE = transform(fs.readFileSync(headerFilepath, {
-	encoding: 'utf-8'
-}));
-exports.MODULE_BOILERPLATE = transform(fs.readFileSync(moduleFilepath, {
-	encoding: 'utf-8'
-}));
-exports.MAIN_BOILERPLATE = transform(fs.readFileSync(mainFilepath, {
-	encoding: 'utf-8'
-}));
+const headerContent = fs.readFileSync(headerFilepath, 'utf8');
+const moduleContent = fs.readFileSync(moduleFilepath, 'utf8');
+const mainContent = fs.readFileSync(mainFilepath, 'utf8');
+
+exports.HEADER_BOILERPLATE = transform(headerContent);
+exports.MODULE_BOILERPLATE = transform(moduleContent);
+exports.MAIN_BOILERPLATE = transform(mainContent);

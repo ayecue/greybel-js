@@ -5,10 +5,6 @@ const FileSystem = require('../file-system');
 const fileClient = require('../api/file');
 const resolve = FileSystem.prototype.resolve;
 
-const parseBlob = function(blob) {
-	return JSON.parse(blob.toString());
-};
-
 const sequence = function(items, callback) {
 	return items.reduce(function(prev, item) {
 		return prev.then(function(list) {
@@ -20,10 +16,9 @@ const sequence = function(items, callback) {
 	}, Promise.resolve([]));
 };
 
-const parseFileSystem = async function(fileSystemBlob) {
+const parseFileSystem = async function(fileSystemData) {
 	const stack = [];
 	const map = {};
-	const fileSystemData = parseBlob(fileSystemBlob);
 	const next = async function(item) {
 		const isFolder = item.hasOwnProperty('files') && item.hasOwnProperty('folders');
 
@@ -68,7 +63,7 @@ const parseFileSystem = async function(fileSystemBlob) {
 
 module.exports = async function(data) {
 	return {
-		users: Object.values(parseBlob(data.users)).map((item) => new User(item)),
+		users: Object.values(data.users).map((item) => new User(item)),
 		fileSystem: new FileSystem(await parseFileSystem(data.fileSystem)),
 		configOS: data.configOS,
 		Hardware: data.Hardware

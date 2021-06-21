@@ -1,11 +1,5 @@
-const BINARY_OPERATORS = [
-	'<<','>>','>>>','|','&','^'
+const EXPRESSION_OPERATORS = [
+	'+', '*', '-', '/', '%', '<', '>', '<=', '>=', '!=', '==', 'or', 'and', '<<','>>','>>>','|','&', '^'
 ];
-
-exports.BINARY_OPERATORS = BINARY_OPERATORS;
-
-const EXPRESSION_OPERATORS = BINARY_OPERATORS.concat([
-	'+', '*', '-', '/', '%', '<', '>', '<=', '>=', '!=', '==', 'or', 'and', ':'
-]);
 
 exports.EXPRESSION_OPERATORS = EXPRESSION_OPERATORS;

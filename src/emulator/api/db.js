@@ -12,16 +12,35 @@ const getDBFilePath = function() {
         throw new Error('Define env GREY_HACK_PATH with Grey Hack game directory. (/SteamLibrary/steamapps/common/Grey Hack)');
     }
 
-    return path.resolve(directory, 'Grey Hack_Data/GreyHackDB.db');
+    const windowsPath = path.resolve(directory, 'Grey Hack_Data/GreyHackDB.db');
+
+    if (fs.existsSync(windowsPath)) {
+        process.env['IS_WINDOWS'] = true;
+        return windowsPath
+    }
+
+    const macPath = path.resolve(directory, 'Grey Hack.app/Contents/GreyHackDB.db');
+
+    if (fs.existsSync(macPath)) {
+        process.env['IS_MAC'] = true;
+        return macPath;
+    }
+
+    return path.resolve(directory);
 };
 
-module.exports = function() {
+exports.client = function() {
     if (!instance) {
         instance = new sqlite3.Database(getDBFilePath());
     }
 
     return {
         run: util.promisify(instance.run.bind(instance)),
-        get: util.promisify(instance.get.bind(instance))
+        get: util.promisify(instance.get.bind(instance)),
+        all: util.promisify(instance.all.bind(instance))
     };
+};
+
+exports.parseBlob = function(blob) {
+    return JSON.parse(blob.toString());
 };

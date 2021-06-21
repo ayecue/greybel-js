@@ -1,0 +1,14 @@
+[
+    {
+        "Transactions": "{\"account\":\"NjSmaRkn\",\"dinero\":1125.0,\"transacciones\":[{\"cuenta\":\"Unknown\",\"cantidad\":1250.0,\"motivo\":\"Gift\",\"fecha\":\"5-1-1990 11:47\"},{\"cuenta\":\"Unknown\",\"cantidad\":-125.0,\"motivo\":\"Rented server\",\"fecha\":\"14:06\"}]}",
+        "User": "NjSmaRkn"
+    },
+    {
+        "Transactions": "{\"account\":\"xmMTG61c\",\"dinero\":1250.0,\"transacciones\":[{\"cuenta\":\"Unknown\",\"cantidad\":1250.0,\"motivo\":\"Gift\",\"fecha\":\"29-4-1990 21:51\"}]}",
+        "User": "xmMTG61c"
+    },
+    {
+        "Transactions": "{\"account\":\"oUURnZ6b\",\"dinero\":1360.0,\"transacciones\":[{\"cuenta\":\"Unknown\",\"cantidad\":1250.0,\"motivo\":\"Gift\",\"fecha\":\"30-4-1990 06:33\"},{\"cuenta\":\"Unknown\",\"cantidad\":200.0,\"motivo\":\"Mission OK\",\"fecha\":\"08:22\"},{\"cuenta\":\"Unknown\",\"cantidad\":-20.0,\"motivo\":\"Shop item purchased\",\"fecha\":\"08:31\"},{\"cuenta\":\"Unknown\",\"cantidad\":-20.0,\"motivo\":\"Shop item purchased\",\"fecha\":\"08:34\"},{\"cuenta\":\"Unknown\",\"cantidad\":-50.0,\"motivo\":\"Shop item purchased\",\"fecha\":\"08:38\"}]}",
+        "User": "oUURnZ6b"
+    }
+]

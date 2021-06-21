@@ -9,13 +9,15 @@ const envs = require('./build/envs');
 const validator = require('./parser/validator');
 const logger = require('node-color-log');
 const statements = require('./parser/statements');
+const getPrecedence = require('./parser/precedence');
 
 const Parser = function(content, collectAll) {
 	const me = this;
 
 	me.content = content;
 	me.lexer = new Lexer(content);
-	me.lookahead = me.lexer.next();
+	me.history = [];
+	me.prefetchedTokens = [];
 	me.token = null;
 	me.previousToken = null;
 	me.imports = [];
@@ -29,9 +31,12 @@ const Parser = function(content, collectAll) {
 Parser.prototype.next = function() {
 	const me = this;
 
+	if (me.previousToken) {
+		me.history.push(me.previousToken);
+	}
+
 	me.previousToken = me.token;
-	me.token = me.lookahead;
-	me.lookahead = me.lexer.next();
+	me.token = me.fetch();
 
 	return me;
 };
@@ -51,6 +56,25 @@ Parser.prototype.consume = function(value) {
 		return true;
     }
     return false;
+};
+
+Parser.prototype.fetch = function() {
+	const me = this;
+	return me.prefetch(1) && me.prefetchedTokens.shift();
+};
+
+Parser.prototype.prefetch = function(offset) {
+	const me = this;
+	const offsetIndex = offset - 1;
+
+	while (me.prefetchedTokens.length < offset) {
+		const next = me.lexer.next();
+		if (!next) break;
+		me.prefetchedTokens.push(next);
+		if (next.type === TOKENS.EOF) break;
+	}
+
+	return me.prefetchedTokens[offsetIndex];
 };
 
 Parser.prototype.consumeMany = function(values) {
@@ -78,13 +102,14 @@ Parser.prototype.isUnary = function(token) {
 	const me = this;
 	const type = token.type;
 	const value = token.value;
-	if (TOKENS.Punctuator === type) return '@:'.indexOf(value) >= 0;
-	if (TOKENS.Keyword === type) return 'not' === value || 'new' === value;
+	if (TOKENS.Punctuator === type) return '@' === value;
+	if (TOKENS.Keyword === type) return 'new' === value;
 	return false;
 };
 
 Parser.prototype.parseIdentifier = function() {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const identifier = me.token.value;
 	if (TOKENS.Identifier === me.token.type) {
 		if (me.collectAll && !me.namespaces.hasOwnProperty(identifier) && !validator.isNative(identifier)) {
@@ -92,23 +117,25 @@ Parser.prototype.parseIdentifier = function() {
 			varNamespaces.createNamespace(identifier);
 		}
 		me.next();
-		return AST.identifier(identifier);
+		return AST.identifier(identifier, mainStatementLine);
 	}
 	me.exception('Unexpected identifier');
 };
 
 Parser.prototype.parseMapConstructor = function(flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const fields = []
 	let key;
 	let value;
 
 	while (true) {
-		if (TOKENS.StringLiteral === me.token.type && ':' === me.lookahead.value) {
+		if (TOKENS.StringLiteral === me.token.type && ':' === me.prefetch(1).value) {
+	        const mapKeyStringLine = me.token.line;
 	        key = me.parsePrimaryExpression();
 			me.next();
 			value = me.parseExpectedExpression(flowContext);
-			fields.push(AST.mapKeyString(key, value));
+			fields.push(AST.mapKeyString(key, value, mapKeyStringLine));
 	  	}
 		if (',;'.indexOf(me.token.value) >= 0) {
 			me.next();
@@ -116,19 +143,23 @@ Parser.prototype.parseMapConstructor = function(flowContext) {
 		}
 	  	break;
 	}
+
 	me.expect('}');
-	return AST.mapConstructorExpression(fields);
+
+	return AST.mapConstructorExpression(fields, mainStatementLine);
 };
 
 Parser.prototype.parseListConstructor = function(flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const fields = []
 	let key;
 	let value;
 
 	while (true) {
+		const listValueLine = me.token.line;
 		value = me.parseExpression(flowContext)
-		if (value != null) fields.push(AST.listValue(value));
+		if (value != null) fields.push(AST.listValue(value, listValueLine));
 		if (',;'.indexOf(me.token.value) >= 0) {
 			me.next();
 			continue;
@@ -136,7 +167,7 @@ Parser.prototype.parseListConstructor = function(flowContext) {
 	  	break;
 	}
 	me.expect(']');
-	return AST.listConstructorExpression(fields);
+	return AST.listConstructorExpression(fields, mainStatementLine);
 };
 
 Parser.prototype.parseRighthandExpressionGreedy = function(base, flowContext) {
@@ -169,44 +200,80 @@ Parser.prototype.parseRighthandExpression = function(flowContext) {
 	return me.parseRighthandExpressionGreedy(base, flowContext);
 };
 
-Parser.prototype.parseMathShorthandLeftOperator = function(flowContext, isWrapped) {
+Parser.prototype.parseMathShorthandLeftOperator = function(flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const operatorToken = me.token;
 	const operator = operatorToken.value.charAt(0);
 	me.next();
 	const scopeBody = flowContext.get();
 	const base = me.parseExpectedExpression(flowContext);
-	const number = AST.literal('NumericLiteral', 1, 1);
+	const number = AST.literal('NumericLiteral', 1, 1, mainStatementLine);
 	logger.warn('Lefthand "' +  operatorToken.value + '" not fully supported. Will only put the math operation in front. (Line: ' + me.token.line + ')');
-	return AST.binaryExpression(operator, number, base, isWrapped);
+	return AST.binaryExpression(operator, number, base, mainStatementLine);
 };
 
 Parser.prototype.parseMathShorthandRightOperator = function(base) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const operator = me.previousToken.value.charAt(0);
-	const number = AST.literal('NumericLiteral', 1, 1);
-	return AST.binaryExpression(operator, base, number);
+	const number = AST.literal('NumericLiteral', 1, 1, mainStatementLine);
+	return AST.binaryExpression(operator, base, number, mainStatementLine);
 };
 
 Parser.prototype.parseAssignmentShorthandOperator = function(base, flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const operator = me.previousToken.value.charAt(0);
 	const value = me.parseSubExpression(flowContext);
-	const expression = AST.binaryExpression(operator, base, value);
-	return AST.assignmentStatement(base, expression);
+	const expression = AST.binaryExpression(operator, base, value, mainStatementLine);
+	return AST.assignmentStatement(base, expression, mainStatementLine);
 };
 
-Parser.prototype.parseBitwiseOperator = function(base, flowContext) {
+Parser.prototype.parseIndexExpression = function(base, flowContext) {
 	const me = this;
-	const operator = me.previousToken.value;
-	const operationArg = AST.literal('StringLiteral', operator, '"' + operator + '"');
-	const lastArg = me.parseSubExpression(flowContext);
-	const fn = AST.identifier('bitwise');
-	return AST.callExpression(fn, [operationArg, base, lastArg]);
+	const mainStatementLine = me.token.line;
+	let offset = 1;
+	let token = me.token;
+
+	while (true) {
+		if (token.value === ']') break;
+		if (token.value === ':') {
+			let left;
+			let right;
+
+			if (!me.consume(':')) {
+				left = me.parseExpectedExpression(flowContext);
+				me.expect(':');
+			} else {
+				left = AST.emptyExpression(mainStatementLine);
+			}
+
+			if (!me.consume(']')) {
+				right = me.parseExpectedExpression(flowContext);
+				me.expect(']');
+			} else {
+				right = AST.emptyExpression(mainStatementLine);
+			}
+
+			const sliceExpression = AST.sliceExpression(left, right, mainStatementLine);
+
+			return  AST.indexExpression(base, sliceExpression, mainStatementLine);
+		}
+
+		token = me.prefetch(offset);
+		offset = offset + 1;
+	}
+
+	expression = me.parseExpectedExpression(flowContext);
+	me.expect(']');
+
+	return AST.indexExpression(base, expression, mainStatementLine);
 };
 
 Parser.prototype.parseRighthandExpressionPart = function(base, flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
     let expression;
     let identifier;
     const type = me.token.type;
@@ -220,18 +287,13 @@ Parser.prototype.parseRighthandExpressionPart = function(base, flowContext) {
 		} else if ('+=' === value || '-=' === value || '*=' === value || '/=' === value) {
 			me.next();
 			return  me.parseAssignmentShorthandOperator(base, flowContext);
-		} else if (validator.isBinaryOperator(value)) {
-			me.next();
-			return  me.parseBitwiseOperator(base, flowContext);
 		} else if ('[' === value) {
 			me.next();
-			expression = me.parseExpectedExpression(flowContext);
-			me.expect(']');
-			return AST.indexExpression(base, expression);
+			return me.parseIndexExpression(base, expression);
     	} else if ('.' === value) {
 			me.next();
 			identifier = me.parseIdentifier();
-			return AST.memberExpression(base, '.', identifier);
+			return AST.memberExpression(base, '.', identifier, mainStatementLine);
 		} else if ('(' === value) {
 			return me.parseCallExpression(base, flowContext);
 		}
@@ -242,6 +304,7 @@ Parser.prototype.parseRighthandExpressionPart = function(base, flowContext) {
 
 Parser.prototype.parseCallExpression = function(base, flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 
 	if (TOKENS.Punctuator === me.token.type) {
 		const value = me.token.value;
@@ -263,7 +326,7 @@ Parser.prototype.parseCallExpression = function(base, flowContext) {
 			}
 
 			me.expect(')');
-			return AST.callExpression(base, expressions);
+			return AST.callExpression(base, expressions, mainStatementLine);
 		}
 	}
 
@@ -273,28 +336,30 @@ Parser.prototype.parseCallExpression = function(base, flowContext) {
 Parser.prototype.parseFloatExpression = function(baseValue) {
 	if (baseValue === 0) baseValue = '';
 	const me = this;
+	const mainStatementLine = me.token.line;
 	me.next();
 	const floatValue = [baseValue, me.token.value].join('.');
 	me.next();
-	const base = AST.literal(TOKENS.NumericLiteral, floatValue, floatValue);
+	const base = AST.literal(TOKENS.NumericLiteral, floatValue, floatValue, mainStatementLine);
 	if (me.collectAll) literals.add(base);
 	return base;
 };
 
 Parser.prototype.parsePrimaryExpression = function(flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const value = me.token.value;
 	const type = me.token.type;
 
 	if (validator.isLiteral(type)) {
 		const raw = me.content.slice(me.token.range[0], me.token.range[1]);
-		let base = AST.literal(type, value, raw);
+		let base = AST.literal(type, value, raw, mainStatementLine);
 
 		if (me.collectAll) literals.add(base);
 
-		if (TOKENS.NilLiteral !== type && me.lookahead.value === '.') {
+		if (TOKENS.NilLiteral !== type && me.prefetch(1).value === '.') {
 			me.next();
-			if (TOKENS.NumericLiteral === type && TOKENS.NumericLiteral === me.lookahead.type) {
+			if (TOKENS.NumericLiteral === type && TOKENS.NumericLiteral === me.prefetch(1).type) {
 				base = me.parseFloatExpression(value);
 			} else {
 				base = me.parseRighthandExpressionGreedy(base, flowContext);
@@ -304,7 +369,7 @@ Parser.prototype.parsePrimaryExpression = function(flowContext) {
 		}
 
 		return base;
-	} else if ('.' === value && TOKENS.NumericLiteral === me.lookahead.type) {
+	} else if ('.' === value && TOKENS.NumericLiteral === me.prefetch(1).type) {
 		return me.parseFloatExpression(0);
 	} else if (TOKENS.Keyword === type && '#envar' === value) {
 		me.next();
@@ -326,18 +391,24 @@ Parser.prototype.parsePrimaryExpression = function(flowContext) {
 	}
 };
 
-Parser.prototype.parseSubExpression = function (flowContext, isWrapped) {
+Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
+	if (minPrecedence == null) minPrecedence = 0;
 	const me = this;
+	const mainStatementLine = me.token.line;
     let operator = me.token.value;
     let expression = null;
 
     if (me.isUnary(me.token)) {
 		me.next();
-		const argument = me.parseSubExpression(flowContext, isWrapped);
-		expression = AST.unaryExpression(operator, argument);
+		const argument = me.parseSubExpression(flowContext);
+		expression = AST.unaryExpression(operator, argument, mainStatementLine);
     } else if (TOKENS.Punctuator === me.token.type && (operator === '++' || operator === '--')) {
 		expression = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
-    }
+	} else if (TOKENS.Keyword === me.token.type && me.token.value === 'not') {
+		me.next();
+		const argument = me.parseSubExpression(flowContext, 10);
+		expression = AST.negationExpression(argument, mainStatementLine);
+	}
     if (null == expression) {
       expression = me.parsePrimaryExpression(flowContext);
 
@@ -346,17 +417,25 @@ Parser.prototype.parseSubExpression = function (flowContext, isWrapped) {
       }
     }
 
+    let precedence;
 	while (true) {
 		operator = me.token.value;
-		if (!validator.isExpressionOperator(me.token.value)) break;
 
-		me.next();
-		let right = me.parseSubExpression(flowContext);
-		if (null == right) {
-			right = AST.emptyExpression();
+		if (validator.isExpressionOperator(operator)) {
+			precedence = getPrecedence(operator);
+		} else {
+			precedence = 0;
 		}
 
-		expression = AST.binaryExpression(operator, expression, right, isWrapped);
+		if (precedence === 0 || precedence <= minPrecedence) break;
+		if ('^' === operator) --precedence;
+		me.next();
+		let right = me.parseSubExpression(flowContext, precedence);
+		if (null == right) {
+			right = AST.emptyExpression(mainStatementLine);
+		}
+
+		expression = AST.binaryExpression(operator, expression, right, mainStatementLine);
 	}
 
     return expression;
@@ -377,26 +456,29 @@ Parser.prototype.parseFeaturePath = function() {
 
 Parser.prototype.parseFeatureIncludeStatement = function() {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const path = me.parseFeaturePath();
 	me.expect(';');
-	const base = AST.featureIncludeExpression(path);
+	const base = AST.featureIncludeExpression(path, mainStatementLine);
 	me.includes.push(base);
 	return base;
 };
 
 Parser.prototype.parseFeatureImportStatement = function() {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const name = me.parseIdentifier();
 	me.expect('from');
 	const path = me.parseFeaturePath();
 	me.expect(';');
-	const base = AST.featureImportExpression(name, path);
+	const base = AST.featureImportExpression(name, path, mainStatementLine);
 	me.imports.push(base);
 	return base;
 };
 
 Parser.prototype.parseFeatureEnvarNameStatement = function() {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const name = me.token.value;
 	const value = envs.get(name);
 	let raw;
@@ -409,7 +491,7 @@ Parser.prototype.parseFeatureEnvarNameStatement = function() {
 		raw = '"' + value + '"';
 	}
 
-	const literal = AST.literal(type, value, raw);
+	const literal = AST.literal(type, value, raw, mainStatementLine);
 
 	if (me.collectAll) literals.add(literal);
 	me.next();
@@ -418,9 +500,10 @@ Parser.prototype.parseFeatureEnvarNameStatement = function() {
 
 Parser.prototype.parseFeatureEnvarStatement = function(flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const name = me.parseFeatureEnvarNameStatement();
 	me.expect(';');
-	let base = AST.featureEnvarExpression(name);
+	let base = AST.featureEnvarExpression(name, mainStatementLine);
 	if ('.' === me.token.value) {
 		while (true) {
 			const newBase = me.parseRighthandExpressionPart(base, flowContext);
@@ -434,6 +517,7 @@ Parser.prototype.parseFeatureEnvarStatement = function(flowContext) {
 
 Parser.prototype.parseWhileStatement = function(flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const condition = me.parseExpectedExpression(flowContext);
 
 	let body;
@@ -445,18 +529,18 @@ Parser.prototype.parseWhileStatement = function(flowContext) {
 		me.expectMany(['end while', ';', '<eof>']);
 	}
 
-	return AST.whileStatement(condition, body);
+	return AST.whileStatement(condition, body, mainStatementLine);
 };
 
-Parser.prototype.parseExpression = function(flowContext, isWrapped) {
+Parser.prototype.parseExpression = function(flowContext) {
 	const me = this;
-	const expression = me.parseSubExpression(flowContext, isWrapped);
+	const expression = me.parseSubExpression(flowContext);
 	return expression;
 };
 
-Parser.prototype.parseExpectedExpression = function(flowContext, isWrapped) {
+Parser.prototype.parseExpectedExpression = function(flowContext) {
 	const me = this;
-	const expression = me.parseExpression(flowContext, isWrapped);
+	const expression = me.parseExpression(flowContext);
 	if (expression != null) return expression;
 	me.exception('Unexpected expression');
 };
@@ -464,6 +548,8 @@ Parser.prototype.parseExpectedExpression = function(flowContext, isWrapped) {
 Parser.prototype.parseIfShortcutStatement = function(flowContext, condition) {
 	const me = this;
 	const clauses = [];
+	const mainStatementLine = me.token.line;
+	let statementLine = mainStatementLine;
 	let body = [];
 
 	body = me.parseBlockShortcut(flowContext);
@@ -471,45 +557,49 @@ Parser.prototype.parseIfShortcutStatement = function(flowContext, condition) {
 	const isActuallyShortcut = body.length === 1;
 
 	if (isActuallyShortcut) {
-		clauses.push(AST.ifShortcutClause(condition, body[0]));
+		clauses.push(AST.ifShortcutClause(condition, body[0], statementLine));
 	} else {
-		clauses.push(AST.ifClause(condition, body));
+		clauses.push(AST.ifClause(condition, body, statementLine));
 	}
 
     while (me.consume('else if')) {
+    	statementLine = me.token.line;
 		condition = me.parseExpectedExpression(flowContext);
 		me.expect('then');
 		body = me.parseBlockShortcut(flowContext);
 
 		if (isActuallyShortcut) {
-			clauses.push(AST.elseifShortcutClause(condition, body[0]));
+			clauses.push(AST.elseifShortcutClause(condition, body[0], statementLine));
 		} else {
-			clauses.push(AST.elseifClause(condition, body));
+			clauses.push(AST.elseifClause(condition, body, statementLine));
 		}
 	}
 
 	if (me.consume('else')) {
+		statementLine = me.token.line;
 		body = me.parseBlockShortcut(flowContext);
 
 		if (isActuallyShortcut) {
-			clauses.push(AST.elseShortcutClause(body[0]));
+			clauses.push(AST.elseShortcutClause(body[0], statementLine));
 		} else {
-			clauses.push(AST.elseClause(body));
+			clauses.push(AST.elseClause(body, statementLine));
 		}
 	}
 
 	me.consumeMany(['end if', ';', '<eof>']);
 
 	if (isActuallyShortcut) {
-		return AST.ifShortcutStatement(clauses);
+		return AST.ifShortcutStatement(clauses, mainStatementLine);
 	}
 
-	return AST.ifStatement(clauses);
+	return AST.ifStatement(clauses, mainStatementLine);
 }
 
 Parser.prototype.parseIfStatement = function(flowContext) {
 	const me = this;
 	const clauses = [];
+	const mainStatementLine = me.token.line;
+	let statementLine = mainStatementLine;
 	let condition;
 	let body;
 
@@ -519,27 +609,30 @@ Parser.prototype.parseIfStatement = function(flowContext) {
 	if (TOKENS.EOL !== me.token.type) return me.parseIfShortcutStatement(flowContext, condition);
 
 	body = me.parseBlock(flowContext);
-	clauses.push(AST.ifClause(condition, body));
+	clauses.push(AST.ifClause(condition, body, statementLine));
 
 	while (me.consume('else if')) {
+		statementLine = mainStatementLine;
 		condition = me.parseExpectedExpression(flowContext);
 		me.expect('then');
 		body = me.parseBlock(flowContext);
-		clauses.push(AST.elseifClause(condition, body));
+		clauses.push(AST.elseifClause(condition, body, statementLine));
 	}
 
 	if (me.consume('else')) {
+		statementLine = mainStatementLine;
 		body = me.parseBlock(flowContext);
-		clauses.push(AST.elseClause(body));
+		clauses.push(AST.elseClause(body, statementLine));
 	}
 
 	me.expect('end if');
 
-	return AST.ifStatement(clauses);
+	return AST.ifStatement(clauses, mainStatementLine);
 };
 
 Parser.prototype.parseReturnStatement = function(flowContext, isShortcutStatement) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const expressions = [];
 
 	if ('end' !== me.token.value) {
@@ -552,11 +645,12 @@ Parser.prototype.parseReturnStatement = function(flowContext, isShortcutStatemen
 		if (!isShortcutStatement) me.consume(';');
 	}
 
-	return AST.returnStatement(expressions);
+	return AST.returnStatement(expressions, mainStatementLine);
 };
 
 Parser.prototype.parseFunctionName = function() {
 	const me = this;
+	const mainStatementLine = me.token.line;
     let base;
     let name;
     let marker;
@@ -565,7 +659,7 @@ Parser.prototype.parseFunctionName = function() {
 
     while (me.consume('.')) {
 		name = me.parseIdentifier();
-		base = AST.memberExpression(base, '.', name);
+		base = AST.memberExpression(base, '.', name, mainStatementLine);
     }
 
 	return base;
@@ -573,6 +667,7 @@ Parser.prototype.parseFunctionName = function() {
 
 Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
     const me = this;
+    const mainStatementLine = me.token.line;
     let base;
     let last = me.token;
 
@@ -602,18 +697,19 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
     		return base;
     	}
 
-		return AST.callStatement(base);
+		return AST.callStatement(base, mainStatementLine);
     }
 
     me.expect('=');
 
 	const value = me.parseExpectedExpression(flowContext);
 
-	return AST.assignmentStatement(base, value);
+	return AST.assignmentStatement(base, value, mainStatementLine);
 };
 
 Parser.prototype.parseForStatement = function(flowContext) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	me.consume('(');
 	const variable = me.parseIdentifier();
 
@@ -630,11 +726,12 @@ Parser.prototype.parseForStatement = function(flowContext) {
 		me.expectMany(['end for', ';', '<eof>']);
 	}
 
-	return AST.forGenericStatement(variable, iterator, body);
+	return AST.forGenericStatement(variable, iterator, body, mainStatementLine);
 };
 
 Parser.prototype.parseFunctionDeclaration = function(flowContext, name) {
 	const me = this;
+	const mainStatementLine = me.token.line;
 	const parameters = [];
 	me.expect('(');
 
@@ -645,7 +742,7 @@ Parser.prototype.parseFunctionDeclaration = function(flowContext, name) {
 				const value = parameter.value;
 				if (me.consume('=')) {
 					const value = me.parseExpectedExpression(flowContext);
-					parameter = AST.assignmentStatement(parameter, value);
+					parameter = AST.assignmentStatement(parameter, value, mainStatementLine);
 				}
 				parameters.push(parameter);
 				if (me.consume(',')) continue;
@@ -667,7 +764,7 @@ Parser.prototype.parseFunctionDeclaration = function(flowContext, name) {
 		me.expectMany(['end function', ';', '<eof>']);
 	}
 
-	return AST.functionStatement(name, parameters, body);
+	return AST.functionStatement(name, parameters, body, mainStatementLine);
 };
 
 Parser.prototype.parseStatement = function(flowContext, isShortcutStatement) {
@@ -720,10 +817,6 @@ Parser.prototype.parseBlock = function(flowContext) {
 	flowContext.push(block);
 	while (!me.isBlockFollow(me.token)) {
 		value = me.token.value;
-		if ('return' === value || 'break' === value) {
-			block.push(me.parseStatement(flowContext));
-			break;
-		}
 		statement = me.parseStatement(flowContext);
 		me.consume(';');
 		if (statement) block.push(statement);
@@ -736,11 +829,12 @@ Parser.prototype.parseBlock = function(flowContext) {
 Parser.prototype.parseChunk = function() {
 	const me = this;
 	me.next();
+	const mainStatementLine = me.token.line;
 	const body = me.parseBlock(new Stack());
 	if (TOKENS.EOF !== me.token.type) {
 		me.exception('Unexpected EOF');
 	}
-	return AST.chunk(body, me.imports, me.includes, Object.keys(me.namespaces));
+	return AST.chunk(body, me.imports, me.includes, Object.keys(me.namespaces), mainStatementLine);
 };
 
 Parser.prototype.exception = function(message) {

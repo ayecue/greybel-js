@@ -1,126 +1,143 @@
 const TOKENS = require('../lexer/tokens');
 
 const AST = {
-    breakStatement: function() {
+    breakStatement: function(line) {
         return {
-            type: 'BreakStatement'
+            type: 'BreakStatement',
+            line: line
         };
     },
-    continueStatement: function() {
+    continueStatement: function(line) {
         return {
             type: 'ContinueStatement'
         };
     },
-    returnStatement: function(args) {
+    returnStatement: function(args, line) {
         return {
             type: 'ReturnStatement',
-            'arguments': args
+            'arguments': args,
+            line: line
         };
     },
-    ifShortcutStatement: function(clauses) {
+    ifShortcutStatement: function(clauses, line) {
         return {
             type: 'IfShortcutStatement',
-            clauses: clauses
+            clauses: clauses,
+            line: line
         };
     },
-    ifShortcutClause: function(condition, statement) {
+    ifShortcutClause: function(condition, statement, line) {
         return {
             type: 'IfShortcutClause',
             condition: condition,
-            statement: statement
+            statement: statement,
+            line: line
         };
     },
-    elseifShortcutClause: function(condition, statement) {
+    elseifShortcutClause: function(condition, statement, line) {
         return {
             type: 'ElseifShortcutClause',
             condition: condition,
-            statement: statement
+            statement: statement,
+            line: line
         };
     },
-    elseShortcutClause: function(statement) {
+    elseShortcutClause: function(statement, line) {
         return {
             type: 'ElseShortcutClause',
-            statement: statement
+            statement: statement,
+            line: line
         };
     },
-    ifStatement: function(clauses) {
+    ifStatement: function(clauses, line) {
         return {
             type: 'IfStatement',
-            clauses: clauses
+            clauses: clauses,
+            line: line
         };
     },
-    ifClause: function(condition, body) {
+    ifClause: function(condition, body, line) {
         return {
             type: 'IfClause',
             condition: condition,
-            body: body
+            body: body,
+            line: line
         };
     },
-    elseifClause: function(condition, body) {
+    elseifClause: function(condition, body, line) {
         return {
             type: 'ElseifClause',
             condition: condition,
-            body: body
+            body: body,
+            line: line
         };
     },
-    elseClause: function(body) {
+    elseClause: function(body, line) {
         return {
             type: 'ElseClause',
-            body: body
+            body: body,
+            line: line
         };
     },
-    whileStatement: function(condition, body) {
+    whileStatement: function(condition, body, line) {
         return {
             type: 'WhileStatement',
             condition: condition,
-            body: body
+            body: body,
+            line: line
         };
     },
-    assignmentStatement: function(variable, init) {
+    assignmentStatement: function(variable, init, line) {
         return {
             type: 'AssignmentStatement',
             variable: variable,
-            init: init
+            init: init,
+            line: line
         };
     },
-    callStatement: function(expression) {
+    callStatement: function(expression, line) {
         return {
             type: 'CallStatement',
-            expression: expression
+            expression: expression,
+            line: line
         };
     },
-    functionStatement: function(identifier, parameters, body) {
+    functionStatement: function(identifier, parameters, body, line) {
         return {
             type: 'FunctionDeclaration',
             identifier: identifier,
             parameters: parameters,
-            body: body
+            body: body,
+            line: line
         };
     },
-    forGenericStatement: function(variable, iterator, body) {
+    forGenericStatement: function(variable, iterator, body, line) {
         return {
             type: 'ForGenericStatement',
             variable: variable,
             iterator: iterator,
-            body: body
+            body: body,
+            line: line
         };
     },
-    chunk: function(body, imports, includes, namespaces) {
+    chunk: function(body, imports, includes, namespaces, line) {
         return {
             type: 'Chunk',
             body: body,
             imports: imports,
             includes: includes,
-            namespaces: namespaces
+            namespaces: namespaces,
+            line: line
         };
     },
-    identifier: function(name) {
+    identifier: function(name, line) {
         return {
             type: 'Identifier',
-            name: name
+            name: name,
+            line: line
         };
     },
-    literal: function(type, value, raw) {
+    literal: function(type, value, raw, line) {
         if (type === TOKENS.StringLiteral) type = 'StringLiteral';
         else if (type === TOKENS.NumericLiteral) type = 'NumericLiteral';
         else if (type === TOKENS.BooleanLiteral) type = 'BooleanLiteral';
@@ -129,128 +146,159 @@ const AST = {
         return {
             type: type,
             value: value,
-            raw: raw
+            raw: raw,
+            line: line
         };
     },
-    memberExpression: function(base, indexer, identifier) {
+    memberExpression: function(base, indexer, identifier, line) {
         return {
             type: 'MemberExpression',
             indexer: indexer,
             identifier: identifier,
-            base: base
+            base: base,
+            line: line
         };
     },
-    callExpression: function(base, args) {
+    callExpression: function(base, args, line) {
         return {
             type: 'CallExpression',
             base: base,
-            'arguments': args
+            'arguments': args,
+            line: line
         };
     },
     comment: function(value, raw) {
         return {
             type: 'Comment',
             value: value,
-            raw: raw
+            raw: raw,
+            line: line
         };
     },
-    unaryExpression: function(operator, argument) {
+    unaryExpression: function(operator, argument, line) {
         return {
             type: 'UnaryExpression',
             operator: operator,
-            argument: argument
+            argument: argument,
+            line: line
         };
     },
-    mapKeyString: function(key, value) {
+    mapKeyString: function(key, value, line) {
         return {
             type: 'MapKeyString',
             key: key,
-            value: value
+            value: value,
+            line: line
         };
     },
-    mapValue: function(value) {
+    mapValue: function(value, line) {
         return {
             type: 'MapValue',
-            value: value
+            value: value,
+            line: line
         };
     },
-    mapConstructorExpression: function(fields) {
+    mapConstructorExpression: function(fields, line) {
         return {
             type: 'MapConstructorExpression',
-            fields: fields
+            fields: fields,
+            line: line
         };
     },
-    mapCallExpression: function(base, args) {
+    mapCallExpression: function(base, args, line) {
         return {
             type: 'MapCallExpression',
             base: base,
-            'arguments': args
+            'arguments': args,
+            line: line
         };
     },
-    listValue: function(value) {
+    listValue: function(value, line) {
         return {
             type: 'ListValue',
-            value: value
+            value: value,
+            line: line
         };
     },
-    listConstructorExpression: function(fields) {
+    listConstructorExpression: function(fields, line) {
         return {
             type: 'ListConstructorExpression',
-            fields: fields
+            fields: fields,
+            line: line
         };
     },
-    listCallExpression: function(base, args) {
+    listCallExpression: function(base, args, line) {
         return {
             type: 'ListCallExpression',
             base: base,
-            'arguments': args
+            'arguments': args,
+            line: line
         };
     },
-    emptyExpression: function() {
+    emptyExpression: function(line) {
         return {
-            type: 'EmptyExpression'
+            type: 'EmptyExpression',
+            line: line
         };
     },
-    indexExpression: function(base, index) {
+    indexExpression: function(base, index, line) {
         return {
             type: 'IndexExpression',
             base: base,
-            index: index
+            index: index,
+            line: line
         };
     },
-    binaryExpression: function(operator, left, right, isWrapped) {
-      let type = 'BinaryExpression';
-      if ('and' === operator || 'or' === operator) type = 'LogicalExpression';
+    binaryExpression: function(operator, left, right, line) {
+        let type = 'BinaryExpression';
+        if ('and' === operator || 'or' === operator) type = 'LogicalExpression';
 
-      return {
-        type: type,
-        operator: operator,
-        left: left,
-        right: right,
-        isWrapped: isWrapped === true
-      };
+        return {
+            type: type,
+            operator: operator,
+            left: left,
+            right: right,
+            line: line
+        };
     },
-    featureImportExpression: function(name, path) {
+    featureImportExpression: function(name, path, line) {
         return {
             type: 'FeatureImportExpression',
             name: name,
             path: path,
             chunk: null,
-            namespace: null
+            namespace: null,
+            line: line
         };
     },
-    featureIncludeExpression: function(path) {
+    featureIncludeExpression: function(path, line) {
         return {
             type: 'FeatureIncludeExpression',
             path: path,
             chunk: null,
-            namespace: null
+            namespace: null,
+            line: line
         };
     },
-    featureEnvarExpression: function(name) {
+    featureEnvarExpression: function(name, line) {
         return {
             type: 'FeatureEnvarExpression',
-            name: name
+            name: name,
+            line: line
+        };
+    },
+    sliceExpression: function(left, right, line) {
+        return {
+            type: 'SliceExpression',
+            left: left,
+            right: right,
+            line: line
+        };
+    },
+    negationExpression: function(arg, line) {
+        return {
+            type: 'NegationExpression',
+            'argument': arg
         };
     }
 };
