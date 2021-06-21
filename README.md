@@ -199,6 +199,7 @@ print(somevar) //prints "SOME_VALUE"
 
 # Things to come
 - add full support of Grey Hack API to emulator
+- add support for native `import_code`
 - port greybel-js to GreyScript to replace https://github.com/ayecue/greybel
 - clean up codebase
 - use typescript
