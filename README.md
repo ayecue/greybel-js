@@ -1,4 +1,4 @@
-# Greybel-JS 0.2.1
+# Greybel-JS 0.2.2
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
@@ -22,6 +22,7 @@ Features:
 	- obfuscate your code (even though that's just a side effect of all the steps above)
 - includes interpreter + emulator (Grey Hack polyfills) which enables debugging code
 - includes ui for interpreter + emulator and transpiler
+- debugger feature (not completly implemented yet)
 
 # Install
 
@@ -33,7 +34,7 @@ npm i greybel-js
 ## Compiler
 ```
 Compiler CLI
-Version: 0.2.1
+Version: 0.2.2
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -57,7 +58,7 @@ greybel /my/code/file.src
 ## Emulator
 ```
 Emulator CLI
-Version: 0.2.1
+Version: 0.2.2
 Example: greybel-console --path "<path to steam common>/Grey Hack"
 
 Options:
@@ -77,7 +78,7 @@ greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Gr
 ## Emulator-UI
 ```
 Emulator UI CLI
-Version: 0.2.1
+Version: 0.2.2
 Example: greybel-ui
 
 Options:
@@ -195,6 +196,17 @@ random=SOME_VALUE
 somevar = #envar random;
 
 print(somevar) //prints "SOME_VALUE"
+```
+
+## Debugger
+For now this will just put the scope object into the console so you can take a look what's in the current scope and also upper scopes.
+
+In the future you will be able to inspect the scope via the console to get viable information. It will act like breakpoint in your code.
+```
+index = 1
+print("Hello world!")
+print("Another string!")
+//debugger
 ```
 
 # Things to come
