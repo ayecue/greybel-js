@@ -4,8 +4,8 @@ module.exports = function(shell) {
 	const api = {};
 
 	api.get_router = function(ip) {
-		console.error('get_router not yet supported.');
-		return null;
+		shell.echo('get_router not yet supported.');
+		return typer.cast(null);
 	};
 
 	return api;

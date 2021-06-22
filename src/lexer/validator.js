@@ -20,6 +20,10 @@ exports.isKeyword = function(value) {
 	return false;
 };
 
+exports.isDebugger = function(value) {
+	return value === '//debugger';
+};
+
 exports.isWhiteSpace = function(code) {
 	return CHAR_CODES.WHITESPACE == code || CHAR_CODES.TAB == code;
 };

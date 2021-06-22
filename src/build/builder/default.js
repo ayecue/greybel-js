@@ -233,6 +233,9 @@ const mapper = function(make, stack, depth, context) {
 		'FeatureIncludeExpression': function(item) {
 			return make(item.chunk);
 		},
+		'FeatureDebuggerExpression': function(item) {
+			return '//debugger';
+		},
 		'ListConstructorExpression': function(item) {
 			const fields = [];
 			let fieldItem;

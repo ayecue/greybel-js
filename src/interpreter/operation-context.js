@@ -223,10 +223,10 @@ OperationContext.prototype.fork = function(type, state) {
 
 	if (type !== TYPE.FUNCTION) {
 		if (type !== TYPE.LOOP) {
-			opc.setMemory(opc.getMemory('loopContext'));
+			opc.setMemory('loopContext', opc.getMemory('loopContext'));
 		}
 
-		opc.setMemory(opc.getMemory('functionContext'));
+		opc.setMemory('functionContext', opc.getMemory('functionContext'));
 	}
 
 	return opc;

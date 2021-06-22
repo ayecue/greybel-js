@@ -176,7 +176,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
  		if (value instanceof Function) {
  			const callable = await operationContext.getCallable(resultExpr.path);
 
- 			return callable.origin.call(callable.context);
+ 			return typer.cast(await callable.origin.call(callable.context));
  		} else if (value?.isOperation) {
  			return value.run(operationContext);
  		}

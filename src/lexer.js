@@ -294,15 +294,34 @@ Lexer.prototype.scanIdentifierOrKeyword = function() {
     };
 };
 
+Lexer.prototype.scanComment = function() {
+	const me = this;
+
+	while (me.isNotEOF()) {
+		if (validator.isEndOfLine(me.codeAt())) break;
+		me.nextIndex();
+	}
+};
+
 Lexer.prototype.next = function() {
 	const me = this;
 
 	me.skipWhiteSpace();
 
 	while (validator.isComment(me.codeAt(), me.codeAt(1))) {
-		while (me.isNotEOF()) {
-			if (validator.isEndOfLine(me.codeAt())) break;
-			me.nextIndex();
+		me.tokenStart = me.index;
+		me.scanComment();
+
+		const value = me.content.slice(me.tokenStart, me.index);
+
+		if (validator.isDebugger(value)) {
+			return {
+				type : TOKENS.DebuggerOperator,
+				value: value,
+				line: me.line,
+				lineStart: me.lineStart,
+				range: [me.tokenStart, me.index]
+			};
 		}
 	}
 	if (!me.isNotEOF()) {

@@ -162,6 +162,9 @@ const mapper = function(make, stack, depth, context) {
 			if (value == null) return 'null';
 			return value;
 		},
+		'FeatureDebuggerExpression': function(item) {
+			return '//debugger';
+		},
 		'IfShortcutStatement': function(item) {
 			const clauses = [];
 			let clausesItem;

@@ -23,7 +23,8 @@ const {
 	ContinueOperation,
 	BreakOperation,
 	BodyOperation,
-	TopOperation
+	TopOperation,
+	DebuggerOperation
 } = require('./cps-evaluator/operations');
 const CustomBoolean = require('./cps-evaluator/types/custom-boolean');
 const CustomNumber = require('./cps-evaluator/types/custom-number');
@@ -252,6 +253,9 @@ const mapper = function(visit, debug, raise) {
 		},
 		'FeatureIncludeExpression': function(item) {
 			throw new Error('Not supported');
+		},
+		'FeatureDebuggerExpression': function(item) {
+			return new DebuggerOperation(item, debug, raise);
 		},
 		'ListConstructorExpression': function(item) {
 			return new ListExpression(item, visit, debug, raise);

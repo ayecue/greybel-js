@@ -8,7 +8,8 @@ const TOKENS = {
 	BooleanLiteral: 64,
 	NilLiteral: 128,
 	EOL: 256,
-	SliceOperator: 512
+	SliceOperator: 512,
+	DebuggerOperator: 1024
 };
 
 module.exports = TOKENS;

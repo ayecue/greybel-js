@@ -5,10 +5,10 @@ module.exports = function(shell) {
 	const api = {};
 
 	api.print = function(str) {
-		if (str?.useTable) {
-			shell.echo(str.v.valueOf()?.toString() || '', true);
+		if (typer.isCustomMap(str)) {
+			shell.echo(str.value.v.valueOf()?.toString() || '', true);
 		} else {
-			shell.echo(str.valueOf()?.toString() || '');
+			shell.echo(str?.valueOf()?.toString() || '');
 		}
 	};
 	api.exit = function(str) {
@@ -23,6 +23,15 @@ module.exports = function(shell) {
 	};
 	api.home_dir = function() {
 		return typer.cast(shell.getHome());
+	};
+	api.parent_path = function(filepath) {
+		filepath = filepath.valueOf();
+
+		if (filepath.startsWith('/')) {
+			filepath = shell.computer.fileSystem.resolve(filepath, '..');
+		}
+
+		return filepath;
 	};
 	api.format_columns = (v) => ({ v: v, useTable: true });
 	api.command_info = (v) => v;
@@ -90,12 +99,12 @@ module.exports = function(shell) {
 		return typer.cast(shell.tools.isLanIP(str.valueOf()));
 	};
 	api.user_mail_address = function() {
-		console.error('user_mail_address is not yet supported');
-		return null;
+		shell.echo('user_mail_address is not yet supported');
+		return typer.cast(null);
 	};
 	api.user_bank_number = function() {
-		console.error('user_bank_number is not yet supported');
-		return null;
+		shell.echo('user_bank_number is not yet supported');
+		return typer.cast(null);
 	};
 	api.clear_screen = function() {
 		shell.clear();

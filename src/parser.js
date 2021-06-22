@@ -514,7 +514,6 @@ Parser.prototype.parseFeatureEnvarStatement = function(flowContext) {
 	return base;
 };
 
-
 Parser.prototype.parseWhileStatement = function(flowContext) {
 	const me = this;
 	const mainStatementLine = me.token.line;
@@ -776,6 +775,10 @@ Parser.prototype.parseStatement = function(flowContext, isShortcutStatement) {
 		const statement = statements.call(me, value, flowContext, isShortcutStatement);
 
 		if (statement) return statement;
+	} else if (TOKENS.DebuggerOperator === me.token.type) {
+		const base = AST.featureDebuggerExpression(me.token.lineStart);
+		me.next();
+		return base;
     } else if (TOKENS.EOL === me.token.type) {
     	me.next();
     	return null;

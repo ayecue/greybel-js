@@ -88,7 +88,7 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 		if (callable.origin?.isOperation) {
 			return callable.origin.run(operationContext);
 		} else if (callable.origin instanceof Function) {
-			return callable.origin.call(callable.context, ...args);
+			return typer.cast(await callable.origin.call(callable.context, ...args));
 		}
 
 		return typer.cast(callable.origin);
