@@ -66,6 +66,10 @@ module.exports = function(shell) {
 		shell.echo('wifi_networks is not yet supported');
 		return typer.cast([]);
 	};
+	computerInterface.network_devices = function(interface) {
+		shell.echo('network_devices is not yet supported');
+		return typer.cast('');
+	};
 
 	return typer.cast(computerInterface);
 };

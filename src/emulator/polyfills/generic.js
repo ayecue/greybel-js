@@ -8,7 +8,7 @@ module.exports = function(shell) {
 		if (typer.isCustomMap(str)) {
 			shell.echo(str.value.v.valueOf()?.toString() || '', true);
 		} else {
-			shell.echo(str.valueOf()?.toString() || '');
+			shell.echo(str?.valueOf()?.toString() || '');
 		}
 	};
 	api.exit = function(str) {
@@ -100,11 +100,11 @@ module.exports = function(shell) {
 	};
 	api.user_mail_address = function() {
 		shell.echo('user_mail_address is not yet supported');
-		return null;
+		return typer.cast(null);
 	};
 	api.user_bank_number = function() {
 		shell.echo('user_bank_number is not yet supported');
-		return null;
+		return typer.cast(null);
 	};
 	api.clear_screen = function() {
 		shell.clear();

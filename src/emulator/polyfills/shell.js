@@ -36,6 +36,10 @@ module.exports = function(shell) {
 				shell.echo('Shell.build not yet supported.');
 				return typer.cast('Not yet supported');
 			};
+			shellInterface.ping = function() {
+				shell.echo('Shell.ping not yet supported.');
+				return typer.cast('Not yet supported');
+			};
 
 			return shellInterface;
 		};
