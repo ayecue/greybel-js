@@ -90,11 +90,11 @@ module.exports = function(shell) {
 		return typer.cast(shell.tools.isLanIP(str.valueOf()));
 	};
 	api.user_mail_address = function() {
-		console.error('user_mail_address is not yet supported');
+		shell.echo('user_mail_address is not yet supported');
 		return null;
 	};
 	api.user_bank_number = function() {
-		console.error('user_bank_number is not yet supported');
+		shell.echo('user_bank_number is not yet supported');
 		return null;
 	};
 	api.clear_screen = function() {

@@ -8,8 +8,6 @@ module.exports = function(shell) {
 	api.get_shell = function(username, password) {
 		const subShell = shell.fork(username?.valueOf(), password?.valueOf());
 
-		if (subShell == null) return null;
-
 		const createInterface = function(contextShell) {
 			if (contextShell == null) return null;
 
@@ -27,15 +25,15 @@ module.exports = function(shell) {
 				return typer.cast(createInterface(remoteShell));
 			};
 			shellInterface.scp = function() {
-				console.error('Shell.scp not yet supported.');
+				shell.echo('Shell.scp not yet supported.');
 				return typer.cast('Not yet supported');
 			};
 			shellInterface.launch = function() {
-				console.error('Shell.launch not yet supported.');
+				shell.echo('Shell.launch not yet supported.');
 				return typer.cast(0);
 			};
 			shellInterface.build = function() {
-				console.error('Shell.build not yet supported.');
+				shell.echo('Shell.build not yet supported.');
 				return typer.cast('Not yet supported');
 			};
 

@@ -23,14 +23,38 @@ module.exports = function(shell, target) {
 				file.setContent(content);
 			};
 			fileInterface.has_permission = function(p) {
-				console.log('has_permission is not yet supported');
+				shell.echo('has_permission is not yet supported');
 				return typer.cast(true);
 			};
 			fileInterface.parent = function(p) {
 				return typer.cast(shell.getByPath('..'));
 			};
 			fileInterface.delete = function() {
-				console.log('delete is not yet supported');
+				shell.echo('delete is not yet supported');
+			};
+			fileInterface.copy = function(path, newname) {
+				shell.echo('copy is not yet supported');
+				return typer.cast(null);
+			};
+			fileInterface.move = function(path, newname) {
+				shell.echo('move is not yet supported');
+				return typer.cast(null);
+			};
+			fileInterface.rename = function(newname) {
+				shell.echo('rename is not yet supported');
+				return typer.cast(null);
+			};
+			fileInterface.chmod = function(perms, recursive) {
+				shell.echo('chmod is not yet supported');
+				return typer.cast('not yet supported');
+			};
+			fileInterface.set_group = function(group, recursive) {
+				shell.echo('set_group is not yet supported');
+				return typer.cast('not yet supported');
+			};
+			fileInterface.set_owner = function(owner, recursive) {
+				shell.echo('set_owner is not yet supported');
+				return typer.cast('not yet supported');
 			};
 			fileInterface.get_folders = function() {
 				const folders = file.getAttribute('folders');
