@@ -24,6 +24,15 @@ module.exports = function(shell) {
 	api.home_dir = function() {
 		return typer.cast(shell.getHome());
 	};
+	api.parent_path = function(filepath) {
+		filepath = filepath.valueOf();
+
+		if (filepath.startsWith('/')) {
+			filepath = shell.computer.fileSystem.resolve(filepath, '..');
+		}
+
+		return filepath;
+	};
 	api.format_columns = (v) => ({ v: v, useTable: true });
 	api.command_info = (v) => v;
 	api.bitwise = (function() {

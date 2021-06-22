@@ -8,10 +8,15 @@ const API = {
 		const me = this;
 		const target = params.shift();
 		const cwd = process.cwd();
-		const targetPath = path.resolve(target);
+		const targetPath = path.resolve(cwd, target);
+
+		if (!fs.existsSync(targetPath)) {
+			console.error(`Path ${targetPath} does not exist.`);
+			return;
+		}
 
 		return scriptExecuter({
-			filename: targetPath,
+			content: fs.readFileSync(targetPath, 'utf-8'),
 			params: params,
 			shell: me
 		});
