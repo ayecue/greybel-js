@@ -31,6 +31,9 @@ const STATEMENT_MAP = {
 	},
 	'#envar': function(flowContext) {
 		return this.parseFeatureEnvarStatement(flowContext);
+	},
+	'#debugger': function() {
+		return this.parseFeatureDebuggerStatement();
 	}
 };
 

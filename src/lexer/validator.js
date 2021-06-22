@@ -7,7 +7,8 @@ const KEYWORDS = {
 	'5': ['break', 'while'],
 	'6': ['return', '#envar'],
 	'7': ['#import'],
-	'8': ['function', 'continue', '#include']
+	'8': ['function', 'continue', '#include'],
+	'9': ['#debugger']
 };
 
 exports.KEYWORDS = KEYWORDS;

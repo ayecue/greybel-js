@@ -514,6 +514,12 @@ Parser.prototype.parseFeatureEnvarStatement = function(flowContext) {
 	return base;
 };
 
+Parser.prototype.parseFeatureDebuggerStatement = function() {
+	const me = this;
+	const mainStatementLine = me.token.line;
+	me.expect(';');
+	return AST.featureDebuggerExpression(mainStatementLine);
+};
 
 Parser.prototype.parseWhileStatement = function(flowContext) {
 	const me = this;

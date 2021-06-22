@@ -287,6 +287,12 @@ const AST = {
             line: line
         };
     },
+    featureDebuggerExpression: function(line) {
+        return {
+            type: 'FeatureDebuggerExpression',
+            line: line
+        };
+    },
     sliceExpression: function(left, right, line) {
         return {
             type: 'SliceExpression',
@@ -298,7 +304,8 @@ const AST = {
     negationExpression: function(arg, line) {
         return {
             type: 'NegationExpression',
-            'argument': arg
+            'argument': arg,
+            line: line
         };
     }
 };
