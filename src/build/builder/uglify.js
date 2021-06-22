@@ -163,7 +163,7 @@ const mapper = function(make, stack, depth, context) {
 			return value;
 		},
 		'FeatureDebuggerExpression': function(item) {
-			return '__debugger';
+			return '//debugger';
 		},
 		'IfShortcutStatement': function(item) {
 			const clauses = [];

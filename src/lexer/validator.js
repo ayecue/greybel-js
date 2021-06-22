@@ -7,8 +7,7 @@ const KEYWORDS = {
 	'5': ['break', 'while'],
 	'6': ['return', '#envar'],
 	'7': ['#import'],
-	'8': ['function', 'continue', '#include'],
-	'9': ['#debugger']
+	'8': ['function', 'continue', '#include']
 };
 
 exports.KEYWORDS = KEYWORDS;
@@ -19,6 +18,10 @@ exports.isKeyword = function(value) {
 		return KEYWORDS[length].indexOf(value) != -1;
 	}
 	return false;
+};
+
+exports.isDebugger = function(value) {
+	return value === '//debugger';
 };
 
 exports.isWhiteSpace = function(code) {

@@ -1,8 +1,9 @@
 module.exports = function(shell) {
 	const api = {};
 
-	api.__debugger = function __debugger (operationContext) {
-		console.log('DEBUG', this, operationContext);
+	api.__debugger = async function(operationContext) {
+		console.log(operationContext);
+		return null;
 	};
 
 	return api;

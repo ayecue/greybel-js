@@ -14,5 +14,6 @@ module.exports = {
 	ContinueOperation: require('./operations/continue'),
 	BreakOperation: require('./operations/break'),
 	BodyOperation: require('./operations/body'),
-	TopOperation: require('./operations/top')
+	TopOperation: require('./operations/top'),
+	DebuggerOperation: require('./operations/debugger')
 };

@@ -234,7 +234,7 @@ const mapper = function(make, stack, depth, context) {
 			return make(item.chunk);
 		},
 		'FeatureDebuggerExpression': function(item) {
-			return '__debugger';
+			return '//debugger';
 		},
 		'ListConstructorExpression': function(item) {
 			const fields = [];

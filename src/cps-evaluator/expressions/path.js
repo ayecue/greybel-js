@@ -176,10 +176,6 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
  		if (value instanceof Function) {
  			const callable = await operationContext.getCallable(resultExpr.path);
 
- 			if (callable.origin.name === '__debugger') {
- 				return callable.origin.call(callable.context, operationContext);
- 			}
-
  			return callable.origin.call(callable.context);
  		} else if (value?.isOperation) {
  			return value.run(operationContext);
