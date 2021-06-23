@@ -65,7 +65,9 @@ Options:
 	-p, --path	Path to Grey Hack
 ```
 
-Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API is not there.
+For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
+
+Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API isn't there yet.
 
 ### Examples:
 #### Most common emulator command:
@@ -85,7 +87,11 @@ Options:
 	-r, --refresh	Rebuilds UI.
 ```
 
-Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API is not there.
+Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API isn't there yet.
+
+### Hint
+
+Sometimes it can happen that it won't build correctly the first time. So just execute it a second time.
 
 ### Examples:
 #### Most common emulator UI command:
