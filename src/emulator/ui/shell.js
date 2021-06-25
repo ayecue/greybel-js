@@ -3,6 +3,7 @@ const computerClient = require('./api/computer');
 const scriptExecuter = require('./script-executer');
 const api = require('./shell/api');
 const tools = require('./tools');
+const Computer = require('./entities/computer');
 
 const DEFAULT_FOLDERS = [
 	'/bin',
@@ -60,10 +61,10 @@ Shell.prototype.connect = function(ip, port, username, password) {
 	const computerId = computerClient.getRemoteComputerId(ip, port);
 
 	if (!computerId) return null;
-	const computer = new Computer(computerId);
-	computer.start();
 
+	const computer = Computer.load(computerId);
 	const user = computer.login(username, password);
+
 	if (!user) return null;
 
 	const shell = new Shell(me.vm, computer, user);

@@ -7,7 +7,7 @@ const api = require('./shell/api');
 const computerClient = require('./api/computer');
 const logger = require('node-color-log');
 const tools = require('./tools');
-const Computer = require('./computer');
+const Computer = require('./entities/computer');
 
 const DEFAULT_FOLDERS = [
 	'/bin',
@@ -61,10 +61,10 @@ Shell.prototype.connect = async function(ip, port, username, password) {
 	const computerId = await computerClient.getRemoteComputerId(ip, port);
 
 	if (!computerId) return null;
-	const computer = new Computer(computerId);
-	await computer.start();
 
+	const computer = await Computer.load(computerId);
 	const user = computer.login(username, password);
+	
 	if (!user) return null;
 
 	const shell = new Shell(me.vm, computer, user);

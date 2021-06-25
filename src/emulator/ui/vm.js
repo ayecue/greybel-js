@@ -1,7 +1,7 @@
 const playerClient = require('./api/player');
 const infoGenClient = require('./api/info-gen');
 const Shell = require('./shell');
-const Computer = require('./computer');
+const Computer = require('./entities/computer');
 
 const VM = function() {
 	const me = this;
@@ -18,11 +18,10 @@ const VM = function() {
 
 VM.prototype.createSession = function(computerId) {
 	const me = this;
-	const computer = new Computer(computerId);
-
-	computer.start();
-
+	const computer = Computer.load(computerId);
 	const shell = new Shell(me, computer);
+
+	console.log(shell);
 
 	me.sessions.push(shell);
 

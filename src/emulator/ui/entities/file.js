@@ -1,5 +1,5 @@
 const fileClient = require('../api/file');
-const DefaultFile = require('../../default/entities').File;
+const DefaultFile = require('../../default/entities/file');
 const util = require('util');
 
 const File = function(data) {

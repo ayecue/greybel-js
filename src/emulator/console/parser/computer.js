@@ -1,10 +1,9 @@
-const entities = require('../entities');
-const User = entities.User;
-const Folder = entities.Folder;
-const ConfigOS = entities.ConfigOS;
-const Hardware = entities.Hardware;
-const File = entities.File;
-const FileSystem = require('../file-system');
+const User = require('../../default/entities/user');
+const Folder = require('../../default/entities/folder');
+const ConfigOS = require('../../default/entities/config-os');
+const Hardware = require('../../default/entities/hardware');
+const File = require('..//entities/file');
+const FileSystem = require('../../default/entities/file-system');
 const fileClient = require('../api/file');
 const resolve = FileSystem.prototype.resolve;
 const parse = require('../../../utils/parse');
@@ -59,10 +58,10 @@ const parseFileSystem = async function(fileSystemData) {
 	};
 	const rootFolder = await next(fileSystemData);
 
-	return {
+	return new FileSystem({
 		map: map,
 		rootFolder: rootFolder
-	};
+	});
 };
 
 const parseUsers = function(userData) {

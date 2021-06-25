@@ -1,7 +1,6 @@
-const entities = require('../entities');
-const LibraryVersion = entities.LibraryVersion;
-const Exploit = entities.Exploit;
-const CurrentVersion = entities.CurrentVersion;
+const LibraryVersion = require('../../default/entities/library-version');
+const Exploit = require('../../default/entities/exploit');
+const CurrentVersion = require('../../default/entities/current-version');
 const parse = require('../../../utils/parse');
 
 const parseExploits = function(exploitsData) {

@@ -1,34 +1,15 @@
-const computer = require('./api/computer');
-const tools = require('./tools');
+const md5 = require('../../../utils/md5');
 
-const Computer = function(id) {
+const Computer = function(id, data) {
 	const me = this;
 
 	me.id = id;
-	me.users = null;
-	me.fileSystem = null;
-	me.configOS = null;
-	me.hardware = null;
-
-	return me;
-};
-
-Computer.prototype.start = function() {
-	const me = this;
-	
-	me.load();
-};
-
-Computer.prototype.load = function() {
-	const me = this;
-	const data = computer.get(me.id);
-
 	me.users = data.users;
 	me.fileSystem = data.fileSystem;
 	me.configOS = data.configOS;
 	me.hardware = data.hardware;
 
-	console.log(data);
+	return me;
 };
 
 Computer.prototype.login = function(username, password) {
@@ -37,7 +18,7 @@ Computer.prototype.login = function(username, password) {
 		return item.username === username;
 	});
 
-	if (user && user.password === tools.md5(password)) {
+	if (user && user.password === md5(password)) {
 		return user;
 	}
 };
