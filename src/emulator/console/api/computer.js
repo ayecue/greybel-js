@@ -4,12 +4,18 @@ const parser = require('../parser/computer');
 
 const get = async function(id) {
 	const result = await db.client().get(`
-		SELECT Users, FileSystem, ConfigOS, Hardware
+		SELECT *
 		FROM Computer
 		WHERE ID = $0
 	`, [id]);
 
 	return {
+		id: result.ID,
+		isRouter: result.IsRouter,
+		isPlayer: result.IsPlayer,
+		isRented: result.IsRented,
+		procs: result.Procs,
+		date: result.Date,
 		users: parser.parseUsers(result.Users),
 		fileSystem: await parser.parseFileSystem(result.FileSystem),
 		configOS: parser.parseConfigOS(result.ConfigOS),

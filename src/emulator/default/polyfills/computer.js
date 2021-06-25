@@ -2,6 +2,7 @@ const typer = require('../../../cps-evaluator/typer');
 const file = require('./file');
 
 module.exports = function(shell) {
+	const computer = shell.computer;
 	const computerInterface = {};
 
 	computerInterface.__isa = 'computer';

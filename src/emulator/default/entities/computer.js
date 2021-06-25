@@ -1,9 +1,15 @@
 const md5 = require('../../../utils/md5');
+const Process = require('./process');
 
 const Computer = function(id, data) {
 	const me = this;
 
 	me.id = id;
+	me.isRouter = data.isRouter;
+	me.isPlayer = data.isPlayer;
+	me.isRented = data.isRented;
+	me.procs = data.procs;
+	me.date = data.date;
 	me.users = data.users;
 	me.fileSystem = data.fileSystem;
 	me.configOS = data.configOS;

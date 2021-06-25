@@ -6,6 +6,12 @@ const get = function(id) {
 	const result = computers.find((item) => item.ID === id);
 
 	return {
+		id: result.ID,
+		isRouter: result.IsRouter,
+		isPlayer: result.IsPlayer,
+		isRented: result.IsRented,
+		procs: parser.parseProcs(result.Procs),
+		date: result.Date,
 		users: parser.parseUsers(result.Users),
 		fileSystem: parser.parseFileSystem(result.FileSystem),
 		configOS: parser.parseConfigOS(result.ConfigOS),

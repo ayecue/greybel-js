@@ -4,6 +4,7 @@ const ConfigOS = require('../../default/entities/config-os');
 const Hardware = require('../../default/entities/hardware');
 const File = require('..//entities/file');
 const FileSystem = require('../../default/entities/file-system');
+const Process = require('../../default/entities/process');
 const fileClient = require('../api/file');
 const resolve = FileSystem.prototype.resolve;
 const parse = require('../../../utils/parse');
@@ -76,6 +77,11 @@ const parseHardware = function(hardwareData) {
 	return new Hardware(hardwareData);
 };
 
+const parseProcs = function(procsData) {
+	return procsData.map((item) => new Process(procsData));
+};
+
+exports.parseProcs = parse.JSON(parseProcs);
 exports.parseUsers = parse.JSON(parseUsers);
 exports.parseConfigOS = parse.JSON(parseConfigOS);
 exports.parseHardware = parse.JSON(parseHardware);
