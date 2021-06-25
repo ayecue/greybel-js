@@ -1,5 +1,5 @@
 const build = require('../../src/build-light');
-const VM = require('./emulator/vm');
+const VM = require('../../src/emulator/ui/vm');
 const Editor = require('./components/editor');
 const Stdout = require('./utils/Stdout');
 const Stdin = require('./utils/Stdin');
