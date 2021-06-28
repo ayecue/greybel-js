@@ -61,7 +61,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 
 		if (left.handle) {
 			if (typer.isCustomMap(left.handle)) {
-				const handlePath = left.path.slice(1);
+				const handlePath = left.path;
 				const context = left.handle;
 				
 				await context.set(handlePath, right);

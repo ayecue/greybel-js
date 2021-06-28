@@ -5,7 +5,7 @@ module.exports = function(shell) {
 	const api = {};
 
 	api.print = function(str) {
-		if (typer.isCustomMap(str)) {
+		if (typer.isCustomMap(str) && str.value.useTable) {
 			shell.echo(str.value.v.valueOf()?.toString() || '', true);
 		} else {
 			shell.echo(str?.valueOf()?.toString() || '');
