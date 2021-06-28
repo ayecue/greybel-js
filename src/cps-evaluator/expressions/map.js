@@ -1,4 +1,5 @@
 const CustomMap = require('../types/custom-map');
+const typer = require('../typer');
 
 const MapExpression = function(ast, visit, debug, raise) {
 	const me = this;
@@ -21,6 +22,7 @@ const MapExpression = function(ast, visit, debug, raise) {
 		return expression;
 	};
 
+	me.ast = ast;
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
 	me.debug = debug;

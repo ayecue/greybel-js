@@ -1,4 +1,4 @@
-	const EXPOSED_METHODS = [
+const EXPOSED_METHODS = [
 	'join',
 	'remove',
 	'hasIndex',
@@ -6,7 +6,14 @@
 	'lastIndexOf',
 	'len',
 	'pull',
-	'pop'
+	'pop',
+	'push',
+	'sum',
+	'values',
+	'indexes',
+	'sort',
+	'reverse',
+	'shuffle'
 ];
 
 const CustomList = function(value) {
@@ -22,6 +29,13 @@ CustomList.prototype.getType = function() {
 CustomList.prototype.valueOf = function() {
 	const me = this;
 	return me.len() === 0 ? null : me;
+};
+
+CustomList.prototype.toString = function() {
+	const me = this;
+	return me.value
+		.map((item) => item?.valueOf()?.toString())
+		.join(',');
 };
 
 CustomList.prototype.concat = function(arr) {
@@ -73,7 +87,7 @@ CustomList.prototype.get = async function(path) {
 		}
 	}
 	
-	return origin?.valueOf() || origin;
+	return origin;
 };
 
 CustomList.prototype.getCallable = async function(path) {
@@ -121,7 +135,7 @@ CustomList.prototype.callMethod = function(method, ...args) {
 		throw new Error(`Unexpected method path`);
 	}
 
-	if (me.value[member]) {
+	if (me.value.hasOwnProperty(member)) {
 		return me.value[member];
 	}
 

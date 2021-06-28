@@ -1,7 +1,7 @@
 const typer = require('../../../cps-evaluator/typer');
 
 module.exports = function(shell, target) {
-	const targetFile = shell.getByPath(target || '');
+	const targetFile = shell.getByPath(target?.valueOf() || '');
 
 	if (targetFile) {
 		const createInterface = function(file) {

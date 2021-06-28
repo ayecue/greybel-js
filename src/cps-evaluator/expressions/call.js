@@ -26,6 +26,7 @@ const CallExpression = function(ast, visit, debug, raise) {
 		return expression;
 	};
 
+	me.ast = ast;
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
 	me.debug = debug;
@@ -37,11 +38,11 @@ const CallExpression = function(ast, visit, debug, raise) {
 CallExpression.prototype.get = function(operationContext, parentExpr) {
 	const me = this;
 	const resolveArgs = function(...args) {
-		return Promise.all(args.map(async (i) => {
-			if (typer.isCustomValue(i)) {
-				return i.value;
+		return Promise.all(args.map(async (item) => {
+			if (typer.isCustomValue(item)) {
+				return item;
 			}
-			return i.get(operationContext);
+			return item.get(operationContext);
 		}));
 	};
 	const evaluate = async function(node) {

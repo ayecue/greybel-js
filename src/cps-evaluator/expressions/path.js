@@ -48,6 +48,7 @@ const PathExpression = function(ast, visit, debug, raise) {
 		return expression;
 	};
 
+	me.ast = ast;
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
 	me.debug = debug;
@@ -69,6 +70,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 	const evaluate = async function(node) {
 		const traverselPath = [].concat(node);
 		let traversedPath = [];
+		let position = 0;
 		let handle;
 		let current;
 
@@ -78,17 +80,27 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 			} else if (current?.isExpression) {
 				handle = await current.get(operationContext, me.expr);
 			} else if (current?.type === 'path') {
-				traversedPath.push(current.value);
+				if (current.value == 'self' && position === 0) {
+					const functionContext = operationContext.getMemory('functionContext');
 
-				if (traverselPath.length > 0) {
-					const origin = await (handle || operationContext).get(traversedPath);
+					if (functionContext?.context) {
+						handle = functionContext.context;
+					} else {
+						me.raise('Unexpected self', me, current);
+					}
+				} else {
+					traversedPath.push(current.value);
 
-					if (typer.isCustomValue(origin)) {
-						handle = origin;
-						traversedPath = [];
-					} else if (origin instanceof Function) {
-						handle = await origin.call(handle);
-						traversedPath = [];
+					if (traverselPath.length > 0) {
+						const origin = await (handle || operationContext).get(traversedPath);
+
+						if (typer.isCustomValue(origin)) {
+							handle = origin;
+							traversedPath = [];
+						} else if (origin instanceof Function) {
+							handle = await origin.call(handle);
+							traversedPath = [];
+						}
 					}
 				}
 			} else if (current?.type === 'index') {
@@ -131,6 +143,8 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 			} else {
 				me.raise('Unexpected handle', me, current);
 			}
+
+			position++;
 		}
 
 		return {
@@ -142,14 +156,6 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 	me.debug('PathExpression', 'get', 'expr', me.expr);
 
 	const resultExpr = await evaluate(me.expr);
-
-	if (resultExpr.path[0] === 'self') {
-		const functionContext = operationContext.getMemory('functionContext');
-
-		if (functionContext.context) {
-			resultExpr.handle = functionContext.context;
-		}
-	}
 
 	if (!parentExpr) {
 		if (resultExpr.handle) {

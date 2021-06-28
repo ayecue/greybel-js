@@ -109,7 +109,7 @@ Scope.prototype.get = async function(path) {
 		}
 	}
 	
-	return origin?.valueOf() || origin;
+	return origin;
 };
 
 Scope.prototype.getCallable = async function(path) {

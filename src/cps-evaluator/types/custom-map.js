@@ -56,6 +56,11 @@ CustomMap.prototype.valueOf = function() {
 		.length === 0 ? null : me;
 };
 
+CustomMap.prototype.toString = function() {
+	const me = this;
+	return JSON.stringify(me.value);
+};
+
 CustomMap.prototype.getType = function() {
 	const me = this;
 	const value = me.value;
@@ -97,7 +102,11 @@ CustomMap.prototype.set = async function(path, value) {
 	}
 
 	if (origin) {
-		origin[last] = value; 
+		if (value?.isFunction) {
+			origin[last] = value.fork(me);
+		} else {
+			origin[last] = value;
+		}
 	} else {
 		throw new Error(`Cannot set path ${path.join('.')}`);
 	}
@@ -129,7 +138,7 @@ CustomMap.prototype.get = async function(path) {
 		}
 	}
 	
-	return origin?.valueOf() || origin;
+	return origin;
 };
 
 CustomMap.prototype.getCallable = async function(path) {

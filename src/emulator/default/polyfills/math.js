@@ -47,8 +47,8 @@ module.exports = function(shell) {
 		value = value.valueOf().toFixed(x);
 		return typer.cast(value);
 	};
-	api.rng = function(seed) {
-		return typer.cast(shell.tools.rng(seed));
+	api.rnd = function(seed) {
+		return typer.cast(shell.tools.rnd(seed));
 	};
 	api.sign = function(number) {
 		const value = Math.sign(number.valueOf());

@@ -57,6 +57,8 @@ FunctionOperation.prototype.run = async function(operationContext) {
 
 	await me.body.run(opc);
 
+	operationContext.setMemory('args', null);
+
 	return functionContext.value;
 };
 
