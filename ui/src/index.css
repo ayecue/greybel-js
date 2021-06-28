@@ -28,7 +28,7 @@ body {
 	padding: 0;
 	width: 100%;
 	height: 100%;
-	font-size: 24px;
+	font-size: 12px;
 	color: #fff;
 	-webkit-text-fill-color: transparent;
 	white-space: nowrap;
@@ -64,7 +64,7 @@ body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	font-size: 24px;
+	font-size: 12px;
 	background: transparent;
 	overflow: visible;
 }
@@ -111,6 +111,18 @@ body {
 
 .editor-actions a:active {
 	border: 1px solid #000;
+}
+
+.editor-actions textarea {
+	background: #000;
+	color: green;
+}
+
+.editor-actions .editor-console-stdin {
+	background: #000;
+	color: green;
+	border-radius: 5px;
+	border: 1px solid #FFF;
 }
 
 .editor-options {
