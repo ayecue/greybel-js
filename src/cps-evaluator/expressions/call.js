@@ -37,17 +37,18 @@ const CallExpression = function(ast, visit, debug, raise) {
 
 CallExpression.prototype.get = function(operationContext, parentExpr) {
 	const me = this;
+	const opc = operationContext.fork('CALL', 'TEMPORARY');
 	const resolveArgs = function(...args) {
 		return Promise.all(args.map(async (item) => {
 			if (typer.isCustomValue(item)) {
 				return item;
 			}
-			return item.get(operationContext);
+			return item.get(opc);
 		}));
 	};
 	const evaluate = async function(node) {
 		if (node?.isExpression) {
-			return node.get(operationContext);
+			return node.get(opc);
 		}
 
 		const args = await resolveArgs(...node.args);
@@ -56,22 +57,22 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 			const callResult = await evaluate(node.path);
 
 			if (callResult?.isOperation) {
-				operationContext.setMemory('args', args);
-				return callResult.run(operationContext);
+				opc.setMemory('args', args);
+				return callResult.run(opc);
 			} else {
 				me.raise('Unexpected handle result', me, callResult);
 			}
 		}
 
-		const pathExpr = await node.path.get(operationContext, me.expr);
+		const pathExpr = await node.path.get(opc, me.expr);
 
 		if (pathExpr.handle) {
 			if (typer.isCustomMap(pathExpr.handle)) {
 				const callable = await pathExpr.handle.getCallable(pathExpr.path);
 
 				if (callable.origin?.isOperation) {
-					operationContext.setMemory('args', args);
-					return callable.origin.run(operationContext);
+					opc.setMemory('args', args);
+					return callable.origin.run(opc);
 				} else if (callable.origin instanceof Function) {
 					return callable.origin.call(pathExpr.handle, ...args);
 				}
@@ -82,12 +83,12 @@ CallExpression.prototype.get = function(operationContext, parentExpr) {
 			return typer.cast(pathExpr.handle.callMethod(pathExpr.path, ...args));
 		}
 		
-		const callable = await operationContext.getCallable(pathExpr.path);
+		const callable = await opc.getCallable(pathExpr.path);
 
-		operationContext.setMemory('args', args);
+		opc.setMemory('args', args);
 
 		if (callable.origin?.isOperation) {
-			return callable.origin.run(operationContext);
+			return callable.origin.run(opc);
 		} else if (callable.origin instanceof Function) {
 			return typer.cast(await callable.origin.call(callable.context, ...args));
 		}

@@ -35,7 +35,7 @@ FunctionOperation.prototype.get = function(operationContext) {
 
 FunctionOperation.prototype.run = async function(operationContext) {
 	const me = this;
-	const opc = operationContext.fork('FUNCTION', 'CALL');
+	const opc = operationContext.fork('FUNCTION', 'DEFAULT');
 	const incArgs = operationContext.getMemory('args');
 	const args = await me.args.get(opc);
 	const argMap = {};
@@ -56,8 +56,6 @@ FunctionOperation.prototype.run = async function(operationContext) {
 	}
 
 	await me.body.run(opc);
-
-	operationContext.setMemory('args', null);
 
 	return functionContext.value;
 };
