@@ -15,6 +15,7 @@ const EXPOSED_METHODS = [
 
 const CustomMap = function(value) {
 	const me = this;
+	me.isObject = true;
 	me.isInstance = false;
 	me.value = value;
 	return me;
@@ -58,7 +59,11 @@ CustomMap.prototype.valueOf = function() {
 
 CustomMap.prototype.toString = function() {
 	const me = this;
-	return JSON.stringify(me.value);
+	const body = Object
+		.entries(me.value)
+		.map(([key, value]) => `"${key}": ${value?.valueOf()?.toString()}`);
+
+	return `{${body.join(',')}}`;
 };
 
 CustomMap.prototype.getType = function() {
@@ -89,11 +94,11 @@ CustomMap.prototype.set = async function(path, value) {
 	let origin = refs;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			origin = origin[current];
 
-			if (origin instanceof CustomMap) {
+			if (origin?.isObject) {
 				return origin.set(traversalPath.concat([last]), value);
 			}
 		} else {
@@ -124,11 +129,11 @@ CustomMap.prototype.get = async function(path) {
 	let origin = refs;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			origin = origin[current];
 
-			if (traversalPath.length > 0 && origin instanceof CustomMap) {
+			if (traversalPath.length > 0 && origin?.isObject) {
 				return origin.get(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
@@ -149,12 +154,12 @@ CustomMap.prototype.getCallable = async function(path) {
 	let context;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			context = origin;
 			origin = origin[current];
 
-			if (origin instanceof CustomMap) {
+			if (origin?.isObject) {
 				return origin.getCallable(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {

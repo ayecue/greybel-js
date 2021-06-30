@@ -80,7 +80,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 			} else if (current?.isExpression) {
 				handle = await current.get(operationContext, me.expr);
 			} else if (current?.type === 'path') {
-				if (current.value == 'self' && position === 0) {
+				if (current.value === 'self' && position === 0) {
 					const functionContext = operationContext.getMemory('functionContext');
 
 					if (functionContext?.context) {
@@ -109,9 +109,11 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				if (typer.isCustomValue(current)) {
 					traversedPath.push(current.valueOf());
 				} else if (current?.isExpression) {
-					traversedPath.push(await current.get(operationContext));
+					const value = await current.get(operationContext);
+					traversedPath.push(value);
 				} else if (current?.type === 'path') {
-					traversedPath.push(await operationContext.get(current.value));
+					const value = await operationContext.get(current.value);
+					traversedPath.push(value.valueOf());
 				} else {
 					me.raise('Unexpected index', me, current);
 				}

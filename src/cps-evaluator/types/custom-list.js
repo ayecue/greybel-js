@@ -18,32 +18,9 @@ const EXPOSED_METHODS = [
 
 const CustomList = function(value) {
 	const me = this;
+	me.isObject = true;
 	me.value = value;
 	return me;
-};
-
-CustomList.prototype.getType = function() {
-	return 'list';
-};
-
-CustomList.prototype.valueOf = function() {
-	const me = this;
-	return me.len() === 0 ? null : me;
-};
-
-CustomList.prototype.toString = function() {
-	const me = this;
-	return me.value
-		.map((item) => item?.valueOf()?.toString())
-		.join(',');
-};
-
-CustomList.prototype.concat = function(arr) {
-	return new CustomList(this.value.concat(arr.value));
-};
-
-CustomList.prototype.slice = function(a, b) {
-	return new CustomList(this.value.slice(a?.valueOf(), b?.valueOf()));
 };
 
 CustomList.prototype[Symbol.iterator] = function() {
@@ -65,6 +42,61 @@ CustomList.prototype[Symbol.iterator] = function() {
 	};
 };
 
+CustomList.prototype.getType = function() {
+	return 'list';
+};
+
+CustomList.prototype.valueOf = function() {
+	const me = this;
+	return me.len() === 0 ? null : me;
+};
+
+CustomList.prototype.toString = function() {
+	const me = this;
+	const body = me.value.map((item) => item?.valueOf()?.toString());
+
+	return `[${body.join(',')}]`;
+};
+
+CustomList.prototype.concat = function(arr) {
+	return new CustomList(this.value.concat(arr.value));
+};
+
+CustomList.prototype.slice = function(a, b) {
+	return new CustomList(this.value.slice(a?.valueOf(), b?.valueOf()));
+};
+
+CustomList.prototype.set = async function(path, value) {
+	const me = this;
+	const traversalPath = [].concat(path);
+	const refs = me.value;
+	const last = traversalPath.pop();
+	let origin = refs;
+	let current;
+
+	while ((current = traversalPath.shift()) != null) {
+		if (current in origin) {
+			origin = origin[current];
+
+			if (origin?.isObject) {
+				return origin.set(traversalPath.concat([last]), value);
+			}
+		} else {
+			throw new Error(`Cannot set path ${path.join('.')}`);
+		}
+	}
+
+	if (origin) {
+		if (value?.isFunction) {
+			origin[last] = value.fork(me);
+		} else {
+			origin[last] = value;
+		}
+	} else {
+		throw new Error(`Cannot set path ${path.join('.')}`);
+	}
+};
+
 CustomList.prototype.get = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
@@ -72,11 +104,11 @@ CustomList.prototype.get = async function(path) {
 	let origin = refs;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			origin = origin[current];
 
-			if (traversalPath.length > 0 && origin instanceof CustomList) {
+			if (traversalPath.length > 0 && origin?.isObject) {
 				return origin.get(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
@@ -98,12 +130,12 @@ CustomList.prototype.getCallable = async function(path) {
 	let context;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			context = origin;
 			origin = origin[current];
 
-			if (origin instanceof CustomList) {
+			if (origin?.isObject) {
 				return origin.getCallable(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
@@ -150,7 +182,7 @@ CustomList.prototype.callMethod = function(method, ...args) {
 CustomList.prototype.join = function(seperator) {
 	return this.value
 		.map((v) => v.valueOf())
-		.join(seperator.valueOf());
+		.join(seperator.valueOf() || '');
 };
 
 CustomList.prototype.remove = function(index) {

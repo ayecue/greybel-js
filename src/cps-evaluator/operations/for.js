@@ -1,4 +1,5 @@
 const BodyOperation = require('./body');
+const typer = require('../typer');
 
 const ForOperation = function(ast, debug, raise) {
 	const me = this;
@@ -26,7 +27,7 @@ ForOperation.prototype.run = async function(operationContext) {
 
 	for (let value of iterator) {
 		loopContext.isContinue = false;
-		await opc.set(variable.path, value);
+		await opc.set(variable.path, typer.cast(value));
 		await me.body.run(opc);
 		if (loopContext.isContinue) continue;
 		if (loopContext.isBreak) break;

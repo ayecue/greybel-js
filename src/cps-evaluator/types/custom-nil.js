@@ -7,6 +7,10 @@ CustomNil.prototype.valueOf = function() {
 	return null;
 };
 
+CustomNil.prototype.toString = function() {
+	return 'null';
+};
+
 CustomNil.prototype.getType = function() {
 	return 'null';
 };

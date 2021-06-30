@@ -8,12 +8,15 @@ const MapExpression = function(ast, visit, debug, raise) {
 
 		switch (node.type) {
 			case 'MapConstructorExpression':
-				expression = node.fields.map((item) => {
-					return {
-						key: buildExpression(item.key),
-						value: buildExpression(item.value)
-					};
-				});
+				expression = {
+					type: 'map',
+					values: node.fields.map((item) => {
+						return {
+							key: visit(item.key),
+							value: buildExpression(item.value)
+						};
+					})
+				};
 				break;
 			default:
 				expression = visit(node);
@@ -47,8 +50,10 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 				me.raise('Unexpected key', me, current.key);
 			}
 
-			if (typer.isCustomValue(current.value)) {
-				value = current;
+			if (current.value?.type === 'map') {
+				value = await evaluate(current.value.values);
+			} if (typer.isCustomValue(current.value)) {
+				value = current.value;
 			} else if (current.value?.isExpression) {
 				value = await current.value.get(operationContext);
 			} else {
@@ -63,7 +68,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 
 	me.debug('MapExpression', 'get', 'expr', me.expr);
 
-	return evaluate(me.expr);
+	return evaluate(me.expr.values);
 };
 
 module.exports = MapExpression;

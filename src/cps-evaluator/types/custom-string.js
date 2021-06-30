@@ -31,9 +31,15 @@ CustomString.prototype[Symbol.iterator] = function() {
 	let index = 0;
 	return  {
 		next: function() {
+			if (index === me.value.length) {
+				return {
+					done: true
+				};
+			}
+
 			return {
 				value: me.value[index++],
-				done: index < me.value.length
+				done: false
 			};
 		}
 	};
@@ -56,6 +62,10 @@ CustomString.prototype.getType = function() {
 CustomString.prototype.valueOf = function() {
 	const me = this;
 	return me.len() === 0 ? null : me.value;
+};
+
+CustomString.prototype.toString = function() {
+	return `"${this.value.toString()}"`;
 };
 
 CustomString.prototype.fork = function() {

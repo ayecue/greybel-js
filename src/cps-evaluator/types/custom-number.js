@@ -12,6 +12,10 @@ CustomNumber.prototype.valueOf = function() {
 	return this.value;
 };
 
+CustomNumber.prototype.toString = function() {
+	return this.value.toString();
+};
+
 CustomNumber.prototype.fork = function() {
 	return new CustomNumber(this.value);
 };

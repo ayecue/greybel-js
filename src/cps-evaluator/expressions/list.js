@@ -8,9 +8,12 @@ const ListExpression = function(ast, visit, debug, raise) {
 
 		switch (node.type) {
 			case 'ListConstructorExpression':
-				expression = node.fields.map((item) => {
-					return buildExpression(item.value);
-				});
+				expression = {
+					type: 'list',
+					values: node.fields.map((item) => {
+						return buildExpression(item.value);
+					})
+				};
 				break;
 			default:
 				expression = visit(node);
@@ -35,7 +38,9 @@ ListExpression.prototype.get = function(operationContext, parentExpr) {
 		const list = [];
 
 		while (current = traverselPath.shift()) {
-			if (typer.isCustomValue(current)) {
+			if (current?.type === 'list') {
+				list.push(await evaluate(current.values));
+			} else if (typer.isCustomValue(current)) {
 				list.push(current);
 			} else if (current?.isExpression) {
 				list.push(await current.get(operationContext));
@@ -49,7 +54,7 @@ ListExpression.prototype.get = function(operationContext, parentExpr) {
 
 	me.debug('ListExpression', 'get', 'expr', me.expr);
 
-	return evaluate(me.expr);
+	return evaluate(me.expr.values);
 };
 
 module.exports = ListExpression;
