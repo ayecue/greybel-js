@@ -42,6 +42,7 @@ const SCAN_MAP = {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('-=');
 		if (CHAR_CODES.MINUS === nextCode) return me.scanPunctuator('--');
+		if (CHAR_CODES.NUMBERS.includes(nextCode)) return me.scanNumericLiteral();
 		return me.scanPunctuator('-');
 	},
 	[CHAR_CODES.PLUS]: function(code, nextCode) {
@@ -175,6 +176,8 @@ Lexer.prototype.scanStringLiteral = function() {
 
 Lexer.prototype.readDecLiteral = function() {
 	const me = this;
+
+	if (me.codeAt() === CHAR_CODES.MINUS) me.nextIndex();
 	while (validator.isDecDigit(me.codeAt())) me.nextIndex();
 
 	let foundFraction = false;
@@ -192,8 +195,6 @@ Lexer.prototype.readDecLiteral = function() {
 
 Lexer.prototype.scanNumericLiteral = function() {
 	const me = this;
-	const code = me.codeAt()
-    const nextCode = me.codeAt(1);
     const literal = me.readDecLiteral()
 
     return {
