@@ -44,11 +44,11 @@ module.exports = function(shell) {
 		return typer.cast(result);
 	};
 	api.round = function(value, x = 0) {
-		value = value.valueOf().toFixed(x);
+		value = value.valueOf().toFixed(x.valueOf());
 		return typer.cast(value);
 	};
 	api.rnd = function(seed) {
-		return typer.cast(shell.tools.rnd(seed));
+		return typer.cast(shell.tools.rnd(seed.valueOf()));
 	};
 	api.sign = function(number) {
 		const value = Math.sign(number.valueOf());

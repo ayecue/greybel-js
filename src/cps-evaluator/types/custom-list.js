@@ -66,6 +66,7 @@ CustomList.prototype.slice = function(a, b) {
 	return new CustomList(this.value.slice(a?.valueOf(), b?.valueOf()));
 };
 
+//Probably needs work
 CustomList.prototype.set = async function(path, value) {
 	const me = this;
 	const traversalPath = [].concat(path);
@@ -97,6 +98,7 @@ CustomList.prototype.set = async function(path, value) {
 	}
 };
 
+//Probably needs work
 CustomList.prototype.get = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
@@ -122,6 +124,7 @@ CustomList.prototype.get = async function(path) {
 	return origin;
 };
 
+//Probably needs work
 CustomList.prototype.getCallable = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
@@ -154,21 +157,34 @@ CustomList.prototype.getCallable = async function(path) {
 	};
 };
 
+CustomList.prototype.isNumber = function(value) {
+	return !Number.isNaN(Number(value));
+};
+
+CustomList.prototype.toIndex = function(value) {
+	const me = this;
+	const casted = Number(value);
+
+	return casted < 0 ? me.value.length + casted : casted;
+};
+
 CustomList.prototype.callMethod = function(method, ...args) {
 	const me = this;
 	const member = method[0]?.valueOf ? method[0].valueOf() : method[0];
 
-	if (method.length > 1) {
-		if (me.value[member]) {
-			return me.value[member].callMethod(method.slice(1), ...args);
+	if (me.isNumber(member)) {
+		const index = me.toIndex(member);
+
+		if (!me.value.hasOwnProperty(index)) {
+			console.error(method, member, args);
+			throw new Error(`Unexpected index`);
 		}
 
-		console.error(method, member, args);
-		throw new Error(`Unexpected method path`);
-	}
+		if (method.length > 1) {
+			return me.value[index].callMethod(method.slice(1), ...args);
+		}
 
-	if (me.value.hasOwnProperty(member)) {
-		return me.value[member];
+		return me.value[index];
 	}
 
 	if (!EXPOSED_METHODS.includes(member)) {
@@ -190,7 +206,17 @@ CustomList.prototype.remove = function(index) {
 };
 
 CustomList.prototype.hasIndex = function(index) {
-	return this.value.hasOwnProperty(index.valueOf());
+	const me = this;
+
+	index = index.valueOf();
+
+	if (!me.isNumber(index)) {
+		throw new Error(`Unexpected index`);
+	}
+
+	index = me.toIndex(index);
+
+	return this.value.hasOwnProperty(index);
 };
 
 CustomList.prototype.indexOf = function(val, begin = 0) {

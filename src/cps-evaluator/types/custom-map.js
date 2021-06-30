@@ -189,7 +189,7 @@ CustomMap.prototype.createInstance = function() {
 		if (item?.isFunction) {
 			value[key] = item.fork(newInstance);
 		} else {
-			value[key] = item?.fork() || item;
+			value[key] = item;
 		}
 	});
 	

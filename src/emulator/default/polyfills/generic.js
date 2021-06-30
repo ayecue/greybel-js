@@ -46,16 +46,16 @@ module.exports = function(shell) {
 		};
 
 		return function(operator, a, b) {
-			return typer.cast(operatorMap[operator](a.valueOf(), b.valueOf()));
+			return typer.cast(operatorMap[operator.valueOf()](a.valueOf(), b.valueOf()));
 		};
 	})();
 	api.user_input = async function(question, isPassword) {
-		const output = await shell.prompt(question, isPassword);
+		const output = await shell.prompt(question.valueOf(), isPassword.valueOf());
 
 		return typer.cast(output);
 	};
 	api.md5 = function(value) {
-		return typer.cast(shell.tools.md5(value));
+		return typer.cast(shell.tools.md5(value.valueOf()));
 	};
 	api.typeof = function(variable) {
 		return typer.cast(typer.cast(variable).getType());
@@ -66,7 +66,7 @@ module.exports = function(shell) {
 		}
 	};
 	api.wait = function(time = 1) {
-		return new Promise((r) => setTimeout(r, time * 1000));
+		return new Promise((r) => setTimeout(r, time.valueOf() * 1000));
 	};
 	api.current_date = function() {
 		const currentDate = shell.vm.getTime();
@@ -108,6 +108,9 @@ module.exports = function(shell) {
 	};
 	api.clear_screen = function() {
 		shell.clear();
+	};
+	api.char = function(code) {
+		return typer.cast(String.fromCharCode(code.valueOf()));
 	};
 
 	return api;

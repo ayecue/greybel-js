@@ -79,6 +79,8 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				handle = current;
 			} else if (current?.isExpression) {
 				handle = await current.get(operationContext, me.expr);
+			} else if (current?.isOperation) {
+				handle = await current.get(operationContext);
 			} else if (current?.type === 'path') {
 				if (current.value === 'self' && position === 0) {
 					const functionContext = operationContext.getMemory('functionContext');

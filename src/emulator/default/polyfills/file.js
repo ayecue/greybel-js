@@ -1,7 +1,7 @@
 const typer = require('../../../cps-evaluator/typer');
 
 module.exports = function(shell, target) {
-	const targetFile = shell.getByPath(target?.valueOf() || '');
+	const targetFile = shell.getByPath(target.valueOf() || '');
 
 	if (targetFile) {
 		const createInterface = function(file) {
@@ -20,13 +20,13 @@ module.exports = function(shell, target) {
 
 			fileInterface.__isa = 'file';
 			fileInterface.set_content = function(content) {
-				file.setContent(content);
+				file.setContent(content.valueOf());
 			};
 			fileInterface.has_permission = function(p) {
 				shell.echo('has_permission is not yet supported');
 				return typer.cast(true);
 			};
-			fileInterface.parent = function(p) {
+			fileInterface.parent = function() {
 				return typer.cast(shell.getByPath('..'));
 			};
 			fileInterface.delete = function() {
