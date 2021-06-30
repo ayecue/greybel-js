@@ -1,5 +1,8 @@
+const uuidv4 = require('uuid').v4; 
+
 const Stdin = function(target) {
 	const me = this;
+	me.queue = [];
 	me.target = target;
 };
 
@@ -36,12 +39,21 @@ Stdin.prototype.setType = function(type) {
 Stdin.prototype.waitForInput = function() {
 	const me = this;
 	const target = me.target;
+	const id = uuidv4();
+
+	me.queue.unshift(id);
 
 	return new Promise((resolve) => {
 		const handler = (evt) => {
 			if (evt.keyCode === 13) {
-				target.removeEventListener('keydown', handler);
-				resolve();
+				const currentId = me.queue[0];
+
+				if (id === currentId) {
+					evt.stopImmediatePropagation();
+					me.queue.shift();
+					target.removeEventListener('keydown', handler);
+					resolve();
+				}
 			}
 		};
 

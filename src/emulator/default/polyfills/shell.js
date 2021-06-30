@@ -6,7 +6,7 @@ module.exports = function(shell) {
 	const api = {};
 
 	api.get_shell = function(username, password) {
-		const subShell = shell.fork(username.valueOf(), password.valueOf());
+		const subShell = shell.fork(username?.valueOf(), password?.valueOf());
 
 		const createInterface = function(contextShell) {
 			if (contextShell == null) return null;

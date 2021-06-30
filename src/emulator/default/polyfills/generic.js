@@ -49,9 +49,8 @@ module.exports = function(shell) {
 			return typer.cast(operatorMap[operator.valueOf()](a.valueOf(), b.valueOf()));
 		};
 	})();
-	api.user_input = async function(question, isPassword) {
+	api.user_input = async function(question, isPassword = false) {
 		const output = await shell.prompt(question.valueOf(), isPassword.valueOf());
-
 		return typer.cast(output);
 	};
 	api.md5 = function(value) {
