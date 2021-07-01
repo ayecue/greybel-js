@@ -33,7 +33,7 @@ const getByIP = function(ip, port) {
 };
 
 const getPersonaByIP = function(ip) {
-	const result = computers.find((item) => {
+	const result = computers.find((row) => {
 		const configOS = JSON.parse(row.ConfigOS);
 
 		return configOS.ipPublica === ip;

@@ -2,7 +2,6 @@ const Lexer = require('./lexer');
 const TOKENS = require('./lexer/tokens');
 const Stack = require('./utils/stack');
 const AST = require('./parser/ast');
-const util = require('util');
 const varNamespaces = require('./build/var-namespaces');
 const literals = require('./build/literals');
 const envs = require('./build/envs');
@@ -99,7 +98,6 @@ Parser.prototype.expectMany = function(values) {
 };
 
 Parser.prototype.isUnary = function(token) {
-	const me = this;
 	const type = token.type;
 	const value = token.value;
 	if (TOKENS.Punctuator === type) return '@' === value;
@@ -131,17 +129,17 @@ Parser.prototype.parseMapConstructor = function(flowContext) {
 
 	while (true) {
 		if (TOKENS.StringLiteral === me.token.type && ':' === me.prefetch(1).value) {
-	        const mapKeyStringLine = me.token.line;
-	        key = me.parsePrimaryExpression();
+			const mapKeyStringLine = me.token.line;
+			key = me.parsePrimaryExpression();
 			me.next();
 			value = me.parseExpectedExpression(flowContext);
 			fields.push(AST.mapKeyString(key, value, mapKeyStringLine));
-	  	}
+		}
 		if (',;'.indexOf(me.token.value) >= 0) {
 			me.next();
 			continue;
 		}
-	  	break;
+		break;
 	}
 
 	me.expect('}');
@@ -164,7 +162,7 @@ Parser.prototype.parseListConstructor = function(flowContext) {
 			me.next();
 			continue;
 		}
-	  	break;
+		break;
 	}
 	me.expect(']');
 	return AST.listConstructorExpression(fields, mainStatementLine);
@@ -184,18 +182,18 @@ Parser.prototype.parseRighthandExpressionGreedy = function(base, flowContext) {
 
 Parser.prototype.parseRighthandExpression = function(flowContext) {
 	const me = this;
-    let base;
-    let name;
+	let base;
+	let name;
 
-    if (TOKENS.Identifier === me.token.type) {
-      name = me.token.value;
-      base = me.parseIdentifier();
-    } else if (me.consume('(')) {
-      base = me.parseExpectedExpression(flowContext, true);
-      me.expect(')');
-    } else {
-      return null;
-    }
+	if (TOKENS.Identifier === me.token.type) {
+		name = me.token.value;
+		base = me.parseIdentifier();
+	} else if (me.consume('(')) {
+		base = me.parseExpectedExpression(flowContext, true);
+		me.expect(')');
+	} else {
+		return null;
+	}
 
 	return me.parseRighthandExpressionGreedy(base, flowContext);
 };
@@ -265,7 +263,7 @@ Parser.prototype.parseIndexExpression = function(base, flowContext) {
 		offset = offset + 1;
 	}
 
-	expression = me.parseExpectedExpression(flowContext);
+	const expression = me.parseExpectedExpression(flowContext);
 	me.expect(']');
 
 	return AST.indexExpression(base, expression, mainStatementLine);
@@ -274,14 +272,14 @@ Parser.prototype.parseIndexExpression = function(base, flowContext) {
 Parser.prototype.parseRighthandExpressionPart = function(base, flowContext) {
 	const me = this;
 	const mainStatementLine = me.token.line;
-    let expression;
-    let identifier;
-    const type = me.token.type;
+	let expression;
+	let identifier;
+	const type = me.token.type;
 
-    if (TOKENS.Punctuator === type) {
-    	const value = me.token.value;
+	if (TOKENS.Punctuator === type) {
+		const value = me.token.value;
 
-    	if ('++' === value || '--' === value) {
+		if ('++' === value || '--' === value) {
 			me.next();
 			return  me.parseMathShorthandRightOperator(base);
 		} else if ('+=' === value || '-=' === value || '*=' === value || '/=' === value) {
@@ -290,7 +288,7 @@ Parser.prototype.parseRighthandExpressionPart = function(base, flowContext) {
 		} else if ('[' === value) {
 			me.next();
 			return me.parseIndexExpression(base, expression);
-    	} else if ('.' === value) {
+		} else if ('.' === value) {
 			me.next();
 			identifier = me.parseIdentifier();
 			return AST.memberExpression(base, '.', identifier, mainStatementLine);
@@ -395,29 +393,29 @@ Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
 	if (minPrecedence == null) minPrecedence = 0;
 	const me = this;
 	const mainStatementLine = me.token.line;
-    let operator = me.token.value;
-    let expression = null;
+	let operator = me.token.value;
+	let expression = null;
 
-    if (me.isUnary(me.token)) {
+	if (me.isUnary(me.token)) {
 		me.next();
 		const argument = me.parseSubExpression(flowContext);
 		expression = AST.unaryExpression(operator, argument, mainStatementLine);
-    } else if (TOKENS.Punctuator === me.token.type && (operator === '++' || operator === '--')) {
+	} else if (TOKENS.Punctuator === me.token.type && (operator === '++' || operator === '--')) {
 		expression = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
 	} else if (TOKENS.Keyword === me.token.type && me.token.value === 'not') {
 		me.next();
 		const argument = me.parseSubExpression(flowContext, 10);
 		expression = AST.negationExpression(argument, mainStatementLine);
 	}
-    if (null == expression) {
-      expression = me.parsePrimaryExpression(flowContext);
+	if (null == expression) {
+		expression = me.parsePrimaryExpression(flowContext);
 
-      if (null == expression) {
-        expression = me.parseRighthandExpression(flowContext);
-      }
-    }
+		if (null == expression) {
+			expression = me.parseRighthandExpression(flowContext);
+		}
+	}
 
-    let precedence;
+	let precedence;
 	while (true) {
 		operator = me.token.value;
 
@@ -438,7 +436,7 @@ Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
 		expression = AST.binaryExpression(operator, expression, right, mainStatementLine);
 	}
 
-    return expression;
+	return expression;
 };
 
 Parser.prototype.parseFeaturePath = function() {
@@ -561,8 +559,8 @@ Parser.prototype.parseIfShortcutStatement = function(flowContext, condition) {
 		clauses.push(AST.ifClause(condition, body, statementLine));
 	}
 
-    while (me.consume('else if')) {
-    	statementLine = me.token.line;
+	while (me.consume('else if')) {
+		statementLine = me.token.line;
 		condition = me.parseExpectedExpression(flowContext);
 		me.expect('then');
 		body = me.parseBlockShortcut(flowContext);
@@ -650,25 +648,25 @@ Parser.prototype.parseReturnStatement = function(flowContext, isShortcutStatemen
 Parser.prototype.parseFunctionName = function() {
 	const me = this;
 	const mainStatementLine = me.token.line;
-    let base;
-    let name;
-    let marker;
+	let base;
+	let name;
+	let marker;
 
-    base = me.parseIdentifier();
+	base = me.parseIdentifier();
 
-    while (me.consume('.')) {
+	while (me.consume('.')) {
 		name = me.parseIdentifier();
 		base = AST.memberExpression(base, '.', name, mainStatementLine);
-    }
+	}
 
 	return base;
 };
 
 Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
-    const me = this;
-    const mainStatementLine = me.token.line;
-    let base;
-    let last = me.token;
+	const me = this;
+	const mainStatementLine = me.token.line;
+	let base;
+	let last = me.token;
 
 	if (TOKENS.Identifier === last.type) {
 		base = me.parseIdentifier();
@@ -691,15 +689,15 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
 		base = me.parseRighthandExpressionGreedy(base, flowContext);
 	}
 
-    if (';' === me.token.value || '<eof>' === me.token.value) {
-    	if (validator.isLiteral(last.type)) {
-    		return base;
-    	}
+	if (';' === me.token.value || '<eof>' === me.token.value) {
+		if (validator.isLiteral(last.type)) {
+			return base;
+		}
 
 		return AST.callStatement(base, mainStatementLine);
-    }
+	}
 
-    me.expect('=');
+	me.expect('=');
 
 	const value = me.parseExpectedExpression(flowContext);
 
@@ -779,12 +777,12 @@ Parser.prototype.parseStatement = function(flowContext, isShortcutStatement) {
 		const base = AST.featureDebuggerExpression(me.token.lineStart);
 		me.next();
 		return base;
-    } else if (TOKENS.EOL === me.token.type) {
-    	me.next();
-    	return null;
-    }
+	} else if (TOKENS.EOL === me.token.type) {
+		me.next();
+		return null;
+	}
 
-    return me.parseAssignmentOrCallStatement(flowContext);
+	return me.parseAssignmentOrCallStatement(flowContext);
 };
 
 Parser.prototype.parseBlockShortcut = function(flowContext) {

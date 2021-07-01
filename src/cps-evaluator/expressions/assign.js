@@ -67,7 +67,7 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 				
 				await context.set(handlePath, right);
 
-		 		return true;
+				return true;
 			} else {
 				me.raise('Unexpected left assignment', me, left);
 			}

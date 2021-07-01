@@ -197,6 +197,7 @@ CustomMap.prototype.createInstance = function() {
 };
 
 CustomMap.prototype.callMethod = function(method, ...args) {
+	const me = this;
 	const key = method[0];
 
 	if (method.length > 1) {
@@ -211,7 +212,7 @@ CustomMap.prototype.callMethod = function(method, ...args) {
 		throw new Error(`Cannot access ${key} in map`);
 	}
 
-	return this[key].call(this, ...args);
+	return me[key].call(me, ...args);
 };
 
 //exposed methods

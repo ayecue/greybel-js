@@ -5,7 +5,6 @@ const varNamespaces = require('./build/var-namespaces');
 const moduleNamespaces = require('./build/module-namespaces');
 const Dependency = require('./build/dependency');
 const Parser = require('./parser');
-const util = require('util');
 const fs = require('fs');
 const path = require('path');
 const envs = require('./build/envs');

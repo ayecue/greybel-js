@@ -1,9 +1,7 @@
 const varNamespaces = require('../var-namespaces');
-const envs = require('../envs');
 const literals = require('../literals');
-const logger = require('node-color-log');
 
-const mapper = function(make, stack, depth, context) {
+const mapper = function(make, _stack, _depth, _context) {
 	return {
 		'AssignmentStatement': function(item) {
 			const varibale = item.variable;
@@ -162,7 +160,7 @@ const mapper = function(make, stack, depth, context) {
 			if (value == null) return 'null';
 			return value;
 		},
-		'FeatureDebuggerExpression': function(item) {
+		'FeatureDebuggerExpression': function(_item) {
 			return '//debugger';
 		},
 		'IfShortcutStatement': function(item) {
@@ -259,10 +257,10 @@ const mapper = function(make, stack, depth, context) {
 
 			return 'else\n' + body.join('\n');
 		},
-		'ContinueStatement': function(item) {
+		'ContinueStatement': function(_item) {
 			return 'continue';
 		},
-		'BreakStatement': function(item) {
+		'BreakStatement': function(_item) {
 			return 'break';
 		},
 		'CallStatement': function(item) {
@@ -293,7 +291,7 @@ const mapper = function(make, stack, depth, context) {
 			if (literal != null && literal.namespace != null)  return literal.namespace;
 			return item.raw;
 		},
-		'EmptyExpression': function(item) {
+		'EmptyExpression': function(_item) {
 			return '';
 		},
 		'LogicalExpression': function(item) {

@@ -189,8 +189,7 @@ Shell.prototype.start = function() {
 					type: 'command',
 					prefix: chalk.green.bold('(' + activeUserName + ')'),
 					name: activeUserName,
-					message: me.getShellPrefix(),
-					type: 'input'
+					message: me.getShellPrefix()
 				})
 				.then(me.consume.bind(me))
 				.then(next)

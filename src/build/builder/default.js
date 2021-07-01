@@ -1,7 +1,4 @@
-const envs = require('../envs');
-const logger = require('node-color-log');
-
-const mapper = function(make, stack, depth, context) {
+const mapper = function(make, _stack, _depth, _context) {
 	return {
 		'AssignmentStatement': function(item) {
 			const varibale = item.variable;
@@ -218,10 +215,10 @@ const mapper = function(make, stack, depth, context) {
 
 			return 'else\n' + body.join('\n');
 		},
-		'ContinueStatement': function(item) {
+		'ContinueStatement': function(_item) {
 			return 'continue';
 		},
-		'BreakStatement': function(item) {
+		'BreakStatement': function(_item) {
 			return 'break';
 		},
 		'CallStatement': function(item) {
@@ -233,7 +230,7 @@ const mapper = function(make, stack, depth, context) {
 		'FeatureIncludeExpression': function(item) {
 			return make(item.chunk);
 		},
-		'FeatureDebuggerExpression': function(item) {
+		'FeatureDebuggerExpression': function(_item) {
 			return '//debugger';
 		},
 		'ListConstructorExpression': function(item) {
@@ -252,7 +249,7 @@ const mapper = function(make, stack, depth, context) {
 		'BooleanLiteral': function(item) {
 			return item.raw;
 		},
-		'EmptyExpression': function(item) {
+		'EmptyExpression': function(_item) {
 			return '';
 		},
 		'LogicalExpression': function(item) {

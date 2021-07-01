@@ -39,6 +39,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 	const evaluate = async function(node) {
 		const traverselPath = [].concat(node);
 		const map = {};
+		let current;
 
 		while (current = traverselPath.shift()) {
 			let key;
@@ -57,7 +58,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 			} else if (current.value?.isExpression) {
 				value = await current.value.get(operationContext);
 			} else {
-				me.raise('Unexpected left assignment', me, left);
+				me.raise('Unexpected value', me, current.value);
 			}
 
 			map[key] = value;

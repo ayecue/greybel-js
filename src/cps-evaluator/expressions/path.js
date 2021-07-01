@@ -168,30 +168,30 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 			} else if (typer.isCustomMap(resultExpr.handle)) {
 				const context = resultExpr.handle;
 				const value = await context.get(resultExpr.path);
- 
-		 		if (value?.isOperation) {
-		 			return value.run(operationContext);
-		 		} else if (value instanceof Function) {
+
+				if (value?.isOperation) {
+					return value.run(operationContext);
+				} else if (value instanceof Function) {
 					return await value.call(context);
 				}
 
-		 		return value;
+				return value;
 			}
 
 			return typer.cast(resultExpr.handle.callMethod(resultExpr.path));
 		}
 
 		const value = await operationContext.get(resultExpr.path);
- 
- 		if (value instanceof Function) {
- 			const callable = await operationContext.getCallable(resultExpr.path);
 
- 			return typer.cast(await callable.origin.call(callable.context));
- 		} else if (value?.isOperation) {
- 			return value.run(operationContext);
- 		}
+		if (value instanceof Function) {
+			const callable = await operationContext.getCallable(resultExpr.path);
 
- 		return value;
+			return typer.cast(await callable.origin.call(callable.context));
+		} else if (value?.isOperation) {
+			return value.run(operationContext);
+		}
+
+		return value;
 	}
 
 	return resultExpr;

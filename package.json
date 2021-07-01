@@ -45,7 +45,9 @@
     "scripts": {
         "build": "browserify ./src/ui/index.js -o ./src/ui/build/bundle.js",
         "watch": "watchify ./src/ui/index.js -o ./src/ui/build/bundle.js",
-        "test": "jest ./tests"
+        "test": "jest ./tests",
+        "lint": "eslint ./src/**/*.js",
+        "lint:fix": "eslint ./src/**/*.js --fix"
     },
     "directories": {},
     "keywords": [
@@ -62,6 +64,7 @@
         "compiler"
     ],
     "devDependencies": {
+        "eslint": "^7.29.0",
         "jest": "^27.0.6",
         "watchify": "^4.0.0"
     }

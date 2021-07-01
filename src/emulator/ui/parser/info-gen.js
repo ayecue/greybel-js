@@ -6,10 +6,10 @@ const parse = require('../../../utils/parse');
 const parseExploits = function(exploitsData) {
 	const result = [];
 
-	for (libraryName in exploitsData) {
+	for (let libraryName in exploitsData) {
 		const versions = exploitsData[libraryName];
 
-		for (version in versions) {
+		for (let version in versions) {
 			const exploits = versions[version];
 
 			result.push(...exploits.map((exploitData) => new Exploit(libraryName, version, exploitData)));
@@ -22,7 +22,7 @@ const parseExploits = function(exploitsData) {
 const parseVersionsControl = function(versionsControlData) {
 	const result = [];
 
-	for (libraryName in versionsControlData) {
+	for (let libraryName in versionsControlData) {
 		const libraryData = versionsControlData[libraryName];
 
 		result.push(new LibraryVersion(libraryName, libraryData));
@@ -34,7 +34,7 @@ const parseVersionsControl = function(versionsControlData) {
 const parseCurrentVersions = function(currentVersionsData) {
 	const result = [];
 
-	for (libraryName in currentVersionsData) {
+	for (let libraryName in currentVersionsData) {
 		const versionData = currentVersionsData[libraryName];
 
 		result.push(new CurrentVersion(libraryName, versionData));

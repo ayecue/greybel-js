@@ -66,7 +66,7 @@ const SCAN_MAP = {
 	}
 };
 
-for (number of CHAR_CODES.NUMBERS) {
+for (let number of CHAR_CODES.NUMBERS) {
 	SCAN_MAP[number] = function() {
 		return this.scanNumericLiteral();
 	}
@@ -88,7 +88,7 @@ const FALL_THROUGH = [
 	CHAR_CODES.VERTICAL_LINE
 ];
 
-for (code of FALL_THROUGH) {
+for (let code of FALL_THROUGH) {
 	SCAN_MAP[code] = function(code) {
 		const me = this;
 		return me.scanPunctuator(String.fromCharCode(code))
@@ -248,7 +248,7 @@ Lexer.prototype.skipWhiteSpace = function() {
 };
 
 Lexer.prototype.scanIdentifierOrKeyword = function() {
-	me = this;
+	const me = this;
 
 	me.nextIndex();
 
@@ -361,7 +361,7 @@ Lexer.prototype.next = function() {
 
 	if (validator.isIdentifierStart(code)) return me.scanIdentifierOrKeyword();
 
-	scan = SCAN_MAP[code];
+	const scan = SCAN_MAP[code];
 
 	if (scan) return scan.call(me, code, nextCode, lastCode);
 

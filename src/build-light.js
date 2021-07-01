@@ -11,16 +11,15 @@ const Tranformer = require('./build/builder/transformer');
 module.exports = function(options = {}) {
 	const buildOptions = Object.assign({
 		uglify: false,
-		maxWords: 80000,
 		obfuscation: true
 	}, options);
 
-	envs.load(options.envFiles, options.envVars);
+	envs.load(buildOptions.envFiles, buildOptions.envVars);
 
-	const charsetMap = charset(options.obfuscation);
+	const charsetMap = charset(buildOptions.obfuscation);
 	let mapper = defaultMapper;
 
-	if (options.uglify) mapper = uglifyMapper;
+	if (buildOptions.uglify) mapper = uglifyMapper;
 
 	varNamespaces
 		.reset()
@@ -30,13 +29,13 @@ module.exports = function(options = {}) {
 		.preset(charsetMap.MODULES);
 	literals.reset();
 
-	const parser = new Parser(options.content, options.uglify);
+	const parser = new Parser(buildOptions.content, buildOptions.uglify);
 	const chunk = parser.parseChunk();
 	const transformer = new Tranformer(mapper);
 	const tempVarForGlobal = varNamespaces.createNamespace('UNIQUE_GLOBAL_TEMP_VAR');
 	const processed = [];
 
-	if (options.uglify) {
+	if (buildOptions.uglify) {
 		const literalMapping = literals.getMapping();
 
 		processed.push('globals.' + tempVarForGlobal + '=globals');

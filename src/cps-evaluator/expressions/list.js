@@ -36,6 +36,7 @@ ListExpression.prototype.get = function(operationContext, parentExpr) {
 	const evaluate = async function(node) {
 		const traverselPath = [].concat(node);
 		const list = [];
+		let current;
 
 		while (current = traverselPath.shift()) {
 			if (current?.type === 'list') {

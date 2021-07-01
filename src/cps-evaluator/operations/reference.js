@@ -1,5 +1,3 @@
-const typer = require('../typer');
-
 const ReferenceOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;

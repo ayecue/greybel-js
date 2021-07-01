@@ -10,7 +10,7 @@ module.exports = function(shell) {
 
 	cryptoInterface.aireplay = function(bssid, essid, maxAcks) {
 		shell.echo('aireplay is not yet supported');
-		return yper.cast('not yet supported');
+		return typer.cast('not yet supported');
 	};
 
 	cryptoInterface.airmon = function(option, interf) {
