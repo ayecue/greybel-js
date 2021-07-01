@@ -1,3 +1,4 @@
 .DS_Store
 node_modules
-ui/build/bundle.js
+src/ui/build/bundle.js
+tests/__snapshots__
