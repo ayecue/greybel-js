@@ -1,2 +1,4 @@
-./assets
-./tests
+assets
+tests
+node_modules
+src/ui/build/bundle.js
