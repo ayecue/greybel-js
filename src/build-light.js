@@ -11,7 +11,7 @@ const Tranformer = require('./build/builder/transformer');
 module.exports = function(options = {}) {
 	const buildOptions = Object.assign({
 		uglify: false,
-		obfuscation: true
+		obfuscation: false
 	}, options);
 
 	envs.load(buildOptions.envFiles, buildOptions.envVars);
