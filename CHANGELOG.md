@@ -22,3 +22,9 @@ All notable changes to this project will be documented in this file.
 - Fixed list exposed methods
 - Fixed string iterator
 - Fixed polyfill namespaces
+
+## [0.2.5] - 01-07-2021
+
+### Changed
+
+- npm latest version
