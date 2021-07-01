@@ -1,4 +1,5 @@
 const CustomMap = require('../types/custom-map');
+const typer = require('../typer');
 
 const MapExpression = function(ast, visit, debug, raise) {
 	const me = this;
@@ -7,12 +8,15 @@ const MapExpression = function(ast, visit, debug, raise) {
 
 		switch (node.type) {
 			case 'MapConstructorExpression':
-				expression = node.fields.map((item) => {
-					return {
-						key: buildExpression(item.key),
-						value: buildExpression(item.value)
-					};
-				});
+				expression = {
+					type: 'map',
+					values: node.fields.map((item) => {
+						return {
+							key: visit(item.key),
+							value: buildExpression(item.value)
+						};
+					})
+				};
 				break;
 			default:
 				expression = visit(node);
@@ -21,6 +25,7 @@ const MapExpression = function(ast, visit, debug, raise) {
 		return expression;
 	};
 
+	me.ast = ast;
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
 	me.debug = debug;
@@ -34,6 +39,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 	const evaluate = async function(node) {
 		const traverselPath = [].concat(node);
 		const map = {};
+		let current;
 
 		while (current = traverselPath.shift()) {
 			let key;
@@ -45,12 +51,14 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 				me.raise('Unexpected key', me, current.key);
 			}
 
-			if (typer.isCustomValue(current.value)) {
-				value = current;
+			if (current.value?.type === 'map') {
+				value = await evaluate(current.value.values);
+			} if (typer.isCustomValue(current.value)) {
+				value = current.value;
 			} else if (current.value?.isExpression) {
 				value = await current.value.get(operationContext);
 			} else {
-				me.raise('Unexpected left assignment', me, left);
+				me.raise('Unexpected value', me, current.value);
 			}
 
 			map[key] = value;
@@ -61,7 +69,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 
 	me.debug('MapExpression', 'get', 'expr', me.expr);
 
-	return evaluate(me.expr);
+	return evaluate(me.expr.values);
 };
 
 module.exports = MapExpression;

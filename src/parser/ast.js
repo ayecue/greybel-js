@@ -9,7 +9,8 @@ const AST = {
     },
     continueStatement: function(line) {
         return {
-            type: 'ContinueStatement'
+            type: 'ContinueStatement',
+            line: line
         };
     },
     returnStatement: function(args, line) {
@@ -167,7 +168,7 @@ const AST = {
             line: line
         };
     },
-    comment: function(value, raw) {
+    comment: function(value, raw, line) {
         return {
             type: 'Comment',
             value: value,

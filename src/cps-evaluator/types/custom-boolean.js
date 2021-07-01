@@ -12,6 +12,10 @@ CustomBoolean.prototype.valueOf = function() {
 	return this.value;
 };
 
+CustomBoolean.prototype.toString = function() {
+	return this.value.toString();
+};
+
 CustomBoolean.prototype.fork = function() {
 	return new CustomBoolean(this.value);
 };

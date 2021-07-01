@@ -20,6 +20,7 @@ const AssignExpression = function(ast, visit, debug, raise) {
 		return expression;
 	};
 
+	me.ast = ast;
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
 	me.debug = debug;
@@ -60,13 +61,13 @@ AssignExpression.prototype.get = async function(operationContext, parentExpr) {
 		}
 
 		if (left.handle) {
-			if (typer.isCustomMap(left.handle)) {
-				const handlePath = left.path.slice(1);
+			if (left.handle?.isObject) {
+				const handlePath = left.path;
 				const context = left.handle;
 				
 				await context.set(handlePath, right);
 
-		 		return true;
+				return true;
 			} else {
 				me.raise('Unexpected left assignment', me, left);
 			}

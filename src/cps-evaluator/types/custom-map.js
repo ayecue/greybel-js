@@ -15,6 +15,7 @@ const EXPOSED_METHODS = [
 
 const CustomMap = function(value) {
 	const me = this;
+	me.isObject = true;
 	me.isInstance = false;
 	me.value = value;
 	return me;
@@ -56,6 +57,15 @@ CustomMap.prototype.valueOf = function() {
 		.length === 0 ? null : me;
 };
 
+CustomMap.prototype.toString = function() {
+	const me = this;
+	const body = Object
+		.entries(me.value)
+		.map(([key, value]) => `"${key}": ${value?.valueOf()?.toString()}`);
+
+	return `{${body.join(',')}}`;
+};
+
 CustomMap.prototype.getType = function() {
 	const me = this;
 	const value = me.value;
@@ -84,11 +94,11 @@ CustomMap.prototype.set = async function(path, value) {
 	let origin = refs;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			origin = origin[current];
 
-			if (origin instanceof CustomMap) {
+			if (origin?.isObject) {
 				return origin.set(traversalPath.concat([last]), value);
 			}
 		} else {
@@ -97,7 +107,11 @@ CustomMap.prototype.set = async function(path, value) {
 	}
 
 	if (origin) {
-		origin[last] = value; 
+		if (value?.isFunction) {
+			origin[last] = value.fork(me);
+		} else {
+			origin[last] = value;
+		}
 	} else {
 		throw new Error(`Cannot set path ${path.join('.')}`);
 	}
@@ -115,11 +129,11 @@ CustomMap.prototype.get = async function(path) {
 	let origin = refs;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			origin = origin[current];
 
-			if (traversalPath.length > 0 && origin instanceof CustomMap) {
+			if (traversalPath.length > 0 && origin?.isObject) {
 				return origin.get(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
@@ -129,7 +143,7 @@ CustomMap.prototype.get = async function(path) {
 		}
 	}
 	
-	return origin?.valueOf() || origin;
+	return origin;
 };
 
 CustomMap.prototype.getCallable = async function(path) {
@@ -140,12 +154,12 @@ CustomMap.prototype.getCallable = async function(path) {
 	let context;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			context = origin;
 			origin = origin[current];
 
-			if (origin instanceof CustomMap) {
+			if (origin?.isObject) {
 				return origin.getCallable(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
@@ -175,7 +189,7 @@ CustomMap.prototype.createInstance = function() {
 		if (item?.isFunction) {
 			value[key] = item.fork(newInstance);
 		} else {
-			value[key] = item?.fork() || item;
+			value[key] = item;
 		}
 	});
 	
@@ -183,6 +197,7 @@ CustomMap.prototype.createInstance = function() {
 };
 
 CustomMap.prototype.callMethod = function(method, ...args) {
+	const me = this;
 	const key = method[0];
 
 	if (method.length > 1) {
@@ -197,7 +212,7 @@ CustomMap.prototype.callMethod = function(method, ...args) {
 		throw new Error(`Cannot access ${key} in map`);
 	}
 
-	return this[key].call(this, ...args);
+	return me[key].call(me, ...args);
 };
 
 //exposed methods

@@ -91,6 +91,7 @@ const LogicalAndBinaryExpression = function(ast, visit, debug, raise) {
 		return expression;
 	};
 
+	me.ast = ast;
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
 	me.debug = debug;

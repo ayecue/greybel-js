@@ -50,7 +50,7 @@ NamespaceGenerator.prototype.increaseBuffer = function(i) {
 	let p = currentCharBuffer[i];
 	p = p + 1;
 	currentCharBuffer[i] = p;
-	if (p == maxBufferSize) {;
+	if (p == maxBufferSize) {
 		currentCharBuffer[i] = 0;
 		if (i == 0) {
 			currentCharBuffer.push(0);
@@ -67,6 +67,7 @@ NamespaceGenerator.prototype.generateNamespace = function() {
 	const forbiddenNamespaces = me.forbidden;
 	let name = '';
 	let index = 0;
+	let pointer;
 	
 	while (index < currentCharBuffer.length) {
 		pointer = currentCharBuffer[index];

@@ -109,7 +109,7 @@ Scope.prototype.get = async function(path) {
 		}
 	}
 	
-	return origin?.valueOf() || origin;
+	return origin;
 };
 
 Scope.prototype.getCallable = async function(path) {
@@ -223,10 +223,10 @@ OperationContext.prototype.fork = function(type, state) {
 
 	if (type !== TYPE.FUNCTION) {
 		if (type !== TYPE.LOOP) {
-			opc.setMemory('loopContext', opc.getMemory('loopContext'));
+			opc.setMemory('loopContext', me.getMemory('loopContext'));
 		}
 
-		opc.setMemory('functionContext', opc.getMemory('functionContext'));
+		opc.setMemory('functionContext', me.getMemory('functionContext'));
 	}
 
 	return opc;

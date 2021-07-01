@@ -48,6 +48,7 @@ const PathExpression = function(ast, visit, debug, raise) {
 		return expression;
 	};
 
+	me.ast = ast;
 	me.expr = buildExpression(ast);
 	me.isExpression = true;
 	me.debug = debug;
@@ -69,6 +70,7 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 	const evaluate = async function(node) {
 		const traverselPath = [].concat(node);
 		let traversedPath = [];
+		let position = 0;
 		let handle;
 		let current;
 
@@ -77,18 +79,30 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				handle = current;
 			} else if (current?.isExpression) {
 				handle = await current.get(operationContext, me.expr);
+			} else if (current?.isOperation) {
+				handle = await current.get(operationContext);
 			} else if (current?.type === 'path') {
-				traversedPath.push(current.value);
+				if (current.value === 'self' && position === 0) {
+					const functionContext = operationContext.getMemory('functionContext');
 
-				if (traverselPath.length > 0) {
-					const origin = await (handle || operationContext).get(traversedPath);
+					if (functionContext?.context) {
+						handle = functionContext.context;
+					} else {
+						me.raise('Unexpected self', me, current);
+					}
+				} else {
+					traversedPath.push(current.value);
 
-					if (typer.isCustomValue(origin)) {
-						handle = origin;
-						traversedPath = [];
-					} else if (origin instanceof Function) {
-						handle = await origin.call(handle);
-						traversedPath = [];
+					if (traverselPath.length > 0) {
+						const origin = await (handle || operationContext).get(traversedPath);
+
+						if (typer.isCustomValue(origin)) {
+							handle = origin;
+							traversedPath = [];
+						} else if (origin instanceof Function) {
+							handle = await origin.call(handle);
+							traversedPath = [];
+						}
 					}
 				}
 			} else if (current?.type === 'index') {
@@ -97,9 +111,11 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				if (typer.isCustomValue(current)) {
 					traversedPath.push(current.valueOf());
 				} else if (current?.isExpression) {
-					traversedPath.push(await current.get(operationContext));
+					const value = await current.get(operationContext);
+					traversedPath.push(value);
 				} else if (current?.type === 'path') {
-					traversedPath.push(await operationContext.get(current.value));
+					const value = await operationContext.get(current.value);
+					traversedPath.push(value.valueOf());
 				} else {
 					me.raise('Unexpected index', me, current);
 				}
@@ -131,6 +147,8 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 			} else {
 				me.raise('Unexpected handle', me, current);
 			}
+
+			position++;
 		}
 
 		return {
@@ -143,14 +161,6 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 
 	const resultExpr = await evaluate(me.expr);
 
-	if (resultExpr.path[0] === 'self') {
-		const functionContext = operationContext.getMemory('functionContext');
-
-		if (functionContext.context) {
-			resultExpr.handle = functionContext.context;
-		}
-	}
-
 	if (!parentExpr) {
 		if (resultExpr.handle) {
 			if (resultExpr.path.length === 0) {
@@ -158,30 +168,30 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 			} else if (typer.isCustomMap(resultExpr.handle)) {
 				const context = resultExpr.handle;
 				const value = await context.get(resultExpr.path);
- 
-		 		if (value?.isOperation) {
-		 			return value.run(operationContext);
-		 		} else if (value instanceof Function) {
+
+				if (value?.isOperation) {
+					return value.run(operationContext);
+				} else if (value instanceof Function) {
 					return await value.call(context);
 				}
 
-		 		return value;
+				return value;
 			}
 
 			return typer.cast(resultExpr.handle.callMethod(resultExpr.path));
 		}
 
 		const value = await operationContext.get(resultExpr.path);
- 
- 		if (value instanceof Function) {
- 			const callable = await operationContext.getCallable(resultExpr.path);
 
- 			return typer.cast(await callable.origin.call(callable.context));
- 		} else if (value?.isOperation) {
- 			return value.run(operationContext);
- 		}
+		if (value instanceof Function) {
+			const callable = await operationContext.getCallable(resultExpr.path);
 
- 		return value;
+			return typer.cast(await callable.origin.call(callable.context));
+		} else if (value?.isOperation) {
+			return value.run(operationContext);
+		}
+
+		return value;
 	}
 
 	return resultExpr;

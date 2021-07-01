@@ -12,7 +12,6 @@ const {
 	ForOperation,
 	FunctionOperation,
 	ReturnOperation,
-	SliceOperation,
 	ReferenceOperation,
 	NewOperation,
 	NotOperation,
@@ -30,7 +29,6 @@ const CustomBoolean = require('./cps-evaluator/types/custom-boolean');
 const CustomNumber = require('./cps-evaluator/types/custom-number');
 const CustomString = require('./cps-evaluator/types/custom-string');
 const CustomNil = require('./cps-evaluator/types/custom-nil');
-const EventEmitter = require('events');
 
 const mapper = function(visit, debug, raise) {
 	return {
@@ -40,17 +38,16 @@ const mapper = function(visit, debug, raise) {
 		'MemberExpression': function(item) {
 			return new PathExpression(item, visit, debug, raise);
 		},
-		'FunctionDeclaration': function(item, operation) {
-			const me = this;
+		'FunctionDeclaration': function(item, _operation) {
 			const op = new FunctionOperation(item, debug, raise);
 			const args = new ArgumentOperation(item.parameters, debug, raise);
 			const body = new BodyOperation(item.body, debug, raise);
 
-			for (parameterItem of item.parameters) {
+			for (let parameterItem of item.parameters) {
 				args.stack.push(visit(parameterItem));
 			}
 
-			for (bodyItem of item.body) {
+			for (let bodyItem of item.body) {
 				body.stack.push(visit(bodyItem));
 			}
 
@@ -66,7 +63,6 @@ const mapper = function(visit, debug, raise) {
 			return new PathExpression(item, visit, debug, raise);
 		},
 		'ReturnStatement': function(item) {
-			const me = this;
 			const op = new ReturnOperation(item, debug, raise);
 
 			op.arg = visit(item.arguments[0]);
@@ -77,15 +73,12 @@ const mapper = function(visit, debug, raise) {
 			return new CustomNumber(item.value);
 		},
 		'WhileStatement': function(item) {
-			const me = this;
 			const op = new WhileOperation(item, debug, raise);
 			const body = new BodyOperation(item.body, debug, raise);
 
 			op.condition = visit(item.condition);
 
-			let bodyItem;
-
-			for (bodyItem of item.body) {
+			for (let bodyItem of item.body) {
 				body.stack.push(visit(bodyItem));
 			}
 
@@ -99,22 +92,19 @@ const mapper = function(visit, debug, raise) {
 		'IndexExpression': function(item) {
 			return new PathExpression(item, visit, debug, raise);
 		},
-		'FeatureEnvarExpression': function(item) {
+		'FeatureEnvarExpression': function(_item) {
 			throw new Error('Not supported');
 		},
 		'IfShortcutStatement': function(item) {
-			const me = this;
 			const op = new IfStatementOperation(item, debug, raise);
-			let clausesItem;
 
-			for (clausesItem of item.clauses) {
+			for (let clausesItem of item.clauses) {
 				op.clauses.push(visit(clausesItem));
 			}
 
 			return op;
 		},
 		'IfShortcutClause': function(item) {
-			const me = this;
 			const op = new IfOperation(item, debug, raise);
 			const body = new BodyOperation(item.statement, debug, raise);
 
@@ -126,7 +116,6 @@ const mapper = function(visit, debug, raise) {
 			return op;
 		},
 		'ElseifShortcutClause': function(item) {
-			const me = this;
 			const op = new ElseIfOperation(item, debug, raise);
 			const body = new BodyOperation(item.statement, debug, raise);
 
@@ -138,7 +127,6 @@ const mapper = function(visit, debug, raise) {
 			return op;
 		},
 		'ElseShortcutClause': function(item) {
-			const me = this;
 			const op = new ElseOperation(item, debug, raise);
 			const body = new BodyOperation(item.statement, debug, raise);
 
@@ -151,16 +139,13 @@ const mapper = function(visit, debug, raise) {
 			return new CustomNil();
 		},
 		'ForGenericStatement': function(item) {
-			const me = this;
 			const op = new ForOperation(item, debug, raise);
 			const body = new BodyOperation(item.body, debug, raise);
 
 			op.variable = visit(item.variable);
 			op.iterator = visit(item.iterator);
 
-			let bodyItem;
-
-			for (bodyItem of item.body) {
+			for (let bodyItem of item.body) {
 				body.stack.push(visit(bodyItem));
 			}
 
@@ -169,26 +154,21 @@ const mapper = function(visit, debug, raise) {
 			return op;
 		},
 		'IfStatement': function(item) {
-			const me = this;
 			const op = new IfStatementOperation(item, debug, raise);
-			let clausesItem;
 
-			for (clausesItem of item.clauses) {
+			for (let clausesItem of item.clauses) {
 				op.clauses.push(visit(clausesItem));
 			}
 
 			return op;
 		},
 		'IfClause': function(item) {
-			const me = this;
 			const op = new IfOperation(item, debug, raise);
 			const body = new BodyOperation(item.body, debug, raise);
 
 			op.condition = visit(item.condition);
 
-			let bodyItem;
-
-			for (bodyItem of item.body) {
+			for (let bodyItem of item.body) {
 				body.stack.push(visit(bodyItem));
 			}
 
@@ -197,15 +177,12 @@ const mapper = function(visit, debug, raise) {
 			return op;
 		},
 		'ElseifClause': function(item) {
-			const me = this;
 			const op = new ElseIfOperation(item, debug, raise);
 			const body = new BodyOperation(item.body, debug, raise);
 
 			op.condition = visit(item.condition);
 
-			let bodyItem;
-
-			for (bodyItem of item.body) {
+			for (let bodyItem of item.body) {
 				body.stack.push(visit(bodyItem));
 			}
 
@@ -214,13 +191,10 @@ const mapper = function(visit, debug, raise) {
 			return op;
 		},
 		'ElseClause': function(item) {
-			const me = this;
 			const op = new ElseOperation(item, debug, raise);
 			const body = new BodyOperation(item.body, debug, raise);
 
-			let bodyItem;
-
-			for (bodyItem of item.body) {
+			for (let bodyItem of item.body) {
 				body.stack.push(visit(bodyItem));
 			}
 
@@ -229,7 +203,6 @@ const mapper = function(visit, debug, raise) {
 			return op;
 		},
 		'NegationExpression': function(item) {
-			const me = this;
 			const op = new NotOperation(item, debug, raise);
 
 			op.arg = visit(item.argument);
@@ -248,10 +221,10 @@ const mapper = function(visit, debug, raise) {
 		'CallStatement': function(item) {
 			return new CallExpression(item, visit, debug, raise);
 		},
-		'FeatureImportExpression': function(item) {
+		'FeatureImportExpression': function(_item) {
 			throw new Error('Not supported');
 		},
-		'FeatureIncludeExpression': function(item) {
+		'FeatureIncludeExpression': function(_item) {
 			throw new Error('Not supported');
 		},
 		'FeatureDebuggerExpression': function(item) {
@@ -271,7 +244,6 @@ const mapper = function(visit, debug, raise) {
 			return new LogicalAndBinaryExpression(item, visit, debug, raise);
 		},
 		'UnaryExpression': function(item) {
-			const me = this;
 			let op;
 
 			if ('@' === item.operator) op = new ReferenceOperation(item, debug, raise);
@@ -282,12 +254,9 @@ const mapper = function(visit, debug, raise) {
 			return op;
 		},
 		'Chunk': function(item) {
-			const me = this;
 			const op = new BodyOperation(item, debug, raise);
 
-			let bodyItem;
-
-			for (bodyItem of item.body) {
+			for (let bodyItem of item.body) {
 				op.stack.push(visit(bodyItem));
 			}
 

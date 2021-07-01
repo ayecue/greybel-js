@@ -31,16 +31,51 @@ CustomString.prototype[Symbol.iterator] = function() {
 	let index = 0;
 	return  {
 		next: function() {
+			if (index === me.value.length) {
+				return {
+					done: true
+				};
+			}
+
 			return {
 				value: me.value[index++],
-				done: index < me.value.length
+				done: false
 			};
 		}
 	};
 };
 
+CustomString.prototype.isNumber = function(value) {
+	return !Number.isNaN(Number(value));
+};
+
+CustomString.prototype.toIndex = function(value) {
+	const me = this;
+	const casted = Number(value);
+
+	return casted < 0 ? me.value.length + casted : casted;
+};
+
 CustomString.prototype.callMethod = function(method, ...args) {
-	const member = method[0];
+	const me = this;
+	const member = method[0]?.valueOf ? method[0].valueOf() : method[0];
+
+	if (me.isNumber(member)) {
+		const index = me.toIndex(member);
+
+		if (!me.value[index]) {
+			console.error(method, member, args);
+			throw new Error(`Unexpected index`);
+		}
+
+		const value = new CustomString(me.value[index]);
+
+		if (method.length > 1) {
+			return value.callMethod(method.slice(1), ...args);
+		}
+
+		return value;
+	}
 
 	if (!EXPOSED_METHODS.includes(member)) {
 		throw new Error(`Cannot access ${member} in string`);
@@ -56,6 +91,10 @@ CustomString.prototype.getType = function() {
 CustomString.prototype.valueOf = function() {
 	const me = this;
 	return me.len() === 0 ? null : me.value;
+};
+
+CustomString.prototype.toString = function() {
+	return `"${this.value.toString()}"`;
 };
 
 CustomString.prototype.fork = function() {

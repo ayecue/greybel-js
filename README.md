@@ -1,10 +1,14 @@
-# Greybel-JS 0.2.2
+# Greybel-JS 0.2.3
+
+[![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
 GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
 
 Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/package/luaparse). It's heavily modified though to support GreyScript.
 
 Also partly based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
+
+Latest changes: [Changelog](/CHANGELOG.md)
 
 Features:
 - supports shortcuts for blocks
@@ -34,7 +38,7 @@ npm i greybel-js
 ## Compiler
 ```
 Compiler CLI
-Version: 0.2.2
+Version: 0.2.3
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -58,7 +62,7 @@ greybel /my/code/file.src
 ## Emulator
 ```
 Emulator CLI
-Version: 0.2.2
+Version: 0.2.3
 Example: greybel-console --path "<path to steam common>/Grey Hack"
 
 Options:
@@ -67,7 +71,18 @@ Options:
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
 
-Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API isn't there yet.
+Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API is not there.
+
+```
+Emulator shell commands:
+	- run <filepath> //used to run scripts from your filesystem
+	- reload
+	- cd <path>
+	- exit
+	- clear
+```
+
+You can use the shell just like in the game. All native scripts like `ls` or `sudo` should work. All functionality that isn't supported yet will print an information text that indicates which exact method it is.
 
 ### Examples:
 #### Most common emulator command:
@@ -80,7 +95,7 @@ greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Gr
 ## Emulator-UI
 ```
 Emulator UI CLI
-Version: 0.2.2
+Version: 0.2.3
 Example: greybel-ui
 
 Options:
@@ -89,9 +104,14 @@ Options:
 
 Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API isn't there yet.
 
-### Hint
+```
+Emulator shell commands:
+	- cd <path>
+	- exit
+	- clear
+```
 
-Sometimes it can happen that it won't build correctly the first time. So just execute it a second time.
+You can use the shell just like in the game. All native scripts like `ls` or `sudo` should work. All functionality that isn't supported yet will print an information text that indicates which exact method it is.
 
 ### Examples:
 #### Most common emulator UI command:

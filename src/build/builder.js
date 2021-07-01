@@ -42,7 +42,7 @@ module.exports = function(mainDependency, mapper, isUglify) {
 	
 	processed.push(headerBoilerplate);
 
-	for (moduleKey in modules) processed.push(modules[moduleKey]);
+	for (let moduleKey in modules) processed.push(modules[moduleKey]);
 	
 	const code = transformer.transform(mainDependency.chunk, mainDependency);
 	const moduleCode = mainBoilerplate.replace('"$0"', code);

@@ -1,4 +1,4 @@
-	const EXPOSED_METHODS = [
+const EXPOSED_METHODS = [
 	'join',
 	'remove',
 	'hasIndex',
@@ -6,30 +6,21 @@
 	'lastIndexOf',
 	'len',
 	'pull',
-	'pop'
+	'pop',
+	'push',
+	'sum',
+	'values',
+	'indexes',
+	'sort',
+	'reverse',
+	'shuffle'
 ];
 
 const CustomList = function(value) {
 	const me = this;
+	me.isObject = true;
 	me.value = value;
 	return me;
-};
-
-CustomList.prototype.getType = function() {
-	return 'list';
-};
-
-CustomList.prototype.valueOf = function() {
-	const me = this;
-	return me.len() === 0 ? null : me;
-};
-
-CustomList.prototype.concat = function(arr) {
-	return new CustomList(this.value.concat(arr.value));
-};
-
-CustomList.prototype.slice = function(a, b) {
-	return new CustomList(this.value.slice(a?.valueOf(), b?.valueOf()));
 };
 
 CustomList.prototype[Symbol.iterator] = function() {
@@ -51,6 +42,63 @@ CustomList.prototype[Symbol.iterator] = function() {
 	};
 };
 
+CustomList.prototype.getType = function() {
+	return 'list';
+};
+
+CustomList.prototype.valueOf = function() {
+	const me = this;
+	return me.len() === 0 ? null : me;
+};
+
+CustomList.prototype.toString = function() {
+	const me = this;
+	const body = me.value.map((item) => item?.valueOf()?.toString());
+
+	return `[${body.join(',')}]`;
+};
+
+CustomList.prototype.concat = function(arr) {
+	return new CustomList(this.value.concat(arr.value));
+};
+
+CustomList.prototype.slice = function(a, b) {
+	return new CustomList(this.value.slice(a?.valueOf(), b?.valueOf()));
+};
+
+//Probably needs work
+CustomList.prototype.set = async function(path, value) {
+	const me = this;
+	const traversalPath = [].concat(path);
+	const refs = me.value;
+	const last = traversalPath.pop();
+	let origin = refs;
+	let current;
+
+	while ((current = traversalPath.shift()) != null) {
+		if (current in origin) {
+			origin = origin[current];
+
+			if (origin?.isObject) {
+				return origin.set(traversalPath.concat([last]), value);
+			}
+		} else {
+			throw new Error(`Cannot set path ${path.join('.')}`);
+		}
+	}
+
+	if (origin) {
+		if (value?.isFunction) {
+			origin[last] = value.fork(me);
+		} else {
+			origin[last] = value;
+		}
+	} else {
+		throw new Error(`Cannot set path ${path.join('.')}`);
+	}
+};
+
+//Probably needs work
 CustomList.prototype.get = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
@@ -58,11 +106,11 @@ CustomList.prototype.get = async function(path) {
 	let origin = refs;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			origin = origin[current];
 
-			if (traversalPath.length > 0 && origin instanceof CustomList) {
+			if (traversalPath.length > 0 && origin?.isObject) {
 				return origin.get(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
@@ -73,9 +121,10 @@ CustomList.prototype.get = async function(path) {
 		}
 	}
 	
-	return origin?.valueOf() || origin;
+	return origin;
 };
 
+//Probably needs work
 CustomList.prototype.getCallable = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
@@ -84,12 +133,12 @@ CustomList.prototype.getCallable = async function(path) {
 	let context;
 	let current;
 
-	while (current = traversalPath.shift()) {
+	while ((current = traversalPath.shift()) != null) {
 		if (current in origin) {
 			context = origin;
 			origin = origin[current];
 
-			if (origin instanceof CustomList) {
+			if (origin?.isObject) {
 				return origin.getCallable(traversalPath);
 			}
 		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
@@ -108,21 +157,34 @@ CustomList.prototype.getCallable = async function(path) {
 	};
 };
 
+CustomList.prototype.isNumber = function(value) {
+	return !Number.isNaN(Number(value));
+};
+
+CustomList.prototype.toIndex = function(value) {
+	const me = this;
+	const casted = Number(value);
+
+	return casted < 0 ? me.value.length + casted : casted;
+};
+
 CustomList.prototype.callMethod = function(method, ...args) {
 	const me = this;
 	const member = method[0]?.valueOf ? method[0].valueOf() : method[0];
 
-	if (method.length > 1) {
-		if (me.value[member]) {
-			return me.value[member].callMethod(method.slice(1), ...args);
+	if (me.isNumber(member)) {
+		const index = me.toIndex(member);
+
+		if (!me.value.hasOwnProperty(index)) {
+			console.error(method, member, args);
+			throw new Error(`Unexpected index`);
 		}
 
-		console.error(method, member, args);
-		throw new Error(`Unexpected method path`);
-	}
+		if (method.length > 1) {
+			return me.value[index].callMethod(method.slice(1), ...args);
+		}
 
-	if (me.value[member]) {
-		return me.value[member];
+		return me.value[index];
 	}
 
 	if (!EXPOSED_METHODS.includes(member)) {
@@ -136,7 +198,7 @@ CustomList.prototype.callMethod = function(method, ...args) {
 CustomList.prototype.join = function(seperator) {
 	return this.value
 		.map((v) => v.valueOf())
-		.join(seperator.valueOf());
+		.join(seperator.valueOf() || '');
 };
 
 CustomList.prototype.remove = function(index) {
@@ -144,7 +206,17 @@ CustomList.prototype.remove = function(index) {
 };
 
 CustomList.prototype.hasIndex = function(index) {
-	return this.value.hasOwnProperty(index.valueOf());
+	const me = this;
+
+	index = index.valueOf();
+
+	if (!me.isNumber(index)) {
+		throw new Error(`Unexpected index`);
+	}
+
+	index = me.toIndex(index);
+
+	return this.value.hasOwnProperty(index);
 };
 
 CustomList.prototype.indexOf = function(val, begin = 0) {

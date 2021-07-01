@@ -42,6 +42,7 @@ const SCAN_MAP = {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('-=');
 		if (CHAR_CODES.MINUS === nextCode) return me.scanPunctuator('--');
+		if (CHAR_CODES.NUMBERS.includes(nextCode)) return me.scanNumericLiteral();
 		return me.scanPunctuator('-');
 	},
 	[CHAR_CODES.PLUS]: function(code, nextCode) {
@@ -65,7 +66,7 @@ const SCAN_MAP = {
 	}
 };
 
-for (number of CHAR_CODES.NUMBERS) {
+for (let number of CHAR_CODES.NUMBERS) {
 	SCAN_MAP[number] = function() {
 		return this.scanNumericLiteral();
 	}
@@ -87,7 +88,7 @@ const FALL_THROUGH = [
 	CHAR_CODES.VERTICAL_LINE
 ];
 
-for (code of FALL_THROUGH) {
+for (let code of FALL_THROUGH) {
 	SCAN_MAP[code] = function(code) {
 		const me = this;
 		return me.scanPunctuator(String.fromCharCode(code))
@@ -175,6 +176,8 @@ Lexer.prototype.scanStringLiteral = function() {
 
 Lexer.prototype.readDecLiteral = function() {
 	const me = this;
+
+	if (me.codeAt() === CHAR_CODES.MINUS) me.nextIndex();
 	while (validator.isDecDigit(me.codeAt())) me.nextIndex();
 
 	let foundFraction = false;
@@ -192,8 +195,6 @@ Lexer.prototype.readDecLiteral = function() {
 
 Lexer.prototype.scanNumericLiteral = function() {
 	const me = this;
-	const code = me.codeAt()
-    const nextCode = me.codeAt(1);
     const literal = me.readDecLiteral()
 
     return {
@@ -247,7 +248,7 @@ Lexer.prototype.skipWhiteSpace = function() {
 };
 
 Lexer.prototype.scanIdentifierOrKeyword = function() {
-	me = this;
+	const me = this;
 
 	me.nextIndex();
 
@@ -360,7 +361,7 @@ Lexer.prototype.next = function() {
 
 	if (validator.isIdentifierStart(code)) return me.scanIdentifierOrKeyword();
 
-	scan = SCAN_MAP[code];
+	const scan = SCAN_MAP[code];
 
 	if (scan) return scan.call(me, code, nextCode, lastCode);
 
