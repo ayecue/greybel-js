@@ -31,7 +31,7 @@ module.exports = function(shell) {
 		shell.echo('close_program is not yet supported');
 		return typer.cast('not yet supported');
 	};
-	computerInterface.connect_wifi = function(interface, bssid, essid, password) {
+	computerInterface.connect_wifi = function(interf, bssid, essid, password) {
 		shell.echo('connect_wifi is not yet supported');
 		return typer.cast('not yet supported');
 	};
@@ -63,11 +63,11 @@ module.exports = function(shell) {
 		shell.echo('touch is not yet supported');
 		return typer.cast('not yet supported');
 	};
-	computerInterface.wifi_networks = function(interface) {
+	computerInterface.wifi_networks = function(interf) {
 		shell.echo('wifi_networks is not yet supported');
 		return typer.cast([]);
 	};
-	computerInterface.network_devices = function(interface) {
+	computerInterface.network_devices = function(interf) {
 		shell.echo('network_devices is not yet supported');
 		return typer.cast('');
 	};

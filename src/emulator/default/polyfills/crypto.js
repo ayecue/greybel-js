@@ -13,7 +13,7 @@ module.exports = function(shell) {
 		return yper.cast('not yet supported');
 	};
 
-	cryptoInterface.airmon = function(option, interface) {
+	cryptoInterface.airmon = function(option, interf) {
 		shell.echo('airmon is not yet supported');
 	};
 

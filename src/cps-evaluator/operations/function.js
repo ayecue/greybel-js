@@ -33,6 +33,10 @@ FunctionOperation.prototype.get = function(operationContext) {
 	return this;
 };
 
+FunctionOperation.prototype.toString = function() {
+	return 'Function';
+};
+
 FunctionOperation.prototype.run = async function(operationContext) {
 	const me = this;
 	const opc = operationContext.fork('FUNCTION', 'DEFAULT');

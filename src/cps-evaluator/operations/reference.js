@@ -21,7 +21,7 @@ ReferenceOperation.prototype.get = async function(operationContext) {
 	}
 
 	if (arg.handle) {
-		if (typer.isCustomMap(arg.handle)) {
+		if (arg.handle?.isObject) {
 			return arg.handle.get(arg.path);
 		}
 

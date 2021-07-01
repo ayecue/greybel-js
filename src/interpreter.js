@@ -43,11 +43,6 @@ Interpreter.prototype.digest = function() {
 		params: typer.cast(me.params)
 	});
 
-	console.log({
-		...me.api,
-		params: typer.cast(me.params)
-	});
-
 	return cps.run(mainContext)
 		.catch((err) => {
 			console.error(err);

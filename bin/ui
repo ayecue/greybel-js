@@ -27,17 +27,42 @@ program.parse(process.argv);
 
 	const fs = require('fs');
 	const path = require('path');
-	const execSync = require('child_process').execSync;
+	const exec = require('child_process').exec;
 	const open = require('open');
+
 	const projectFolder = path.resolve(__dirname, '..');
-	const uiFolder = path.resolve(projectFolder, './ui');
-	const bundleFile = path.resolve(uiFolder, './build/bundle.js');
-	const indexHTMLFile = path.resolve(uiFolder, './index.html');
+	const bundleFile = path.resolve(projectFolder, './src/ui/build/bundle.js');
+	const indexHTMLFile = path.resolve(projectFolder, './src/ui/index.html');
 
-	if (!fs.existsSync(bundleFile) || options.refresh) {
-		console.log('Preparing ui...');
-		execSync(`cd ${uiFolder} && npm i && npm run build`);
-	}
+	const waitForBuild = function(timeout = 30000) {
+		return new Promise((resolve, reject) => {
+			let passedTime = 0;
+			const intv = setInterval(() => {
+				passedTime += 500;
+				if (fs.existsSync(bundleFile)) {
+					clearTimeout(intv);
+					resolve(indexHTMLFile);
+				} else if (passedTime >= timeout) {
+					clearTimeout(intv);
+					reject(new Error("Timeout"));
+				}
+			}, 500);
+		});
+	};
 
-	open(indexHTMLFile);
+	const build = async function() {
+		if (fs.existsSync(bundleFile) && options.refresh) {
+			await exec(`rm ${bundleFile}`);
+		}
+
+		if (!fs.existsSync(bundleFile) || options.refresh) {
+			console.log('Preparing ui...');
+			await exec(`cd ${projectFolder} && npm run build`);
+		}
+
+		await waitForBuild();
+		open(indexHTMLFile);
+	};
+
+	build();
 })();

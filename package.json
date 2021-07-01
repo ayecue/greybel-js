@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "engines": {
         "node": ">=14.0.0"
     },
@@ -31,7 +31,8 @@
         "semver": "^5.3.0",
         "sqlite3": "^5.0.2",
         "string-argv": "^0.3.1",
-        "uuid": "^8.3.2"
+        "uuid": "^8.3.2",
+        "browserify": "^17.0.0"
     },
     "bugs": {
         "url": "https://github.com/ayecue/greybel-js/issues"
@@ -40,6 +41,11 @@
         "greybel": "./bin/compile",
         "greybel-console": "./bin/console",
         "greybel-ui": "./bin/ui"
+    },
+    "scripts": {
+        "build": "browserify ./src/ui/index.js -o ./src/ui/build/bundle.js",
+        "watch": "watchify ./src/ui/index.js -o ./src/ui/build/bundle.js",
+        "test": "jest ./tests"
     },
     "directories": {},
     "keywords": [
@@ -54,5 +60,9 @@
         "lexer",
         "parser",
         "compiler"
-    ]
+    ],
+    "devDependencies": {
+        "jest": "^27.0.6",
+        "watchify": "^4.0.0"
+    }
 }
