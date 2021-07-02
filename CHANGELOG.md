@@ -28,3 +28,12 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - npm latest version
+
+## [0.2.6] - 02-07-2021
+
+### Changed
+
+- new ui
+- using codemirror now for the ide
+- simplified getter/setter logic
+- ui is using local storage now, so code will be saved

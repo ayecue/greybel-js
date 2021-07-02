@@ -1,4 +1,4 @@
-# Greybel-JS 0.2.5
+# Greybel-JS 0.2.6
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
@@ -38,7 +38,7 @@ npm i greybel-js
 ## Compiler
 ```
 Compiler CLI
-Version: 0.2.5
+Version: 0.2.6
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -62,7 +62,7 @@ greybel /my/code/file.src
 ## Emulator
 ```
 Emulator CLI
-Version: 0.2.5
+Version: 0.2.6
 Example: greybel-console --path "<path to steam common>/Grey Hack"
 
 Options:
@@ -95,7 +95,7 @@ greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Gr
 ## Emulator-UI
 ```
 Emulator UI CLI
-Version: 0.2.5
+Version: 0.2.6
 Example: greybel-ui
 
 Options:
