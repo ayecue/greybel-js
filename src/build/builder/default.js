@@ -280,6 +280,12 @@ const mapper = function(make, _stack, _depth, _context) {
 
 			return '(' + expression + ')';
 		},
+		'BinaryNegatedExpression': function(item) {
+			const arg = make(item.arg);
+			const operator = item.operator;
+
+			return operator + arg;
+		},
 		'Chunk': function(item) {
 			const body = [];
 			let bodyItem;

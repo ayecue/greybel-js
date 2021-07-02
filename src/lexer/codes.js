@@ -28,7 +28,11 @@ const CHAR_CODES = {
 	ARROW_LEFT: 60,
 	ARROW_RIGHT: 62,
 	VERTICAL_LINE: 124,
-	AMPERSAND: 38
+	AMPERSAND: 38,
+	LETTERS: {
+		E: 69,
+		e: 101
+	}
 };
 
 module.exports = CHAR_CODES;

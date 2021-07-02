@@ -37,3 +37,11 @@ All notable changes to this project will be documented in this file.
 - using codemirror now for the ide
 - simplified getter/setter logic
 - ui is using local storage now, so code will be saved
+
+## [0.2.7] - 03-07-2021
+
+### Changed
+
+- range polyfill fix
+- fix negative number recognition
+- add obfuscation option in ui

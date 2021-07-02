@@ -4,7 +4,8 @@ const {
 	ListExpression,
 	LogicalAndBinaryExpression,
 	MapExpression,
-	PathExpression
+	PathExpression,
+	BinaryNegatedExpression
 } = require('./cps-evaluator/expressions');
 const {
 	ArgumentOperation,
@@ -239,6 +240,9 @@ const mapper = function(visit, debug, raise) {
 		'EmptyExpression': function(item) {},
 		'BinaryExpression': function(item) {
 			return new LogicalAndBinaryExpression(item, visit, debug, raise);
+		},
+		'BinaryNegatedExpression': function(item) {
+			return new BinaryNegatedExpression(item, visit, debug, raise);
 		},
 		'LogicalExpression': function(item) {
 			return new LogicalAndBinaryExpression(item, visit, debug, raise);

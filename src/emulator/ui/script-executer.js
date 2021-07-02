@@ -19,7 +19,7 @@ module.exports = async function(options) {
 		});
 
 		emitter.on('debug', (message, ...args) => {
-			//console.log('[DEBUG]', message, ...args);
+			console.log('[DEBUG]', message, ...args);
 		});
 
 		await interpreter({

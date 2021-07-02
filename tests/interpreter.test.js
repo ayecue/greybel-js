@@ -138,4 +138,27 @@ describe('interpreter', function() {
 		expect(echoMock).toHaveBeenNthCalledWith(1, '222');
 		expect(echoMock).toHaveBeenNthCalledWith(2, '[481,287,196,197,352,298,283,381,302,223]');
 	});
+
+	test('negation script', async function() {
+		const filepath = path.resolve(testFolder, 'negation.src');
+		const code = fs.readFileSync(filepath, {
+			encoding: 'utf-8'
+		});
+		let success;
+
+		try {
+			await interpreter({
+				code: code,
+				params: [],
+				api: mockAPI
+			});
+			success = true;
+		} catch (e) {
+			success = false;
+		}
+
+		expect(success).toEqual(true);
+		expect(echoMock).toHaveBeenNthCalledWith(1, '2');
+		expect(echoMock).toHaveBeenNthCalledWith(2, '[-1,2,0]');
+	});
 });

@@ -151,6 +151,14 @@ const AST = {
             line: line
         };
     },
+    binaryNegatedExpression: function(operator, arg, line) {
+        return {
+            type: 'BinaryNegatedExpression',
+            arg: arg,
+            operator: operator,
+            line: line
+        };
+    },
     memberExpression: function(base, indexer, identifier, line) {
         return {
             type: 'MemberExpression',

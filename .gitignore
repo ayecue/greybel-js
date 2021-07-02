@@ -1,4 +1,3 @@
 .DS_Store
 node_modules
 src/ui/build/bundle.js
-tests/__snapshots__

@@ -14,6 +14,7 @@ const javascript = require('@codemirror/lang-javascript').javascript;
 const transpileEl = document.getElementById('transpile');
 const transpileOutputEl = document.getElementById('toutput');
 const uglifyEl = document.getElementById('uglify');
+const obfuscationEl = document.getElementById('obfuscation');
 const executeEl = document.getElementById('execute');
 const stdoutEl = document.getElementById('stdout');
 const stdinEl = document.getElementById('stdin');
@@ -43,6 +44,7 @@ vmInstance.start(stdout, stdin);
 transpileEl.addEventListener('click', () => {
 	const output = build({
 		uglify: uglifyEl.checked,
+		obfuscation: obfuscationEl.checked,
 		content: editorView.state.doc.toString()
 	});
 

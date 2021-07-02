@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "engines": {
         "node": ">=14.0.0"
     },

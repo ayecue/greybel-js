@@ -42,7 +42,6 @@ const SCAN_MAP = {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('-=');
 		if (CHAR_CODES.MINUS === nextCode) return me.scanPunctuator('--');
-		if (CHAR_CODES.NUMBERS.includes(nextCode)) return me.scanNumericLiteral();
 		return me.scanPunctuator('-');
 	},
 	[CHAR_CODES.PLUS]: function(code, nextCode) {
@@ -177,20 +176,27 @@ Lexer.prototype.scanStringLiteral = function() {
 Lexer.prototype.readDecLiteral = function() {
 	const me = this;
 
-	if (me.codeAt() === CHAR_CODES.MINUS) me.nextIndex();
 	while (validator.isDecDigit(me.codeAt())) me.nextIndex();
 
 	let foundFraction = false;
-    if ('.' === me.codeAt()) {
-      foundFraction = true;
-      me.nextIndex()
-      while (validator.isDecDigit(me.codeAt())) me.nextIndex();
-    }
+	if (CHAR_CODES.DOT === me.codeAt()) {
+		foundFraction = true;
+		me.nextIndex()
+		while (validator.isDecDigit(me.codeAt())) me.nextIndex();
+	}
 
-    return {
-      value: parseFloat(me.content.slice(me.tokenStart, me.index)),
-      hasFractionPart: foundFraction
-    };
+	const notation = me.codeAt();
+	if (CHAR_CODES.LETTERS.E === notation || CHAR_CODES.LETTERS.e === notation) {
+		me.nextIndex();
+		const operation = me.codeAt();
+		if (CHAR_CODES.MINUS === operation || CHAR_CODES.PLUS === operation) me.nextIndex();
+		while (validator.isDecDigit(me.codeAt())) me.nextIndex();
+	}
+
+	return {
+		value: parseFloat(me.content.slice(me.tokenStart, me.index)),
+		hasFractionPart: foundFraction
+	};
 };
 
 Lexer.prototype.scanNumericLiteral = function() {
