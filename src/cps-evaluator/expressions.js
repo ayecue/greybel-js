@@ -4,5 +4,6 @@ module.exports = {
 	ListExpression: require('./expressions/list'),
 	LogicalAndBinaryExpression: require('./expressions/logical-and-binary'),
 	MapExpression: require('./expressions/map'),
-	PathExpression: require('./expressions/path')
+	PathExpression: require('./expressions/path'),
+	BinaryNegatedExpression: require('./expressions/binary-negated-expression')
 };

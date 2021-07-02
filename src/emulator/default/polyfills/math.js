@@ -37,8 +37,18 @@ module.exports = function(shell) {
 	};
 	api.range = function(startValue, endValue, inc = 1) {
 		const result = [];
-		const max = endValue.valueOf();
-		for (let index = startValue.valueOf(); index < max; index += inc) {
+		let index;
+		let max;
+
+		if (endValue == null) {
+			index = 0;
+			max = startValue.valueOf();
+		} else {
+			index = startValue.valueOf();
+			max = endValue.valueOf();
+		}
+
+		for (; index < max; index += inc) {
 			result.push(index);
 		}
 		return typer.cast(result);

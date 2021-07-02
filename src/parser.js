@@ -416,6 +416,7 @@ Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
 	}
 
 	let precedence;
+
 	while (true) {
 		operator = me.token.value;
 
@@ -428,12 +429,25 @@ Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
 		if (precedence === 0 || precedence <= minPrecedence) break;
 		if ('^' === operator) --precedence;
 		me.next();
+
 		let right = me.parseSubExpression(flowContext, precedence);
+
 		if (null == right) {
 			right = AST.emptyExpression(mainStatementLine);
 		}
 
-		expression = AST.binaryExpression(operator, expression, right, mainStatementLine);
+		if (expression == null && (operator === "-" || operator === "+")) {
+			expression = AST.binaryNegatedExpression(operator, right, mainStatementLine);
+		} else if (right.type === 'EmptyExpression' && (me.token.value === "-" || me.token.value === "+")) {
+			const negationOperator = me.token.value;
+			me.next();
+			const arg = me.parseSubExpression(flowContext, precedence);
+			const negationExpression = AST.binaryNegatedExpression(negationOperator, arg, mainStatementLine);
+
+			expression = AST.binaryExpression(operator, expression, negationExpression, mainStatementLine);
+		} else {
+			expression = AST.binaryExpression(operator, expression, right, mainStatementLine);
+		}
 	}
 
 	return expression;

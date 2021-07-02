@@ -43,6 +43,7 @@ vmInstance.start(stdout, stdin);
 transpileEl.addEventListener('click', () => {
 	const output = build({
 		uglify: uglifyEl.checked,
+		obfuscation: true,
 		content: editorView.state.doc.toString()
 	});
 
