@@ -46,8 +46,6 @@ const BinaryNegatedExpression = function(ast, visit, debug, raise) {
 BinaryNegatedExpression.prototype.get = function(operationContext) {
 	const me = this;
 	const evaluate = async function(node) {
-		console.log(node);
-
 		switch(node.type) {
 			case 'BinaryNegatedExpression':
 				const arg = await evaluate(node.arg);

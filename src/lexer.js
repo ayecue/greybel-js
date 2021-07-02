@@ -179,24 +179,24 @@ Lexer.prototype.readDecLiteral = function() {
 	while (validator.isDecDigit(me.codeAt())) me.nextIndex();
 
 	let foundFraction = false;
-    if (CHAR_CODES.DOT === me.codeAt()) {
-      foundFraction = true;
-      me.nextIndex()
-      while (validator.isDecDigit(me.codeAt())) me.nextIndex();
-    }
+	if (CHAR_CODES.DOT === me.codeAt()) {
+		foundFraction = true;
+		me.nextIndex()
+		while (validator.isDecDigit(me.codeAt())) me.nextIndex();
+	}
 
-    const notation = me.codeAt();
-    if (CHAR_CODES.LETTERS.E === notation || CHAR_CODES.LETTERS.e === notation) {
-    	me.nextIndex();
-    	const operation = me.codeAt();
-    	if (CHAR_CODES.MINUS === operation || CHAR_CODES.PLUS === operation) me.nextIndex();
-    	while (validator.isDecDigit(me.codeAt())) me.nextIndex();
-    }
+	const notation = me.codeAt();
+	if (CHAR_CODES.LETTERS.E === notation || CHAR_CODES.LETTERS.e === notation) {
+		me.nextIndex();
+		const operation = me.codeAt();
+		if (CHAR_CODES.MINUS === operation || CHAR_CODES.PLUS === operation) me.nextIndex();
+		while (validator.isDecDigit(me.codeAt())) me.nextIndex();
+	}
 
-    return {
-      value: parseFloat(me.content.slice(me.tokenStart, me.index)),
-      hasFractionPart: foundFraction
-    };
+	return {
+		value: parseFloat(me.content.slice(me.tokenStart, me.index)),
+		hasFractionPart: foundFraction
+	};
 };
 
 Lexer.prototype.scanNumericLiteral = function() {
