@@ -91,10 +91,10 @@ CustomMap.prototype.set = async function(path, value) {
 	const traversalPath = [].concat(path);
 	const refs = me.value;
 	const last = traversalPath.pop();
+	const current = traversalPath.shift();
 	let origin = refs;
-	let current;
 
-	while ((current = traversalPath.shift()) != null) {
+	if (current != null) {
 		if (current in origin) {
 			origin = origin[current];
 
@@ -126,10 +126,10 @@ CustomMap.prototype.get = async function(path) {
 
 	const traversalPath = [].concat(path);
 	const refs = me.value;
+	const current = traversalPath.shift();
 	let origin = refs;
-	let current;
 
-	while ((current = traversalPath.shift()) != null) {
+	if (current != null) {
 		if (current in origin) {
 			origin = origin[current];
 
@@ -150,11 +150,11 @@ CustomMap.prototype.getCallable = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
 	const refs = me.value;
+	const current = traversalPath.shift();
 	let origin = refs;
 	let context;
-	let current;
 
-	while ((current = traversalPath.shift()) != null) {
+	if (current != null) {
 		if (current in origin) {
 			context = origin;
 			origin = origin[current];

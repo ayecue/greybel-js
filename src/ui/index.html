@@ -5,16 +5,36 @@
 	    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <title>GreyScript IDE</title>
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.2.0/umd/react.production.min.js"></script>
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.2.0/umd/react-dom.production.min.js"></script>
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/lua.min.js"></script>
-	    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-dark.min.css">
 	    <link rel="stylesheet" type="text/css" href="index.css">
 	</head>
 	<body>
 		<article>
-    		<div id="container"></div>
+			<div class="editor-control">
+				<div class="editor-ide">
+					<div id="container"></div>
+				</diV>
+				<div class="editor-side-panel">
+					<div>
+						<div class="editor-actions">
+							<div class="editor-transpile">
+								<a id="transpile">Transpile</a>
+								<div class="editor-options">
+									<input id="uglify" type="checkbox" />
+									<label>Uglify</label>
+								</div>
+								<label>Transpiler output:</label>
+								<textarea id="toutput" class="editor-transpiled-area" readonly></textarea>
+							</div>
+							<div class="editor-execute">
+								<a id="execute">Execute</a>
+								<label>Execution output:</label>
+								<textarea id="stdout" class="editor-console-stdout" readonly></textarea>
+								<input id="stdin" class="editor-console-stdin" type="text" disabled />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</article>
 		<footer>
 			<script src="build/bundle.js"></script>
