@@ -23,7 +23,9 @@
     ],
     "dependencies": {
         "@codemirror/basic-setup": "^0.18.2",
+        "@codemirror/commands": "^0.18.3",
         "@codemirror/lang-javascript": "^0.18.0",
+        "@codemirror/view": "^0.18.17",
         "browserify": "^17.0.0",
         "chalk": "^4.1.1",
         "commander": "^7.2.0",
