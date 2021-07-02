@@ -45,16 +45,15 @@ Scope.prototype.set = async function(path, value) {
 	const traversalPath = [].concat(path);
 	const refs = me.refs;
 	const last = traversalPath.pop();
+	const current = traversalPath.shift();
 	let origin = refs;
-	let current;
 
-	while (current = traversalPath.shift()) {
+	if (current != null) {
 		if (current in origin) {
 			origin = origin[current];
 
 			if (
-				origin instanceof CustomMap ||
-				origin instanceof CustomList ||
+				origin?.isObject ||
 				origin instanceof Scope
 			) {
 				return origin.set(traversalPath.concat([last]), value);
@@ -83,11 +82,11 @@ Scope.prototype.get = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
 	const refs = me.refs;
+	const current = traversalPath.shift();
 	let context;
 	let origin = refs;
-	let current;
 
-	while (current = traversalPath.shift()) {
+	if (current != null) {
 		if (current in origin) {
 			context = origin;
 			origin = origin[current];
@@ -95,8 +94,7 @@ Scope.prototype.get = async function(path) {
 			if (
 				traversalPath.length > 0 &&
 				(
-					origin instanceof CustomMap ||
-					origin instanceof CustomList ||
+					origin?.isObject ||
 					origin instanceof Scope
 				)
 			) {
@@ -116,18 +114,17 @@ Scope.prototype.getCallable = async function(path) {
 	const me = this;
 	const traversalPath = [].concat(path);
 	const refs = me.refs;
+	const current = traversalPath.shift();
 	let origin = refs;
 	let context;
-	let current;
 
-	while (current = traversalPath.shift()) {
+	if (current != null) {
 		if (current in origin) {
 			context = origin;
 			origin = origin[current];
 
 			if (
-				origin instanceof CustomMap ||
-				origin instanceof CustomList ||
+				origin?.isObject ||
 				origin instanceof Scope
 			) {
 				return origin.getCallable(traversalPath);
