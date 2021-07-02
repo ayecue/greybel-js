@@ -81,7 +81,7 @@ CustomString.prototype.callMethod = function(method, ...args) {
 		throw new Error(`Cannot access ${member} in string`);
 	}
 
-	return this[member].call(this, ...args);
+	return me[member].call(me, ...args);
 };
 
 CustomString.prototype.getType = function() {
@@ -122,6 +122,10 @@ CustomString.prototype.indexOf = function(substr, begin = 0) {
 CustomString.prototype.lastIndexOf = function(substr) {
 	const index = this.value.lastIndexOf(substr.valueOf());
 	return index === -1 ? null : index;
+};
+
+CustomString.prototype.replace = function(search, replaceWith) {
+	return this.value.replace(search.valueOf(), replaceWith.valueOf());
 };
 
 CustomString.prototype.trim = function() {
