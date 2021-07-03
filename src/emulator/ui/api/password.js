@@ -1,11 +1,16 @@
-const osPasswords = require('./fixtures/OSPasswords.json');
-const passwords = require('./fixtures/Passwords.json');
+const dbClient = require('./db').client;
 
 exports.getOSPassword = function(id) {
 	let password = '';
 
 	try {
-		const result = osPasswords.find((item) => item.ID === id);
+		const rows = dbClient.queryAll('osPasswords', {
+			query: {
+				'ID': id
+			},
+			limit: 1
+		});
+		const result = rows[0];
 		password = result.PlainPassword;
 	} catch (err) {
 	}
@@ -17,7 +22,13 @@ exports.getPassword = function(id) {
 	let password = '';
 
 	try {
-		const result = passwords.find((item) => item.ID === id);
+		const rows = dbClient.queryAll('passwords', {
+			query: {
+				'ID': id
+			},
+			limit: 1
+		});
+		const result = rows[0];
 		password = result.PlainPassword;
 	} catch (err) {
 	}
