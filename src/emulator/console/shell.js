@@ -8,6 +8,7 @@ const computerClient = require('./api/computer');
 const logger = require('node-color-log');
 const tools = require('./tools');
 const Computer = require('./entities/computer');
+const jsonViewer = require('./utils/json-viewer');
 
 const DEFAULT_FOLDERS = [
 	'/bin',
@@ -118,7 +119,25 @@ Shell.prototype.echo = function(str, formatted) {
 };
 
 Shell.prototype.breakpoint = function(operationContext) {
-	console.log(operationContext);
+	const me = this;
+	const activeUserName = me.getUser().getName();
+	const name = [activeUserName, 'prompt'].join('-');
+
+	console.log('##############################################');
+	console.log('Context:');
+	console.log(jsonViewer(operationContext.scope));
+	console.log('##############################################');
+
+	return inquirer
+		.prompt({
+			prefix: chalk.green.bold('(' + activeUserName + ')'),
+			name: name,
+			message: 'Press enter to continue...',
+			type: 'input'
+		})
+		.catch((err) => {
+			throw err;
+		});
 };
 
 Shell.prototype.consume = function(inputMap) {
