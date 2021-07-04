@@ -4,6 +4,7 @@ const scriptExecuter = require('./script-executer');
 const api = require('./shell/api');
 const tools = require('./tools');
 const Computer = require('./entities/computer');
+const jsonViewer = require('./utils/json-viewer');
 
 const DEFAULT_FOLDERS = [
 	'/bin',
@@ -153,6 +154,33 @@ Shell.prototype.echo = function(str, formatted) {
 	} else {
 		me.stdout.write(str);
 	}
+};
+
+Shell.prototype.breakpoint = function(operationContext) {
+	return new Promise(function(resolve, reject) {
+		const bg = document.createElement('div');
+		const popup = document.createElement('div');
+		const continueButton = document.createElement('input');
+
+		bg.classList.add('debugger-popup-bg');
+		popup.classList.add('debugger-popup');
+
+		continueButton.classList.add('debugger-continue');
+		continueButton.type = 'button';
+		continueButton.value = 'Continue';
+
+		document.body.appendChild(bg);
+		document.body.appendChild(popup);
+
+		popup.appendChild(jsonViewer(operationContext.scope));
+		popup.appendChild(continueButton);
+
+		continueButton.addEventListener('click', function() {
+			document.body.removeChild(bg);
+			document.body.removeChild(popup);
+			resolve();
+		});
+	});
 };
 
 Shell.prototype.consume = async function(input) {

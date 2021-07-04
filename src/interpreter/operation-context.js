@@ -22,6 +22,7 @@ const STATE = {
 
 const Scope = function(context) {
 	const me = this;
+	me.isScope = true;
 	me.context = context;
 	me.refs = {};
 	return me;

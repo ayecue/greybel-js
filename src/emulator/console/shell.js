@@ -117,6 +117,10 @@ Shell.prototype.echo = function(str, formatted) {
 	}
 };
 
+Shell.prototype.breakpoint = function(operationContext) {
+	console.log(operationContext);
+};
+
 Shell.prototype.consume = function(inputMap) {
 	const me = this;
 	const activeUserName = me.getUser().getName();
