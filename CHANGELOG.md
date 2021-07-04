@@ -45,3 +45,11 @@ All notable changes to this project will be documented in this file.
 - range polyfill fix
 - fix negative number recognition
 - add obfuscation option in ui
+
+## [0.2.8] - 04-07-2021
+
+### Changed
+
+- add auto restart when vm gets completly shutdown in ui
+- add debugger in ui/console
+- improve data handling in ui
