@@ -1,7 +1,10 @@
-const players = require('./fixtures/Players.json');
+const dbClient = require('./db').client;
 
 exports.get = function() {
-	const result = players[0];
+	const rows = dbClient.queryAll('players', {
+			limit: 1
+		});
+		const result = rows[0];
 
 	return {
 		computerId: result.ComputerID,

@@ -1,9 +1,16 @@
-const computers = require('./fixtures/Computer.json');
+const dbClient = require('./db').client;
 const mapClient = require('./map');
 const parser = require('../parser/computer');
 
 const get = function(id) {
-	const result = computers.find((item) => item.ID === id);
+	const rows = dbClient
+		.queryAll('computers', {
+			query: {
+				'ID': id
+			},
+			limit: 1
+		});
+	const result = rows[0];
 
 	return {
 		id: result.ID,
@@ -21,10 +28,12 @@ const get = function(id) {
 
 const getByIP = function(ip, port) {
 	const isRouter = !port ? 1 : 0;
-	const results = computers
-		.filter((row) => {
-			const configOS = parser.parseConfigOS(row.ConfigOS);
-			return configOS.isPortAvailable(port);
+	const results = dbClient
+		.queryAll('computers', {
+			query: function(row) {
+				const configOS = parser.parseConfigOS(row.ConfigOS);
+				return configOS.isPortAvailable(port);
+			}
 		});
 
 	if (results.length === 1) {
@@ -33,11 +42,15 @@ const getByIP = function(ip, port) {
 };
 
 const getPersonaByIP = function(ip) {
-	const result = computers.find((row) => {
-		const configOS = JSON.parse(row.ConfigOS);
-
-		return configOS.ipPublica === ip;
-	});
+	const rows = dbClient
+		.queryAll('computers', {
+			query: function(row) {
+				const configOS = JSON.parse(row.ConfigOS);
+				return configOS.ipPublica === ip;
+			},
+			limit: 1
+		});
+	const result = rows[0];
 
 	if (result) {
 		const configOS = parser.parseConfigOS(result.ConfigOS);

@@ -39,7 +39,13 @@ const vmInstance = new VM();
 const stdout = new Stdout(stdoutEl);
 const stdin = new Stdin(stdinEl);
 
-vmInstance.start(stdout, stdin);
+(async () => {
+	while (true) {
+		console.error('VM is ready...');
+		await vmInstance.start(stdout, stdin);
+		console.error('VM shutdown. Restarting...');
+	}
+})();
 
 transpileEl.addEventListener('click', () => {
 	const output = build({

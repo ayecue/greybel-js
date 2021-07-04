@@ -1,8 +1,8 @@
-# Greybel-JS 0.2.7
+# Greybel-JS 0.2.8
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
-GreyScript preprocessor ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)). Which adds new features to GreyScript.
+GreyScript preprocessor/interpreter/emulator ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
 
 Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/package/luaparse). It's heavily modified though to support GreyScript.
 
@@ -35,10 +35,9 @@ npm i greybel-js
 ```
 
 # CLI Usage
-## Compiler
+## Transpiler
 ```
-Compiler CLI
-Version: 0.2.7
+Transpiler CLI
 Example: greybel <myscriptfile> [output]
 
 Arguments:
@@ -62,7 +61,6 @@ greybel /my/code/file.src
 ## Emulator
 ```
 Emulator CLI
-Version: 0.2.7
 Example: greybel-console --path "<path to steam common>/Grey Hack"
 
 Options:
@@ -95,7 +93,6 @@ greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Gr
 ## Emulator-UI
 ```
 Emulator UI CLI
-Version: 0.2.7
 Example: greybel-ui
 
 Options:
@@ -156,22 +153,16 @@ test = {
 
 ## Math shortcuts
 ```
-a++
-a--
-++a
---a
 a /= b
 a *= b
 a -= b
 a += b
 a << b
 a >> b
-w = a >>> (b << c) >> a++
+w = a >>> (b << c) >> a
 a | b
 a & b
 a ^ b
-a=a++ + ++b
-a=++a + --b
 ```
 
 ## Importing
@@ -225,15 +216,15 @@ print(somevar) //prints "SOME_VALUE"
 ```
 
 ## Debugger
-For now this will just put the scope object into the console so you can take a look what's in the current scope and also upper scopes.
-
-In the future you will be able to inspect the scope via the console to get viable information. It will act like breakpoint in your code.
+Enables you to see the variables in the current scope. It will also set a breakpoint and stop the code execution.
 ```
 index = 1
 print("Hello world!")
 print("Another string!")
 //debugger
 ```
+
+![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
 
 # Things to come
 - add full support of Grey Hack API to emulator

@@ -1,8 +1,11 @@
-const infoGen = require('./fixtures/InfoGen.json');
+const dbClient = require('./db').client;
 const parser = require('../parser/info-gen');
 
 exports.get = function(id) {
-	const result = infoGen[0];
+	const rows = dbClient.queryAll('infoGen', {
+		limit: 1
+	});
+	const result = rows[0];
 
 	return {
 		currentVersions: parser.parseCurrentVersions(result.CurrentVersions),

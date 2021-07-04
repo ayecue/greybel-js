@@ -96,3 +96,42 @@ body {
 .editor-console-stdin {
 	width: 100%;
 }
+
+.debugger-popup-bg {
+	background-color: #333;
+	opacity: 0.5;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+}
+
+.debugger-popup {
+	position: absolute;
+    max-width: 800px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #AAA;
+    padding: 10px;
+}
+
+.debugger-popup > .json-formatter-row {
+	height: 300px;
+	width: 600px;
+	overflow: auto;
+	border: 1px solid #000;
+	padding: 5px;
+}
+
+.debugger-continue {
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 8px 16px;
+	text-decoration: none;
+	margin: 5px 0 0;
+	cursor: pointer;
+	width: 100%;
+}

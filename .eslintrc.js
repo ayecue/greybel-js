@@ -22,6 +22,7 @@ module.exports = {
         "process": true,
         "setTimeout": true,
         "__dirname": true,
-        "Buffer": true
+        "Buffer": true,
+        "document": true
     }
 };

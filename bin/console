@@ -9,7 +9,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
   process.exit(1);
 }
 
-const VM = require('../src/emulator').Console;
+const VM = require('../src/emulator/console/vm');
 const program = require('commander').program;
 const version = package.version;
 let options = {};
