@@ -53,3 +53,9 @@ All notable changes to this project will be documented in this file.
 - add auto restart when vm gets completly shutdown in ui
 - add debugger in ui/console
 - improve data handling in ui
+
+## [0.2.9] - 12-07-2021
+
+### Changed
+
+- fix unary parsing

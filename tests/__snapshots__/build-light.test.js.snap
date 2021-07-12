@@ -195,7 +195,7 @@ me=self
 me.defaultSecret=defaultSecret
 me.table=charset
 me.hashFn=@hashFn
-if (@(hashFn == null)) then me.hashFn=@md5
+if ((@hashFn == null)) then me.hashFn=@md5
 if ((charset == null)) then me.table=me.defaultCharset
 if ((me.table.len != 64)) then (new me.Error).constructor(\\"Invalid charset $0...\\",[me.table]).throw()
 return me
@@ -375,6 +375,14 @@ test.was=function ()
 print(self.here)
 end function
 print(test.was())"
+`;
+
+exports[`build-light default scripts 7`] = `
+"test=function ()
+return null
+end function
+print((@\\"was\\".split and (false or not false)))
+print(@(\\"was\\".split and (false or not false)))"
 `;
 
 exports[`build-light uglify scripts 1`] = `
@@ -591,7 +599,7 @@ k=self
 k.defaultSecret=h
 k.table=j
 k.hashFn=@i
-if @(i == m) then k.hashFn=@md5
+if (@i == m) then k.hashFn=@md5
 if (j == m) then k.table=k.defaultCharset
 if (k.table.len != 64) then (new k.Error).constructor(\\"Invalid charset $0...\\",[k.table]).throw
 return k
@@ -773,4 +781,14 @@ H.was=function()
 print(self.here)
 end function
 print(H.was)"
+`;
+
+exports[`build-light uglify scripts 7`] = `
+"globals.K=globals
+K.J=false
+H=function()
+return null
+end function
+print((@\\"was\\".split and (J or not J)))
+print(@(\\"was\\".split and (J or not J)))"
 `;

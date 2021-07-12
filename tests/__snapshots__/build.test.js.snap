@@ -249,7 +249,7 @@ me=self
 me.defaultSecret=defaultSecret
 me.table=charset
 me.hashFn=@hashFn
-if (@(hashFn == null)) then me.hashFn=@md5
+if ((@hashFn == null)) then me.hashFn=@md5
 if ((charset == null)) then me.table=me.defaultCharset
 if ((me.table.len != 64)) then (new me.Error).constructor(\\"Invalid charset $0...\\",[me.table]).throw()
 return me
@@ -457,6 +457,28 @@ test.was=function ()
 print(self.here)
 end function
 print(test.was())
+end function
+MAIN()"
+`;
+
+exports[`build default scripts 7`] = `
+"BACKSLASH_CODE=92
+NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
+MODULES={}
+EXPORTED={}
+__REQUIRE=function (r)
+if (not MODULES.hasIndex(r)) then
+exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+end if
+module=MODULES[r]
+return @module(r).exports
+end function
+MAIN=function ()
+test=function ()
+return null
+end function
+print((@\\"was\\".split and (false or not false)))
+print(@(\\"was\\".split and (false or not false)))
 end function
 MAIN()"
 `;
@@ -729,7 +751,7 @@ k=self
 k.defaultSecret=h
 k.table=j
 k.hashFn=@i
-if @(i == m) then k.hashFn=@md5
+if (@i == m) then k.hashFn=@md5
 if (j == m) then k.table=k.defaultCharset
 if (k.table.len != 64) then (new k.Error).constructor(\\"Invalid charset $0...\\",[k.table]).throw
 return k
@@ -939,6 +961,30 @@ H.was=function()
 print(self.here)
 end function
 print(H.was)
+end function
+F"
+`;
+
+exports[`build uglify scripts 7`] = `
+"globals.K=globals
+K.J=false
+A=92
+B=(char(A) + \\"n\\")
+C={}
+D={}
+E=function(r)
+if not C.hasIndex(r) then
+exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+end if
+G=C[r]
+return @G(r).exports
+end function
+F=function()
+H=function()
+return null
+end function
+print((@\\"was\\".split and (J or not J)))
+print(@(\\"was\\".split and (J or not J)))
 end function
 F"
 `;
