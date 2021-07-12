@@ -1,4 +1,4 @@
-# Greybel-JS 0.2.8
+# Greybel-JS 0.2.9
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
