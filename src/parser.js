@@ -50,7 +50,7 @@ Parser.prototype.isBlockFollow = function(token) {
 
 Parser.prototype.consume = function(value) {
 	const me = this;
-	if (value === me.token.value) {
+	if (value === me.token.value && TOKENS.StringLiteral !== me.token.type) {
 		me.next();
 		return true;
     }
@@ -78,7 +78,7 @@ Parser.prototype.prefetch = function(offset) {
 
 Parser.prototype.consumeMany = function(values) {
 	const me = this;
-	if (values.indexOf(me.token.value) != -1) {
+	if (values.indexOf(me.token.value) != -1 && TOKENS.StringLiteral !== me.token.type) {
 		me.next();
 		return true;
     }
@@ -87,13 +87,13 @@ Parser.prototype.consumeMany = function(values) {
 
 Parser.prototype.expect = function(value) {
 	const me = this;
-	if (value === me.token.value) return me.next();
+	if (value === me.token.value && TOKENS.StringLiteral !== me.token.type) return me.next();
 	me.exception('Unexpected value ' + me.token.value + '. Expected: ' + value)
 };
 
 Parser.prototype.expectMany = function(values) {
 	const me = this;
-	if (values.indexOf(me.token.value) != -1) return me.next();
+	if (values.indexOf(me.token.value) != -1 && TOKENS.StringLiteral !== me.token.type) return me.next();
 	me.exception('Unexpected value ' + me.token.value + '. Expected: ' + values)
 };
 
@@ -236,7 +236,7 @@ Parser.prototype.parseIndexExpression = function(base, flowContext) {
 
 	while (true) {
 		if (token.value === ']') break;
-		if (token.value === ':') {
+		if (token.value === ':' && token.type !== TOKENS.StringLiteral) {
 			let left;
 			let right;
 
@@ -398,7 +398,10 @@ Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
 
 	if (me.isUnary(me.token)) {
 		me.next();
-		const argument = me.parseSubExpression(flowContext);
+		let argument = me.parsePrimaryExpression(flowContext);
+		if (null == argument) {
+			argument = me.parseRighthandExpression(flowContext);
+		}
 		expression = AST.unaryExpression(operator, argument, mainStatementLine);
 	} else if (TOKENS.Punctuator === me.token.type && (operator === '++' || operator === '--')) {
 		expression = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
