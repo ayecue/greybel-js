@@ -392,6 +392,18 @@ end function
 print(test.was())"
 `;
 
+exports[`build-light default scripts 8`] = `
+"test=function ()
+return null
+end function
+print((@\\"was\\".split and (false or not false)))
+print(@(\\"was\\".split and (false or not false)))
+print((not \\"was\\".split and (false or not false)))
+print(not (\\"was\\".split and (false or not false)))
+print((-1 + 2))
+print(-(1 + 2))"
+`;
+
 exports[`build-light uglify scripts 1`] = `
 "globals.AC=globals
 AC.f=\\"||¯|| \\"
@@ -804,4 +816,19 @@ H.was=function()
 print(self.here)
 end function
 print(H.was)"
+`;
+
+exports[`build-light uglify scripts 8`] = `
+"globals.L=globals
+L.K=\\"was\\"
+L.J=false
+H=function()
+return null
+end function
+print((@K.split and (J or not J)))
+print(@(K.split and (J or not J)))
+print((not K.split and (J or not J)))
+print(not (K.split and (J or not J)))
+print((-1+2))
+print(-(1+2))"
 `;

@@ -490,6 +490,32 @@ end function
 MAIN()"
 `;
 
+exports[`build default scripts 8`] = `
+"BACKSLASH_CODE=92
+NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
+MODULES={}
+EXPORTED={}
+__REQUIRE=function (r)
+if (not MODULES.hasIndex(r)) then
+exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+end if
+module=MODULES[r]
+return @module(r).exports
+end function
+MAIN=function ()
+test=function ()
+return null
+end function
+print((@\\"was\\".split and (false or not false)))
+print(@(\\"was\\".split and (false or not false)))
+print((not \\"was\\".split and (false or not false)))
+print(not (\\"was\\".split and (false or not false)))
+print((-1 + 2))
+print(-(1 + 2))
+end function
+MAIN()"
+`;
+
 exports[`build uglify scripts 1`] = `
 "globals.ϩ=globals
 ϩ.f=\\"||¯|| \\"
@@ -998,6 +1024,35 @@ H.was=function()
 print(self.here)
 end function
 print(H.was)
+end function
+F"
+`;
+
+exports[`build uglify scripts 8`] = `
+"globals.L=globals
+L.K=\\"was\\"
+L.J=false
+A=92
+B=(char(A)+\\"n\\")
+C={}
+D={}
+E=function(r)
+if not C.hasIndex(r) then
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
+end if
+G=C[r]
+return @G(r).exports
+end function
+F=function()
+H=function()
+return null
+end function
+print((@K.split and (J or not J)))
+print(@(K.split and (J or not J)))
+print((not K.split and (J or not J)))
+print(not (K.split and (J or not J)))
+print((-1+2))
+print(-(1+2))
 end function
 F"
 `;
