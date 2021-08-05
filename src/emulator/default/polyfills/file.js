@@ -18,7 +18,7 @@ module.exports = function(shell, target) {
 				'name': 'name'
 			};
 
-			fileInterface.__isa = 'file';
+			fileInterface.classID = 'file';
 			fileInterface.set_content = function(content) {
 				file.setContent(content.valueOf());
 			};

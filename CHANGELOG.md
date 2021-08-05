@@ -59,3 +59,12 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - fix unary parsing
+
+## [0.3.0] - 12-07-2021
+
+### Changed
+
+- change 'not' and 'positive/negative number prefix' to unary
+- prevent inifite loop when having binary expressions without assignment
+- use classID
+- remove '++' and '--' shortcuts since those essentialy don't work as intended

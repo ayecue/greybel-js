@@ -5,7 +5,7 @@ module.exports = function(shell) {
 	const computer = shell.computer;
 	const computerInterface = {};
 
-	computerInterface.__isa = 'computer';
+	computerInterface.classID = 'computer';
 	computerInterface.File = file.bind(null, shell);
 	computerInterface.show_procs = function() {
 		shell.echo('show_procs is not yet supported');

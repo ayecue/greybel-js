@@ -151,14 +151,6 @@ const AST = {
             line: line
         };
     },
-    binaryNegatedExpression: function(operator, arg, line) {
-        return {
-            type: 'BinaryNegatedExpression',
-            arg: arg,
-            operator: operator,
-            line: line
-        };
-    },
     memberExpression: function(base, indexer, identifier, line) {
         return {
             type: 'MemberExpression',
@@ -184,11 +176,26 @@ const AST = {
             line: line
         };
     },
-    unaryExpression: function(operator, argument, line) {
+    unaryExpression: function(operator, arg, line) {
+        if (operator === 'not') {
+            return {
+                type: 'NegationExpression',
+                argument: arg,
+                line: line
+            };
+        } else if (operator === '+' || operator === '-') {
+            return {
+                type: 'BinaryNegatedExpression',
+                arg: arg,
+                operator: operator,
+                line: line
+            };
+        }
+
         return {
             type: 'UnaryExpression',
             operator: operator,
-            argument: argument,
+            argument: arg,
             line: line
         };
     },
@@ -307,13 +314,6 @@ const AST = {
             type: 'SliceExpression',
             left: left,
             right: right,
-            line: line
-        };
-    },
-    negationExpression: function(arg, line) {
-        return {
-            type: 'NegationExpression',
-            'argument': arg,
             line: line
         };
     }

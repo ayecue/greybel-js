@@ -305,7 +305,7 @@ const mapper = function(make, _stack, _depth, _context) {
 			const left = make(item.left);
 			const right = make(item.right);
 			const operator = item.operator;
-			let expression = [left, operator, right].join(' ');
+			let expression = [left, operator, right].join('');
 
 			if (
 				'<<' === operator ||

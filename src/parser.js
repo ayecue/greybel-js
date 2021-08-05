@@ -100,8 +100,8 @@ Parser.prototype.expectMany = function(values) {
 Parser.prototype.isUnary = function(token) {
 	const type = token.type;
 	const value = token.value;
-	if (TOKENS.Punctuator === type) return '@' === value;
-	if (TOKENS.Keyword === type) return 'new' === value;
+	if (TOKENS.Punctuator === type) return '@' === value || '-' === value || '+' === value;
+	if (TOKENS.Keyword === type) return 'new' === value || 'not' === value;
 	return false;
 };
 
@@ -198,27 +198,6 @@ Parser.prototype.parseRighthandExpression = function(flowContext) {
 	return me.parseRighthandExpressionGreedy(base, flowContext);
 };
 
-Parser.prototype.parseMathShorthandLeftOperator = function(flowContext) {
-	const me = this;
-	const mainStatementLine = me.token.line;
-	const operatorToken = me.token;
-	const operator = operatorToken.value.charAt(0);
-	me.next();
-	const scopeBody = flowContext.get();
-	const base = me.parseExpectedExpression(flowContext);
-	const number = AST.literal('NumericLiteral', 1, 1, mainStatementLine);
-	logger.warn('Lefthand "' +  operatorToken.value + '" not fully supported. Will only put the math operation in front. (Line: ' + me.token.line + ')');
-	return AST.binaryExpression(operator, number, base, mainStatementLine);
-};
-
-Parser.prototype.parseMathShorthandRightOperator = function(base) {
-	const me = this;
-	const mainStatementLine = me.token.line;
-	const operator = me.previousToken.value.charAt(0);
-	const number = AST.literal('NumericLiteral', 1, 1, mainStatementLine);
-	return AST.binaryExpression(operator, base, number, mainStatementLine);
-};
-
 Parser.prototype.parseAssignmentShorthandOperator = function(base, flowContext) {
 	const me = this;
 	const mainStatementLine = me.token.line;
@@ -279,10 +258,7 @@ Parser.prototype.parseRighthandExpressionPart = function(base, flowContext) {
 	if (TOKENS.Punctuator === type) {
 		const value = me.token.value;
 
-		if ('++' === value || '--' === value) {
-			me.next();
-			return  me.parseMathShorthandRightOperator(base);
-		} else if ('+=' === value || '-=' === value || '*=' === value || '/=' === value) {
+		if ('+=' === value || '-=' === value || '*=' === value || '/=' === value) {
 			me.next();
 			return  me.parseAssignmentShorthandOperator(base, flowContext);
 		} else if ('[' === value) {
@@ -389,39 +365,15 @@ Parser.prototype.parsePrimaryExpression = function(flowContext) {
 	}
 };
 
-Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
+Parser.prototype.parseBinaryExpression = function(expression, flowContext, minPrecedence) {
 	if (minPrecedence == null) minPrecedence = 0;
 	const me = this;
 	const mainStatementLine = me.token.line;
-	let operator = me.token.value;
-	let expression = null;
-
-	if (me.isUnary(me.token)) {
-		me.next();
-		let argument = me.parsePrimaryExpression(flowContext);
-		if (null == argument) {
-			argument = me.parseRighthandExpression(flowContext);
-		}
-		expression = AST.unaryExpression(operator, argument, mainStatementLine);
-	} else if (TOKENS.Punctuator === me.token.type && (operator === '++' || operator === '--')) {
-		expression = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
-	} else if (TOKENS.Keyword === me.token.type && me.token.value === 'not') {
-		me.next();
-		const argument = me.parseSubExpression(flowContext, 10);
-		expression = AST.negationExpression(argument, mainStatementLine);
-	}
-	if (null == expression) {
-		expression = me.parsePrimaryExpression(flowContext);
-
-		if (null == expression) {
-			expression = me.parseRighthandExpression(flowContext);
-		}
-	}
 
 	let precedence;
 
 	while (true) {
-		operator = me.token.value;
+		const operator = me.token.value;
 
 		if (validator.isExpressionOperator(operator)) {
 			precedence = getPrecedence(operator);
@@ -439,19 +391,35 @@ Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
 			right = AST.emptyExpression(mainStatementLine);
 		}
 
-		if (expression == null && (operator === "-" || operator === "+")) {
-			expression = AST.binaryNegatedExpression(operator, right, mainStatementLine);
-		} else if (right.type === 'EmptyExpression' && (me.token.value === "-" || me.token.value === "+")) {
-			const negationOperator = me.token.value;
-			me.next();
-			const arg = me.parseSubExpression(flowContext, precedence);
-			const negationExpression = AST.binaryNegatedExpression(negationOperator, arg, mainStatementLine);
+		expression = AST.binaryExpression(operator, expression, right, mainStatementLine);
+	}
 
-			expression = AST.binaryExpression(operator, expression, negationExpression, mainStatementLine);
-		} else {
-			expression = AST.binaryExpression(operator, expression, right, mainStatementLine);
+	return expression;
+};
+
+Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
+	const me = this;
+	const mainStatementLine = me.token.line;
+	const operator = me.token.value;
+	let expression = null;
+
+	if (me.isUnary(me.token)) {
+		me.next();
+		let argument = me.parsePrimaryExpression(flowContext);
+		if (null == argument) {
+			argument = me.parseRighthandExpression(flowContext);
+		}
+		expression = AST.unaryExpression(operator, argument, mainStatementLine);
+	}
+	if (null == expression) {
+		expression = me.parsePrimaryExpression(flowContext);
+
+		if (null == expression) {
+			expression = me.parseRighthandExpression(flowContext);
 		}
 	}
+
+	expression = me.parseBinaryExpression(expression, flowContext, minPrecedence);
 
 	return expression;
 };
@@ -687,8 +655,6 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
 
 	if (TOKENS.Identifier === last.type) {
 		base = me.parseIdentifier();
-	} else if ('++' === last.value || '--' === last.value) {
-		base = me.parseMathShorthandLeftOperator(flowContext, '(' === me.previousToken.value);
 	} else if ('(' === last.value) {
 		me.next();
 		base = me.parseExpectedExpression(flowContext, true);
@@ -699,6 +665,10 @@ Parser.prototype.parseAssignmentOrCallStatement = function(flowContext) {
 		base = me.parseExpectedExpression(flowContext);
 	} else {
 		me.exception('Unexpected assignment or call');
+	}
+
+	if (validator.isExpressionOperator(me.token.value)) {
+		return me.parseBinaryExpression(base, flowContext);
 	}
 
 	while (TOKENS.Punctuator === me.token.type && '=' !== me.token.value && ';' !== me.token.value && '<eof>' !== me.token.value) {

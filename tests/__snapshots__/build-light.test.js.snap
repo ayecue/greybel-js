@@ -67,13 +67,28 @@ print(AsciiGen.gen(\\"Hallo\\"))"
 `;
 
 exports[`build-light default scripts 2`] = `
+"a=(a / b)
+a=(a * b)
+a=(a - b)
+a=(a + b)
+(bitwise(\\"<<\\",a,b))
+(bitwise(\\">>\\",a,b))
+w=(bitwise(\\">>\\",(bitwise(\\">>>\\",a,(bitwise(\\"<<\\",b,c)))),a))
+(bitwise(\\"|\\",a,b))
+(bitwise(\\"&\\",a,b))
+(bitwise(\\"^\\",a,b))
+(a and b)
+(a or b)"
+`;
+
+exports[`build-light default scripts 3`] = `
 "test=(((-1 + 2) + -2) + +3)
 foo=[-1,(-2 + 4),((-2 + -4) + +6)]
 print(test)
 print(foo)"
 `;
 
-exports[`build-light default scripts 3`] = `
+exports[`build-light default scripts 4`] = `
 "PasswordGenerator={}
 PasswordGenerator.MAX_PASSWORD_LENGTH=15
 PasswordGenerator.ALPHABETIC_CHARACTERS=\\"qwertzuiopasdfghjklyxcvbnm\\"
@@ -130,7 +145,7 @@ end while
 print(result)"
 `;
 
-exports[`build-light default scripts 4`] = `
+exports[`build-light default scripts 5`] = `
 "String={}
 String.constructor=function (str)
 self.str=str
@@ -295,7 +310,7 @@ if ((currentBit % 4)) then
 expectedHashIndex=(((floor((hashPointer / 3)) * 3) % hashLength) - 1)
 if (not hash.hasIndex(expectedHashIndex)) then break
 m=hash[expectedHashIndex]
-operation=AND(-(2 * bitCounter),6)
+operation=AND((-2 * bitCounter),6)
 operation=RSHIFT(bitStorage,operation)
 operation=AND(255,operation)
 if ((operation != 0)) then
@@ -315,7 +330,7 @@ print(foo)
 print(test.decrypt(foo))"
 `;
 
-exports[`build-light default scripts 5`] = `
+exports[`build-light default scripts 6`] = `
 "Random={}
 Random.pool={}
 Random.defaultSeed=\\"random\\"
@@ -368,7 +383,7 @@ print(Random.get(100,500))
 print(Random.seq(100,500,\\"test\\",10))"
 `;
 
-exports[`build-light default scripts 6`] = `
+exports[`build-light default scripts 7`] = `
 "test={}
 test.here=\\"was\\"
 test.was=function ()
@@ -377,12 +392,16 @@ end function
 print(test.was())"
 `;
 
-exports[`build-light default scripts 7`] = `
+exports[`build-light default scripts 8`] = `
 "test=function ()
 return null
 end function
 print((@\\"was\\".split and (false or not false)))
-print(@(\\"was\\".split and (false or not false)))"
+print(@(\\"was\\".split and (false or not false)))
+print((not \\"was\\".split and (false or not false)))
+print(not (\\"was\\".split and (false or not false)))
+print((-1 + 2))
+print(-(1 + 2))"
 `;
 
 exports[`build-light uglify scripts 1`] = `
@@ -450,14 +469,14 @@ h[1].push(v[char][1])
 h[2].push(v[char][2])
 end if
 end for
-if (typeof(u) == \\"string\\") then
-h[0]=(([((y + u) + _A)] + h[0]) + [z])
-h[1]=(([((y + u) + _A)] + h[1]) + [z])
-h[2]=(([((y + u) + _A)] + h[2]) + [z])
-else if (typeof(u) == \\"list\\") then
-h[0]=(([((y + u[0]) + _A)] + h[0]) + [z])
-h[1]=(([((y + u[1]) + _A)] + h[1]) + [z])
-h[2]=(([((y + u[2]) + _A)] + h[2]) + [z])
+if (typeof(u)==\\"string\\") then
+h[0]=(([((y+u)+_A)]+h[0])+[z])
+h[1]=(([((y+u)+_A)]+h[1])+[z])
+h[2]=(([((y+u)+_A)]+h[2])+[z])
+else if (typeof(u)==\\"list\\") then
+h[0]=(([((y+u[0])+_A)]+h[0])+[z])
+h[1]=(([((y+u[1])+_A)]+h[1])+[z])
+h[2]=(([((y+u[2])+_A)]+h[2])+[z])
 end if
 return [h[0].join(\\"\\"),h[1].join(\\"\\"),h[2].join(\\"\\")].join(\\"\\\\n\\")
 end function
@@ -465,20 +484,36 @@ print(H.gen(\\"Hallo\\"))"
 `;
 
 exports[`build-light uglify scripts 2`] = `
+"globals.L=globals
+H=(H/I)
+H=(H*I)
+H=(H-I)
+H=(H+I)
+(bitwise(\\"<<\\",H,I))
+(bitwise(\\">>\\",H,I))
+J=(bitwise(\\">>\\",(bitwise(\\">>>\\",H,(bitwise(\\"<<\\",I,K)))),H))
+(bitwise(\\"|\\",H,I))
+(bitwise(\\"&\\",H,I))
+(bitwise(\\"^\\",H,I))
+(H and I)
+(H or I)"
+`;
+
+exports[`build-light uglify scripts 3`] = `
 "globals.J=globals
-H=(((-1 + 2) + -2) + +3)
-I=[-1,(-2 + 4),((-2 + -4) + +6)]
+H=(((-1+2)+-2)++3)
+I=[-1,(-2+4),((-2+-4)++6)]
 print(H)
 print(I)"
 `;
 
-exports[`build-light uglify scripts 3`] = `
+exports[`build-light uglify scripts 4`] = `
 "globals.f=globals
 H={}
 H.MAX_PASSWORD_LENGTH=15
 H.ALPHABETIC_CHARACTERS=\\"qwertzuiopasdfghjklyxcvbnm\\"
 H.NUMBER_CHARACTERS=\\"0123456789\\"
-H.ALPHA_NUMERIC=((H.ALPHABETIC_CHARACTERS + H.ALPHABETIC_CHARACTERS.upper) + H.NUMBER_CHARACTERS)
+H.ALPHA_NUMERIC=((H.ALPHABETIC_CHARACTERS+H.ALPHABETIC_CHARACTERS.upper)+H.NUMBER_CHARACTERS)
 H.constructor=function()
 N=self
 N.buffer=[0]
@@ -489,16 +524,16 @@ H.increaseBuffer=function(R)
 N=self
 S=N.buffer
 T=N.characters.len
-if (R == null) then R=(S.len - 1)
+if (R==null) then R=(S.len-1)
 V=S[R]
-V=(V + 1)
+V=(V+1)
 S[R]=V
-if (V == T) then
+if (V==T) then
 S[R]=0
-if (R == 0) then
+if (R==0) then
 S.push(0)
 else
-N.increaseBuffer((R - 1))
+N.increaseBuffer((R-1))
 end if
 end if
 end function
@@ -508,13 +543,13 @@ S=N.buffer
 Y=N.characters
 Z=\\"\\"
 a=0
-while (a < S.len)
+while (a<S.len)
 b=S[a]
-Z=(Z + Y[b])
-if (a == (S.len - 1)) then self.increaseBuffer
-a=(a + 1)
+Z=(Z+Y[b])
+if (a==(S.len-1)) then self.increaseBuffer
+a=(a+1)
 end while
-if (S.len > N.MAX_PASSWORD_LENGTH) then
+if (S.len>N.MAX_PASSWORD_LENGTH) then
 return null
 end if
 return Z
@@ -523,14 +558,14 @@ c=(new H).constructor
 a=0
 d=10
 e=[]
-while (a < d)
+while (a<d)
 e.push(c.gen)
-a=(a + 1)
+a=(a+1)
 end while
 print(e)"
 `;
 
-exports[`build-light uglify scripts 4`] = `
+exports[`build-light uglify scripts 5`] = `
 "globals.Ab=globals
 Ab.AY=1
 Ab.AO=63
@@ -544,14 +579,14 @@ H.parse=function(J)
 K=self.str
 L=0
 M=J.len
-while (L < M)
-K=K.replace((\\"$\\" + L),J[L])
-L=(L + AY)
+while (L<M)
+K=K.replace((\\"$\\"+L),J[L])
+L=(L+AY)
 end while
 return (new self).constructor(K)
 end function
 H.startsWith=function(str)
-return (self.str.indexOf(str) == 0)
+return (self.str.indexOf(str)==0)
 end function
 H.substr=function(S,T)
 return (new self).constructor(slice(self.str,S,T))
@@ -582,13 +617,13 @@ AF.String=H
 AF.constructor=function(AH,J)
 AL=self
 AL.message=AH
-if (J != m) then
+if (J!=m) then
 AL.message=(new AL.String).constructor(AH).parse(J).toString
 end if
 return AL
 end function
 AF.throw=function()
-exit(((\\"<color=#ff0000>\\" + self.message) + \\"</color>\\"))
+exit(((\\"<color=#ff0000>\\"+self.message)+\\"</color>\\"))
 end function
 e={}
 e.defaultCharset=\\"QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-\\"
@@ -599,9 +634,9 @@ k=self
 k.defaultSecret=h
 k.table=j
 k.hashFn=@i
-if (@i == m) then k.hashFn=@md5
-if (j == m) then k.table=k.defaultCharset
-if (k.table.len != 64) then (new k.Error).constructor(\\"Invalid charset $0...\\",[k.table]).throw
+if (@i==m) then k.hashFn=@md5
+if (j==m) then k.table=k.defaultCharset
+if (k.table.len!=64) then (new k.Error).constructor(\\"Invalid charset $0...\\",[k.table]).throw
 return k
 end function
 e.getHash=function(o)
@@ -616,13 +651,13 @@ return p
 end function
 e.encrypt=function(str,o)
 k=self
-if (o == m) then o=k.defaultSecret
+if (o==m) then o=k.defaultSecret
 p=k.getHash(o)
 AC=0
 w=[]
 x=0
-y=(str.len % 3)
-z=(str.len - y)
+y=(str.len%3)
+z=(str.len-y)
 _A=function(AB)
 if not k.table.hasIndex(AB) then
 (new k.Error).constructor(\\"Invalid index $0...\\",[AB]).throw
@@ -638,30 +673,30 @@ end function
 AJ=function(AE,AG)
 return bitwise(\\">>\\",AE,AG)
 end function
-while (x < z)
-AL=p[((x % p.len) - AY)]
-AE=AI((str[x].code + AL),16)
-AG=AI((str[(x + AY)].code + AL),8)
-AK=(str[(x + 2)].code + AL)
-AN=((AE + AG) + AK)
+while (x<z)
+AL=p[((x%p.len)-AY)]
+AE=AI((str[x].code+AL),16)
+AG=AI((str[(x+AY)].code+AL),8)
+AK=(str[(x+2)].code+AL)
+AN=((AE+AG)+AK)
 w.push(_A(AD(AJ(AN,18),AO)))
 w.push(_A(AD(AJ(AN,12),AO)))
 w.push(_A(AD(AJ(AN,6),AO)))
 w.push(_A(AD(AN,AO)))
-x=(x + 3)
+x=(x+3)
 end while
-if (y == 2) then
-AL=p[((x % p.len) - AY)]
-AE=AI((str[x].code + AL),8)
-AG=(str[(x + AY)].code + AL)
-AN=(AE + AG)
+if (y==2) then
+AL=p[((x%p.len)-AY)]
+AE=AI((str[x].code+AL),8)
+AG=(str[(x+AY)].code+AL)
+AN=(AE+AG)
 w.push(_A(AJ(AN,10)))
 w.push(_A(AD(AJ(AN,4),AO)))
 w.push(_A(AD(AI(AN,2),AO)))
 w.push(\\"=\\")
-else if (y == AY) then
-AL=p[((x % p.len) - AY)]
-AN=(str[x].code + AL)
+else if (y==AY) then
+AL=p[((x%p.len)-AY)]
+AN=(str[x].code+AL)
 w.push(_A(AJ(AN,2)))
 w.push(_A(AD(AI(AN,4),AO)))
 w.push(\\"==\\")
@@ -670,7 +705,7 @@ return w.join(\\"\\")
 end function
 e.decrypt=function(str,o)
 k=self
-if (o == m) then o=k.defaultSecret
+if (o==m) then o=k.defaultSecret
 p=k.getHash(o)
 AC=0
 AR=p.len
@@ -686,30 +721,30 @@ end function
 AJ=function(AE,AG)
 return bitwise(\\">>\\",AE,AG)
 end function
-while (x < z)
+while (x<z)
 AN=k.table.indexOf(str[x])
 AU=AS
-AS=(AS + AY)
-if (AU % 4) then
-AT=((AT * 64) + AN)
+AS=(AS+AY)
+if (AU%4) then
+AT=((AT*64)+AN)
 else
 AT=AN
 end if
-if (AU % 4) then
-AV=(((floor((AC / 3)) * 3) % AR) - AY)
+if (AU%4) then
+AV=(((floor((AC/3))*3)%AR)-AY)
 if not p.hasIndex(AV) then break
 AL=p[AV]
-AW=AD(-(2 * AS),6)
+AW=AD((-2*AS),6)
 AW=AJ(AT,AW)
 AW=AD(255,AW)
-if (AW != 0) then
-AX=(AW - AL)
-if (AX > k.maxCharCode) then break
+if (AW!=0) then
+AX=(AW-AL)
+if (AX>k.maxCharCode) then break
 w.push(char(AX))
 end if
-AC=(AC + AY)
+AC=(AC+AY)
 end if
-x=(x + AY)
+x=(x+AY)
 end while
 return w.join(\\"\\")
 end function
@@ -719,7 +754,7 @@ print(Aa)
 print(AZ.decrypt(Aa))"
 `;
 
-exports[`build-light uglify scripts 5`] = `
+exports[`build-light uglify scripts 6`] = `
 "globals.j=globals
 H={}
 H.pool={}
@@ -731,26 +766,26 @@ H.calcSeed=function(L)
 O=0
 P=L.len
 for char in L
-O=((O + char.code) + P)
-P=(P - 1)
+O=((O+char.code)+P)
+P=(P-1)
 end for
 return O
 end function
 H.gen=function(T,U,L,V)
 W=self
 I=W.pool
-if (V == null) then V=true
-if (L == null) then L=W.defaultSeed
+if (V==null) then V=true
+if (L==null) then L=W.defaultSeed
 if I.hasIndex(L) then
 X=I[L]
 if not V then return X.value
-X.generation=(X.generation + 1)
-M=floor(((rnd((X.value + X.generation)) * (U - T)) + T))
+X.generation=(X.generation+1)
+M=floor(((rnd((X.value+X.generation))*(U-T))+T))
 X.value=M
 return M
 end if
 O=W.calcSeed(L)
-M=floor(((rnd(O) * (U - T)) + T))
+M=floor(((rnd(O)*(U-T))+T))
 I[L]=W.createPool(O,M)
 return M
 end function
@@ -758,12 +793,12 @@ H.seq=function(T,U,L,b,c)
 W=self
 d=0
 e=[]
-while (d < b)
+while (d<b)
 f=W.gen(T,U,L)
 e.push(f)
-d=(d + 1)
+d=(d+1)
 end while
-if (c != true) then W.pool.remove(L)
+if (c!=true) then W.pool.remove(L)
 return e
 end function
 H.get=function(T,U)
@@ -773,7 +808,7 @@ print(H.get(100,500))
 print(H.seq(100,500,\\"test\\",10))"
 `;
 
-exports[`build-light uglify scripts 6`] = `
+exports[`build-light uglify scripts 7`] = `
 "globals.K=globals
 H={}
 H.here=\\"was\\"
@@ -783,12 +818,17 @@ end function
 print(H.was)"
 `;
 
-exports[`build-light uglify scripts 7`] = `
-"globals.K=globals
-K.J=false
+exports[`build-light uglify scripts 8`] = `
+"globals.L=globals
+L.K=\\"was\\"
+L.J=false
 H=function()
 return null
 end function
-print((@\\"was\\".split and (J or not J)))
-print(@(\\"was\\".split and (J or not J)))"
+print((@K.split and (J or not J)))
+print(@(K.split and (J or not J)))
+print((not K.split and (J or not J)))
+print(not (K.split and (J or not J)))
+print((-1+2))
+print(-(1+2))"
 `;

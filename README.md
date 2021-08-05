@@ -1,4 +1,4 @@
-# Greybel-JS 0.2.9
+# Greybel-JS 0.3.0
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
@@ -227,10 +227,11 @@ print("Another string!")
 ![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
 
 # Things to come
-- add full support of Grey Hack API to emulator
+- add full support of Grey Hack API to emulator (delayed for now)
 - add support for native `import_code`
 - port greybel-js to GreyScript to replace https://github.com/ayecue/greybel
 - clean up codebase
 - use typescript
-- debugging
+- debugging (semi integrated)
 - more functionality and possibly more syntax sugar
+- security in terms of scoping

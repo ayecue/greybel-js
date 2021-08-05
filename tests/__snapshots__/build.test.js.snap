@@ -93,6 +93,35 @@ module=MODULES[r]
 return @module(r).exports
 end function
 MAIN=function ()
+a=(a / b)
+a=(a * b)
+a=(a - b)
+a=(a + b)
+(bitwise(\\"<<\\",a,b))
+(bitwise(\\">>\\",a,b))
+w=(bitwise(\\">>\\",(bitwise(\\">>>\\",a,(bitwise(\\"<<\\",b,c)))),a))
+(bitwise(\\"|\\",a,b))
+(bitwise(\\"&\\",a,b))
+(bitwise(\\"^\\",a,b))
+(a and b)
+(a or b)
+end function
+MAIN()"
+`;
+
+exports[`build default scripts 3`] = `
+"BACKSLASH_CODE=92
+NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
+MODULES={}
+EXPORTED={}
+__REQUIRE=function (r)
+if (not MODULES.hasIndex(r)) then
+exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+end if
+module=MODULES[r]
+return @module(r).exports
+end function
+MAIN=function ()
 test=(((-1 + 2) + -2) + +3)
 foo=[-1,(-2 + 4),((-2 + -4) + +6)]
 print(test)
@@ -101,7 +130,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 3`] = `
+exports[`build default scripts 4`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -172,7 +201,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 4`] = `
+exports[`build default scripts 5`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -349,7 +378,7 @@ if ((currentBit % 4)) then
 expectedHashIndex=(((floor((hashPointer / 3)) * 3) % hashLength) - 1)
 if (not hash.hasIndex(expectedHashIndex)) then break
 m=hash[expectedHashIndex]
-operation=AND(-(2 * bitCounter),6)
+operation=AND((-2 * bitCounter),6)
 operation=RSHIFT(bitStorage,operation)
 operation=AND(255,operation)
 if ((operation != 0)) then
@@ -371,7 +400,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 5`] = `
+exports[`build default scripts 6`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -438,7 +467,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 6`] = `
+exports[`build default scripts 7`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -461,7 +490,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 7`] = `
+exports[`build default scripts 8`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -479,6 +508,10 @@ return null
 end function
 print((@\\"was\\".split and (false or not false)))
 print(@(\\"was\\".split and (false or not false)))
+print((not \\"was\\".split and (false or not false)))
+print(not (\\"was\\".split and (false or not false)))
+print((-1 + 2))
+print(-(1 + 2))
 end function
 MAIN()"
 `;
@@ -498,12 +531,12 @@ exports[`build uglify scripts 1`] = `
 ϩ._=\\">\\"
 ϩ.z=\\"</color>\\"
 A=92
-B=(char(A) + \\"n\\")
+B=(char(A)+\\"n\\")
 C={}
 D={}
 E=function(h)
 if not C.hasIndex(h) then
-exit(((\\"Module \\" + h) + \\" cannot be found...\\"))
+exit(((\\"Module \\"+h)+\\" cannot be found...\\"))
 end if
 G=C[h]
 return @G(h).exports
@@ -560,14 +593,14 @@ h[1].push(v[char][1])
 h[2].push(v[char][2])
 end if
 end for
-if (typeof(u) == \\"string\\") then
-h[0]=(([((y + u) + _)] + h[0]) + [z])
-h[1]=(([((y + u) + _)] + h[1]) + [z])
-h[2]=(([((y + u) + _)] + h[2]) + [z])
-else if (typeof(u) == \\"list\\") then
-h[0]=(([((y + u[0]) + _)] + h[0]) + [z])
-h[1]=(([((y + u[1]) + _)] + h[1]) + [z])
-h[2]=(([((y + u[2]) + _)] + h[2]) + [z])
+if (typeof(u)==\\"string\\") then
+h[0]=(([((y+u)+_)]+h[0])+[z])
+h[1]=(([((y+u)+_)]+h[1])+[z])
+h[2]=(([((y+u)+_)]+h[2])+[z])
+else if (typeof(u)==\\"list\\") then
+h[0]=(([((y+u[0])+_)]+h[0])+[z])
+h[1]=(([((y+u[1])+_)]+h[1])+[z])
+h[2]=(([((y+u[2])+_)]+h[2])+[z])
 end if
 return [h[0].join(\\"\\"),h[1].join(\\"\\"),h[2].join(\\"\\")].join(\\"\\\\n\\")
 end function
@@ -577,36 +610,66 @@ F"
 `;
 
 exports[`build uglify scripts 2`] = `
-"globals.J=globals
+"globals.L=globals
 A=92
-B=(char(A) + \\"n\\")
+B=(char(A)+\\"n\\")
 C={}
 D={}
 E=function(r)
 if not C.hasIndex(r) then
-exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
 end if
 G=C[r]
 return @G(r).exports
 end function
 F=function()
-H=(((-1 + 2) + -2) + +3)
-I=[-1,(-2 + 4),((-2 + -4) + +6)]
+H=(H/I)
+H=(H*I)
+H=(H-I)
+H=(H+I)
+(bitwise(\\"<<\\",H,I))
+(bitwise(\\">>\\",H,I))
+J=(bitwise(\\">>\\",(bitwise(\\">>>\\",H,(bitwise(\\"<<\\",I,K)))),H))
+(bitwise(\\"|\\",H,I))
+(bitwise(\\"&\\",H,I))
+(bitwise(\\"^\\",H,I))
+(H and I)
+(H or I)
+end function
+F"
+`;
+
+exports[`build uglify scripts 3`] = `
+"globals.J=globals
+A=92
+B=(char(A)+\\"n\\")
+C={}
+D={}
+E=function(r)
+if not C.hasIndex(r) then
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
+end if
+G=C[r]
+return @G(r).exports
+end function
+F=function()
+H=(((-1+2)+-2)++3)
+I=[-1,(-2+4),((-2+-4)++6)]
 print(H)
 print(I)
 end function
 F"
 `;
 
-exports[`build uglify scripts 3`] = `
+exports[`build uglify scripts 4`] = `
 "globals.f=globals
 A=92
-B=(char(A) + \\"n\\")
+B=(char(A)+\\"n\\")
 C={}
 D={}
 E=function(r)
 if not C.hasIndex(r) then
-exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
 end if
 G=C[r]
 return @G(r).exports
@@ -616,7 +679,7 @@ H={}
 H.MAX_PASSWORD_LENGTH=15
 H.ALPHABETIC_CHARACTERS=\\"qwertzuiopasdfghjklyxcvbnm\\"
 H.NUMBER_CHARACTERS=\\"0123456789\\"
-H.ALPHA_NUMERIC=((H.ALPHABETIC_CHARACTERS + H.ALPHABETIC_CHARACTERS.upper) + H.NUMBER_CHARACTERS)
+H.ALPHA_NUMERIC=((H.ALPHABETIC_CHARACTERS+H.ALPHABETIC_CHARACTERS.upper)+H.NUMBER_CHARACTERS)
 H.constructor=function()
 N=self
 N.buffer=[0]
@@ -627,16 +690,16 @@ H.increaseBuffer=function(R)
 N=self
 S=N.buffer
 T=N.characters.len
-if (R == null) then R=(S.len - 1)
+if (R==null) then R=(S.len-1)
 V=S[R]
-V=(V + 1)
+V=(V+1)
 S[R]=V
-if (V == T) then
+if (V==T) then
 S[R]=0
-if (R == 0) then
+if (R==0) then
 S.push(0)
 else
-N.increaseBuffer((R - 1))
+N.increaseBuffer((R-1))
 end if
 end if
 end function
@@ -646,13 +709,13 @@ S=N.buffer
 Y=N.characters
 Z=\\"\\"
 a=0
-while (a < S.len)
+while (a<S.len)
 b=S[a]
-Z=(Z + Y[b])
-if (a == (S.len - 1)) then self.increaseBuffer
-a=(a + 1)
+Z=(Z+Y[b])
+if (a==(S.len-1)) then self.increaseBuffer
+a=(a+1)
 end while
-if (S.len > N.MAX_PASSWORD_LENGTH) then
+if (S.len>N.MAX_PASSWORD_LENGTH) then
 return null
 end if
 return Z
@@ -661,27 +724,27 @@ c=(new H).constructor
 a=0
 d=10
 e=[]
-while (a < d)
+while (a<d)
 e.push(c.gen)
-a=(a + 1)
+a=(a+1)
 end while
 print(e)
 end function
 F"
 `;
 
-exports[`build uglify scripts 4`] = `
+exports[`build uglify scripts 5`] = `
 "globals.Ђ=globals
 Ђ.Ͽ=1
 Ђ.ϵ=63
 Ђ.m=null
 A=92
-B=(char(A) + \\"n\\")
+B=(char(A)+\\"n\\")
 C={}
 D={}
 E=function(r)
 if not C.hasIndex(r) then
-exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
 end if
 G=C[r]
 return @G(r).exports
@@ -696,14 +759,14 @@ H.parse=function(J)
 K=self.str
 L=0
 M=J.len
-while (L < M)
-K=K.replace((\\"$\\" + L),J[L])
-L=(L + Ͽ)
+while (L<M)
+K=K.replace((\\"$\\"+L),J[L])
+L=(L+Ͽ)
 end while
 return (new self).constructor(K)
 end function
 H.startsWith=function(str)
-return (self.str.indexOf(str) == 0)
+return (self.str.indexOf(str)==0)
 end function
 H.substr=function(S,T)
 return (new self).constructor(slice(self.str,S,T))
@@ -734,13 +797,13 @@ end function
 Ϭ.constructor=function(Ϯ,J)
 ϲ=self
 ϲ.message=Ϯ
-if (J != m) then
+if (J!=m) then
 ϲ.message=(new ϲ.String).constructor(Ϯ).parse(J).toString
 end if
 return ϲ
 end function
 Ϭ.throw=function()
-exit(((\\"<color=#ff0000>\\" + self.message) + \\"</color>\\"))
+exit(((\\"<color=#ff0000>\\"+self.message)+\\"</color>\\"))
 end function
 e={}
 e.defaultCharset=\\"QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-\\"
@@ -751,9 +814,9 @@ k=self
 k.defaultSecret=h
 k.table=j
 k.hashFn=@i
-if (@i == m) then k.hashFn=@md5
-if (j == m) then k.table=k.defaultCharset
-if (k.table.len != 64) then (new k.Error).constructor(\\"Invalid charset $0...\\",[k.table]).throw
+if (@i==m) then k.hashFn=@md5
+if (j==m) then k.table=k.defaultCharset
+if (k.table.len!=64) then (new k.Error).constructor(\\"Invalid charset $0...\\",[k.table]).throw
 return k
 end function
 e.getHash=function(o)
@@ -768,13 +831,13 @@ return p
 end function
 e.encrypt=function(str,o)
 k=self
-if (o == m) then o=k.defaultSecret
+if (o==m) then o=k.defaultSecret
 p=k.getHash(o)
 ϩ=0
 w=[]
 x=0
-y=(str.len % 3)
-z=(str.len - y)
+y=(str.len%3)
+z=(str.len-y)
 _=function(Ϩ)
 if not k.table.hasIndex(Ϩ) then
 (new k.Error).constructor(\\"Invalid index $0...\\",[Ϩ]).throw
@@ -790,30 +853,30 @@ end function
 ϰ=function(ϫ,ϭ)
 return bitwise(\\">>\\",ϫ,ϭ)
 end function
-while (x < z)
-ϲ=p[((x % p.len) - Ͽ)]
-ϫ=ϯ((str[x].code + ϲ),16)
-ϭ=ϯ((str[(x + Ͽ)].code + ϲ),8)
-ϱ=(str[(x + 2)].code + ϲ)
-ϴ=((ϫ + ϭ) + ϱ)
+while (x<z)
+ϲ=p[((x%p.len)-Ͽ)]
+ϫ=ϯ((str[x].code+ϲ),16)
+ϭ=ϯ((str[(x+Ͽ)].code+ϲ),8)
+ϱ=(str[(x+2)].code+ϲ)
+ϴ=((ϫ+ϭ)+ϱ)
 w.push(_(Ϫ(ϰ(ϴ,18),ϵ)))
 w.push(_(Ϫ(ϰ(ϴ,12),ϵ)))
 w.push(_(Ϫ(ϰ(ϴ,6),ϵ)))
 w.push(_(Ϫ(ϴ,ϵ)))
-x=(x + 3)
+x=(x+3)
 end while
-if (y == 2) then
-ϲ=p[((x % p.len) - Ͽ)]
-ϫ=ϯ((str[x].code + ϲ),8)
-ϭ=(str[(x + Ͽ)].code + ϲ)
-ϴ=(ϫ + ϭ)
+if (y==2) then
+ϲ=p[((x%p.len)-Ͽ)]
+ϫ=ϯ((str[x].code+ϲ),8)
+ϭ=(str[(x+Ͽ)].code+ϲ)
+ϴ=(ϫ+ϭ)
 w.push(_(ϰ(ϴ,10)))
 w.push(_(Ϫ(ϰ(ϴ,4),ϵ)))
 w.push(_(Ϫ(ϯ(ϴ,2),ϵ)))
 w.push(\\"=\\")
-else if (y == Ͽ) then
-ϲ=p[((x % p.len) - Ͽ)]
-ϴ=(str[x].code + ϲ)
+else if (y==Ͽ) then
+ϲ=p[((x%p.len)-Ͽ)]
+ϴ=(str[x].code+ϲ)
 w.push(_(ϰ(ϴ,2)))
 w.push(_(Ϫ(ϯ(ϴ,4),ϵ)))
 w.push(\\"==\\")
@@ -822,7 +885,7 @@ return w.join(\\"\\")
 end function
 e.decrypt=function(str,o)
 k=self
-if (o == m) then o=k.defaultSecret
+if (o==m) then o=k.defaultSecret
 p=k.getHash(o)
 ϩ=0
 ϸ=p.len
@@ -838,30 +901,30 @@ end function
 ϰ=function(ϫ,ϭ)
 return bitwise(\\">>\\",ϫ,ϭ)
 end function
-while (x < z)
+while (x<z)
 ϴ=k.table.indexOf(str[x])
 ϻ=Ϲ
-Ϲ=(Ϲ + Ͽ)
-if (ϻ % 4) then
-Ϻ=((Ϻ * 64) + ϴ)
+Ϲ=(Ϲ+Ͽ)
+if (ϻ%4) then
+Ϻ=((Ϻ*64)+ϴ)
 else
 Ϻ=ϴ
 end if
-if (ϻ % 4) then
-ϼ=(((floor((ϩ / 3)) * 3) % ϸ) - Ͽ)
+if (ϻ%4) then
+ϼ=(((floor((ϩ/3))*3)%ϸ)-Ͽ)
 if not p.hasIndex(ϼ) then break
 ϲ=p[ϼ]
-Ͻ=Ϫ(-(2 * Ϲ),6)
+Ͻ=Ϫ((-2*Ϲ),6)
 Ͻ=ϰ(Ϻ,Ͻ)
 Ͻ=Ϫ(255,Ͻ)
-if (Ͻ != 0) then
-Ͼ=(Ͻ - ϲ)
-if (Ͼ > k.maxCharCode) then break
+if (Ͻ!=0) then
+Ͼ=(Ͻ-ϲ)
+if (Ͼ>k.maxCharCode) then break
 w.push(char(Ͼ))
 end if
-ϩ=(ϩ + Ͽ)
+ϩ=(ϩ+Ͽ)
 end if
-x=(x + Ͽ)
+x=(x+Ͽ)
 end while
 return w.join(\\"\\")
 end function
@@ -873,15 +936,15 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 5`] = `
+exports[`build uglify scripts 6`] = `
 "globals.j=globals
 A=92
-B=(char(A) + \\"n\\")
+B=(char(A)+\\"n\\")
 C={}
 D={}
 E=function(r)
 if not C.hasIndex(r) then
-exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
 end if
 G=C[r]
 return @G(r).exports
@@ -897,26 +960,26 @@ H.calcSeed=function(L)
 O=0
 P=L.len
 for char in L
-O=((O + char.code) + P)
-P=(P - 1)
+O=((O+char.code)+P)
+P=(P-1)
 end for
 return O
 end function
 H.gen=function(T,U,L,V)
 W=self
 I=W.pool
-if (V == null) then V=true
-if (L == null) then L=W.defaultSeed
+if (V==null) then V=true
+if (L==null) then L=W.defaultSeed
 if I.hasIndex(L) then
 X=I[L]
 if not V then return X.value
-X.generation=(X.generation + 1)
-M=floor(((rnd((X.value + X.generation)) * (U - T)) + T))
+X.generation=(X.generation+1)
+M=floor(((rnd((X.value+X.generation))*(U-T))+T))
 X.value=M
 return M
 end if
 O=W.calcSeed(L)
-M=floor(((rnd(O) * (U - T)) + T))
+M=floor(((rnd(O)*(U-T))+T))
 I[L]=W.createPool(O,M)
 return M
 end function
@@ -924,12 +987,12 @@ H.seq=function(T,U,L,b,c)
 W=self
 d=0
 e=[]
-while (d < b)
+while (d<b)
 f=W.gen(T,U,L)
 e.push(f)
-d=(d + 1)
+d=(d+1)
 end while
-if (c != true) then W.pool.remove(L)
+if (c!=true) then W.pool.remove(L)
 return e
 end function
 H.get=function(T,U)
@@ -941,15 +1004,15 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 6`] = `
+exports[`build uglify scripts 7`] = `
 "globals.K=globals
 A=92
-B=(char(A) + \\"n\\")
+B=(char(A)+\\"n\\")
 C={}
 D={}
 E=function(r)
 if not C.hasIndex(r) then
-exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
 end if
 G=C[r]
 return @G(r).exports
@@ -965,16 +1028,17 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 7`] = `
-"globals.K=globals
-K.J=false
+exports[`build uglify scripts 8`] = `
+"globals.L=globals
+L.K=\\"was\\"
+L.J=false
 A=92
-B=(char(A) + \\"n\\")
+B=(char(A)+\\"n\\")
 C={}
 D={}
 E=function(r)
 if not C.hasIndex(r) then
-exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
 end if
 G=C[r]
 return @G(r).exports
@@ -983,8 +1047,12 @@ F=function()
 H=function()
 return null
 end function
-print((@\\"was\\".split and (J or not J)))
-print(@(\\"was\\".split and (J or not J)))
+print((@K.split and (J or not J)))
+print(@(K.split and (J or not J)))
+print((not K.split and (J or not J)))
+print(not (K.split and (J or not J)))
+print((-1+2))
+print(-(1+2))
 end function
 F"
 `;
