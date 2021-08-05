@@ -53,7 +53,6 @@ CustomMap.prototype.valueOf = function() {
 
 	return Object
 		.keys(value)
-		.filter((v) => v !== '__isa')
 		.length === 0 ? null : me;
 };
 
@@ -70,8 +69,8 @@ CustomMap.prototype.getType = function() {
 	const me = this;
 	const value = me.value;
 
-	if (value.__isa) {
-		return value.__isa;
+	if (value.classID) {
+		return value.classID;
 	}
 
 	return 'map';

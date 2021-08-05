@@ -41,13 +41,11 @@ const SCAN_MAP = {
 	[CHAR_CODES.MINUS]: function(code, nextCode) {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('-=');
-		if (CHAR_CODES.MINUS === nextCode) return me.scanPunctuator('--');
 		return me.scanPunctuator('-');
 	},
 	[CHAR_CODES.PLUS]: function(code, nextCode) {
 		const me = this;
 		if (CHAR_CODES.EQUAL === nextCode) return me.scanPunctuator('+=');
-		if (CHAR_CODES.PLUS === nextCode) return me.scanPunctuator('++');
 		return me.scanPunctuator('+');
 	},
 	[CHAR_CODES.ASTERISK]: function(code, nextCode) {

@@ -13,7 +13,7 @@ module.exports = function(shell) {
 
 			const shellInterface = {};
 
-			shellInterface.__isa = 'shell';
+			shellInterface.classID = 'shell';
 			shellInterface.host_computer = computer(contextShell);
 			shellInterface.start_terminal = function() {
 				contextShell.attach();

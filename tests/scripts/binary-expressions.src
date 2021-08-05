@@ -1,0 +1,12 @@
+a /= b
+a *= b
+a -= b
+a += b
+a << b
+a >> b
+w = a >>> (b << c) >> a
+a | b
+a & b
+a ^ b
+a and b
+a or b
