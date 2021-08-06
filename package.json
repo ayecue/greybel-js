@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "engines": {
         "node": ">=14.0.0"
     },
@@ -33,6 +33,7 @@
         "inquirer-command-prompt": "^0.1.0",
         "json-formatter-js": "^2.3.4",
         "localstoragedb": "git+https://github.com/ayecue/localStorageDB.git",
+        "mkdirp": "^1.0.4",
         "node-color-log": "^5.3.0",
         "open": "^8.2.1",
         "semver": "^5.3.0",

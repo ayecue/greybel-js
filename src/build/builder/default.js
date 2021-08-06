@@ -297,6 +297,10 @@ const mapper = function(make, _stack, _depth, _context) {
 			}
 
 			return body.join('\n');
+		},
+		'ImportCodeExpression': function(item) {
+			const dir = make(item.gameDirectory);
+			return 'import_code(' + dir + ')';
 		}
 	};
 };

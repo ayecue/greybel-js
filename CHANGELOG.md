@@ -68,3 +68,9 @@ All notable changes to this project will be documented in this file.
 - prevent inifite loop when having binary expressions without assignment
 - use classID
 - remove '++' and '--' shortcuts since those essentialy don't work as intended
+
+## [0.3.1] - 06-08-2021
+
+- add installer feature
+- support import_code in builder
+- add mkdirp

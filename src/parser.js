@@ -20,6 +20,7 @@ const Parser = function(content, collectAll) {
 	me.token = null;
 	me.previousToken = null;
 	me.imports = [];
+	me.nativeImports = [];
 	me.includes = [];
 	me.namespaces = {};
 	me.collectAll = collectAll;
@@ -88,13 +89,13 @@ Parser.prototype.consumeMany = function(values) {
 Parser.prototype.expect = function(value) {
 	const me = this;
 	if (value === me.token.value && TOKENS.StringLiteral !== me.token.type) return me.next();
-	me.exception('Unexpected value ' + me.token.value + '. Expected: ' + value)
+	me.exception('Unexpected value ' + me.token.value + '. Expected: ' + value);
 };
 
 Parser.prototype.expectMany = function(values) {
 	const me = this;
 	if (values.indexOf(me.token.value) != -1 && TOKENS.StringLiteral !== me.token.type) return me.next();
-	me.exception('Unexpected value ' + me.token.value + '. Expected: ' + values)
+	me.exception('Unexpected value ' + me.token.value + '. Expected: ' + values);
 };
 
 Parser.prototype.isUnary = function(token) {
@@ -422,6 +423,38 @@ Parser.prototype.parseSubExpression = function (flowContext, minPrecedence) {
 	expression = me.parseBinaryExpression(expression, flowContext, minPrecedence);
 
 	return expression;
+};
+
+Parser.prototype.parseNativeImportCodeStatement = function() {
+	const me = this;
+	const mainStatementLine = me.token.line;
+	me.expect('(');
+
+	let gameDirectory;
+	let fileSystemDirectory;
+
+	if (TOKENS.StringLiteral === me.token.type) {
+		gameDirectory = me.parsePrimaryExpression();
+	} else {
+		me.exception('Unexpected non literal value in import_code');
+	}
+
+	if (me.consume(':')) {
+		fileSystemDirectory = me.parsePrimaryExpression();
+	} else {
+		logger.warn('WARNING: import_code requires a reference to a file in your file system otherwise it will be ignored by the builder (this message can be ignored in the browser)');
+	}
+
+	me.expect(')');
+	me.expect(';');
+
+	const base = AST.importCodeExpression(gameDirectory, fileSystemDirectory, mainStatementLine);
+
+	if (fileSystemDirectory != null) {
+		me.nativeImports.push(fileSystemDirectory.value);
+	}
+
+	return base;
 };
 
 Parser.prototype.parseFeaturePath = function() {
@@ -822,7 +855,7 @@ Parser.prototype.parseChunk = function() {
 	if (TOKENS.EOF !== me.token.type) {
 		me.exception('Unexpected EOF');
 	}
-	return AST.chunk(body, me.imports, me.includes, Object.keys(me.namespaces), mainStatementLine);
+	return AST.chunk(body, me.imports, me.nativeImports, me.includes, Object.keys(me.namespaces), mainStatementLine);
 };
 
 Parser.prototype.exception = function(message) {

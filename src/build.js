@@ -11,23 +11,24 @@ const envs = require('./build/envs');
 const literals = require('./build/literals');
 const logger = require('node-color-log');
 const charset = require('./build/charset');
+const handleNativeImports = require('./utils/handle-native-imports');
+const createInstaller = require('./utils/create-installer');
+const mkdirp = require('mkdirp');
 
-const Builder = function(filepath, output, name) {
+const Builder = function(filepath, output, name, isNativeImport) {
 	const me = this;
 
 	if (filepath == null || !fs.existsSync(filepath)) {
 		throw new Error('File ' + filepath + ' does not exist...');
 	}
 
-	if (output != null && !fs.existsSync(output)) {
-		throw new Error('Output directory ' + filepath + ' does not exist...');
-	}
-
 	me.filepath = path.resolve(filepath);
 
 	const parsed = path.parse(me.filepath);
 
-	me.output = path.resolve(output || parsed.dir, name || parsed.name + '.output.src');
+	me.output = path.resolve(output || parsed.dir, name || parsed.name + (!isNativeImport ? '.output.src' : '.src'));
+	me.isNativeImport = !!isNativeImport;
+	me.nativeImportBuilders = [];
 
 	return me;
 };
@@ -51,13 +52,16 @@ Builder.prototype.compile = function(options) {
 	logger.info('Parsing: ' + me.filepath);
 	const parser = new Parser(content, options.uglify);
 	const chunk = parser.parseChunk();
+
+	me.nativeImportBuilders = handleNativeImports(me.filepath, chunk.nativeImports, Builder, me.output, options);
+
 	const dependency = new Dependency(me.filepath, chunk, options.uglify);
 	dependency.findDependencies();
 
 	return builder(dependency, mapper, options.uglify);
 };
 
-Builder.prototype.write = function(code, maxWords) {
+Builder.prototype.write = function(code, maxWords, installer) {
 	const me = this;
 	const words = code.length;
 
@@ -66,20 +70,30 @@ Builder.prototype.write = function(code, maxWords) {
 	}
 
 	logger.info('Created file:', me.output);
+
+	mkdirp.sync(path.dirname(me.output));
+
 	fs.writeFileSync(me.output, code, {
 		encoding: 'utf-8'
 	});
+
+	if (installer) {
+		createInstaller(me, maxWords);
+	}
 }
+
+
 
 module.exports = function(filepath, output, options = {}) {
 	const buildOptions = Object.assign({
 		uglify: false,
 		maxWords: 80000,
-		obfuscation: true
+		obfuscation: true,
+		installer: false
 	}, options);
-	const builder = new Builder(filepath, output, options.name);
+	const builder = new Builder(filepath, output, buildOptions.name);
 
-	envs.load(options.envFiles, options.envVars);
+	envs.load(buildOptions.envFiles, buildOptions.envVars);
 
 	const code = builder.compile(buildOptions);
 
@@ -87,5 +101,5 @@ module.exports = function(filepath, output, options = {}) {
 		return code;
 	}
 
-	return builder.write(code, options.maxWords);
+	return builder.write(code, buildOptions.maxWords, buildOptions.installer);
 };
