@@ -44,19 +44,19 @@ AsciiGen.MAP=map
 AsciiGen.gen=function (str,colors)
 r=[[],[],[]]
 signs=self.MAP
-for (char in str)
+for char in str
 char=char.lower
-if (signs.hasIndex(char)) then
+if signs.hasIndex(char) then
 r[0].push(signs[char][0])
 r[1].push(signs[char][1])
 r[2].push(signs[char][2])
 end if
 end for
-if ((typeof(colors) == \\"string\\")) then
+if (typeof(colors) == \\"string\\") then
 r[0]=(([((\\"<color=#\\" + colors) + \\">\\")] + r[0]) + [\\"</color>\\"])
 r[1]=(([((\\"<color=#\\" + colors) + \\">\\")] + r[1]) + [\\"</color>\\"])
 r[2]=(([((\\"<color=#\\" + colors) + \\">\\")] + r[2]) + [\\"</color>\\"])
-else if ((typeof(colors) == \\"list\\")) then
+else if (typeof(colors) == \\"list\\") then
 r[0]=(([((\\"<color=#\\" + colors[0]) + \\">\\")] + r[0]) + [\\"</color>\\"])
 r[1]=(([((\\"<color=#\\" + colors[1]) + \\">\\")] + r[1]) + [\\"</color>\\"])
 r[2]=(([((\\"<color=#\\" + colors[2]) + \\">\\")] + r[2]) + [\\"</color>\\"])
@@ -104,13 +104,13 @@ PasswordGenerator.increaseBuffer=function (i)
 me=self
 currentCharBuffer=me.buffer
 maxBufferSize=me.characters.len
-if ((i == null)) then i=(currentCharBuffer.len - 1)
+if (i == null) then i=(currentCharBuffer.len - 1)
 p=currentCharBuffer[i]
 p=(p + 1)
 currentCharBuffer[i]=p
-if ((p == maxBufferSize)) then
+if (p == maxBufferSize) then
 currentCharBuffer[i]=0
-if ((i == 0)) then
+if (i == 0) then
 currentCharBuffer.push(0)
 else
 me.increaseBuffer((i - 1))
@@ -123,13 +123,13 @@ currentCharBuffer=me.buffer
 generatorCharacters=me.characters
 password=\\"\\"
 index=0
-while ((index < currentCharBuffer.len))
+while (index < currentCharBuffer.len)
 pointer=currentCharBuffer[index]
 password=(password + generatorCharacters[pointer])
-if ((index == (currentCharBuffer.len - 1))) then self.increaseBuffer()
+if (index == (currentCharBuffer.len - 1)) then self.increaseBuffer()
 index=(index + 1)
 end while
-if ((currentCharBuffer.len > me.MAX_PASSWORD_LENGTH)) then
+if (currentCharBuffer.len > me.MAX_PASSWORD_LENGTH) then
 return null
 end if
 return password
@@ -138,7 +138,7 @@ pgen=(new PasswordGenerator).constructor()
 index=0
 max=10
 result=[]
-while ((index < max))
+while (index < max)
 result.push(pgen.gen())
 index=(index + 1)
 end while
@@ -155,7 +155,7 @@ String.parse=function (values)
 result=self.str
 index=0
 maxIndex=values.len
-while ((index < maxIndex))
+while (index < maxIndex)
 result=result.replace((\\"$\\" + index),values[index])
 index=(index + 1)
 end while
@@ -193,7 +193,7 @@ Error.String=String
 Error.constructor=function (message,values)
 m=self
 m.message=message
-if ((values != null)) then
+if (values != null) then
 m.message=(new m.String).constructor(message).parse(values).toString()
 end if
 return m
@@ -210,16 +210,16 @@ me=self
 me.defaultSecret=defaultSecret
 me.table=charset
 me.hashFn=@hashFn
-if ((@hashFn == null)) then me.hashFn=@md5
-if ((charset == null)) then me.table=me.defaultCharset
-if ((me.table.len != 64)) then (new me.Error).constructor(\\"Invalid charset $0...\\",[me.table]).throw()
+if (@hashFn == null) then me.hashFn=@md5
+if (charset == null) then me.table=me.defaultCharset
+if (me.table.len != 64) then (new me.Error).constructor(\\"Invalid charset $0...\\",[me.table]).throw()
 return me
 end function
 Crypto.getHash=function (pw)
 me=self
 hash=[]
 x=me.hashFn(pw)
-for (char in x)
+for char in x
 hash.push(char.code)
 end for
 hash.reverse
@@ -227,7 +227,7 @@ return hash
 end function
 Crypto.encrypt=function (str,pw)
 me=self
-if ((pw == null)) then pw=me.defaultSecret
+if (pw == null) then pw=me.defaultSecret
 hash=me.getHash(pw)
 hashPointer=0
 output=[]
@@ -235,7 +235,7 @@ position=0
 padding=(str.len % 3)
 max=(str.len - padding)
 get=function (v)
-if (not me.table.hasIndex(v)) then
+if not me.table.hasIndex(v) then
 (new me.Error).constructor(\\"Invalid index $0...\\",[v]).throw()
 end if
 return me.table[v]
@@ -249,7 +249,7 @@ end function
 RSHIFT=function (a,b)
 return bitwise(\\">>\\",a,b)
 end function
-while ((position < max))
+while (position < max)
 m=hash[((position % hash.len) - 1)]
 a=LSHIFT((str[position].code + m),16)
 b=LSHIFT((str[(position + 1)].code + m),8)
@@ -261,7 +261,7 @@ output.push(get(AND(RSHIFT(buffer,6),63)))
 output.push(get(AND(buffer,63)))
 position=(position + 3)
 end while
-if ((padding == 2)) then
+if (padding == 2) then
 m=hash[((position % hash.len) - 1)]
 a=LSHIFT((str[position].code + m),8)
 b=(str[(position + 1)].code + m)
@@ -270,7 +270,7 @@ output.push(get(RSHIFT(buffer,10)))
 output.push(get(AND(RSHIFT(buffer,4),63)))
 output.push(get(AND(LSHIFT(buffer,2),63)))
 output.push(\\"=\\")
-else if ((padding == 1)) then
+else if (padding == 1) then
 m=hash[((position % hash.len) - 1)]
 buffer=(str[position].code + m)
 output.push(get(RSHIFT(buffer,2)))
@@ -281,7 +281,7 @@ return output.join(\\"\\")
 end function
 Crypto.decrypt=function (str,pw)
 me=self
-if ((pw == null)) then pw=me.defaultSecret
+if (pw == null) then pw=me.defaultSecret
 hash=me.getHash(pw)
 hashPointer=0
 hashLength=hash.len
@@ -297,25 +297,25 @@ end function
 RSHIFT=function (a,b)
 return bitwise(\\">>\\",a,b)
 end function
-while ((position < max))
+while (position < max)
 buffer=me.table.indexOf(str[position])
 currentBit=bitCounter
 bitCounter=(bitCounter + 1)
-if ((currentBit % 4)) then
+if (currentBit % 4) then
 bitStorage=((bitStorage * 64) + buffer)
 else
 bitStorage=buffer
 end if
-if ((currentBit % 4)) then
+if (currentBit % 4) then
 expectedHashIndex=(((floor((hashPointer / 3)) * 3) % hashLength) - 1)
-if (not hash.hasIndex(expectedHashIndex)) then break
+if not hash.hasIndex(expectedHashIndex) then break
 m=hash[expectedHashIndex]
 operation=AND((-2 * bitCounter),6)
 operation=RSHIFT(bitStorage,operation)
 operation=AND(255,operation)
-if ((operation != 0)) then
+if (operation != 0) then
 charCode=(operation - m)
-if ((charCode > me.maxCharCode)) then break
+if (charCode > me.maxCharCode) then break
 output.push(char(charCode))
 end if
 hashPointer=(hashPointer + 1)
@@ -340,7 +340,7 @@ end function
 Random.calcSeed=function (seed)
 seedVal=0
 pos=seed.len
-for (char in seed)
+for char in seed
 seedVal=((seedVal + char.code) + pos)
 pos=(pos - 1)
 end for
@@ -349,11 +349,11 @@ end function
 Random.gen=function (min,max,seed,inc)
 me=self
 pool=me.pool
-if ((inc == null)) then inc=true
-if ((seed == null)) then seed=me.defaultSeed
-if (pool.hasIndex(seed)) then
+if (inc == null) then inc=true
+if (seed == null) then seed=me.defaultSeed
+if pool.hasIndex(seed) then
 ps=pool[seed]
-if (not inc) then return ps.value
+if not inc then return ps.value
 ps.generation=(ps.generation + 1)
 val=floor(((rnd((ps.value + ps.generation)) * (max - min)) + min))
 ps.value=val
@@ -368,12 +368,12 @@ Random.seq=function (min,max,seed,amount,keepPool)
 me=self
 index=0
 result=[]
-while ((index < amount))
+while (index < amount)
 temp=me.gen(min,max,seed)
 result.push(temp)
 index=(index + 1)
 end while
-if ((keepPool != true)) then me.pool.remove(seed)
+if (keepPool != true) then me.pool.remove(seed)
 return result
 end function
 Random.get=function (min,max)
