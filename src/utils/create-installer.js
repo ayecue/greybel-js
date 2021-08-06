@@ -48,13 +48,15 @@ function createFileLine(file, isNew) {
 			output = output.concat([
 				'print("Creating " + h + "/' + base + '")',
 				'c.touch(h, "' + base + '")',
-				'file = c.File(h + "/' + base + '")'
+				'file = c.File(h + "/' + base + '")',
+				'lines = []'
 			]);
 		} else {
 			output = output.concat([
 				'print("Creating " + h + "' + folder + '/' + base + '")',
 				'c.touch(h + "' + folder + '", "' + base + '")',
-				'file = c.File(h + "' + folder + '/' + base + '")'
+				'file = c.File(h + "' + folder + '/' + base + '")',
+				'lines = []'
 			]);
 		}
 	} else {
@@ -83,7 +85,11 @@ function createFileLine(file, isNew) {
 }
 
 function createCodeInsertLine(line) {
-	return 'lines.push("' + line.replace(/"/g, '""') + '")';
+	const parsed = line
+		.replace(/"/g, '""')
+		.replace(/^import_code\(/i, 'import" + "_" + "code(');
+
+	return 'lines.push("' + parsed + '")';
 }
 
 function createSetContentLine() {
@@ -118,6 +124,10 @@ module.exports = function(builder, maxWords) {
 	let content = createContentHeader();
 	let item = importList.shift();
 	const createInstallerFile = function() {
+		if (content.length === 0) {
+			return;
+		}
+
 		fs.writeFileSync(path.resolve(targetDirectory, 'installer' + installerSplits + '.src'), content, {
 			encoding: 'utf-8'
 		});
@@ -163,4 +173,6 @@ module.exports = function(builder, maxWords) {
 
 		item = importList.shift();
 	}
+
+	createInstallerFile();
 };

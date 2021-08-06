@@ -87,7 +87,9 @@ NamespaceGenerator.prototype.createNamespace = function(value, isCollision) {
 	const mapping = me.mapping;
 	const rmapping = me.rmapping;
 	
-	if (value in mapping && !isCollision) return;
+	if (value in mapping && !isCollision) {
+		return mapping[value];
+	}
 	
 	let namespace = me.generateNamespace();
 	

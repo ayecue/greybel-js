@@ -40,13 +40,15 @@ Builder.prototype.compile = function(options) {
 
 	if (options.uglify) mapper = uglifyMapper;
 
-	varNamespaces
-		.reset()
-		.preset(charsetMap.VARS);
-	moduleNamespaces
-		.reset()
-		.preset(charsetMap.MODULES);
-	literals.reset();
+	if (!me.isNativeImport) {
+		varNamespaces
+			.reset()
+			.preset(charsetMap.VARS);
+		moduleNamespaces
+			.reset()
+			.preset(charsetMap.MODULES);
+		literals.reset();
+	}
 
 	const content = fs.readFileSync(me.filepath, 'utf8');
 	logger.info('Parsing: ' + me.filepath);
@@ -58,7 +60,7 @@ Builder.prototype.compile = function(options) {
 	const dependency = new Dependency(me.filepath, chunk, options.uglify);
 	dependency.findDependencies();
 
-	return builder(dependency, mapper, options.uglify);
+	return builder(dependency, mapper, options.uglify, me.isNativeImport);
 };
 
 Builder.prototype.write = function(code, maxWords, installer) {
@@ -78,6 +80,10 @@ Builder.prototype.write = function(code, maxWords, installer) {
 	});
 
 	if (installer) {
+		if (me.nativeImportBuilders.length == 0) {
+			logger.warn('WARNING: Unecessary installer usage. There is no usage of import_code.');
+		}
+
 		createInstaller(me, maxWords);
 	}
 }
