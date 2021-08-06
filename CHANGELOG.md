@@ -74,3 +74,4 @@ All notable changes to this project will be documented in this file.
 - add installer feature
 - support import_code in builder
 - add mkdirp
+- fixed issue with default cli builder
