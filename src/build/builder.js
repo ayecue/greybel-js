@@ -4,7 +4,7 @@ const varNamespaces = require('./var-namespaces');
 const Tranformer = require('./builder/transformer');
 const literals = require('./literals');
 
-module.exports = function(mainDependency, mapper, isUglify) {
+module.exports = function(mainDependency, mapper, isUglify, isNativeImport) {
 	const tempVarForGlobal = varNamespaces.createNamespace('UNIQUE_GLOBAL_TEMP_VAR');
 	const transformer = new Tranformer(mapper);
 	const mainModuleName = moduleNamespaces.get(mainDependency.getId())
@@ -29,24 +29,31 @@ module.exports = function(mainDependency, mapper, isUglify) {
 
 	const processed = [];
 
-	if (isUglify) {
-		const literalMapping = literals.getMapping();
+	if (!isNativeImport) {
+		if (isUglify) {
+			const literalMapping = literals.getMapping();
 
-		processed.push('globals.' + tempVarForGlobal + '=globals');
+			processed.push('globals.' + tempVarForGlobal + '=globals');
 
-		Object.values(literalMapping).forEach(function(literal) {
-			if (literal.namespace == null) return;
-			processed.push(tempVarForGlobal + '.' + literal.namespace + '=' + literal.literal.raw);
-		});
-	}
+			Object.values(literalMapping).forEach(function(literal) {
+				if (literal.namespace == null) return;
+				processed.push(tempVarForGlobal + '.' + literal.namespace + '=' + literal.literal.raw);
+			});
+		}
 	
-	processed.push(headerBoilerplate);
+		processed.push(headerBoilerplate);
+	}
 
 	for (let moduleKey in modules) processed.push(modules[moduleKey]);
 	
 	const code = transformer.transform(mainDependency.chunk, mainDependency);
-	const moduleCode = mainBoilerplate.replace('"$0"', code);
-	processed.push(moduleCode);
+
+	if (isNativeImport) {
+		processed.push(code);
+	} else {
+		const moduleCode = mainBoilerplate.replace('"$0"', code);
+		processed.push(moduleCode);
+	}
 	
 	return processed.join('\n');
 };

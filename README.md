@@ -1,4 +1,4 @@
-# Greybel-JS 0.3.0
+# Greybel-JS 0.3.1
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
@@ -27,6 +27,8 @@ Features:
 - includes interpreter + emulator (Grey Hack polyfills) which enables debugging code
 - includes ui for interpreter + emulator and transpiler
 - debugger feature (not completly implemented yet)
+- installer feature
+- supports import_code
 
 # Install
 
@@ -45,11 +47,12 @@ Arguments:
 	output                      Output directory
 
 Options:
-	-V, --version               output the version number
-	-ev, --env-files <file...>  Environment varibales files
-	-vr, --env-vars <vars...>   Environment varibales
-	-u, --uglify                Uglify your code
-	-h, --help                  display help for command
+	-V, --version               	output the version number
+	-ev, --env-files <file...>  	Environment varibales files
+	-vr, --env-vars <vars...>   	Environment varibales
+	-u, --uglify                	Uglify your code
+	-h, --help                  	display help for command
+	-i, --installer			Create installer for GreyScript (Should be used if you use import_code)
 ```
 
 ### Examples:
@@ -57,6 +60,14 @@ Options:
 ```
 greybel /my/code/file.src
 ```
+
+You can use the installer feature if you are using `import_code`. 
+```
+greybel /my/code/file.src --installer
+```
+This will create an installer file. Instead of copy+pasting every single file you can just copy+paste the installer files into Grey Hack. The installer files will automatically get splitted if it is at the max character limit of a Grey Hack file.
+
+To execute an installer you just have to create a file and paste the installer file content into it. Then you need to use the `build` command to compile it to an binary. Then just execute the binary. It will automatically create all the files in your Grey Hack file system.
 
 ## Emulator
 ```
@@ -186,6 +197,22 @@ HelloWord() //prints "Hello world!"
 HelloName("Joe") //prints "Hello Joe!"
 ```
 
+## import_code
+The native `import_code` is now supported as well. For now it's only available in the builder. The interpreter will not support this for now. Will be added in a later update.
+
+The implementation in this parser enables you to build files in your actual file system via an additional attribute.
+```
+// The default import_code command will just be parsed but won't actually include a file from your file system
+import_code("somefile.src");
+
+// As you can see this will adds another string behind the actual parameter. This enables the parser to build a dependency in your file system.
+import_code("somefile.src":"./myProject/test.src");
+```
+
+This going to be very useful if you want to use the new feature but still want your script files to get optimized.
+
+Together with the new `--installer` flag in the CLI it will even build an installer file for you which makes it easier to copy paste code from your file system into the game.
+
 ## Including
 Include will use the relative path from the file it imports to. Also keep in mind to not use the `.src` extension. Unlike `import` this will not wrap the module. This will just purely put the content of a file into your script.
 ```
@@ -228,7 +255,6 @@ print("Another string!")
 
 # Things to come
 - add full support of Grey Hack API to emulator (delayed for now)
-- add support for native `import_code`
 - port greybel-js to GreyScript to replace https://github.com/ayecue/greybel
 - clean up codebase
 - use typescript

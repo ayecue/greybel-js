@@ -35,7 +35,8 @@ program
 	.option('-ev, --env-files <file...>', 'Environment varibales files')
 	.option('-vr, --env-vars <vars...>', 'Environment varibales')
 	.option('-u, --uglify', 'Uglify your code')
-	.option('-n, --name', 'Output filename');
+	.option('-n, --name', 'Output filename')
+	.option('-i, --installer', 'Create installer for GreyScript (Should be used if you use import_code)');
 
 program.parse(process.argv);
 
@@ -46,6 +47,7 @@ program.parse(process.argv);
 		envFiles: options.envFiles,
 		envVars: options.envVars,
 		uglify: options.uglify,
-		name: options.name
+		name: options.name,
+		installer: options.installer
 	});
 })();

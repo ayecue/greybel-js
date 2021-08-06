@@ -228,6 +228,9 @@ const mapper = function(visit, debug, raise) {
 		'FeatureIncludeExpression': function(_item) {
 			throw new Error('Not supported');
 		},
+		'ImportCodeExpression': function(_item) {
+			throw new Error('Not supported');
+		},
 		'FeatureDebuggerExpression': function(item) {
 			return new DebuggerOperation(item, debug, raise);
 		},

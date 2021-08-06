@@ -78,7 +78,7 @@ const mapper = function(make, _stack, _depth, _context) {
 				body.push(transformed);
 			}
 
-			return 'while (' + condition + ')\n' + body.join('\n') + '\nend while';
+			return 'while ' + condition + '\n' + body.join('\n') + '\nend while';
 		},
 		'CallExpression': function(item) {
 			const base = make(item.base);
@@ -137,13 +137,13 @@ const mapper = function(make, _stack, _depth, _context) {
 			const condition = make(item.condition);
 			const statement = make(item.statement);
 
-			return 'if (' + condition + ') then ' + statement;
+			return 'if ' + condition + ' then ' + statement;
 		},
 		'ElseifShortcutClause': function(item) {
 			const condition = make(item.condition);
 			const statement = make(item.statement);
 
-			return ' else if (' + condition + ') then ' + statement;
+			return ' else if ' + condition + ' then ' + statement;
 		},
 		'ElseShortcutClause': function(item) {
 			const statement = make(item.statement);
@@ -165,7 +165,7 @@ const mapper = function(make, _stack, _depth, _context) {
 				body.push(transformed);
 			}
 
-			return 'for (' + variable + ' in ' + iterator + ')\n' + body.join('\n') + '\nend for';
+			return 'for ' + variable + ' in ' + iterator + '\n' + body.join('\n') + '\nend for';
 		},
 		'IfStatement': function(item) {
 			const clauses = [];
@@ -188,7 +188,7 @@ const mapper = function(make, _stack, _depth, _context) {
 				body.push(transformed);
 			}
 
-			return 'if (' + condition + ') then\n' + body.join('\n');
+			return 'if ' + condition + ' then\n' + body.join('\n');
 		},
 		'ElseifClause': function(item) {
 			const condition = make(item.condition);
@@ -201,7 +201,7 @@ const mapper = function(make, _stack, _depth, _context) {
 				body.push(transformed);
 			}
 
-			return 'else if (' + condition + ') then\n' + body.join('\n');
+			return 'else if ' + condition + ' then\n' + body.join('\n');
 		},
 		'ElseClause': function(item) {
 			const body = [];
@@ -297,6 +297,10 @@ const mapper = function(make, _stack, _depth, _context) {
 			}
 
 			return body.join('\n');
+		},
+		'ImportCodeExpression': function(item) {
+			const dir = make(item.gameDirectory);
+			return 'import_code(' + dir + ')';
 		}
 	};
 };

@@ -121,10 +121,11 @@ const AST = {
             line: line
         };
     },
-    chunk: function(body, imports, includes, namespaces, line) {
+    chunk: function(body, imports, nativeImports, includes, namespaces, line) {
         return {
             type: 'Chunk',
             body: body,
+            nativeImports: nativeImports,
             imports: imports,
             includes: includes,
             namespaces: namespaces,
@@ -314,6 +315,14 @@ const AST = {
             type: 'SliceExpression',
             left: left,
             right: right,
+            line: line
+        };
+    },
+    importCodeExpression: function(gameDirectory, fileSystemDirectory, line) {
+        return {
+            type: 'ImportCodeExpression',
+            gameDirectory: gameDirectory,
+            fileSystemDirectory: fileSystemDirectory,
             line: line
         };
     }
