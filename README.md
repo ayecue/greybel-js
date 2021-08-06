@@ -47,12 +47,12 @@ Arguments:
 	output                      Output directory
 
 Options:
-	-V, --version               output the version number
-	-ev, --env-files <file...>  Environment varibales files
-	-vr, --env-vars <vars...>   Environment varibales
-	-u, --uglify                Uglify your code
-	-h, --help                  display help for command
-	-i, --installer				Create installer for GreyScript (Should be used if you use import_code)
+	-V, --version               	output the version number
+	-ev, --env-files <file...>  	Environment varibales files
+	-vr, --env-vars <vars...>   	Environment varibales
+	-u, --uglify                	Uglify your code
+	-h, --help                  	display help for command
+	-i, --installer			Create installer for GreyScript (Should be used if you use import_code)
 ```
 
 ### Examples:
