@@ -8,7 +8,8 @@ Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/packag
 
 Also partly based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
 
-Latest changes: [Changelog](/CHANGELOG.md)
+- Latest changes: [Changelog](/CHANGELOG.md)
+- Demo Project: [TEdit](https://github.com/ayecue/tedit)
 
 Features:
 - supports shortcuts for blocks
