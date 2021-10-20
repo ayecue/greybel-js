@@ -24,13 +24,13 @@ const PathExpression = function(ast, visit, debug, raise) {
 				if (node.index?.type === 'SliceExpression') {
 					expression = append(expression, {
 						type: 'slice',
-						left: buildExpression(node.index.left),
-						right: buildExpression(node.index.right)
+						left: visit(node.index.left),
+						right: visit(node.index.right)
 					});
 				} else {
 					expression = append(expression, {
 						type: 'index',
-						value: buildExpression(node.index)
+						value: visit(node.index)
 					});
 				}
 
@@ -106,16 +106,13 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 					}
 				}
 			} else if (current?.type === 'index') {
-				current = current.value[0];
+				current = current.value;
 
 				if (typer.isCustomValue(current)) {
 					traversedPath.push(current.valueOf());
 				} else if (current?.isExpression) {
 					const value = await current.get(operationContext);
 					traversedPath.push(value);
-				} else if (current?.type === 'path') {
-					const value = await operationContext.get(current.value);
-					traversedPath.push(value.valueOf());
 				} else {
 					me.raise('Unexpected index', me, current);
 				}
@@ -123,23 +120,23 @@ PathExpression.prototype.get = async function(operationContext, parentExpr) {
 				if (!handle) {
 					handle = await operationContext.get(traversedPath);
 					traversedPath = [];
-				} else if (!typer.isCustomList(handle)) {
+				} else if (!typer.isCustomList(handle) && !typer.isCustomString(handle)) {
 					me.raise('Invalid type for slice', me, handle);
 				}
 
-				let left = current.left[0];
+				let left = current.left;
 
 				if (typer.isCustomValue(left)) {
 					left = left;
-				} else if (node.left?.isExpression) {
+				} else if (left?.isExpression) {
 					left = await left.get(operationContext);
 				}
 
-				let right = current.right[0];
+				let right = current.right;
 
 				if (typer.isCustomValue(right)) {
 					right = right;
-				} else if (node.left?.isExpression) {
+				} else if (right?.isExpression) {
 					right = await right.get(operationContext);
 				}
 
