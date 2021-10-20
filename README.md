@@ -1,4 +1,4 @@
-# Greybel-JS 0.3.1
+# Greybel-JS 0.3.2
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
@@ -48,12 +48,13 @@ Arguments:
 	output                      Output directory
 
 Options:
-	-V, --version               	output the version number
-	-ev, --env-files <file...>  	Environment varibales files
-	-vr, --env-vars <vars...>   	Environment varibales
-	-u, --uglify                	Uglify your code
-	-h, --help                  	display help for command
-	-i, --installer			Create installer for GreyScript (Should be used if you use import_code)
+	-V, --version               			Output the version number
+	-ev, --env-files <file...>  			Environment varibales files
+	-vr, --env-vars <vars...>   			Environment varibales
+	-en, --exclude-namespaces <vars...>		Exclude namespaces from optimization
+	-u, --uglify                			Uglify your code
+	-h, --help                  			Display help for command
+	-i, --installer							Create installer for GreyScript (Should be used if you use import_code)
 ```
 
 ### Examples:

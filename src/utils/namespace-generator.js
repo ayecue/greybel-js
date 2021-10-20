@@ -9,6 +9,18 @@ const NamespaceGenerator = function(characters, forbidden, defaultNamespaces) {
 	return me;
 };
 
+NamespaceGenerator.prototype.exclude = function(namespace) {
+	const me = this;
+	
+	if (Array.isArray(namespace)) {
+		me.forbidden = me.forbidden.concat(namespace);
+	} else {
+		me.forbidden.push(namespace);
+	}
+
+	return me;
+};
+
 NamespaceGenerator.prototype.setCharset = function(characters) {
 	const me = this;
 	me.characters = characters;
@@ -75,8 +87,10 @@ NamespaceGenerator.prototype.generateNamespace = function() {
 		if (index == currentCharBuffer.length - 1) me.increaseBuffer();
 		index = index + 1;
 	}
-	
-	if (forbiddenNamespaces.indexOf(name) != -1) return me.generateNamespace();
+
+	if (forbiddenNamespaces.indexOf(name) != -1) {
+		return me.generateNamespace();
+	}
 	
 	return name;
 };
@@ -86,6 +100,11 @@ NamespaceGenerator.prototype.createNamespace = function(value, isCollision) {
 	const me = this;
 	const mapping = me.mapping;
 	const rmapping = me.rmapping;
+	const forbiddenNamespaces = me.forbidden;
+
+	if (forbiddenNamespaces.indexOf(value) != -1) {
+		return value;
+	}
 	
 	if (value in mapping && !isCollision) {
 		return mapping[value];

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`build-light default scripts 1`] = `
+exports[`build-light default scripts ascii.src 1`] = `
 "AsciiGen={}
 map={}
 map.a=[\\"||¯|| \\",\\"||_|| \\",\\"|| || \\"]
@@ -66,7 +66,7 @@ end function
 print(AsciiGen.gen(\\"Hallo\\"))"
 `;
 
-exports[`build-light default scripts 2`] = `
+exports[`build-light default scripts binary-expressions.src 1`] = `
 "a=(a / b)
 a=(a * b)
 a=(a - b)
@@ -81,14 +81,14 @@ w=(bitwise(\\">>\\",(bitwise(\\">>>\\",a,(bitwise(\\"<<\\",b,c)))),a))
 (a or b)"
 `;
 
-exports[`build-light default scripts 3`] = `
+exports[`build-light default scripts negation.src 1`] = `
 "test=(((-1 + 2) + -2) + +3)
 foo=[-1,(-2 + 4),((-2 + -4) + +6)]
 print(test)
 print(foo)"
 `;
 
-exports[`build-light default scripts 4`] = `
+exports[`build-light default scripts password-generator.src 1`] = `
 "PasswordGenerator={}
 PasswordGenerator.MAX_PASSWORD_LENGTH=15
 PasswordGenerator.ALPHABETIC_CHARACTERS=\\"qwertzuiopasdfghjklyxcvbnm\\"
@@ -145,7 +145,7 @@ end while
 print(result)"
 `;
 
-exports[`build-light default scripts 5`] = `
+exports[`build-light default scripts pseudo-crypto.src 1`] = `
 "String={}
 String.constructor=function (str)
 self.str=str
@@ -203,6 +203,7 @@ exit(((\\"<color=#ff0000>\\" + self.message) + \\"</color>\\"))
 end function
 Crypto={}
 Crypto.defaultCharset=\\"QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-\\"
+Crypto.defaultSecret=\\"test123\\"
 Crypto.maxCharCode=55295
 Crypto.Error=Error
 Crypto.constructor=function (defaultSecret,hashFn,charset)
@@ -325,12 +326,14 @@ end while
 return output.join(\\"\\")
 end function
 test=(new Crypto).constructor(\\"test\\")
-foo=test.encrypt(user_input(\\"gif password\\"))
+pwd=\\"abcde\\"
+foo=test.encrypt(pwd)
+decrypted=test.decrypt(foo)
 print(foo)
-print(test.decrypt(foo))"
+print(decrypted)"
 `;
 
-exports[`build-light default scripts 6`] = `
+exports[`build-light default scripts random.src 1`] = `
 "Random={}
 Random.pool={}
 Random.defaultSeed=\\"random\\"
@@ -383,7 +386,7 @@ print(Random.get(100,500))
 print(Random.seq(100,500,\\"test\\",10))"
 `;
 
-exports[`build-light default scripts 7`] = `
+exports[`build-light default scripts simple-object.src 1`] = `
 "test={}
 test.here=\\"was\\"
 test.was=function ()
@@ -392,7 +395,22 @@ end function
 print(test.was())"
 `;
 
-exports[`build-light default scripts 8`] = `
+exports[`build-light default scripts slice.src 1`] = `
+"divideString=function (str,limit)
+offset=0
+maxLen=str.len
+frags=[]
+while (offset < maxLen)
+next=(offset + limit)
+frags.push(str[offset:next])
+offset=next
+end while
+return frags
+end function
+print(divideString(\\"blahhblahhblahhblahhblahhblahhgad\\",5))"
+`;
+
+exports[`build-light default scripts unary.src 1`] = `
 "test=function ()
 return null
 end function
@@ -404,7 +422,7 @@ print((-1 + 2))
 print(-(1 + 2))"
 `;
 
-exports[`build-light uglify scripts 1`] = `
+exports[`build-light uglify scripts ascii.src 1`] = `
 "globals.AC=globals
 AC.f=\\"||¯|| \\"
 AC.d=\\"||_|| \\"
@@ -483,7 +501,7 @@ end function
 print(H.gen(\\"Hallo\\"))"
 `;
 
-exports[`build-light uglify scripts 2`] = `
+exports[`build-light uglify scripts binary-expressions.src 1`] = `
 "globals.L=globals
 H=(H/I)
 H=(H*I)
@@ -499,7 +517,7 @@ J=(bitwise(\\">>\\",(bitwise(\\">>>\\",H,(bitwise(\\"<<\\",I,K)))),H))
 (H or I)"
 `;
 
-exports[`build-light uglify scripts 3`] = `
+exports[`build-light uglify scripts negation.src 1`] = `
 "globals.J=globals
 H=(((-1+2)+-2)++3)
 I=[-1,(-2+4),((-2+-4)++6)]
@@ -507,7 +525,7 @@ print(H)
 print(I)"
 `;
 
-exports[`build-light uglify scripts 4`] = `
+exports[`build-light uglify scripts password-generator.src 1`] = `
 "globals.f=globals
 H={}
 H.MAX_PASSWORD_LENGTH=15
@@ -565,11 +583,11 @@ end while
 print(e)"
 `;
 
-exports[`build-light uglify scripts 5`] = `
-"globals.Ab=globals
-Ab.AY=1
-Ab.AO=63
-Ab.m=null
+exports[`build-light uglify scripts pseudo-crypto.src 1`] = `
+"globals.Ac=globals
+Ac.AX=1
+Ac.AN=63
+Ac.m=null
 H={}
 H.constructor=function(str)
 self.str=str
@@ -581,7 +599,7 @@ L=0
 M=J.len
 while (L<M)
 K=K.replace((\\"$\\"+L),J[L])
-L=(L+AY)
+L=(L+AX)
 end while
 return (new self).constructor(K)
 end function
@@ -612,26 +630,27 @@ end function
 H.trim=function(Y)
 return (new self).constructor(self.str.trim)
 end function
-AF={}
-AF.String=H
-AF.constructor=function(AH,J)
-AL=self
-AL.message=AH
+AE={}
+AE.String=H
+AE.constructor=function(AG,J)
+AK=self
+AK.message=AG
 if (J!=m) then
-AL.message=(new AL.String).constructor(AH).parse(J).toString
+AK.message=(new AK.String).constructor(AG).parse(J).toString
 end if
-return AL
+return AK
 end function
-AF.throw=function()
+AE.throw=function()
 exit(((\\"<color=#ff0000>\\"+self.message)+\\"</color>\\"))
 end function
 e={}
 e.defaultCharset=\\"QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-\\"
+e.defaultSecret=\\"test123\\"
 e.maxCharCode=55295
-e.Error=AF
-e.constructor=function(h,i,j)
+e.Error=AE
+e.constructor=function(g,i,j)
 k=self
-k.defaultSecret=h
+k.defaultSecret=g
 k.table=j
 k.hashFn=@i
 if (@i==m) then k.hashFn=@md5
@@ -641,120 +660,122 @@ return k
 end function
 e.getHash=function(o)
 k=self
-p=[]
-q=k.hashFn(o)
-for char in q
-p.push(char.code)
+hash=[]
+p=k.hashFn(o)
+for char in p
+hash.push(char.code)
 end for
-p.reverse
-return p
+hash.reverse
+return hash
 end function
 e.encrypt=function(str,o)
 k=self
 if (o==m) then o=k.defaultSecret
-p=k.getHash(o)
-AC=0
-w=[]
-x=0
-y=(str.len%3)
-z=(str.len-y)
-_A=function(AB)
-if not k.table.hasIndex(AB) then
-(new k.Error).constructor(\\"Invalid index $0...\\",[AB]).throw
+hash=k.getHash(o)
+u=0
+AB=[]
+w=0
+x=(str.len%3)
+y=(str.len-x)
+z=function(_A)
+if not k.table.hasIndex(_A) then
+(new k.Error).constructor(\\"Invalid index $0...\\",[_A]).throw
 end if
-return k.table[AB]
+return k.table[_A]
 end function
-AD=function(AE,AG)
-return bitwise(\\"&\\",AE,AG)
+AC=function(AD,AF)
+return bitwise(\\"&\\",AD,AF)
 end function
-AI=function(AE,AG)
-return bitwise(\\"<<\\",AE,AG)
+AH=function(AD,AF)
+return bitwise(\\"<<\\",AD,AF)
 end function
-AJ=function(AE,AG)
-return bitwise(\\">>\\",AE,AG)
+AI=function(AD,AF)
+return bitwise(\\">>\\",AD,AF)
 end function
-while (x<z)
-AL=p[((x%p.len)-AY)]
-AE=AI((str[x].code+AL),16)
-AG=AI((str[(x+AY)].code+AL),8)
-AK=(str[(x+2)].code+AL)
-AN=((AE+AG)+AK)
-w.push(_A(AD(AJ(AN,18),AO)))
-w.push(_A(AD(AJ(AN,12),AO)))
-w.push(_A(AD(AJ(AN,6),AO)))
-w.push(_A(AD(AN,AO)))
-x=(x+3)
+while (w<y)
+AK=hash[((w%hash.len)-AX)]
+AD=AH((str[w].code+AK),16)
+AF=AH((str[(w+AX)].code+AK),8)
+AJ=(str[(w+2)].code+AK)
+AM=((AD+AF)+AJ)
+AB.push(z(AC(AI(AM,18),AN)))
+AB.push(z(AC(AI(AM,12),AN)))
+AB.push(z(AC(AI(AM,6),AN)))
+AB.push(z(AC(AM,AN)))
+w=(w+3)
 end while
-if (y==2) then
-AL=p[((x%p.len)-AY)]
-AE=AI((str[x].code+AL),8)
-AG=(str[(x+AY)].code+AL)
-AN=(AE+AG)
-w.push(_A(AJ(AN,10)))
-w.push(_A(AD(AJ(AN,4),AO)))
-w.push(_A(AD(AI(AN,2),AO)))
-w.push(\\"=\\")
-else if (y==AY) then
-AL=p[((x%p.len)-AY)]
-AN=(str[x].code+AL)
-w.push(_A(AJ(AN,2)))
-w.push(_A(AD(AI(AN,4),AO)))
-w.push(\\"==\\")
+if (x==2) then
+AK=hash[((w%hash.len)-AX)]
+AD=AH((str[w].code+AK),8)
+AF=(str[(w+AX)].code+AK)
+AM=(AD+AF)
+AB.push(z(AI(AM,10)))
+AB.push(z(AC(AI(AM,4),AN)))
+AB.push(z(AC(AH(AM,2),AN)))
+AB.push(\\"=\\")
+else if (x==AX) then
+AK=hash[((w%hash.len)-AX)]
+AM=(str[w].code+AK)
+AB.push(z(AI(AM,2)))
+AB.push(z(AC(AH(AM,4),AN)))
+AB.push(\\"==\\")
 end if
-return w.join(\\"\\")
+return AB.join(\\"\\")
 end function
 e.decrypt=function(str,o)
 k=self
 if (o==m) then o=k.defaultSecret
-p=k.getHash(o)
-AC=0
-AR=p.len
-w=[]
+hash=k.getHash(o)
+u=0
+AQ=hash.len
+AB=[]
+AR=0
 AS=0
-AT=0
-x=0
-AC=0
-z=str.len
-AD=function(AE,AG)
-return bitwise(\\"&\\",AE,AG)
+w=0
+u=0
+y=str.len
+AC=function(AD,AF)
+return bitwise(\\"&\\",AD,AF)
 end function
-AJ=function(AE,AG)
-return bitwise(\\">>\\",AE,AG)
+AI=function(AD,AF)
+return bitwise(\\">>\\",AD,AF)
 end function
-while (x<z)
-AN=k.table.indexOf(str[x])
-AU=AS
-AS=(AS+AY)
-if (AU%4) then
-AT=((AT*64)+AN)
+while (w<y)
+AM=k.table.indexOf(str[w])
+AT=AR
+AR=(AR+AX)
+if (AT%4) then
+AS=((AS*64)+AM)
 else
-AT=AN
+AS=AM
 end if
-if (AU%4) then
-AV=(((floor((AC/3))*3)%AR)-AY)
-if not p.hasIndex(AV) then break
-AL=p[AV]
-AW=AD((-2*AS),6)
-AW=AJ(AT,AW)
-AW=AD(255,AW)
-if (AW!=0) then
-AX=(AW-AL)
-if (AX>k.maxCharCode) then break
-w.push(char(AX))
+if (AT%4) then
+AU=(((floor((u/3))*3)%AQ)-AX)
+if not hash.hasIndex(AU) then break
+AK=hash[AU]
+AV=AC((-2*AR),6)
+AV=AI(AS,AV)
+AV=AC(255,AV)
+if (AV!=0) then
+AW=(AV-AK)
+if (AW>k.maxCharCode) then break
+AB.push(char(AW))
 end if
-AC=(AC+AY)
+u=(u+AX)
 end if
-x=(x+AY)
+w=(w+AX)
 end while
-return w.join(\\"\\")
+return AB.join(\\"\\")
 end function
-AZ=(new e).constructor(\\"test\\")
-Aa=AZ.encrypt(user_input(\\"gif password\\"))
+AY=(new e).constructor(\\"test\\")
+AZ=\\"abcde\\"
+Aa=AY.encrypt(AZ)
+Ab=AY.decrypt(Aa)
 print(Aa)
-print(AZ.decrypt(Aa))"
+print(Ab)"
 `;
 
-exports[`build-light uglify scripts 6`] = `
+exports[`build-light uglify scripts random.src 1`] = `
 "globals.j=globals
 H={}
 H.pool={}
@@ -808,7 +829,7 @@ print(H.get(100,500))
 print(H.seq(100,500,\\"test\\",10))"
 `;
 
-exports[`build-light uglify scripts 7`] = `
+exports[`build-light uglify scripts simple-object.src 1`] = `
 "globals.K=globals
 H={}
 H.here=\\"was\\"
@@ -818,7 +839,23 @@ end function
 print(H.was)"
 `;
 
-exports[`build-light uglify scripts 8`] = `
+exports[`build-light uglify scripts slice.src 1`] = `
+"globals.P=globals
+H=function(str,I)
+J=0
+K=str.len
+M=[]
+while (J<K)
+N=(J+I)
+M.push(str[J:N])
+J=N
+end while
+return M
+end function
+print(H(\\"blahhblahhblahhblahhblahhblahhgad\\",5))"
+`;
+
+exports[`build-light uglify scripts unary.src 1`] = `
 "globals.L=globals
 L.K=\\"was\\"
 L.J=false

@@ -1,3 +1,5 @@
+const typer = require('../typer');
+
 const ReferenceOperation = function(ast, debug, raise) {
 	const me = this;
 	me.ast = ast;
@@ -12,13 +14,17 @@ ReferenceOperation.prototype.get = async function(operationContext) {
 	const me = this;
 	let arg;
 
-	if (me.arg?.isExpression) {
+	if (typer.isCustomValue(me.arg)) {
+		return me.arg;
+	} else if (me.arg?.isExpression) {
 		arg = await me.arg.get(operationContext, me);
 	} else {
 		me.raise('Unexpected reference', me, me.arg);
 	}
 
-	if (arg.handle) {
+	if (typer.isCustomValue(arg)) {
+		return arg;
+	} else if (arg.handle) {
 		if (arg.handle?.isObject) {
 			return arg.handle.get(arg.path);
 		}

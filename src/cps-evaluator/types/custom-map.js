@@ -126,17 +126,18 @@ CustomMap.prototype.get = async function(path) {
 	const traversalPath = [].concat(path);
 	const refs = me.value;
 	const current = traversalPath.shift();
+	const currentValue = current?.valueOf();
 	let origin = refs;
 
-	if (current != null) {
-		if (current in origin) {
-			origin = origin[current];
+	if (currentValue != null) {
+		if (currentValue in origin) {
+			origin = origin[currentValue];
 
 			if (traversalPath.length > 0 && origin?.isObject) {
 				return origin.get(traversalPath);
 			}
-		} else if (path.length === 1 && EXPOSED_METHODS.includes(current)) {
-			return me[current];
+		} else if (path.length === 1 && EXPOSED_METHODS.includes(currentValue)) {
+			return me[currentValue];
 		} else {
 			throw new Error(`Cannot get path ${path.join('.')}`);
 		}

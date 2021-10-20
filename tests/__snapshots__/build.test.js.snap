@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`build default scripts 1`] = `
+exports[`build default scripts ascii.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -80,7 +80,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 2`] = `
+exports[`build default scripts binary-expressions.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -109,7 +109,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 3`] = `
+exports[`build default scripts negation.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -130,7 +130,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 4`] = `
+exports[`build default scripts password-generator.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -201,7 +201,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 5`] = `
+exports[`build default scripts pseudo-crypto.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -271,6 +271,7 @@ exit(((\\"<color=#ff0000>\\" + self.message) + \\"</color>\\"))
 end function
 Crypto={}
 Crypto.defaultCharset=\\"QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-\\"
+Crypto.defaultSecret=\\"test123\\"
 Crypto.maxCharCode=55295
 Crypto.Error=Error
 Crypto.constructor=function (defaultSecret,hashFn,charset)
@@ -393,14 +394,16 @@ end while
 return output.join(\\"\\")
 end function
 test=(new Crypto).constructor(\\"test\\")
-foo=test.encrypt(user_input(\\"gif password\\"))
+pwd=\\"abcde\\"
+foo=test.encrypt(pwd)
+decrypted=test.decrypt(foo)
 print(foo)
-print(test.decrypt(foo))
+print(decrypted)
 end function
 MAIN()"
 `;
 
-exports[`build default scripts 6`] = `
+exports[`build default scripts random.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -467,7 +470,7 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 7`] = `
+exports[`build default scripts simple-object.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -490,7 +493,36 @@ end function
 MAIN()"
 `;
 
-exports[`build default scripts 8`] = `
+exports[`build default scripts slice.src 1`] = `
+"BACKSLASH_CODE=92
+NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
+MODULES={}
+EXPORTED={}
+__REQUIRE=function (r)
+if not MODULES.hasIndex(r) then
+exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+end if
+module=MODULES[r]
+return @module(r).exports
+end function
+MAIN=function ()
+divideString=function (str,limit)
+offset=0
+maxLen=str.len
+frags=[]
+while (offset < maxLen)
+next=(offset + limit)
+frags.push(str[offset:next])
+offset=next
+end while
+return frags
+end function
+print(divideString(\\"blahhblahhblahhblahhblahhblahhgad\\",5))
+end function
+MAIN()"
+`;
+
+exports[`build default scripts unary.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
 MODULES={}
@@ -516,7 +548,7 @@ end function
 MAIN()"
 `;
 
-exports[`build uglify scripts 1`] = `
+exports[`build uglify scripts ascii.src 1`] = `
 "globals.ϩ=globals
 ϩ.f=\\"||¯|| \\"
 ϩ.d=\\"||_|| \\"
@@ -609,7 +641,7 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 2`] = `
+exports[`build uglify scripts binary-expressions.src 1`] = `
 "globals.L=globals
 A=92
 B=(char(A)+\\"n\\")
@@ -639,7 +671,7 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 3`] = `
+exports[`build uglify scripts negation.src 1`] = `
 "globals.J=globals
 A=92
 B=(char(A)+\\"n\\")
@@ -661,7 +693,7 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 4`] = `
+exports[`build uglify scripts password-generator.src 1`] = `
 "globals.f=globals
 A=92
 B=(char(A)+\\"n\\")
@@ -733,11 +765,11 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 5`] = `
-"globals.Ђ=globals
-Ђ.Ͽ=1
-Ђ.ϵ=63
-Ђ.m=null
+exports[`build uglify scripts pseudo-crypto.src 1`] = `
+"globals.Ѓ=globals
+Ѓ.Ͼ=1
+Ѓ.ϴ=63
+Ѓ.m=null
 A=92
 B=(char(A)+\\"n\\")
 C={}
@@ -761,7 +793,7 @@ L=0
 M=J.len
 while (L<M)
 K=K.replace((\\"$\\"+L),J[L])
-L=(L+Ͽ)
+L=(L+Ͼ)
 end while
 return (new self).constructor(K)
 end function
@@ -792,26 +824,27 @@ end function
 H.trim=function(Y)
 return (new self).constructor(self.str.trim)
 end function
-Ϭ={}
-Ϭ.String=H
-Ϭ.constructor=function(Ϯ,J)
-ϲ=self
-ϲ.message=Ϯ
+ϫ={}
+ϫ.String=H
+ϫ.constructor=function(ϭ,J)
+ϱ=self
+ϱ.message=ϭ
 if (J!=m) then
-ϲ.message=(new ϲ.String).constructor(Ϯ).parse(J).toString
+ϱ.message=(new ϱ.String).constructor(ϭ).parse(J).toString
 end if
-return ϲ
+return ϱ
 end function
-Ϭ.throw=function()
+ϫ.throw=function()
 exit(((\\"<color=#ff0000>\\"+self.message)+\\"</color>\\"))
 end function
 e={}
 e.defaultCharset=\\"QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-\\"
+e.defaultSecret=\\"test123\\"
 e.maxCharCode=55295
-e.Error=Ϭ
-e.constructor=function(h,i,j)
+e.Error=ϫ
+e.constructor=function(g,i,j)
 k=self
-k.defaultSecret=h
+k.defaultSecret=g
 k.table=j
 k.hashFn=@i
 if (@i==m) then k.hashFn=@md5
@@ -821,122 +854,124 @@ return k
 end function
 e.getHash=function(o)
 k=self
-p=[]
-q=k.hashFn(o)
-for char in q
-p.push(char.code)
+hash=[]
+p=k.hashFn(o)
+for char in p
+hash.push(char.code)
 end for
-p.reverse
-return p
+hash.reverse
+return hash
 end function
 e.encrypt=function(str,o)
 k=self
 if (o==m) then o=k.defaultSecret
-p=k.getHash(o)
-ϩ=0
-w=[]
-x=0
-y=(str.len%3)
-z=(str.len-y)
-_=function(Ϩ)
-if not k.table.hasIndex(Ϩ) then
-(new k.Error).constructor(\\"Invalid index $0...\\",[Ϩ]).throw
+hash=k.getHash(o)
+u=0
+Ϩ=[]
+w=0
+x=(str.len%3)
+y=(str.len-x)
+z=function(_)
+if not k.table.hasIndex(_) then
+(new k.Error).constructor(\\"Invalid index $0...\\",[_]).throw
 end if
-return k.table[Ϩ]
+return k.table[_]
 end function
-Ϫ=function(ϫ,ϭ)
-return bitwise(\\"&\\",ϫ,ϭ)
+ϩ=function(Ϫ,Ϭ)
+return bitwise(\\"&\\",Ϫ,Ϭ)
 end function
-ϯ=function(ϫ,ϭ)
-return bitwise(\\"<<\\",ϫ,ϭ)
+Ϯ=function(Ϫ,Ϭ)
+return bitwise(\\"<<\\",Ϫ,Ϭ)
 end function
-ϰ=function(ϫ,ϭ)
-return bitwise(\\">>\\",ϫ,ϭ)
+ϯ=function(Ϫ,Ϭ)
+return bitwise(\\">>\\",Ϫ,Ϭ)
 end function
-while (x<z)
-ϲ=p[((x%p.len)-Ͽ)]
-ϫ=ϯ((str[x].code+ϲ),16)
-ϭ=ϯ((str[(x+Ͽ)].code+ϲ),8)
-ϱ=(str[(x+2)].code+ϲ)
-ϴ=((ϫ+ϭ)+ϱ)
-w.push(_(Ϫ(ϰ(ϴ,18),ϵ)))
-w.push(_(Ϫ(ϰ(ϴ,12),ϵ)))
-w.push(_(Ϫ(ϰ(ϴ,6),ϵ)))
-w.push(_(Ϫ(ϴ,ϵ)))
-x=(x+3)
+while (w<y)
+ϱ=hash[((w%hash.len)-Ͼ)]
+Ϫ=Ϯ((str[w].code+ϱ),16)
+Ϭ=Ϯ((str[(w+Ͼ)].code+ϱ),8)
+ϰ=(str[(w+2)].code+ϱ)
+ϳ=((Ϫ+Ϭ)+ϰ)
+Ϩ.push(z(ϩ(ϯ(ϳ,18),ϴ)))
+Ϩ.push(z(ϩ(ϯ(ϳ,12),ϴ)))
+Ϩ.push(z(ϩ(ϯ(ϳ,6),ϴ)))
+Ϩ.push(z(ϩ(ϳ,ϴ)))
+w=(w+3)
 end while
-if (y==2) then
-ϲ=p[((x%p.len)-Ͽ)]
-ϫ=ϯ((str[x].code+ϲ),8)
-ϭ=(str[(x+Ͽ)].code+ϲ)
-ϴ=(ϫ+ϭ)
-w.push(_(ϰ(ϴ,10)))
-w.push(_(Ϫ(ϰ(ϴ,4),ϵ)))
-w.push(_(Ϫ(ϯ(ϴ,2),ϵ)))
-w.push(\\"=\\")
-else if (y==Ͽ) then
-ϲ=p[((x%p.len)-Ͽ)]
-ϴ=(str[x].code+ϲ)
-w.push(_(ϰ(ϴ,2)))
-w.push(_(Ϫ(ϯ(ϴ,4),ϵ)))
-w.push(\\"==\\")
+if (x==2) then
+ϱ=hash[((w%hash.len)-Ͼ)]
+Ϫ=Ϯ((str[w].code+ϱ),8)
+Ϭ=(str[(w+Ͼ)].code+ϱ)
+ϳ=(Ϫ+Ϭ)
+Ϩ.push(z(ϯ(ϳ,10)))
+Ϩ.push(z(ϩ(ϯ(ϳ,4),ϴ)))
+Ϩ.push(z(ϩ(Ϯ(ϳ,2),ϴ)))
+Ϩ.push(\\"=\\")
+else if (x==Ͼ) then
+ϱ=hash[((w%hash.len)-Ͼ)]
+ϳ=(str[w].code+ϱ)
+Ϩ.push(z(ϯ(ϳ,2)))
+Ϩ.push(z(ϩ(Ϯ(ϳ,4),ϴ)))
+Ϩ.push(\\"==\\")
 end if
-return w.join(\\"\\")
+return Ϩ.join(\\"\\")
 end function
 e.decrypt=function(str,o)
 k=self
 if (o==m) then o=k.defaultSecret
-p=k.getHash(o)
-ϩ=0
-ϸ=p.len
-w=[]
+hash=k.getHash(o)
+u=0
+Ϸ=hash.len
+Ϩ=[]
+ϸ=0
 Ϲ=0
-Ϻ=0
-x=0
-ϩ=0
-z=str.len
-Ϫ=function(ϫ,ϭ)
-return bitwise(\\"&\\",ϫ,ϭ)
+w=0
+u=0
+y=str.len
+ϩ=function(Ϫ,Ϭ)
+return bitwise(\\"&\\",Ϫ,Ϭ)
 end function
-ϰ=function(ϫ,ϭ)
-return bitwise(\\">>\\",ϫ,ϭ)
+ϯ=function(Ϫ,Ϭ)
+return bitwise(\\">>\\",Ϫ,Ϭ)
 end function
-while (x<z)
-ϴ=k.table.indexOf(str[x])
-ϻ=Ϲ
-Ϲ=(Ϲ+Ͽ)
-if (ϻ%4) then
-Ϻ=((Ϻ*64)+ϴ)
+while (w<y)
+ϳ=k.table.indexOf(str[w])
+Ϻ=ϸ
+ϸ=(ϸ+Ͼ)
+if (Ϻ%4) then
+Ϲ=((Ϲ*64)+ϳ)
 else
-Ϻ=ϴ
+Ϲ=ϳ
 end if
-if (ϻ%4) then
-ϼ=(((floor((ϩ/3))*3)%ϸ)-Ͽ)
-if not p.hasIndex(ϼ) then break
-ϲ=p[ϼ]
-Ͻ=Ϫ((-2*Ϲ),6)
-Ͻ=ϰ(Ϻ,Ͻ)
-Ͻ=Ϫ(255,Ͻ)
-if (Ͻ!=0) then
-Ͼ=(Ͻ-ϲ)
-if (Ͼ>k.maxCharCode) then break
-w.push(char(Ͼ))
+if (Ϻ%4) then
+ϻ=(((floor((u/3))*3)%Ϸ)-Ͼ)
+if not hash.hasIndex(ϻ) then break
+ϱ=hash[ϻ]
+ϼ=ϩ((-2*ϸ),6)
+ϼ=ϯ(Ϲ,ϼ)
+ϼ=ϩ(255,ϼ)
+if (ϼ!=0) then
+Ͻ=(ϼ-ϱ)
+if (Ͻ>k.maxCharCode) then break
+Ϩ.push(char(Ͻ))
 end if
-ϩ=(ϩ+Ͽ)
+u=(u+Ͼ)
 end if
-x=(x+Ͽ)
+w=(w+Ͼ)
 end while
-return w.join(\\"\\")
+return Ϩ.join(\\"\\")
 end function
-Ѐ=(new e).constructor(\\"test\\")
-Ё=Ѐ.encrypt(user_input(\\"gif password\\"))
+Ͽ=(new e).constructor(\\"test\\")
+Ѐ=\\"abcde\\"
+Ё=Ͽ.encrypt(Ѐ)
+Ђ=Ͽ.decrypt(Ё)
 print(Ё)
-print(Ѐ.decrypt(Ё))
+print(Ђ)
 end function
 F"
 `;
 
-exports[`build uglify scripts 6`] = `
+exports[`build uglify scripts random.src 1`] = `
 "globals.j=globals
 A=92
 B=(char(A)+\\"n\\")
@@ -1004,7 +1039,7 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 7`] = `
+exports[`build uglify scripts simple-object.src 1`] = `
 "globals.K=globals
 A=92
 B=(char(A)+\\"n\\")
@@ -1028,7 +1063,37 @@ end function
 F"
 `;
 
-exports[`build uglify scripts 8`] = `
+exports[`build uglify scripts slice.src 1`] = `
+"globals.P=globals
+A=92
+B=(char(A)+\\"n\\")
+C={}
+D={}
+E=function(r)
+if not C.hasIndex(r) then
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
+end if
+G=C[r]
+return @G(r).exports
+end function
+F=function()
+H=function(str,I)
+J=0
+K=str.len
+M=[]
+while (J<K)
+N=(J+I)
+M.push(str[J:N])
+J=N
+end while
+return M
+end function
+print(H(\\"blahhblahhblahhblahhblahhblahhgad\\",5))
+end function
+F"
+`;
+
+exports[`build uglify scripts unary.src 1`] = `
 "globals.L=globals
 L.K=\\"was\\"
 L.J=false

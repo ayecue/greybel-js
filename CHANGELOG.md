@@ -75,3 +75,13 @@ All notable changes to this project will be documented in this file.
 - support import_code in builder
 - add mkdirp
 - fixed issue with default cli builder
+
+## [0.3.2] - 21-10-2021
+
+- add stdin and stdout for ui build for better debugging
+- fixed index and slice path resolving in interpreter
+- fixed reference operation if value is either executed or not a function
+- fixed operation context type inheriting
+- added slice testing
+- improved test naming for snapshots
+- added exclude namespace flag

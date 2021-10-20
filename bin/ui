@@ -57,7 +57,15 @@ program.parse(process.argv);
 
 		if (!fs.existsSync(bundleFile) || options.refresh) {
 			console.log('Preparing ui...');
-			await exec(`cd ${projectFolder} && npm run build`);
+			const { stdout, stderr } = await exec(`cd ${projectFolder} && npm run build`);
+			
+			stdout.on('data', function(chunk) {
+				console.log('Build output: ', chunk);
+			});
+
+			stderr.on('data', function(chunk) {
+				console.log('Error: ', chunk);
+			});
 		}
 
 		await waitForBuild();
