@@ -74,6 +74,7 @@ end function
 Crypto = {}
 
 Crypto.defaultCharset = "QWERTZUIOPASDFGHJKLYXCVBNMqwertzuiopasdfghjklyxcvbnm1234567890+-"
+Crypto.defaultSecret = "test123"
 Crypto.maxCharCode = 55295
 Crypto.Error = Error
 
@@ -201,6 +202,11 @@ Crypto.decrypt = function(str, pw)
 end function
 
 test = (new Crypto).constructor("test")
-foo = test.encrypt(user_input("gif password"))
+
+pwd = "abcde"
+
+foo = test.encrypt(pwd)
+decrypted = test.decrypt(foo)
+
 print(foo)
-print(test.decrypt(foo))
+print(decrypted)

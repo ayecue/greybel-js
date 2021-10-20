@@ -42,6 +42,7 @@ describe('interpreter', function() {
 			});
 			success = true;
 		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
 			success = false;
 		}
 
@@ -64,6 +65,7 @@ describe('interpreter', function() {
 			});
 			success = true;
 		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
 			success = false;
 		}
 
@@ -86,6 +88,7 @@ describe('interpreter', function() {
 			});
 			success = true;
 		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
 			success = false;
 		}
 
@@ -108,12 +111,13 @@ describe('interpreter', function() {
 			});
 			success = true;
 		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
 			success = false;
 		}
 
 		expect(success).toEqual(true);
-		expect(echoMock).toHaveBeenNthCalledWith(1, 'hPVpjQ==');
-		expect(echoMock).toHaveBeenNthCalledWith(2, 'test');
+		expect(echoMock).toHaveBeenNthCalledWith(1, 'aMAYdPa=');
+		expect(echoMock).toHaveBeenNthCalledWith(2, 'abcde');
 	});
 
 	test('random script', async function() {
@@ -131,12 +135,13 @@ describe('interpreter', function() {
 			});
 			success = true;
 		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
 			success = false;
 		}
 
 		expect(success).toEqual(true);
 		expect(echoMock).toHaveBeenNthCalledWith(1, '222');
-		expect(echoMock).toHaveBeenNthCalledWith(2, '[481,287,196,197,352,298,283,381,302,223]');
+		expect(echoMock).toHaveBeenNthCalledWith(2, '[481,286,146,221,280,411,472,272,403,204]');
 	});
 
 	test('negation script', async function() {
@@ -154,11 +159,35 @@ describe('interpreter', function() {
 			});
 			success = true;
 		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
 			success = false;
 		}
 
 		expect(success).toEqual(true);
 		expect(echoMock).toHaveBeenNthCalledWith(1, '2');
 		expect(echoMock).toHaveBeenNthCalledWith(2, '[-1,2,0]');
+	});
+
+	test('slice script', async function() {
+		const filepath = path.resolve(testFolder, 'slice.src');
+		const code = fs.readFileSync(filepath, {
+			encoding: 'utf-8'
+		});
+		let success;
+
+		try {
+			await interpreter({
+				code: code,
+				params: [],
+				api: mockAPI
+			});
+			success = true;
+		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
+			success = false;
+		}
+
+		expect(success).toEqual(true);
+		expect(echoMock).toHaveBeenNthCalledWith(1, '[blahh,blahh,blahh,blahh,blahh,blahh,gad]');
 	});
 });

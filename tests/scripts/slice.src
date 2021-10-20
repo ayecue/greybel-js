@@ -1,0 +1,15 @@
+divideString = function(str,limit)
+	offset = 0
+	maxLen = str.len
+	frags = []
+
+	while offset < maxLen
+		next = offset + limit
+		frags.push(str[offset:next])
+		offset = next
+	end while
+
+	return frags
+end function
+
+print(divideString("blahhblahhblahhblahhblahhblahhgad",5))
