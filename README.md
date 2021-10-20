@@ -10,6 +10,7 @@ Also partly based on my GreyScript preprocessor written in GreyScript [greybel](
 
 - Latest changes: [Changelog](/CHANGELOG.md)
 - Demo Project: [TEdit](https://github.com/ayecue/tedit)
+- Greybel UI Demo: [greybel-ui](https://greybel-ui.tiiny.site)
 
 Features:
 - supports shortcuts for blocks
@@ -54,7 +55,7 @@ Options:
 	-en, --exclude-namespaces <vars...>		Exclude namespaces from optimization
 	-u, --uglify                			Uglify your code
 	-h, --help                  			Display help for command
-	-i, --installer							Create installer for GreyScript (Should be used if you use import_code)
+	-i, --installer					Create installer for GreyScript (Should be used if you use import_code)
 ```
 
 ### Examples:
