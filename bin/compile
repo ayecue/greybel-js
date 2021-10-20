@@ -32,8 +32,9 @@ program
 			options.output = output;
 		}
 	})
-	.option('-ev, --env-files <file...>', 'Environment varibales files')
-	.option('-vr, --env-vars <vars...>', 'Environment varibales')
+	.option('-ev, --env-files <file...>', 'Environment variables files')
+	.option('-vr, --env-vars <var...>', 'Environment variables')
+	.option('-en, --exclude-namespaces <namespace...>', 'Exclude namespaces from optimization')
 	.option('-u, --uglify', 'Uglify your code')
 	.option('-n, --name', 'Output filename')
 	.option('-i, --installer', 'Create installer for GreyScript (Should be used if you use import_code)');
@@ -47,6 +48,7 @@ program.parse(process.argv);
 		envFiles: options.envFiles,
 		envVars: options.envVars,
 		uglify: options.uglify,
+		excludedNamespaces: options.excludeNamespaces || [],
 		name: options.name,
 		installer: options.installer
 	});

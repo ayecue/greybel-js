@@ -44,6 +44,7 @@ Builder.prototype.compile = function(options) {
 		varNamespaces
 			.reset()
 			.preset(charsetMap.VARS);
+		varNamespaces.exclude(options.excludedNamespaces);
 		moduleNamespaces
 			.reset()
 			.preset(charsetMap.MODULES);
