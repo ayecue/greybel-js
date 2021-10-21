@@ -36,6 +36,10 @@ const Builder = function(filepath, output, name, isNativeImport) {
 Builder.prototype.compile = function(options) {
 	const me = this;
 	const charsetMap = charset(options.obfuscation);
+	const optimizationOptions = {
+		literals: options.uglify && !options.disableLiteralsOptimization,
+		namespaces: options.uglify && !options.disableNamespacesOptimization
+	};
 	let mapper = defaultMapper;
 
 	if (options.uglify) mapper = uglifyMapper;
@@ -53,15 +57,15 @@ Builder.prototype.compile = function(options) {
 
 	const content = fs.readFileSync(me.filepath, 'utf8');
 	logger.info('Parsing: ' + me.filepath);
-	const parser = new Parser(content, options.uglify);
+	const parser = new Parser(content, optimizationOptions);
 	const chunk = parser.parseChunk();
 
 	me.nativeImportBuilders = handleNativeImports(me.filepath, chunk.nativeImports, Builder, me.output, options);
 
-	const dependency = new Dependency(me.filepath, chunk, options.uglify);
+	const dependency = new Dependency(me.filepath, chunk, optimizationOptions);
 	dependency.findDependencies();
 
-	return builder(dependency, mapper, options.uglify, me.isNativeImport);
+	return builder(dependency, mapper, optimizationOptions.literals, me.isNativeImport);
 };
 
 Builder.prototype.write = function(code, maxWords, installer) {
@@ -89,14 +93,15 @@ Builder.prototype.write = function(code, maxWords, installer) {
 	}
 }
 
-
-
 module.exports = function(filepath, output, options = {}) {
 	const buildOptions = Object.assign({
 		uglify: false,
 		maxWords: 80000,
 		obfuscation: true,
-		installer: false
+		installer: false,
+		excludedNamespaces: [],
+		disableLiteralsOptimization: false,
+		disableNamespacesOptimization: false
 	}, options);
 	const builder = new Builder(filepath, output, buildOptions.name);
 

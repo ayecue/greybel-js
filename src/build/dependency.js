@@ -6,7 +6,7 @@ const fs = require('fs');
 const GLOBAL_DEPENDENCY_MAP = {};
 const logger = require('node-color-log');
 
-const Dependency = function(filepath, chunk, collectAll, isInclude) {
+const Dependency = function(filepath, chunk, optimizationOptions, isInclude) {
 	if (isInclude == null) isInclude = false;
 	const me = this;
 	
@@ -15,7 +15,7 @@ const Dependency = function(filepath, chunk, collectAll, isInclude) {
 	me.basePath = path.resolve(filepath, '..');
 	me.chunk = chunk;
 	me.dependencies = [];
-	me.collectAll = collectAll;
+	me.optimizationOptions = optimizationOptions;
 	me.isInclude = isInclude;
 	
 	moduleNamespaces.createNamespace(me.id);
@@ -55,11 +55,11 @@ Dependency.prototype.findDependencies = function() {
 		const content = fs.readFileSync(depFilepath, 'utf8');
 
 		logger.info('Parsing: ' + depFilepath);
-		const parser = new Parser(content, me.collectAll);
+		const parser = new Parser(content, me.optimizationOptions);
 		const chunk = parser.parseChunk();
 		item.chunk = chunk;
 
-		const dependency = new Dependency(depFilepath, chunk, me.collectAll, isInclude);
+		const dependency = new Dependency(depFilepath, chunk, me.optimizationOptions, isInclude);
 		dependency.findDependencies();
 		item.namespace = moduleNamespaces.get(id);
 

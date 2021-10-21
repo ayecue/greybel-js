@@ -10,7 +10,7 @@ const logger = require('node-color-log');
 const statements = require('./parser/statements');
 const getPrecedence = require('./parser/precedence');
 
-const Parser = function(content, collectAll) {
+const Parser = function(content, optimizeOptions) {
 	const me = this;
 
 	me.content = content;
@@ -23,7 +23,10 @@ const Parser = function(content, collectAll) {
 	me.nativeImports = [];
 	me.includes = [];
 	me.namespaces = {};
-	me.collectAll = collectAll;
+	me.optimizeOptions = optimizeOptions || {
+		literals: false,
+		namespaces: false
+	};
 
 	return me;
 };
@@ -111,7 +114,7 @@ Parser.prototype.parseIdentifier = function() {
 	const mainStatementLine = me.token.line;
 	const identifier = me.token.value;
 	if (TOKENS.Identifier === me.token.type) {
-		if (me.collectAll && !me.namespaces.hasOwnProperty(identifier) && !validator.isNative(identifier)) {
+		if (me.optimizeOptions.namespaces && !me.namespaces.hasOwnProperty(identifier) && !validator.isNative(identifier)) {
 			me.namespaces[identifier] = true;
 			varNamespaces.createNamespace(identifier);
 		}
@@ -316,7 +319,7 @@ Parser.prototype.parseFloatExpression = function(baseValue) {
 	const floatValue = [baseValue, me.token.value].join('.');
 	me.next();
 	const base = AST.literal(TOKENS.NumericLiteral, floatValue, floatValue, mainStatementLine);
-	if (me.collectAll) literals.add(base);
+	if (me.optimizeOptions.literals) literals.add(base);
 	return base;
 };
 
@@ -330,7 +333,7 @@ Parser.prototype.parsePrimaryExpression = function(flowContext) {
 		const raw = me.content.slice(me.token.range[0], me.token.range[1]);
 		let base = AST.literal(type, value, raw, mainStatementLine);
 
-		if (me.collectAll) literals.add(base);
+		if (me.optimizeOptions.literals) literals.add(base);
 
 		if (TOKENS.NilLiteral !== type && me.prefetch(1).value === '.') {
 			me.next();
@@ -509,7 +512,7 @@ Parser.prototype.parseFeatureEnvarNameStatement = function() {
 
 	const literal = AST.literal(type, value, raw, mainStatementLine);
 
-	if (me.collectAll) literals.add(literal);
+	if (me.optimizeOptions.literals) literals.add(literal);
 	me.next();
 	return literal;
 };
