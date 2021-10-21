@@ -4,7 +4,7 @@ const varNamespaces = require('./var-namespaces');
 const Tranformer = require('./builder/transformer');
 const literals = require('./literals');
 
-module.exports = function(mainDependency, mapper, isUglify, isNativeImport) {
+module.exports = function(mainDependency, mapper, optimizeLiterals, isNativeImport) {
 	const tempVarForGlobal = varNamespaces.createNamespace('UNIQUE_GLOBAL_TEMP_VAR');
 	const transformer = new Tranformer(mapper);
 	const mainModuleName = moduleNamespaces.get(mainDependency.getId())
@@ -30,7 +30,7 @@ module.exports = function(mainDependency, mapper, isUglify, isNativeImport) {
 	const processed = [];
 
 	if (!isNativeImport) {
-		if (isUglify) {
+		if (optimizeLiterals) {
 			const literalMapping = literals.getMapping();
 
 			processed.push('globals.' + tempVarForGlobal + '=globals');

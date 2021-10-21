@@ -85,3 +85,8 @@ All notable changes to this project will be documented in this file.
 - added slice testing
 - improved test naming for snapshots
 - added exclude namespace flag
+
+## [0.3.3] - 21-10-2021
+
+- add dlo and dno flag
+- update ui with options

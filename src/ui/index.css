@@ -83,6 +83,18 @@ body {
 	color: #333;
 }
 
+.editor-options ul {
+	padding: 0;
+	margin: 0;
+}
+
+.editor-options ul > li {
+	display: block;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
 .editor-transpiled-area {
 	width: 100%;
 	height: 200px;

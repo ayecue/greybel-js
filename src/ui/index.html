@@ -19,10 +19,28 @@
 							<div class="editor-transpile">
 								<a id="transpile">Transpile</a>
 								<div class="editor-options">
-									<input id="uglify" type="checkbox" />
-									<label>Uglify</label>
-									<input id="obfuscation" type="checkbox" />
-									<label>Obfuscation</label>
+									<ul>
+										<li>
+											<input id="uglify" type="checkbox" />
+											<label>Uglify</label>
+										</li>
+										<li>
+											<input id="obfuscation" type="checkbox" />
+											<label>Obfuscation</label>
+										</li>
+										<li>
+											<input id="disableLiteralsOptimization" type="checkbox" />
+											<label>Disable literals optimization</label>
+										</li>
+										<li>
+											<input id="disableNamespacesOptimization" type="checkbox" />
+											<label>Disable namespaces optimization</label>
+										</li>
+										<li>
+											<label>Exclude namespaces from optimization</label>
+											<input id="excludedNamespaces" type="text" />
+										</li>
+									</ul>
 								</div>
 								<label>Transpiler output:</label>
 								<textarea id="toutput" class="editor-transpiled-area" readonly></textarea>

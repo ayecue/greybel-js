@@ -15,6 +15,9 @@ const transpileEl = document.getElementById('transpile');
 const transpileOutputEl = document.getElementById('toutput');
 const uglifyEl = document.getElementById('uglify');
 const obfuscationEl = document.getElementById('obfuscation');
+const disableLiteralsOptimizationEl = document.getElementById('disableLiteralsOptimization');
+const disableNamespacesOptimizationEl = document.getElementById('disableNamespacesOptimization');
+const excludedNamespacesEl = document.getElementById('excludedNamespaces');
 const executeEl = document.getElementById('execute');
 const stdoutEl = document.getElementById('stdout');
 const stdinEl = document.getElementById('stdin');
@@ -51,10 +54,19 @@ transpileEl.addEventListener('click', () => {
 	const output = build({
 		uglify: uglifyEl.checked,
 		obfuscation: obfuscationEl.checked,
+		disableLiteralsOptimization: disableLiteralsOptimizationEl.checked,
+		disableNamespacesOptimization: disableNamespacesOptimizationEl.checked,
+		excludedNamespaces: excludedNamespacesEl.value.split(",").map(function(v) {
+			return v.trim();
+		}),
 		content: editorView.state.doc.toString()
 	});
 
 	transpileOutputEl.value = output;
+});
+
+stdoutEl.addEventListener('click', () => {
+	stdinEl.focus();
 });
 
 executeEl.addEventListener('click', () => {
