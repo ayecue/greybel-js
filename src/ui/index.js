@@ -11,6 +11,7 @@ const keymap = codemirrorView.keymap;
 const defaultTabBinding = require('@codemirror/commands').defaultTabBinding;
 const javascript = require('@codemirror/lang-javascript').javascript;
 
+const editorErrorsEl = document.getElementById('editor-errors');
 const transpileEl = document.getElementById('transpile');
 const transpileOutputEl = document.getElementById('toutput');
 const uglifyEl = document.getElementById('uglify');
@@ -41,6 +42,18 @@ const editorView = new EditorView({
 const vmInstance = new VM();
 const stdout = new Stdout(stdoutEl);
 const stdin = new Stdin(stdinEl);
+const showError = function(msg, timeout) {
+	const errorEl = document.createElement('div');
+
+	errorEl.innerHTML = msg;
+	editorErrorsEl.appendChild(errorEl);
+
+	const timer = setTimeout(() => editorErrorsEl.removeChild(errorEl), timeout || 10000);
+	errorEl.addEventListener('click', () => {
+		clearTimeout(timer);
+		editorErrorsEl.removeChild(errorEl);
+	});
+};
 
 (async () => {
 	while (true) {
@@ -51,26 +64,33 @@ const stdin = new Stdin(stdinEl);
 })();
 
 transpileEl.addEventListener('click', () => {
-	const output = build({
-		uglify: uglifyEl.checked,
-		obfuscation: obfuscationEl.checked,
-		disableLiteralsOptimization: disableLiteralsOptimizationEl.checked,
-		disableNamespacesOptimization: disableNamespacesOptimizationEl.checked,
-		excludedNamespaces: excludedNamespacesEl.value.split(",").map(function(v) {
-			return v.trim();
-		}),
-		content: editorView.state.doc.toString()
-	});
+	try {
+		const output = build({
+			uglify: uglifyEl.checked,
+			obfuscation: obfuscationEl.checked,
+			disableLiteralsOptimization: disableLiteralsOptimizationEl.checked,
+			disableNamespacesOptimization: disableNamespacesOptimizationEl.checked,
+			excludedNamespaces: excludedNamespacesEl.value.split(",").map(function(v) {
+				return v.trim();
+			}),
+			content: editorView.state.doc.toString()
+		});
 
-	transpileOutputEl.value = output;
+		transpileOutputEl.value = output;
+	} catch (err) {
+		showError(err.message);
+	}
 });
 
 stdoutEl.addEventListener('click', () => {
 	stdinEl.focus();
 });
 
-executeEl.addEventListener('click', () => {
+executeEl.addEventListener('click', async () => {
 	const shell = vmInstance.getLastSession();
+	const result = await shell.run(editorView.state.doc.toString());
 
-	shell.run(editorView.state.doc.toString());
+	if (!result.success) {
+		showError(result.error.message);
+	}
 });

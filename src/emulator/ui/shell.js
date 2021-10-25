@@ -129,7 +129,7 @@ Shell.prototype.run = async function(content) {
 	
 	me.isPending = true;
 
-	await scriptExecuter({
+	const result = await scriptExecuter({
 		content: content,
 		params: [],
 		shell: me,
@@ -138,12 +138,13 @@ Shell.prototype.run = async function(content) {
 	});
 
 	me.isPending = false;
+
 	stdout.write(me.getShellPrefix());
 
 	stdin.enable();
 	stdin.focus();
 
-	return true;
+	return result;
 };
 
 Shell.prototype.echo = function(str, formatted) {

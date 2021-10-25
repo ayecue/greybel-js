@@ -3,6 +3,24 @@ body {
 	background-color: #f3f9ff;
 }
 
+#editor-errors {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 100;
+	max-height: 500px;
+	overflow: auto;
+}
+
+#editor-errors > div {
+	background: red;
+	margin: 20px 40px;
+	padding: 5px 10px;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
 .editor-control {
 	position: absolute;
 	width: 100%;
