@@ -90,3 +90,9 @@ All notable changes to this project will be documented in this file.
 
 - add dlo and dno flag
 - update ui with options
+
+## [0.3.4] - 25-10-2021
+
+- fix issue with object/list init in interpreter
+- add popups to show errors when transpiling or using the interpreter in the UI
+- changed demo site

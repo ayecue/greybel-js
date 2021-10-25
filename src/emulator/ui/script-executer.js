@@ -37,5 +37,14 @@ module.exports = async function(options) {
 		} else {
 			console.error(err);
 		}
+
+		return {
+			success: false,
+			error: err
+		};
 	}
+
+	return {
+		success: true
+	};
 };

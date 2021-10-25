@@ -13,7 +13,7 @@ const MapExpression = function(ast, visit, debug, raise) {
 					values: node.fields.map((item) => {
 						return {
 							key: visit(item.key),
-							value: buildExpression(item.value)
+							value: visit(item.value)
 						};
 					})
 				};
@@ -51,9 +51,7 @@ MapExpression.prototype.get = function(operationContext, parentExpr) {
 				me.raise('Unexpected key', me, current.key);
 			}
 
-			if (current.value?.type === 'map') {
-				value = await evaluate(current.value.values);
-			} if (typer.isCustomValue(current.value)) {
+			if (typer.isCustomValue(current.value)) {
 				value = current.value;
 			} else if (current.value?.isExpression) {
 				value = await current.value.get(operationContext);

@@ -1,4 +1,4 @@
-# Greybel-JS 0.3.3
+# Greybel-JS 0.3.4
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
@@ -10,7 +10,7 @@ Also partly based on my GreyScript preprocessor written in GreyScript [greybel](
 
 - Latest changes: [Changelog](/CHANGELOG.md)
 - Demo Project: [TEdit](https://github.com/ayecue/tedit)
-- Greybel UI Demo: [greybel-ui](https://greybel-ui.tiiny.site)
+- Greybel UI Demo: [greybel-ui](https://greybel-ui.netlify.app/)
 
 Features:
 - supports shortcuts for blocks

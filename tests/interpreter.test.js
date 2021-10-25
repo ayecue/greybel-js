@@ -190,4 +190,28 @@ describe('interpreter', function() {
 		expect(success).toEqual(true);
 		expect(echoMock).toHaveBeenNthCalledWith(1, '[blahh,blahh,blahh,blahh,blahh,blahh,gad]');
 	});
+
+	test('negation script', async function() {
+		const filepath = path.resolve(testFolder, 'obj-init.src');
+		const code = fs.readFileSync(filepath, {
+			encoding: 'utf-8'
+		});
+		let success;
+
+		try {
+			await interpreter({
+				code: code,
+				params: [],
+				api: mockAPI
+			});
+			success = true;
+		} catch (e) {
+			console.log(`${filepath} failed with: `, e);
+			success = false;
+		}
+
+		expect(success).toEqual(true);
+		expect(echoMock).toHaveBeenNthCalledWith(1, '[123,123,foo]');
+		expect(echoMock).toHaveBeenNthCalledWith(2, '[{"another": 123},123,foo]');
+	});
 });
