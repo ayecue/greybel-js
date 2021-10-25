@@ -88,6 +88,14 @@ print(test)
 print(foo)"
 `;
 
+exports[`build-light default scripts obj-init.src 1`] = `
+"valueOfIdentifier=\\"foo\\"
+myObject={\\"test\\":{\\"another\\":\\"123\\"},\\"value\\":\\"123\\",\\"idtf\\":valueOfIdentifier}
+print([myObject.test.another,myObject.value,myObject.idtf])
+myList=[{\\"another\\":\\"123\\"},\\"123\\",valueOfIdentifier]
+print(myList)"
+`;
+
 exports[`build-light default scripts password-generator.src 1`] = `
 "PasswordGenerator={}
 PasswordGenerator.MAX_PASSWORD_LENGTH=15
@@ -523,6 +531,16 @@ H=(((-1+2)+-2)++3)
 I=[-1,(-2+4),((-2+-4)++6)]
 print(H)
 print(I)"
+`;
+
+exports[`build-light uglify scripts obj-init.src 1`] = `
+"globals.P=globals
+P.O=\\"123\\"
+H=\\"foo\\"
+I={\\"test\\":{\\"another\\":O},\\"value\\":O,\\"idtf\\":H}
+print([I.test.another,I.value,I.idtf])
+N=[{\\"another\\":O},O,H]
+print(N)"
 `;
 
 exports[`build-light uglify scripts password-generator.src 1`] = `

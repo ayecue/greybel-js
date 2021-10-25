@@ -11,7 +11,7 @@ const ListExpression = function(ast, visit, debug, raise) {
 				expression = {
 					type: 'list',
 					values: node.fields.map((item) => {
-						return buildExpression(item.value);
+						return visit(item.value);
 					})
 				};
 				break;
@@ -39,9 +39,7 @@ ListExpression.prototype.get = function(operationContext, parentExpr) {
 		let current;
 
 		while (current = traverselPath.shift()) {
-			if (current?.type === 'list') {
-				list.push(await evaluate(current.values));
-			} else if (typer.isCustomValue(current)) {
+			if (typer.isCustomValue(current)) {
 				list.push(current);
 			} else if (current?.isExpression) {
 				list.push(await current.get(operationContext));

@@ -130,6 +130,28 @@ end function
 MAIN()"
 `;
 
+exports[`build default scripts obj-init.src 1`] = `
+"BACKSLASH_CODE=92
+NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
+MODULES={}
+EXPORTED={}
+__REQUIRE=function (r)
+if not MODULES.hasIndex(r) then
+exit(((\\"Module \\" + r) + \\" cannot be found...\\"))
+end if
+module=MODULES[r]
+return @module(r).exports
+end function
+MAIN=function ()
+valueOfIdentifier=\\"foo\\"
+myObject={\\"test\\":{\\"another\\":\\"123\\"},\\"value\\":\\"123\\",\\"idtf\\":valueOfIdentifier}
+print([myObject.test.another,myObject.value,myObject.idtf])
+myList=[{\\"another\\":\\"123\\"},\\"123\\",valueOfIdentifier]
+print(myList)
+end function
+MAIN()"
+`;
+
 exports[`build default scripts password-generator.src 1`] = `
 "BACKSLASH_CODE=92
 NEW_LINE_OPERATOR=(char(BACKSLASH_CODE) + \\"n\\")
@@ -689,6 +711,30 @@ H=(((-1+2)+-2)++3)
 I=[-1,(-2+4),((-2+-4)++6)]
 print(H)
 print(I)
+end function
+F"
+`;
+
+exports[`build uglify scripts obj-init.src 1`] = `
+"globals.P=globals
+P.O=\\"123\\"
+A=92
+B=(char(A)+\\"n\\")
+C={}
+D={}
+E=function(r)
+if not C.hasIndex(r) then
+exit(((\\"Module \\"+r)+\\" cannot be found...\\"))
+end if
+G=C[r]
+return @G(r).exports
+end function
+F=function()
+H=\\"foo\\"
+I={\\"test\\":{\\"another\\":O},\\"value\\":O,\\"idtf\\":H}
+print([I.test.another,I.value,I.idtf])
+N=[{\\"another\\":O},O,H]
+print(N)
 end function
 F"
 `;
