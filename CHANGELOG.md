@@ -95,3 +95,4 @@ All notable changes to this project will be documented in this file.
 
 - fix issue with object/list init in interpreter
 - add popups to show errors when transpiling or using the interpreter in the UI
+- changed demo site
