@@ -14,7 +14,7 @@ const mapper = function(make, _stack, _depth, _context) {
 		'MemberExpression': function(item) {
 			let identifier = item.identifier;
 			const base = make(item.base);
-			const globalNamespace = varNamespaces.get('UNIQUE_GLOBAL_TEMP_VAR');
+			const globalNamespace = varNamespaces.get('globals');
 
 			identifier.usesNativeVar = base === globalNamespace || base === 'locals';
 			identifier.isMember = true;
@@ -61,15 +61,15 @@ const mapper = function(make, _stack, _depth, _context) {
 		},
 		'Identifier': function(item) {
 			const name = item.name;
-			if (name === 'globals') {
-				return varNamespaces.get('UNIQUE_GLOBAL_TEMP_VAR');
-			} else if (item.isMember) {
+
+			if (item.isMember) {
 				if (item.usesNativeVar) {
 					return varNamespaces.get(name) || name;
 				}
 
 				return name;
 			}
+			
 			return varNamespaces.get(name) || name;
 		},
 		'ReturnStatement': function(item) {
@@ -102,7 +102,7 @@ const mapper = function(make, _stack, _depth, _context) {
 		},
 		'CallExpression': function(item) {
 			const base = make(item.base);
-			const globalNamespace = varNamespaces.get('UNIQUE_GLOBAL_TEMP_VAR');
+			const globalNamespace = varNamespaces.get('globals');
 			const isNativeVarHasIndex = base === globalNamespace + '.hasIndex' || base === 'locals.hasIndex';
 			let argItem;
 

@@ -5,7 +5,7 @@ const Tranformer = require('./builder/transformer');
 const literals = require('./literals');
 
 module.exports = function(mainDependency, mapper, optimizeLiterals, isNativeImport) {
-	const tempVarForGlobal = varNamespaces.createNamespace('UNIQUE_GLOBAL_TEMP_VAR');
+	const tempVarForGlobal = varNamespaces.createNamespace('globals');
 	const transformer = new Tranformer(mapper);
 	const mainModuleName = moduleNamespaces.get(mainDependency.getId())
 	const headerBoilerplate = transformer.transform(BOILERPLATES.HEADER_BOILERPLATE);

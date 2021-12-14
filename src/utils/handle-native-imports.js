@@ -18,9 +18,9 @@ module.exports = function(filePath, nativeImports, Builder, outputDir, buildOpti
 		const outputFilePathRelative = path.resolve(originalOutputDirname, relativeOutputTarget);
 
 		const builder = new Builder(importFilePathRelative, outputFilePathRelative, null, true);
-		const code = builder.compile(buildOptions);
+		
+		builder.parse(buildOptions);
 
-		builder.write(code, buildOptions.maxWords);
 		outputBuilder.push(builder);
 	});
 

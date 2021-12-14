@@ -96,3 +96,8 @@ All notable changes to this project will be documented in this file.
 - fix issue with object/list init in interpreter
 - add popups to show errors when transpiling or using the interpreter in the UI
 - changed demo site
+
+## [0.3.5] - 14-12-2021
+
+- parse all files before building to avoid issues with namespaces when optimizing
+- use different globals namespace identifier to avoid unintended behavior when optimizing with certain options

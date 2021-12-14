@@ -40,7 +40,7 @@ module.exports = function(options = {}) {
 	const parser = new Parser(buildOptions.content, optimizationOptions);
 	const chunk = parser.parseChunk();
 	const transformer = new Tranformer(mapper);
-	const tempVarForGlobal = varNamespaces.createNamespace('UNIQUE_GLOBAL_TEMP_VAR');
+	const tempVarForGlobal = varNamespaces.createNamespace('globals');
 	const processed = [];
 
 	if (optimizationOptions.literals) {
