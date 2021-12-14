@@ -1,4 +1,4 @@
-# Greybel-JS 0.3.4
+# Greybel-JS 0.3.5
 
 [![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
 
@@ -29,7 +29,7 @@ Features:
 - includes interpreter + emulator (Grey Hack polyfills) which enables debugging code
 - includes ui for interpreter + emulator and transpiler
 - debugger feature (not completly implemented yet)
-- installer feature
+- installer feature (bundler)
 - supports import_code
 
 # Install
@@ -216,7 +216,7 @@ import_code("somefile.src":"./myProject/test.src");
 
 This going to be very useful if you want to use the new feature but still want your script files to get optimized.
 
-Together with the new `--installer` flag in the CLI it will even build an installer file for you which makes it easier to copy paste code from your file system into the game.
+Together with the new `--installer` flag in the CLI it will even bundle your files for you which makes it easier to copy paste code from your file system into the game.
 
 ## Including
 Include will use the relative path from the file it imports to. Also keep in mind to not use the `.src` extension. Unlike `import` this will not wrap the module. This will just purely put the content of a file into your script.
