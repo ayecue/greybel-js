@@ -33,7 +33,7 @@ const Builder = function(filepath, output, name, isNativeImport) {
 	return me;
 };
 
-Builder.prototype.compile = function(options) {
+Builder.prototype.parse = function(options) {
 	const me = this;
 	const charsetMap = charset(options.obfuscation);
 	const optimizationOptions = {
@@ -65,7 +65,20 @@ Builder.prototype.compile = function(options) {
 	const dependency = new Dependency(me.filepath, chunk, optimizationOptions);
 	dependency.findDependencies();
 
-	return builder(dependency, mapper, optimizationOptions.literals, me.isNativeImport);
+	me.compile = function() {
+		me.nativeImportBuilders.forEach(function(item) {
+			const code = item.compile();
+			item.write(code, options.maxWords);
+		});
+
+		return builder(dependency, mapper, optimizationOptions.literals, me.isNativeImport);
+	};
+
+	return me;
+};
+
+Builder.prototype.compile = function() {
+	throw new Error('Builder didn\'t parse code...');
 };
 
 Builder.prototype.write = function(code, maxWords, installer) {
@@ -107,7 +120,9 @@ module.exports = function(filepath, output, options = {}) {
 
 	envs.load(buildOptions.envFiles, buildOptions.envVars);
 
-	const code = builder.compile(buildOptions);
+	const code = builder
+		.parse(buildOptions)
+		.compile();
 
 	if (options.noWrite) {
 		return code;
