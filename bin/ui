@@ -27,5 +27,5 @@ program.parse(process.argv);
 	const open = require('open');
 	const path = require('path');
 
-	open(path.resolve(__dirname, '../web/index.html'));
+	open(path.resolve(__dirname, '../out/index.html'));
 })();

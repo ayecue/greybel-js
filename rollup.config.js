@@ -30,8 +30,8 @@ const options = {
                     regenerator: true
                 }]
             ]
-        })/*,
-        terser()*/
+        }),
+        terser()
     ]
 };
 
