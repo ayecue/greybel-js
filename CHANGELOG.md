@@ -113,3 +113,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.2] - 25-01-2021
 
 - update gh mock intrinsics to latest version due to browser support
+
+## [1.0.3] - 25-01-2021
+
+- File('/') should return root folder
