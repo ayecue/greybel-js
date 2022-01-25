@@ -1,6 +1,4 @@
 assets
-tests
 node_modules
-src/ui/build/bundle.js
-tests/__snapshots__
-demo
+src
+.circleci

@@ -9,8 +9,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
   process.exit(1);
 }
 
-const Parser = require('../src/parser');
-const build = require('../src/build');
+const build = require('../out/build').default;
 const path = require('path');
 const fs = require('fs');
 const program = require('commander').program;
@@ -46,7 +45,7 @@ program.parse(process.argv);
 (function() {
 	options = Object.assign(options, program.opts());
 
-	build(options.filepath, options.output, {
+	const success = build(options.filepath, options.output, {
 		envFiles: options.envFiles,
 		envVars: options.envVars,
 		uglify: options.uglify,
@@ -56,4 +55,8 @@ program.parse(process.argv);
 		name: options.name,
 		installer: options.installer
 	});
+
+	if (!success) {
+		process.exit(1);
+	}
 })();
