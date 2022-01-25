@@ -117,3 +117,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.3] - 25-01-2021
 
 - File('/') should return root folder
+
+## [1.0.4] - 25-01-2021
+
+- metaxploit port 0 uses kernel_router

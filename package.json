@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "engines": {
         "node": ">=14.0.0"
     },
@@ -28,7 +28,7 @@
         "@codemirror/view": "^0.18.17",
         "commander": "^7.2.0",
         "greybel-core": "^0.2.3",
-        "greybel-gh-mock-intrinsics": "^0.2.3",
+        "greybel-gh-mock-intrinsics": "^0.2.4",
         "greybel-interpreter": "^0.5.8",
         "greybel-intrinsics": "^0.4.7",
         "greybel-transpiler": "^0.2.3",
@@ -52,6 +52,7 @@
         "greybel-ui": "./bin/ui"
     },
     "scripts": {
+        "prepublishOnly": "npm run compile",
         "compile": "npm run compile:local && npm run compile:web && npm run move:web",
         "move:web": "cp -a web/. out/",
         "compile:local": "tsc -p ./",
