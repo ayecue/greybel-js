@@ -105,3 +105,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 25-01-2021
 
 - major overhaul
+
+## [1.0.1] - 25-01-2021
+
+- update gh mock intrinsics to latest version
