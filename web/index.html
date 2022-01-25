@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>GreyScript IDE</title>
+	    <link rel="stylesheet" type="text/css" href="./index.css">
+	</head>
+	<body>
+		<article>
+			<div class="editor-control">
+				<div id="editor-errors"></div>
+				<div class="editor-ide">
+					<div id="container"></div>
+				</diV>
+				<div class="editor-side-panel">
+					<div>
+						<div class="editor-actions">
+							<div class="editor-transpile">
+								<a id="transpile">Transpile</a>
+								<div class="editor-options">
+									<ul>
+										<li>
+											<input id="uglify" type="checkbox" />
+											<label>Uglify</label>
+										</li>
+										<li>
+											<input id="obfuscation" type="checkbox" />
+											<label>Obfuscation</label>
+										</li>
+										<li>
+											<input id="disableLiteralsOptimization" type="checkbox" />
+											<label>Disable literals optimization</label>
+										</li>
+										<li>
+											<input id="disableNamespacesOptimization" type="checkbox" />
+											<label>Disable namespaces optimization</label>
+										</li>
+										<li>
+											<label>Exclude namespaces from optimization</label>
+											<input id="excludedNamespaces" type="text" />
+										</li>
+									</ul>
+								</div>
+								<label>Transpiler output:</label>
+								<textarea id="toutput" class="editor-transpiled-area" readonly></textarea>
+							</div>
+							<div class="editor-execute">
+								<a id="execute">Execute</a>
+								<label>Execution output:</label>
+								<textarea id="stdout" class="editor-console-stdout" readonly></textarea>
+								<input id="stdin" class="editor-console-stdin" type="text" disabled />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</article>
+		<footer>
+            <script>
+                var _typeof$1 = (v) => typeof v;
+            </script>
+			<script src="./web.bundled.js"></script>
+		</footer>
+	</body>
+</html>

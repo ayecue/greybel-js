@@ -1,18 +1,31 @@
-# Greybel-JS 0.3.5
+# Greybel-JS 1.0.0
 
-[![Greybel-JS](https://circleci.com/gh/ayecue/greybel-js.svg?style=svg)](https://circleci.com/gh/ayecue/greybel-js)
-
-GreyScript preprocessor/interpreter/emulator ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
+GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
 
 Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/package/luaparse). It's heavily modified though to support GreyScript.
 
 Also partly based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
 
+## Links
+
 - Latest changes: [Changelog](/CHANGELOG.md)
 - Demo Project: [TEdit](https://github.com/ayecue/tedit)
 - Greybel UI Demo: [greybel-ui](https://greybel-ui.netlify.app/)
+- VSCode extension: [greyscript](https://github.com/ayecue/greyscript)
 
-Features:
+## Greybel Modules
+
+These modules are used in this CLI. Feel free to create your own tool using these.
+
+- [GreyScript Core](https://github.com/ayecue/greyscript-core)
+- [Greybel Core](https://github.com/ayecue/greybel-core)
+- [Greybel Transpiler](https://github.com/ayecue/greybel-transpiler)
+- [Greybel Interpreter](https://github.com/ayecue/greybel-interpreter)
+- [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics)
+- [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics)
+
+## Features
+
 - syntax sugar
 	- shortcuts for blocks
 	- multiline lists
@@ -25,9 +38,10 @@ Features:
 	- minifying namespaces
 	- removing whitespaces + tabs
 	- obfuscate your code (even though that's just a side effect of all the steps above)
-- interpreter + emulator with debugging feature (semi implemented)
-- simple ui for interpreter + emulator and transpiler
-- bundler feature via installer flag
+- bundling of files
+- interpreter for code execution
+- REPL for GreyScript
+- Web UI with simplified features
 
 # Install
 
@@ -67,8 +81,6 @@ You can use the installer feature if you are using `import_code`.
 greybel /my/code/file.src --installer
 ```
 This will create an installer file which pretty much bundles all the files into one. Installer files exceeding the max char limit of Grey Hack will get splitted automatically.
-
-To execute an installer you just have to create a file and paste the installer file content into it. Then you need to use the `build` command to compile it to an binary. Then just execute the binary. It will automatically create all the files in your Grey Hack file system.
 
 # Syntax
 ## Block shortcuts
@@ -189,76 +201,39 @@ Enables you to see the variables in the current scope. It will also set a breakp
 index = 1
 print("Hello world!")
 print("Another string!")
-//debugger
+debugger
 ```
 
 ![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
 
-# Emulator
+# Interpreter
 ```
-Emulator CLI
-Example: greybel-console --path "<path to steam common>/Grey Hack"
+Interpreter CLI
+Example: greybel-execute <myscriptfile>
 
 Options:
-	-p, --path	Path to Grey Hack
+	-p, --params	Execution parameters
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
 
-Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API is not there.
-
+# REPL
 ```
-Emulator shell commands:
-	- run <filepath> //used to run scripts from your filesystem
-	- reload
-	- cd <path>
-	- exit
-	- clear
+Emulator CLI
+Example: greybel-repl
 ```
 
-You can use the shell just like in the game. All native scripts like `ls` or `sudo` should work. All functionality that isn't supported yet will print an information text that indicates which exact method it is.
+For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
 
-## Examples:
-### Most common emulator command:
-```
-greybel-console --path "./Library/Application\ Support/Steam/steamapps/common/Grey\ Hack"
-```
-
-![Emulator](/assets/emulator-preview.png?raw=true "Emulator")
-
-# Emulator-UI
+# Web-UI
 ```
 Emulator UI CLI
 Example: greybel-ui
-
-Options:
-	-r, --refresh	Rebuilds UI.
 ```
 
-Keep in mind that not all functionality is implemented yet. So certain parts of the Grey Hack API isn't there yet.
+This is a simple UI where you can minify code and execute code. There is also a VSCode extension. It features a lot of neat features. Like for example a debugger with breakpoints etc.
 
-```
-Emulator shell commands:
-	- cd <path>
-	- exit
-	- clear
-```
-
-You can use the shell just like in the game. All native scripts like `ls` or `sudo` should work. All functionality that isn't supported yet will print an information text that indicates which exact method it is.
-
-## Examples:
-### Most common emulator UI command:
-```
-greybel-ui
-```
-
-![Emulator UI](/assets/emulator-ui-preview.png?raw=true "Emulator UI")
+![Web UI](/assets/emulator-ui-preview.png?raw=true "Web UI")
 
 # TODO
-- add full support of Grey Hack API to emulator (delayed for now)
-- port greybel-js to GreyScript to replace https://github.com/ayecue/greybel
-- clean up codebase
-- use typescript
 - debugging (semi integrated)
-- more functionality and possibly more syntax sugar
-- security in terms of scoping

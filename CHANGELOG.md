@@ -101,3 +101,7 @@ All notable changes to this project will be documented in this file.
 
 - parse all files before building to avoid issues with namespaces when optimizing
 - use different globals namespace identifier to avoid unintended behavior when optimizing with certain options
+
+## [1.0.0] - 25-01-2021
+
+- major overhaul
