@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "engines": {
         "node": ">=14.0.0"
     },
@@ -27,12 +27,12 @@
         "@codemirror/lang-javascript": "^0.18.0",
         "@codemirror/view": "^0.18.17",
         "commander": "^7.2.0",
-        "greybel-core": "^0.2.3",
-        "greybel-gh-mock-intrinsics": "^0.2.4",
-        "greybel-interpreter": "^0.5.8",
-        "greybel-intrinsics": "^0.4.7",
-        "greybel-transpiler": "^0.2.3",
-        "greyscript-core": "^0.2.4",
+        "greybel-core": "^0.2.4",
+        "greybel-gh-mock-intrinsics": "^0.2.6",
+        "greybel-interpreter": "^0.6.3",
+        "greybel-intrinsics": "^0.5.2",
+        "greybel-transpiler": "^0.2.4",
+        "greyscript-core": "^0.2.5",
         "inquirer": "^8.1.0",
         "inquirer-command-prompt": "^0.1.0",
         "json-formatter-js": "^2.3.4",

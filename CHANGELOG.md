@@ -121,3 +121,11 @@ All notable changes to this project will be documented in this file.
 ## [1.0.4] - 25-01-2021
 
 - metaxploit port 0 uses kernel_router
+
+## [1.0.5] - 26-01-2021
+
+- mock intrinsics generate new entities on the fly now
+- bunch of fixes for the interpreter
+- parser supports another if-then style
+- intrinsics generally got fixes
+- metaMail is supported now
