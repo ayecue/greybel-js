@@ -133,3 +133,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.6] - 26-01-2021
 
 - fix issue with unexpected behavior on end if
+
+## [1.0.7] - 26-01-2021
+
+- fix minor issue in slice not accepting null values
