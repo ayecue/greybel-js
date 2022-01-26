@@ -43,7 +43,7 @@ class GrebyelPseudoDebugger extends Debugger {
 
 			try {
 				await me.interpreter.injectInLastContext(line)
-				console.log(`Execution of ${line} was successful.`);
+				console.log(`Execution of ${line}:${operationContext.target} was successful.`);
 			} catch (err: any) {
 				console.error(`Execution of ${line} failed.`);
 				console.error(err);

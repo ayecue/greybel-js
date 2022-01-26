@@ -137,3 +137,9 @@ All notable changes to this project will be documented in this file.
 ## [1.0.7] - 26-01-2021
 
 - fix minor issue in slice not accepting null values
+
+## [1.0.8] - 27-01-2021
+
+- improve debugger tracking
+- fixed minor bugs in intrinsics
+- fixed object iteration
