@@ -129,3 +129,7 @@ All notable changes to this project will be documented in this file.
 - parser supports another if-then style
 - intrinsics generally got fixes
 - metaMail is supported now
+
+## [1.0.6] - 26-01-2021
+
+- fix issue with unexpected behavior on end if
