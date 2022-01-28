@@ -51,14 +51,14 @@ function createFileLine(file: string, isNew?: boolean): string {
 			output = output.concat([
 				'print("Creating " + h + "/' + base + '")',
 				'c.touch(h, "' + base + '")',
-				'file = c.File(h + "/' + base + '")',
+				'f = c.File(h + "/' + base + '")',
 				'l = []'
 			]);
 		} else {
 			output = output.concat([
 				'print("Creating " + h + "' + folder + '/' + base + '")',
 				'c.touch(h + "' + folder + '", "' + base + '")',
-				'file = c.File(h + "' + folder + '/' + base + '")',
+				'f = c.File(h + "' + folder + '/' + base + '")',
 				'l = []'
 			]);
 		}
@@ -66,20 +66,20 @@ function createFileLine(file: string, isNew?: boolean): string {
 		if (isRootDirectory(folder)) {
 			output = output.concat([
 				'f = c.File(h + "/' + base + '")',
-				'if (file == null) then',
+				'if (f == null) then',
 				'c.touch(h, "' + base + '")',
 				'f = c.File(h + "/' + base + '")',
 				'end if',
-				'l = file.get_content.split(char(10))'
+				'l = f.get_content.split(char(10))'
 			]);
 		} else {
 			output = output.concat([
 				'f = c.File(h + "' + folder + '/' + base + '")',
-				'if (file == null) then',
+				'if (f == null) then',
 				'c.touch(h + "' + folder + '", "' + base + '")',
 				'f = c.File(h + "' + folder + '/' + base + '")',
 				'end if',
-				'l = file.get_content.split(char(10))'
+				'l = f.get_content.split(char(10))'
 			]);
 		}
 	}
@@ -240,7 +240,7 @@ export default async function build(filepath: string, output: string, options: B
 			createInstaller(result, target, buildPath, 75000);
 		}
 
-		console.log(`Build done. Available [here](${buildPath}).`);
+		console.log(`Build done. Available ${buildPath}.`);
 	} catch (err: any) {
 		console.error(err.message);
 		return false;
