@@ -143,3 +143,7 @@ All notable changes to this project will be documented in this file.
 - improve debugger tracking
 - fixed minor bugs in intrinsics
 - fixed object iteration
+
+## [1.0.9] - 28-01-2021
+
+- remove certain dependencies which required crypto
