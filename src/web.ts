@@ -1,3 +1,4 @@
+import { Interpreter } from 'greybel-interpreter';
 import execute from './web/execute';
 import minify from './web/minify';
 import { Stdin, Stdout } from './web/std';
@@ -19,7 +20,10 @@ const obfuscationEl = document.getElementById('obfuscation');
 const disableLiteralsOptimizationEl = document.getElementById('disableLiteralsOptimization');
 const disableNamespacesOptimizationEl = document.getElementById('disableNamespacesOptimization');
 const excludedNamespacesEl = document.getElementById('excludedNamespaces');
+const paramsEl = document.getElementById('params') as HTMLInputElement;
 const executeEl = document.getElementById('execute');
+const stopEl = document.getElementById('stop');
+const pauseEl = document.getElementById('pause');
 const stdoutEl = document.getElementById('stdout');
 const stdinEl = document.getElementById('stdin');
 const editorState = EditorState.create({
@@ -82,13 +86,52 @@ stdoutEl?.addEventListener('click', () => {
 	stdinEl?.focus();
 });
 
-executeEl?.addEventListener('click', async () => {
-    try {
-	    await execute(editorView.state.doc.toString(), {
+executeEl?.addEventListener('click', (): Promise<void> => {
+    return new Promise(async (resolve, reject) => {
+		let currentInterpreter: Interpreter | null = null;
+	    const emitter = await execute(editorView.state.doc.toString(), {
             stdin,
-            stdout
+            stdout,
+			params: paramsEl?.value
+				.split(' ')
+				.filter((v) => v !== '')
         });
-    } catch (err: any) {
-        showError(err.message);
-    }
+		const start = () => {
+			stopEl?.classList.remove('disabled');
+			pauseEl?.classList.remove('disabled');
+
+			stopEl?.addEventListener('click', stop);
+			pauseEl?.addEventListener('click', pause);
+		};
+		const pause = () => {
+			currentInterpreter?.debugger.setBreakpoint(true);
+		};
+		const stop = () => {
+			currentInterpreter?.exit();
+			finalize();
+		};
+		const finalize = () => {
+			stopEl?.classList.add('disabled');
+			pauseEl?.classList.add('disabled');
+
+			stopEl?.removeEventListener('click', stop);
+			pauseEl?.removeEventListener('click', pause);
+		};
+
+		emitter?.on('start', (interpreter: Interpreter) => {
+			currentInterpreter = interpreter;
+			start();
+		});
+
+		emitter?.on('error', (err: any) => {
+			showError(err.message);
+			finalize();
+			resolve();
+		});
+
+		emitter?.on('end', (interpreter: Interpreter) => {
+			finalize();
+			resolve();
+		});
+	});
 });

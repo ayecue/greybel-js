@@ -156,3 +156,11 @@ All notable changes to this project will be documented in this file.
 
 - fixed loops not supporting exit request
 - added non blocking while iteration via process.nextTick
+
+## [1.1.2] - 29-01-2021
+
+- add pause to UI
+- add stop to UI
+- add repl to UI
+- add next to UI
+- change website to be less white, so you don't get flashbanged

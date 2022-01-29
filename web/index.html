@@ -47,7 +47,15 @@
 								<textarea id="toutput" class="editor-transpiled-area" readonly></textarea>
 							</div>
 							<div class="editor-execute">
-								<a id="execute">Execute</a>
+								<div class="context">
+									<label>Execution parameter:</label>
+									<input id="params" type ="text" />
+								</div>
+								<div class="actions">
+									<a id="execute">Execute</a>
+									<a id="pause" class="disabled">Pause</a>
+									<a id="stop" class="disabled">Stop</a>
+								</div>
 								<label>Execution output:</label>
 								<textarea id="stdout" class="editor-console-stdout" readonly></textarea>
 								<input id="stdin" class="editor-console-stdin" type="text" disabled />

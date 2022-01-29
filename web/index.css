@@ -1,6 +1,6 @@
 body {
 	font-family: monospace;
-	background-color: #f3f9ff;
+	background-color: #818181;
 }
 
 #editor-errors {
@@ -30,14 +30,14 @@ body {
 /* IDE */
 .editor-ide {
 	position: absolute;
-	width: 70%;
+	width: 68%;
 	border: 1px solid #AAA;
 	background-color: #f3f9ff;
 }
 
 /* Editor Side Panel */
 .editor-side-panel {
-	position: absolute;
+	position: fixed;
 	height: 100%;
 	width: 30%;
 	right: 0;
@@ -75,6 +75,11 @@ body {
 	cursor: pointer;
 }
 
+.editor-actions a.disabled {
+	background-color: rgb(26, 26, 26);
+	color: rgb(136, 136, 136);
+}
+
 .editor-actions a:active {
 	border: 1px solid #000;
 }
@@ -109,7 +114,7 @@ body {
 .editor-options ul > li {
 	display: block;
 	list-style: none;
-	margin: 0;
+	margin: 5px 0;
 	padding: 0;
 }
 
@@ -138,11 +143,10 @@ body {
 }
 
 .debugger-popup {
-	position: absolute;
+	position: fixed;
     max-width: 800px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 0;
+    left: 20px;
     background-color: #AAA;
     padding: 10px;
 }
@@ -155,7 +159,12 @@ body {
 	padding: 5px;
 }
 
-.debugger-continue {
+.debugger-actions {
+	position: relative;
+	display: block;
+}
+
+.debugger-actions .debugger-continue {
 	background-color: #4CAF50;
 	border: none;
 	color: white;
@@ -163,5 +172,86 @@ body {
 	text-decoration: none;
 	margin: 5px 0 0;
 	cursor: pointer;
-	width: 100%;
+	width: 48%;
+	float: left;
+}
+
+.debugger-actions .debugger-next {
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 8px 16px;
+	text-decoration: none;
+	margin: 5px 0 0;
+	cursor: pointer;
+	width: 48%;
+	float: right;
+}
+
+.debugger-repl-wrapper {
+	margin: 10px 0;
+	position: relative;
+	display: block;
+	clear: both;
+}
+
+.debugger-repl-wrapper label {
+	display: block;
+	clear: both;
+}
+
+.debugger-repl {
+	background: #000;
+	color: green;
+	border-radius: 5px;
+	border: 1px solid #FFF;
+	width: 60%;
+	height: 28px;
+	float: left;
+	margin: 5px 0;
+}
+
+.debugger-repl-execute {
+	width: 35%;
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 8px 16px;
+	text-decoration: none;
+	margin: 5px 0 0;
+	cursor: pointer;
+	float: right;
+}
+
+.editor-execute .context {
+	display: block;
+	position: relative;
+}
+
+.editor-execute label {
+	display: block;
+}
+
+.editor-execute .actions {
+	clear: both;
+}
+
+.editor-execute .context #params {
+	background: #000;
+	color: green;
+	border-radius: 5px;
+	border: 1px solid #FFF;
+	width: 60%;
+	height: 28px;
+	margin: 5px 0;
+}
+
+#excludedNamespaces {
+	background: #000;
+	color: green;
+	border-radius: 5px;
+	border: 1px solid #FFF;
+	width: 60%;
+	height: 28px;
+	margin: 5px 0;
 }
