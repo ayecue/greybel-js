@@ -151,3 +151,8 @@ All notable changes to this project will be documented in this file.
 ## [1.1.0] - 28-01-2021
 
 - fix broken boilerplate of bundler
+
+## [1.1.1] - 29-01-2021
+
+- fixed loops not supporting exit request
+- added non blocking while iteration via process.nextTick
