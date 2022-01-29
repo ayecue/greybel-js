@@ -12,7 +12,6 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import viewJSON from './json-viewer';
 import { Stdin, Stdout } from './std';
-import EventEmitter from 'events';
 import process from 'process';
 
 function parseMap(map: Map<string, string>) {
@@ -146,11 +145,14 @@ export interface ExecuteOptions {
     stdout?: Stdout;
 	api?: Map<string, Function>;
 	params?: string[];
+    onStart?: Function;
+    onError?: Function;
+    onEnd?: Function;
 }
 
-export default async function execute(code: string, options: ExecuteOptions = {}): Promise<EventEmitter | null> {
+export default async function execute(code: string, options: ExecuteOptions = {}): Promise<void> {
     if (!isReady) {
-        return null;
+        return;
     }
 
     isReady = false;
@@ -158,7 +160,6 @@ export default async function execute(code: string, options: ExecuteOptions = {}
 	const vsAPI = options.api || new Map();
     const stdin = options.stdin || new Stdin(new Element());
     const stdout = options.stdout || new Stdout(new Element());
-    const emitter = new EventEmitter();
 
     if (activeInterpreter) {
         await activeInterpreter.exit();
@@ -224,22 +225,20 @@ export default async function execute(code: string, options: ExecuteOptions = {}
 
         try {
             interpreter.params = options.params || [];
+            options.onStart?.(interpreter);
             const operation = interpreter.digest();
-            emitter.emit('start', interpreter);
             console.time('Execution');
             await operation;
             console.timeEnd('Execution');
-            emitter.emit('end', interpreter);
+            options.onEnd?.(interpreter);
         } catch (err: any) {
             const opc = interpreter.apiContext.getLastActive() || interpreter.globalContext;
     
             console.error(err);
 
-            emitter.emit('error', new Error(`${err.message} at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`));
+            options.onError?.(new Error(`${err.message} at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`));
         }
 
         activeInterpreter = null;
     });
-
-    return emitter;
 };

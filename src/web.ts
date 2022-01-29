@@ -89,13 +89,6 @@ stdoutEl?.addEventListener('click', () => {
 executeEl?.addEventListener('click', (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
 		let currentInterpreter: Interpreter | null = null;
-	    const emitter = await execute(editorView.state.doc.toString(), {
-            stdin,
-            stdout,
-			params: paramsEl?.value
-				.split(' ')
-				.filter((v) => v !== '')
-        });
 		const start = () => {
 			stopEl?.classList.remove('disabled');
 			pauseEl?.classList.remove('disabled');
@@ -118,20 +111,25 @@ executeEl?.addEventListener('click', (): Promise<void> => {
 			pauseEl?.removeEventListener('click', pause);
 		};
 
-		emitter?.on('start', (interpreter: Interpreter) => {
-			currentInterpreter = interpreter;
-			start();
-		});
-
-		emitter?.on('error', (err: any) => {
-			showError(err.message);
-			finalize();
-			resolve();
-		});
-
-		emitter?.on('end', (interpreter: Interpreter) => {
-			finalize();
-			resolve();
-		});
+		await execute(editorView.state.doc.toString(), {
+            stdin,
+            stdout,
+			params: paramsEl?.value
+				.split(' ')
+				.filter((v) => v !== ''),
+			onStart: (interpreter: Interpreter) => {
+				currentInterpreter = interpreter;
+				start();
+			},
+			onEnd: (interpreter: Interpreter) => {
+				finalize();
+				resolve();
+			},
+			onError: (err: any) => {
+				showError(err.message);
+				finalize();
+				resolve();
+			}
+        });
 	});
 });

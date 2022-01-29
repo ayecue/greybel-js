@@ -164,3 +164,7 @@ All notable changes to this project will be documented in this file.
 - add repl to UI
 - add next to UI
 - change website to be less white, so you don't get flashbanged
+
+## [1.1.3] - 29-01-2021
+
+- minor change in execution handling to support error messages again in the UI

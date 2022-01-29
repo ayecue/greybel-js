@@ -1,4 +1,4 @@
-# Greybel-JS 1.1.2
+# Greybel-JS 1.1.3
 
 GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
 
