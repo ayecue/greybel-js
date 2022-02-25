@@ -46,7 +46,7 @@ These modules are used in this CLI. Feel free to create your own tool using thes
 # Install
 
 ```
-npm i greybel-js
+npm i -g greybel-js
 ```
 
 # Transpiler
@@ -130,7 +130,7 @@ a ^ b
 ```
 
 ## import_code
-The native `import_code` is now supported as well. For now it's only available in the builder. The interpreter will not support this for now. Will be added in a later update.
+The native `import_code` is now supported as well.
 
 The implementation in this parser enables you to build files in your actual file system via an additional attribute.
 ```
