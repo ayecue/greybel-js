@@ -102,27 +102,27 @@ All notable changes to this project will be documented in this file.
 - parse all files before building to avoid issues with namespaces when optimizing
 - use different globals namespace identifier to avoid unintended behavior when optimizing with certain options
 
-## [1.0.0] - 25-01-2021
+## [1.0.0] - 25-01-2022
 
 - major overhaul
 
-## [1.0.1] - 25-01-2021
+## [1.0.1] - 25-01-2022
 
 - update gh mock intrinsics to latest version
 
-## [1.0.2] - 25-01-2021
+## [1.0.2] - 25-01-2022
 
 - update gh mock intrinsics to latest version due to browser support
 
-## [1.0.3] - 25-01-2021
+## [1.0.3] - 25-01-2022
 
 - File('/') should return root folder
 
-## [1.0.4] - 25-01-2021
+## [1.0.4] - 25-01-2022
 
 - metaxploit port 0 uses kernel_router
 
-## [1.0.5] - 26-01-2021
+## [1.0.5] - 26-01-2022
 
 - mock intrinsics generate new entities on the fly now
 - bunch of fixes for the interpreter
@@ -130,34 +130,34 @@ All notable changes to this project will be documented in this file.
 - intrinsics generally got fixes
 - metaMail is supported now
 
-## [1.0.6] - 26-01-2021
+## [1.0.6] - 26-01-2022
 
 - fix issue with unexpected behavior on end if
 
-## [1.0.7] - 26-01-2021
+## [1.0.7] - 26-01-2022
 
 - fix minor issue in slice not accepting null values
 
-## [1.0.8] - 27-01-2021
+## [1.0.8] - 27-01-2022
 
 - improve debugger tracking
 - fixed minor bugs in intrinsics
 - fixed object iteration
 
-## [1.0.9] - 28-01-2021
+## [1.0.9] - 28-01-2022
 
 - remove certain dependencies which required crypto
 
-## [1.1.0] - 28-01-2021
+## [1.1.0] - 28-01-2022
 
 - fix broken boilerplate of bundler
 
-## [1.1.1] - 29-01-2021
+## [1.1.1] - 29-01-2022
 
 - fixed loops not supporting exit request
 - added non blocking while iteration via process.nextTick
 
-## [1.1.2] - 29-01-2021
+## [1.1.2] - 29-01-2022
 
 - add pause to UI
 - add stop to UI
@@ -165,6 +165,10 @@ All notable changes to this project will be documented in this file.
 - add next to UI
 - change website to be less white, so you don't get flashbanged
 
-## [1.1.3] - 29-01-2021
+## [1.1.3] - 29-01-2022
 
 - minor change in execution handling to support error messages again in the UI
+
+## [1.1.4] - 31-03-2022
+
+- fix issue in parser/lexer which could casue infinite loops
