@@ -16,9 +16,7 @@ let options = {};
 
 program.version(version);
 program
-	.description('REPL for Greyscript.', {
-		filepath: 'File to run'
-	});
+	.description('REPL for Greyscript.', {});
 
 program.parse(process.argv);
 
