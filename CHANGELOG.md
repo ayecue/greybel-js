@@ -172,3 +172,7 @@ All notable changes to this project will be documented in this file.
 ## [1.1.4] - 31-03-2022
 
 - fix issue in parser/lexer which could casue infinite loops
+
+## [1.1.5] - 30-06-2022
+
+- fix envar functionality in transpiler - [issue#24](https://github.com/ayecue/greybel-js/issues/24) - thanks to @stevenklar
