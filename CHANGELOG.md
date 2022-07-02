@@ -176,3 +176,7 @@ All notable changes to this project will be documented in this file.
 ## [1.1.5] - 30-06-2022
 
 - fix envar functionality in transpiler - [issue#24](https://github.com/ayecue/greybel-js/issues/24) - thanks to @stevenklar
+
+## [1.1.6] - 02-07-2022
+
+- support envar in includes/imports - [issue#24](https://github.com/ayecue/greybel-js/issues/24) - thanks to @stevenklar
