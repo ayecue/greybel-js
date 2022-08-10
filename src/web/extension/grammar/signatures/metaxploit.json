@@ -1,0 +1,69 @@
+{
+    "load": {
+        "arguments": [{
+            "label": "path",
+            "type": "string"
+        }],
+        "description": "Loads a library (`string` path) in memory and returns a MetaLib object. Returns either the MetaLib object, or `null` on failure.",
+        "returns": ["null", "metaLib"]
+    },
+    "net_use": {
+        "arguments": [{
+            "label": "ip",
+            "type": "string"
+        }, {
+            "label": "port",
+            "type": "number"
+        }],
+        "description": "Connects to an IP address and establishes a NetSession, which grants remote access to the target's libraries; either the service library running on the optional port (`int`), or the router libraries if no port has been specified. Returns a `NetSession` object, or `null` on failure.",
+        "returns": ["null", "netSession"]
+    },
+    "rshell_client": {
+        "arguments": [{
+            "label": "ip",
+            "type": "string"
+        }, {
+            "label": "port",
+            "type": "number"
+        }, {
+            "label": "processName",
+            "type": "string",
+            "opt": true
+        }],
+        "description": "Takes an optional port (`number`) and process name (`string`). Launches a process on the victim's machine, which silently tries to continuously connect in the background to the specified address and port.",
+        "returns": ["null"]
+    },
+    "rshell_server": {
+        "arguments": [],
+        "description": "Returns a `list` of `shell` objects that have been reverse shell connected to this machine.",
+        "returns": ["list:shell"]
+    },
+    "scan": {
+        "arguments": [{
+            "label": "metaLib",
+            "type": "metaLib"
+        }],
+        "description": "Scans a MetaLib for vulnerable memory addresses and returns them in a list. Returns either the memory addresses (`list`), or `null` on failure.",
+        "returns": ["null", "list:string"]
+    },
+    "scan_address": {
+        "arguments": [{
+            "label": "metaLib",
+            "type": "metaLib"
+        }, {
+            "label": "memoryAddress",
+            "type": "string"
+        }],
+        "description": "Scans a specific memory address and returns information about all its vulnerabilities. Returns either the information about the memory vulnerabilities (`string`), or `null` on failure.",
+        "returns": ["null", "string"]
+    },
+    "sniffer": {
+        "arguments": [{
+            "label": "saveEncSource",
+            "type": "boolean",
+            "opt": true
+        }],
+        "description": "Takes an optional argument to save the source (`boolean`). The terminal listens to the network packets of any connection that passes through this device. \nWhen any connection information is captured, it prints a string with the obtained data. \nIt can save the source code of the encode script if saveEncSource is `true`. Returns `null` if the listener could not be started.",
+        "returns": ["string"]
+    }
+}

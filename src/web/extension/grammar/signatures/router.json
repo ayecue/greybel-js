@@ -1,0 +1,56 @@
+{
+    "device_ports": {
+        "arguments": [{
+            "label": "ip",
+            "type": "string"
+        }],
+        "description": "Takes a LAN IP address (`string`). Returns a `list` of Port objects for ports used on the corresponding machine.",
+        "returns": ["list:port"]
+    },
+    "devices_lan_ip": {
+        "description": "Returns a `list` of IP addresses for machines connected to the router.",
+        "returns": ["list:string"]
+    },
+    "bssid_name": {
+        "description": "Returns the mac address (bssid `string`) of the router.",
+        "returns": ["string"]
+    },
+    "essid_name": {
+        "description": "Returns the name (essid `string`) of the router.",
+        "returns": ["string"]
+    },
+    "firewall_rules": {
+        "returns": ["string"]
+    },
+    "kernel_version": {
+        "returns": ["string"]
+    },
+    "local_ip": {
+        "description": "Returns the LAN IP address (`string`) of the router.",
+        "returns": ["string"]
+    },
+    "public_ip": {
+        "description": "Returns the public IP address (`string`) of the router.",
+        "returns": ["string"]
+    },
+    "used_ports": {
+        "description": "Returns a `list` of Port objects - all ports configured for forwarding on the router.",
+        "returns": ["list:port"]
+    },
+    "ping_port": {
+        "arguments": [{
+            "label": "port",
+            "type": "number"
+        }],
+        "description": "Takes an external port number (`int`). Returns the Port object for the specified port if forwarding is configured for it; otherwise returns `null`.",
+        "returns": ["port", "null"]
+    },
+    "port_info": {
+        "arguments": [{
+            "label": "port",
+            "type": "port"
+        }],
+        "description": "Takes a Port object. Returns service information for that port (`string`).",
+        "returns": ["string"]
+    }
+}

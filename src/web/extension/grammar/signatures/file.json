@@ -1,0 +1,171 @@
+{
+    "chmod": {
+        "arguments": [{
+            "label": "perms",
+            "type": "string"
+        }, {
+            "label": "recursive",
+            "type": "boolean",
+            "opt": true
+        }],
+        "example": [
+            "comp = get_shell.host_computer",
+            "pwd = comp.File(\"/etc/passwd\")",
+            "etc = comp.File(\"/etc\")",
+            "",
+            "pwd.chmod(\"o-wrx\") //removes read, write, and execute permissions for guest on the file",
+            "etc.chmod(\"o-wrx\", 1) //removes rwx permissions for guest on /etc and all files within /etc"
+        ],
+        "description": "Modifies the file's permissions. Takes a permissions `string` (e.g. `u+wr`) and optional recursive flag (`int` 0 or 1). If the file is a folder and the recursive flag is `1`, the permissions change will apply recursively, to all the files and folders inside the target folder. Returns a `string` (empty on success, or with an error on failure).",
+        "returns": ["string"]
+    },
+    "copy": {
+        "arguments": [{
+            "label": "path",
+            "type": "string"
+        }, {
+            "label": "name",
+            "type": "string"
+        }],
+        "example": [
+            "comp = get_shell.host_computer",
+            "comp.File(\"/etc/passwd\").copy(current_path, \"passfile\")"
+        ],
+        "description": "Copies a file to a new directory path (`string`) with the provided name (`string`). Overwrites any existing file with newname. On success, returns `1` and the terminal outputs the copied file dialogue. On failure, returns either an error (`string`) such as `permission denied` or `null` (if File object not valid).",
+        "returns": ["string", "boolean", "null"]
+    },
+    "move": {
+        "arguments": [{
+            "label": "path",
+            "type": "string"
+        }, {
+            "label": "name",
+            "type": "string"
+        }],
+        "example": [
+            "get_shell.host_computer.File(\"/home/user/Downloads\").move(\"/home/user/Desktop\", \"Downloads\")"
+        ],
+        "description": "Moves a file to the specified path, similar to `File.copy`, except that the original file is moved. On success, returns `1`. On failure, returns either an error (`string`) such as `permission denied` or `null` (if File object not valid).",
+        "returns": ["string", "boolean", "null"]
+    },
+    "rename": {
+        "arguments": [{
+            "label": "name",
+            "type": "string"
+        }],
+        "example": [
+            "fruit = get_shell.host_computer.File(\"apple\")",
+            "if(typeof(fruit) == \"file\") then",
+            "  fruit.rename(\"banana\")",
+            "end if"
+        ],
+        "description": "Renames a file to newname (`string`). Returns a `string` (empty on success, or with an error on failure).",
+        "returns": ["string"]
+    },
+    "path": {
+        "example": [
+            "computer = get_shell.host_computer",
+            "file = computer.File(\"/root/Config/Bank.txt\")",
+            "",
+            "print(file.path) // /root/Config/Bank.txt",
+            "print(file.parent.path) // /root/Config"
+        ],
+        "description": "Returns the full path (`string`) to the file or directory.",
+        "returns": ["string"]
+    },
+    "parent": {
+        "example": [
+            "comp = get_shell.host_computer",
+            "print(comp.File(\"/Public/htdocs/downloads\").parent.name)"
+        ],
+        "description": "Returns the File object of the file's parent directory (or `null` if the initial object is `/`).",
+        "returns": ["file", "null"]
+    },
+    "name": {
+        "returns": ["string"],
+        "description": "Returns the name of the file (`string`)."
+    },
+    "get_content": {
+        "returns": ["string", "null"],
+        "description": "Returns the contents of the file (`string`)."
+    },
+    "set_content": {
+        "arguments": [{
+            "label": "content",
+            "type": "string"
+        }],
+        "example": [
+            "myfile = get_shell.host_computer.File(\"/etc/passwd\")",
+            "myfile.set_content(\"blah\") // sets the content of /etc/passwd to \"blah\""
+        ],
+        "description": "Sets a file's contents to content (`string`). Returns `1` on success, or a `string` (containing an error) on failure.",
+        "returns": ["string", "null"]
+    },
+    "is_binary": {
+        "description": "Is the file a binary file?. Returns `1` (true) or `0` (false).",
+        "returns": ["boolean"]
+    },
+    "has_permission": {
+        "arguments": [{
+            "label": "perms",
+            "type": "string"
+        }],
+        "description": "Does the active user have permission to read, write, or execute the file?. Takes a permission (`string`: `r`, `w`, or `x`) and returns `1` (true) or `0` (false).",
+        "returns": ["boolean"]
+    },
+    "delete": {
+        "description": "Deletes the file and returns a `string` (empty on success, or with an error on failure).",
+        "returns": ["string"]
+    },
+    "get_folders": {
+        "description": "Returns a `list` of File objects for all folders in the target directory.",
+        "returns": ["list:file"]
+    },
+    "get_files": {
+        "description": "Returns a `list` of File objects for all files (excluding folder) in the target directory.",
+        "returns": ["list:file"]
+    },
+    "permissions": {
+        "description": "Returns a `string` with the permissions set on the file (e.g. `-rw-rw-r--`).",
+        "returns": ["string"]
+    },
+    "owner": {
+        "description": "Returns the username of the file's owner (`string`).",
+        "returns": ["string"]
+    },
+    "set_owner": {
+        "arguments": [{
+            "label": "owner",
+            "type": "string"
+        }, {
+            "label": "recursive",
+            "type": "boolean",
+            "opt": true
+        }],
+        "description": "Modifies the file's ownership user. Takes the name of a user (`string`) and optional recursive flag (`int` 0 or 1). If the file is a folder and the recursive flag is `1`, the ownership change will apply recursively, to all the files and folders inside the target folder.",
+        "returns": ["boolean"]
+    },
+    "group": {
+        "description": "Creates a group (named with a chosen `string`) for the named user (`string` username of an existing user account). Returns `1` (true) on success or error `string` on failure.",
+        "returns": ["string"]
+    },
+    "set_group": {
+        "arguments": [{
+            "label": "group",
+            "type": "string"
+        }, {
+            "label": "recursive",
+            "type": "boolean",
+            "opt": true
+        }],
+        "description": "Modifies the file's ownership group. Takes the name of a group (`string`) and optional recursive flag (`int` 0 or 1). If the file is a folder and the recursive flag is `1`, the ownership change will apply recursively, to all the files and folders inside the target folder.",
+        "returns": ["boolean"]
+    },
+    "size": {
+        "description": "Returns the size (`int`) of the file in bytes.",
+        "returns": ["number"]
+    },
+    "meta_info": {
+        "returns": ["null"]
+    }
+}

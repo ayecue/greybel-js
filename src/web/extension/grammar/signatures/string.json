@@ -1,0 +1,177 @@
+{
+    "remove": {
+        "arguments": [{
+            "label": "toDelete",
+            "type": "string"
+        }],
+        "example": [
+            "title.remove(\"nope\") // \"Saving Private Ryan\" (unaltered)",
+            "title.remove(\"i\") // \"Savng Private Ryan\" (removes first instance of \"i\" only)",
+            "title.remove(\"av\") // \"Sing Private Ryan\"",
+            "title.remove(\"av\").remove(\" Ryan\") + \"ly!\" // \"Sing Privately!\""
+        ],
+        "description": "Remove the first occurrence of a substring from a string. Returns the string without the first occurrence of substr (`string`).",
+        "returns": ["string"]
+    },
+    "hasIndex": {
+        "arguments": [{
+            "label": "index",
+            "type": "number"
+        }],
+        "example": [
+            "title.hasIndex(0) // 1",
+            "title.hasIndex(11) // 1",
+            "title.hasIndex(22) // 0"
+        ],
+        "description": "Does the index (`int`) exist?. Returns `1` (true) or `0` (false).",
+        "returns": ["boolean"]
+    },
+    "indexOf": {
+        "arguments": [{
+            "label": "value",
+            "type": "string"
+        }, {
+            "label": "offset",
+            "type": "number",
+            "opt": true
+        }],
+        "example": [
+            "title.indexOf(\"R\") // 15",
+            "title.indexOf(\"av\") // 1",
+            "title.indexOf(\"Matt Damon\") // null",
+            "title.indexOf(\"i\") // 3",
+            "title.indexOf(\"i\", 5) // 9",
+            "",
+            "i = title.indexOf(\"P\")",
+            "if i then",
+            "  print(title[i:]) //prints \"Private Ryan\"",
+            "end if"
+        ],
+        "description": "Get the index of the first substring (`string`) within string. Optionally searches after begin (`int` index). Returns index (`int`) or `null` (substring not found).",
+        "returns": ["number"]
+    },
+    "lastIndexOf": {
+        "arguments": [{
+            "label": "value",
+            "type": "string"
+        }],
+        "example": [
+            "title.lastIndexOf(\"a\") // 17"
+        ],
+        "description": "Get the index of the last substring (`substr`) within string. Takes a `string`. Returns index (`int`) or `null` (substring not found).",
+        "returns": ["number"]
+    },
+    "split": {
+        "arguments": [{
+            "label": "delimiter",
+            "type": "string"
+        }],
+        "example": [
+            "title.split(\" \") // [\"Saving\", \"Private\", \"Ryan\"]",
+            "title.split(\"a\") // [\"S\", \"ving Priv\", \"te Ry\", \"n\"]",
+            "title.split(\"blah\") // [\"Saving Private Ryan\"]"
+        ],
+        "description": "Takes a separator (`string`). Returns a `list object` of substrings (or `null` on error).",
+        "returns": ["list:string"]
+    },
+    "replace": {
+        "arguments": [{
+            "label": "toReplace",
+            "type": "string"
+        }, {
+            "label": "newString",
+            "type": "string"
+        }],
+        "example": [
+            "title.replace(\"Ryan\", \"Gosling\") // \"Saving Private Gosling\"",
+            "\"aaabbbccc\".replace(\"b\", \"x\") // \"aaaxxxccc\"",
+            "title.replace(slice(title, title.indexOf(\"P\")), \"Mr. Banks\") // \"Saving Mr. Banks\""
+        ],
+        "description": "Takes two `string` values. Returns the string with any instances of substring old replaced with new.",
+        "returns": ["string"]
+    },
+    "trim": {
+        "example": [
+            "\"No change\".trim // \"No change\"",
+            "\"   Strip off some spacing \".trim // \"Strip off some spacing\""
+        ],
+        "description": "Returns the string stripped of any spacing at the beginning or end.",
+        "returns": ["string"]
+    },
+    "indexes": {
+        "example": [
+            "title.indexes // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]"
+        ],
+        "description": "Returns a `list object` containing indexes of all characters in the string.",
+        "returns": ["list:number"]
+    },
+    "code": {
+        "example": [
+            "title.code // 83 (unicode decimal for \"S\")",
+            "title[7:].code // 80 (unicode decimal for \"P\")",
+            "\"x\".code // 120"
+        ],
+        "description": "Returns the unicode code point (`int`) of the first character of the string.",
+        "returns": ["number"]
+    },
+    "len": {
+        "example": [
+            "title.len / 19",
+            "\"abc\".len // 3",
+            "\"\".len // 0"
+        ],
+        "description": "Returns length of string (`int`).",
+        "returns": ["number"]
+    },
+    "lower": {
+        "example": [
+            "title.lower // \"saving private ryan\""
+        ],
+        "description": "Returns str in lowercase (`string`).",
+        "returns": ["string"]
+    },
+    "upper": {
+        "example": [
+            "title.upper // \"SAVING PRIVATE RYAN\""
+        ],
+        "description": "Returns str in uppercase (`string`).",
+        "returns": ["string"]
+    },
+    "val": {
+        "example": [
+            "title.val // 0 (no numbers in the title string)",
+            "\"four\".val // 0 (no numbers in this string)",
+            "\"4\".val // 4",
+            "\"0.816\" // 0.816",
+            "",
+            "n = \"4 2\"",
+            "n.val // 0",
+            "n[0].val // 4",
+            "n.remove(\" \").val // 42"
+        ],
+        "description": "Converts str to a number. Returns `number` if string represents a valid number, `0` if not.",
+        "returns": ["number"]
+    },
+    "values": {
+        "example": [
+            "title.values // [\"S\", \"a\", \"v\", \"i\", \"n\", \"g\", \" \", \"P\", \"r\", \"i\", \"v\", \"a\", \"t\", \"e\", \" \", \"R\", \"y\", \"a\", \"n\"]"
+        ],
+        "description": "Returns a `list object` consisting of all the individual characters in str.",
+        "returns": ["list:string"]
+    },
+    "to_int": {
+        "example": [
+            "\"five\".to_int // \"five\" (string)",
+            "\"0.92\".to_int // \"0.92\" (string)",
+            "",
+            "\"5\".to_int // 5 (int number)",
+            "",
+            "n = \"3 8\"",
+            "n.to_int // \"3 8\" (string)",
+            "n[0].to_int // 3 (int number)",
+            "n.remove(\" \").to_int // 38 (int number)"
+        ],
+        "description": "Converts str to an integer. Returns `int` if string represents a valid integer, or otherwise returns `string` str.",
+        "returns": ["string", "number"]
+    }
+}

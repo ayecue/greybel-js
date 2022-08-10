@@ -1,0 +1,190 @@
+{
+    "get_ports": {
+        "description": "Returns a `list` of Port objects for services running on the computer.",
+        "returns": ["list:port"]
+    },
+    "File": {
+        "arguments": [{
+            "label": "path",
+            "type": "string"
+        }],
+        "example": [
+            "comp = get_shell.host_computer",
+            "myfile = comp.File(\"/path/to/file\")",
+            "myfile.delete",
+            "",
+            "comp.File(\"/path/to/directory\").delete"
+        ],
+        "description": "Obtain a `File` object for a file on the machine. Returns a File object or `null` if the file does not exist.",
+        "returns": ["file", "null"]
+    },
+    "create_folder": {
+        "arguments": [{
+            "label": "folder",
+            "type": "string"
+        }],
+        "example": [
+            "comp = get_shell.host_computer",
+            "comp.create_folder(current_path, \"foldername\")"
+        ],
+        "description": "Creates a directory name within path. Returns `1` (true) on success or `0` (false) / `null` on failure.",
+        "returns": ["boolean", "null"]
+    },
+    "is_network_active": {
+        "description": "Does the Computer have internet access?. Returns `1` (true) or `0` (false).",
+        "returns": ["boolean"]
+    },
+    "touch": {
+        "arguments": [{
+            "label": "path",
+            "type": "string"
+        }, {
+            "label": "fileName",
+            "type": "string"
+        }],
+        "example": [
+            "comp = get_shell.host_computer",
+            "comp.touch(\"/path/to/directory\", \"filename\")",
+            "print(comp.File(\"/path/to/directory/filename\").name) // \"filename\""
+        ],
+        "description": "Creates an empty file with the name of filename (`string`) in the chosen directory path (`string`). Returns `1` on success, or a `string` (containing an error) on failure.",
+        "returns": ["boolean", "string"]
+    },
+    "show_procs": {
+        "example": [
+            "print(\"Current user: \" + active_user + \"\\n\\nCurrent processes:\")",
+            "print(get_shell.host_computer.show_procs)"
+        ],
+        "description": "Returns a `string` listing the processes currently running on the machine.",
+        "returns": ["list:string"]
+    },
+    "network_devices": {
+        "example": [
+            "print(get_shell.host_computer.network_devices)"
+        ],
+        "description": "Returns a `string` with a list of network device(s) on the computer.",
+        "returns": ["list:string"]
+    },
+    "change_password": {
+        "arguments": [{
+            "label": "user",
+            "type": "string"
+        }, {
+            "label": "pass",
+            "type": "string"
+        }],
+        "description": "Changes an existing user's password. Takes a user (`string`) and password (`string`). Returns `1` on success, or error `string` on failure.",
+        "returns": ["boolean", "string"]
+    },
+    "create_user": {
+        "arguments": [{
+            "label": "user",
+            "type": "string"
+        }, {
+            "label": "pass",
+            "type": "string"
+        }],
+        "description": "Creates a new user on the computer. Requires a username (`string`) and password (`string`). Returns `1` on success, or error `string` on failure.",
+        "returns": ["boolean", "string"]
+    },
+    "delete_user": {
+        "arguments": [{
+            "label": "user",
+            "type": "string"
+        }, {
+            "label": "removeHome",
+            "type": "boolean",
+            "opt": true
+        }],
+        "description": "Deletes a user, and optionally deletes their /home/user directory. Requires username (`string`) and takes an optional removeHome `int` (`1` or `0`). Returns `1` on success, or error `string` on failure.",
+        "returns": ["boolean", "string"]
+    },
+    "create_group": {
+        "arguments": [{
+            "label": "user",
+            "type": "string"
+        }, {
+            "label": "group",
+            "type": "string"
+        }],
+        "description": "Creates a group (named with a chosen `string`) for the named user (`string` username of an existing user account). Returns `1` (true) on success or error `string` on failure.",
+        "returns": ["boolean", "string"]
+    },
+    "delete_group": {
+        "arguments": [{
+            "label": "user",
+            "type": "string"
+        }, {
+            "label": "group",
+            "type": "string"
+        }],
+        "description": "Deletes a group (named `string`) on the machine, removing it from the named user (`string` username of an existing user). Returns `1` (true) on success or error `string` on failure.",
+        "returns": ["boolean", "string"]
+    },
+    "groups": {
+        "arguments": [{
+            "label": "user",
+            "type": "string"
+        }],
+        "description": "Returns a line delimited string of all groups a given user (`string` username) belongs to.",
+        "returns": ["string"]
+    },
+    "close_program": {
+        "arguments": [{
+            "label": "pid",
+            "type": "number"
+        }],
+        "description": "Terminates a process. Takes a process ID (`int`). Returns `1` on success, `0` if the process cannot be found, or an error `string` on failure to terminate the process.",
+        "returns": ["boolean", "string"]
+    },
+    "wifi_networks": {
+        "arguments": [{
+            "label": "interface",
+            "type": "string"
+        }],
+        "example": [
+            "networks = get_shell.host_computer.wifi_networks(\"eth0\")",
+            "for net in networks",
+            "  print(net.split(\" \")[0])",
+            "end for"
+        ],
+        "description": "Takes a network interface (`string` e.g. eth0). Returns a list object of WiFi networks available to the user's machine.",
+        "returns": ["list:string"]
+    },
+    "connect_wifi": {
+        "arguments": [{
+            "label": "interface",
+            "type": "string"
+        }, {
+            "label": "bssid",
+            "type": "string"
+        }, {
+            "label": "essid",
+            "type": "string"
+        }, {
+            "label": "pass",
+            "type": "string"
+        }],
+        "description": "Connects to a wireless network. Takes an interface (`string` e.g. eth0), bssid (`string`), essid (`string`), and password (`string`). Returns `1` on successful connection, `null` if the network cannot be found, or an error `string` on connection failure.",
+        "returns": ["boolean", "string", "null"]
+    },
+    "connect_ethernet": {
+        "arguments": [{
+            "label": "interface",
+            "type": "string"
+        }, {
+            "label": "localIp",
+            "type": "string"
+        }, {
+            "label": "gateway",
+            "type": "string"
+        }],
+        "returns": ["boolean", "string", "null"]
+    },
+    "network_gateway": {
+        "returns": ["string"]
+    },
+    "active_net_card": {
+        "returns": ["string"]
+    }
+}
