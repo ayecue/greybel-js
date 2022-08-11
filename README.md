@@ -79,6 +79,24 @@ greybel /my/code/file.src --installer
 ```
 This will create an installer file which pretty much bundles all the files into one. Installer files exceeding the max char limit of Grey Hack will get splitted automatically.
 
+## Envar
+Envar will put environment variables into your script. Just keep in mind to use the `--env-files /path/env.conf` parameter. This might be useful if you want to use different variables for different environments. You can use multiple env files `--env-file /path/default.conf --env-file /path/env.conf`.
+
+You can also define the envars via this parameter. `--env-vars random=SOME_VALUE --env-vars foo=123`
+```
+//File path: env.conf
+# MY COMMENT
+random=SOME_VALUE
+foo=123
+
+//File path: example.src
+somevar = #envar random;
+foovar = #envar foo;
+
+print(somevar) //prints "SOME_VALUE"
+print(foovar) //prints "123"
+```
+
 # Interpreter
 ```
 Interpreter CLI
@@ -247,24 +265,6 @@ end function
 hello() //prints "Hello world!"
 ```
 
-## Envar
-Envar will put environment variables into your script. Just keep in mind to use the `--env-files /path/env.conf` parameter. This might be useful if you want to use different variables for different environments. You can use multiple env files `--env-file /path/default.conf --env-file /path/env.conf`.
-
-You can also define the envars via this parameter. `--env-vars random=SOME_VALUE --env-vars foo=123`
-```
-//File path: env.conf
-# MY COMMENT
-random=SOME_VALUE
-foo=123
-
-//File path: example.src
-somevar = #envar random;
-foovar = #envar foo;
-
-print(somevar) //prints "SOME_VALUE"
-print(foovar) //prints "123"
-```
-
-## Contact
+# Contact
 
 Generally you can just create an [issue](https://github.com/ayecue/greybel-js/issues) if you find a bug or got a feature request. Alternatively you can also contact me on discord `ayecue#9086`.
