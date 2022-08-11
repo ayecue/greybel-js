@@ -1,6 +1,7 @@
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
+  CustomString,
   CustomValue,
   Debugger,
   Defaults,
@@ -128,7 +129,7 @@ export default async function execute(
             loop: false
           })
           .then(function (inputMap) {
-            return inputMap.default;
+            return new CustomString(inputMap.default);
           })
           .catch((err) => {
             throw err;

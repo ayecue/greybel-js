@@ -1,6 +1,7 @@
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
+  CustomString,
   CustomValue,
   Debugger,
   Defaults,
@@ -83,7 +84,7 @@ export default async function repl(
           loop: false
         });
 
-        return result?.default;
+        return new CustomString(result?.default);
       }
     )
       .addArgument('message')
