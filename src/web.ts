@@ -8,6 +8,8 @@ import init from './web/view';
 
   // get all elements
   const containerEl = document.getElementById('container')!;
+  const shareEl = document.getElementById('share')!;
+  const popupsContainerEl = document.getElementById('editor-popups')!;
   const errorContainerEl = document.getElementById('editor-errors')!;
   const transpileEl = document.getElementById('transpile')!;
   const outputEl = document.getElementById('toutput')!;
@@ -28,14 +30,25 @@ import init from './web/view';
   const stdinEl = document.getElementById('stdin')!;
 
   const urlSearchParams = new URLSearchParams(location.search);
-  const gistId = urlSearchParams.get('gist') || undefined;
+  let content = urlSearchParams.get('c') || undefined;
+
+  if (content) {
+    try {
+      content = atob(decodeURIComponent(content));
+    } catch (err: any) {
+      content = undefined;
+      console.error(err);
+    }
+  }
 
   // initialize editor + actions
   init({
     monaco,
     containerEl,
+    popupsContainerEl,
     errorContainerEl,
-    gistId,
+    shareEl,
+    content,
     transpiler: {
       transpileEl,
       outputEl,

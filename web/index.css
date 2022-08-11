@@ -287,3 +287,62 @@ body {
 .editor-help code .comment {
 	color:lightgreen;
 }
+
+/* Share code */
+.share-popup-bg {
+	background-color: #333;
+	opacity: 0.5;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	z-index: 999;
+}
+
+.share-popup {
+	position: fixed;
+    max-width: 800px;
+    position: absolute;
+	top: 200px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background-color: #AAA;
+	z-index: 999;
+}
+
+.share-popup textarea {
+	background: #000;
+	color: green;
+	padding: 0;
+	margin: 0;
+	height: 200px;
+	width: 400px;
+}
+
+.share-popup a {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 24px;
+	height: 24px;
+	opacity: 0.3;
+	cursor: pointer;
+}
+.share-popup a:hover {
+	opacity: 1;
+}
+.share-popup a:before, .share-popup a:after {
+	position: absolute;
+	left: 12px;
+	content: ' ';
+	height: 25px;
+	width: 2px;
+	background-color: #CCC;
+}
+.share-popup a:before {
+	transform: rotate(45deg);
+}
+.share-popup a:after {
+	transform: rotate(-45deg);
+}

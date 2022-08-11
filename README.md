@@ -165,6 +165,12 @@ This is a simple UI where you can [minify code](#transpiler) and [execute code](
 
 ![Web UI](/assets/emulator-ui-preview.png?raw=true "Web UI")
 
+## Share code
+
+Use the share code button to generate an URL. Currently the implementation just uses the query params so watch out for [any browser limitations](https://stackoverflow.com/a/812962).
+
+It's [planned in the future](#todo) to implement some kind of package manager.
+
 # Syntax
 ## Block shortcuts
 ```

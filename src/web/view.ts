@@ -5,7 +5,6 @@ import execute from './execute';
 import { activate } from './extension';
 import language from './extension/grammar/language';
 import { createDocumentAST } from './extension/helper/model-manager';
-import GithubGist from './gist';
 import minify from './minify';
 import { Stdin, Stdout } from './std';
 
@@ -32,8 +31,10 @@ export interface EditorRunnerOptions {
 export interface EditorOptions {
   monaco: typeof Monaco;
   containerEl: HTMLElement;
+  popupsContainerEl: HTMLElement;
   errorContainerEl: HTMLElement;
-  gistId?: string;
+  shareEl: HTMLElement;
+  content?: string;
 
   transpiler: EditorTranspilerOptions;
   runner: EditorRunnerOptions;
@@ -152,9 +153,12 @@ export function initRunner(
 }
 
 export default async function init(options: EditorOptions) {
-  const { monaco, containerEl, errorContainerEl } = options;
-  let initContent =
-    localStorage.getItem('ide-content') || 'print("Hello world")';
+  const { monaco, containerEl, errorContainerEl, popupsContainerEl, shareEl } =
+    options;
+  const initContent =
+    options.content ||
+    localStorage.getItem('ide-content') ||
+    'print("Hello world")';
 
   const showError = function (msg: string, timeout: number = 10000) {
     const errorEl = document.createElement('div');
@@ -172,15 +176,31 @@ export default async function init(options: EditorOptions) {
     });
   };
 
-  if (options.gistId) {
-    const gistService = new GithubGist();
+  const showSharePopup = function (msg: string) {
+    const popupBgEl = document.createElement('div');
+    const popupEl = document.createElement('div');
+    const areaEl = document.createElement('textarea');
+    const closeEl = document.createElement('a');
+    const close = () => {
+      popupsContainerEl.removeChild(popupBgEl);
+      popupsContainerEl.removeChild(popupEl);
+    };
 
-    try {
-      initContent = await gistService.get(options.gistId);
-    } catch (err: any) {
-      showError(err.message);
-    }
-  }
+    areaEl.readOnly = true;
+    areaEl.innerHTML = msg;
+
+    popupBgEl.classList.add('share-popup-bg');
+    popupEl.classList.add('share-popup');
+
+    popupEl.appendChild(closeEl);
+    popupEl.appendChild(areaEl);
+
+    popupsContainerEl.appendChild(popupBgEl);
+    popupsContainerEl.appendChild(popupEl);
+
+    closeEl.addEventListener('click', close);
+    popupBgEl.addEventListener('click', close);
+  };
 
   monaco.languages.register({ id: 'greyscript' });
   monaco.languages.setMonarchTokensProvider('greyscript', language);
@@ -193,6 +213,12 @@ export default async function init(options: EditorOptions) {
     model: editorModel,
     automaticLayout: true,
     theme: 'vs-dark'
+  });
+
+  shareEl.addEventListener('click', () => {
+    const url = new URL(location.href);
+    url.searchParams.set('c', btoa(editorModel.getValue()));
+    showSharePopup(url.toString());
   });
 
   editorModel.onDidChangeContent((_event) => {
