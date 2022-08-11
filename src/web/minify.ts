@@ -28,6 +28,7 @@ export default function build(
   return new Minifier({
     code,
     uglify: buildOptions.uglify,
+    excludedNamespaces: buildOptions.excludedNamespaces,
     disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
     disableNamespacesOptimization: buildOptions.disableNamespacesOptimization
   }).minify();
