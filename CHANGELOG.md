@@ -181,7 +181,7 @@ All notable changes to this project will be documented in this file.
 
 - support envar in includes/imports - [issue#24](https://github.com/ayecue/greybel-js/issues/24) - thanks to @stevenklar
 
-## [1.2.0] - 10-08-2022
+## [1.2.0] - 11-08-2022
 
 - fix lexer behaviour if string literal wasn't closed
 - fix parser not passing unsafe value to lexer
@@ -191,3 +191,4 @@ All notable changes to this project will be documented in this file.
 - implemented monaco edtior into UI
 - add language config, automcomplete logic and hover logic to UI
 - add simple logic to share code; going to be extended
+- now passing exclude namespace input and obfuscation checkbox to transpiler in UI
