@@ -1,78 +1,126 @@
-import { Interpreter, CustomType, Debugger, OperationContext } from 'greybel-interpreter';
-import { init as initIntrinsics } from 'greybel-intrinsics';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import {
+  CustomFunction,
+  CustomString,
+  CustomValue,
+  Debugger,
+  Defaults,
+  Interpreter,
+  OperationContext
+} from 'greybel-interpreter';
+import { init as initIntrinsics } from 'greybel-intrinsics';
 import inquirer from 'inquirer';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 
 class GrebyelPseudoDebugger extends Debugger {
-	debug() {
+  debug() {
+    return Defaults.Void;
+  }
 
-	}
+  getBreakpoint(_operationContext: OperationContext): boolean {
+    return false;
+  }
 
-	getBreakpoint(operationContext: OperationContext): boolean {
-		return false;
-	}
-
-	interact(operationContext: OperationContext) {
-	}
+  interact(_operationContext: OperationContext) {}
 }
 
 export interface REPLOptions {
-	api?: Map<string, Function>;
+  api?: Map<string, CustomFunction>;
 }
 
-export default async function repl(options: REPLOptions = {}): Promise<boolean> {
-	const vsAPI = options.api || new Map();
-	let active = true;
+export default async function repl(
+  options: REPLOptions = {}
+): Promise<boolean> {
+  const vsAPI = options.api || new Map<string, CustomFunction>();
+  let active = true;
 
-	vsAPI.set('print', (customValue: CustomType): void => {
-		console.log(customValue.toString());
-	});
+  vsAPI.set(
+    'print',
+    CustomFunction.createExternal(
+      'print',
+      (
+        _ctx: OperationContext,
+        _self: CustomValue,
+        args: Map<string, CustomValue>
+      ): Promise<CustomValue> => {
+        console.log(args.get('value')?.toString());
+        return Promise.resolve(Defaults.Void);
+      }
+    ).addArgument('value')
+  );
 
-	vsAPI.set('exit', (customValue: CustomType): void => {
-		if (customValue) {
-			console.log(customValue?.toString());
-		}
-		
-		active = false;
-	});
+  vsAPI.set(
+    'exit',
+    CustomFunction.createExternal(
+      'exit',
+      (
+        _ctx: OperationContext,
+        _self: CustomValue,
+        args: Map<string, CustomValue>
+      ): Promise<CustomValue> => {
+        console.log(args.get('value')?.toString());
+        active = false;
+        return Promise.resolve(Defaults.Void);
+      }
+    ).addArgument('value')
+  );
 
-	vsAPI.set('user_input', async (message: CustomType, isPassword: CustomType, anyKey: CustomType): Promise<string | null> => {
-		const result = await inquirer.prompt({
-				name: 'default',
-				message: message.toString(),
-				type: isPassword?.valueOf() ? 'password' : 'input',
-				loop: false
-			});
-		
-		return result?.['default'];
-	});
+  vsAPI.set(
+    'user_input',
+    CustomFunction.createExternal(
+      'user_input',
+      async (
+        _ctx: OperationContext,
+        _self: CustomValue,
+        args: Map<string, CustomValue>
+      ): Promise<CustomValue> => {
+        const message = args.get('message')?.toString();
+        const isPassword = args.get('isPassword')?.toTruthy();
 
-	const interpreter = new Interpreter({
-		debugger: new GrebyelPseudoDebugger(),
-		api: initIntrinsics(initGHIntrinsics(vsAPI))
-	});
+        const result = await inquirer.prompt({
+          name: 'default',
+          message,
+          type: isPassword ? 'password' : 'input',
+          loop: false
+        });
 
-	try {
-		while (active) {
-			const inputMap = await inquirer.prompt({
-				prefix: '>',
-				name: 'repl'
-			});
+        return new CustomString(result?.default);
+      }
+    )
+      .addArgument('message')
+      .addArgument('isPassword')
+      .addArgument('anyKey')
+  );
 
-			try {
-				await interpreter.digest(inputMap['repl']);
-			} catch (err: any) {
-				const opc = interpreter.apiContext.getLastActive() || interpreter.globalContext;
-		
-				console.error(`${err.message} at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`);
-			}
-		}
-	} catch (err: any) {
-		console.error(err);
+  const interpreter = new Interpreter({
+    debugger: new GrebyelPseudoDebugger(),
+    api: initIntrinsics(initGHIntrinsics(vsAPI))
+  });
 
-		return false;
-	}
+  try {
+    /* eslint-disable-next-line no-unmodified-loop-condition */
+    while (active) {
+      const inputMap = await inquirer.prompt({
+        prefix: '>',
+        name: 'repl'
+      });
 
-	return true;
-};
+      try {
+        await interpreter.run(inputMap.repl);
+      } catch (err: any) {
+        const opc =
+          interpreter.apiContext.getLastActive() || interpreter.globalContext;
+
+        console.error(
+          `${err.message} at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`
+        );
+      }
+    }
+  } catch (err: any) {
+    console.error(err);
+
+    return false;
+  }
+
+  return true;
+}

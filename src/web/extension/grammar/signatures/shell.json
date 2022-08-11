@@ -1,0 +1,148 @@
+{
+    "host_computer": {
+        "example": [
+            "mycomputer = get_shell.host_computer",
+            "",
+            "print(mycomputer.File(\"/etc/passwd\").content)",
+            "// prints the contents of /etc/passwd on the user machine"
+        ],
+        "description": "Returns the shell's `Computer object`.",
+        "returns": ["computer", "null"]
+    },
+    "start_terminal": {
+        "example": [
+            "shell = get_shell.connect_service(\"88.137.62.95\", 21, \"root\", \"kuroshitsuji\", \"ftp\")",
+            "if shell then shell.start_terminal"
+        ],
+        "description": "Launches an active terminal. The colour of the terminal will change and show the IP of the connected shell.",
+        "returns": ["null"]
+    },
+    "build": {
+        "arguments": [{
+            "label": "srcpath",
+            "type": "string"
+        }, {
+            "label": "buildpath",
+            "type": "string"
+        }, {
+            "label": "importsEnabled",
+            "type": "boolean",
+            "opt": true
+        }],
+        "example": [
+            "get_shell.build(\"/home/user/myprogram.src\", \"/home/user\")"
+        ],
+        "description": "Compiles an executable binary from a source file. Requires a path to a source file (`string`) and a directory path (`string`) to where the binary will be saved. The binary will be created with the same name as the source file, without a file extension. Returns a `string` (empty on success, or with an error on failure).",
+        "returns": ["string"]
+    },
+    "connect_service": {
+        "arguments": [{
+            "label": "ip",
+            "type": "string"
+        }, {
+            "label": "port",
+            "type": "number"
+        }, {
+            "label": "user",
+            "type": "string"
+        }, {
+            "label": "pass",
+            "type": "string"
+        }, {
+            "label": "service",
+            "type": "string",
+            "opt": true
+        }],
+        "example": [
+            "mypc = get_shell",
+            "remote = mypc.connect_service(\"39.62.143.12\", 22, \"root\", \"We<3nigma\")",
+            "",
+            "if remote then",
+            "  print(remote.host_computer.File(\"/etc/passwd\").content)",
+            "  //prints the contents of /etc/passwd on this remote machine",
+            "end if"
+        ],
+        "description": "Connects to a remote service (i.e. ssh/ftp) to obtain a remote shell. Requires an IP address (`string`), port (`int`), username (`string`), password (`string`), and takes an optional service (`string`). Returns a `Shell` object or `null` on failure.",
+        "returns": ["shell", "null"]
+    },
+    "launch": {
+        "arguments": [{
+            "label": "program",
+            "type": "string"
+        }, {
+            "label": "params",
+            "type": "string",
+            "opt": true
+        }],
+        "example": [
+            "get_shell.launch(\"/bin/cat\", \"/etc/passwd\")"
+        ],
+        "description": "Executes a program (`string` path to program) with optional parameters (`string`). Returns `null` on success, or `0` on failure.",
+        "returns": ["null", "number"]
+    },
+    "ping": {
+        "arguments": [{
+            "label": "ip",
+            "type": "string",
+            "opt": false
+        }],
+        "returns": ["boolean"]
+    },
+    "scp": {
+        "arguments": [{
+            "label": "file",
+            "type": "string"
+        }, {
+            "label": "folder",
+            "type": "string"
+        }, {
+            "label": "remoteShell",
+            "type": "shell"
+        }],
+        "example": [
+            "myPC = get_shell",
+            "remote = myPC.connect_service(\"31.19.44.137\", 22, \"root\", \"AceofSpades\")",
+            "",
+            "myPC.scp(\"/var/system.log\", \"/root\", remote)",
+            "// uploads system.log from the user machine to the root directory on the remote machine",
+            "",
+            "remote.scp(\"/var/system.log\", home_dir, myPC)",
+            "// downloads system.log from the remote server to the user directory on the user machine"
+        ],
+        "description": "Upload or download files to/from the local shell to/from a remote shell. Takes the path (`string`) to a file on the shell machine, path to a folder (`string`) on the remote shell machine, and the shell (`Shell`) of the machine to copy the file to. Returns `1` on success, or a `string` (containing an error) on failure.",
+        "returns": ["number", "string"]
+    },
+    "masterkey": {
+        "arguments": [{
+            "label": "ip",
+            "type": "string"
+        }, {
+            "label": "port",
+            "type": "number"
+        }, {
+            "label": "user",
+            "type": "string"
+        }],
+        "returns": ["shell", "null"]
+    },
+    "masterkey_direct": {
+        "arguments": [{
+            "label": "publicIp",
+            "type": "string"
+        }, {
+            "label": "localIp",
+            "type": "number"
+        }, {
+            "label": "user",
+            "type": "string"
+        }],
+        "returns": ["shell", "null"]
+    },
+    "restore_network": {
+        "arguments": [{
+            "label": "publicIp",
+            "type": "string"
+        }],
+        "returns": ["null"]
+    }
+}

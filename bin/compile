@@ -26,10 +26,7 @@ program
 	})
 	.action(function (filepath, output) {
 		options.filepath = filepath;
-
-		if (output) {
-			options.output = output;
-		}
+		options.output = output || '.';
 	})
 	.option('-ev, --env-files <file...>', 'Environment variables files')
 	.option('-vr, --env-vars <var...>', 'Environment variables')

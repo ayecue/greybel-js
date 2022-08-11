@@ -1,0 +1,37 @@
+{
+    "delete": {
+        "arguments": [{
+            "label": "mailId",
+            "type": "string"
+        }],
+        "returns": ["number", "string"]
+    },
+    "description": "Delete mail with certain id.",
+    "fetch": {
+        "arguments": [],
+        "description": "Fetch list of mails.",
+        "returns": ["list:string", "string"]
+    },
+    "read": {
+        "arguments": [{
+            "label": "mailId",
+            "type": "string"
+        }],
+        "description": "Returns content of an email.",
+        "returns": ["string"]
+    },
+    "send": {
+        "arguments": [{
+            "label": "emailAddress",
+            "type": "string"
+        }, {
+            "label": "subject",
+            "type": "string"
+        }, {
+            "label": "message",
+            "type": "string"
+        }],
+        "description": "Send email to address.",
+        "returns": ["string"]
+    }
+}

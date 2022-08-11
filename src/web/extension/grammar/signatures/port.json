@@ -1,0 +1,14 @@
+{
+    "port_number": {
+        "description": "Returns the port number (`int`).",
+        "returns": ["number"]
+    },
+    "is_closed": {
+        "description": "Is the port closed?. Returns `1` (true) or `0` (false).",
+        "returns": ["boolean"]
+    },
+    "get_lan_ip": {
+        "description": "Returns the LAN IP Address for which the port forwarding record is configured (`string`).",
+        "returns": ["string"]
+    }
+}

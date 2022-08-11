@@ -1,6 +1,7 @@
 body {
 	font-family: monospace;
-	background-color: #818181;
+	background-color: #333;
+	margin: 0;
 }
 
 #editor-errors {
@@ -30,9 +31,17 @@ body {
 /* IDE */
 .editor-ide {
 	position: absolute;
-	width: 68%;
-	border: 1px solid #AAA;
-	background-color: #f3f9ff;
+	width: 68.5%;
+	top: 1px;
+	bottom: 0px;
+	border: 1px solid #000;
+	background-color: #000;
+}
+
+.editor-ide #container {
+	position: relative;
+	width: 100%;
+	height: 100%;
 }
 
 /* Editor Side Panel */
@@ -42,20 +51,17 @@ body {
 	width: 30%;
 	right: 0;
 	top: 0;
+	overflow: auto;
 }
 
 .editor-actions > div > label {
 	display: block;
-	color: #333;
+	color: #CCC;
 	margin: 5px 0;
 }
 
-.editor-actions {
-	margin: 0 10px;
-}
-
 .editor-actions > div {
-	margin: 0 0 10px;
+	margin: 10px 5px 0 0;
 }
 
 .editor-actions a {
@@ -73,11 +79,13 @@ body {
 	text-align: center;
 	position: relative;
 	cursor: pointer;
+	border: 1px solid transparent;
 }
 
 .editor-actions a.disabled {
 	background-color: rgb(26, 26, 26);
 	color: rgb(136, 136, 136);
+	cursor: default;
 }
 
 .editor-actions a:active {
@@ -87,6 +95,7 @@ body {
 .editor-actions textarea {
 	background: #000;
 	color: green;
+	padding: 0;
 }
 
 .editor-actions .editor-console-stdin {
@@ -103,7 +112,7 @@ body {
 }
 
 .editor-options label {
-	color: #333;
+	color: #CCC;
 }
 
 .editor-options ul {
@@ -130,6 +139,7 @@ body {
 
 .editor-console-stdin {
 	width: 100%;
+	padding: 0;
 }
 
 .debugger-popup-bg {
@@ -230,6 +240,7 @@ body {
 
 .editor-execute label {
 	display: block;
+	color: #CCC;
 }
 
 .editor-execute .actions {
@@ -254,4 +265,85 @@ body {
 	width: 60%;
 	height: 28px;
 	margin: 5px 0;
+}
+
+/* Help */
+.editor-help code {
+	background: #1e1e1e;
+    display: block;
+    margin: 5px 0 0;
+    padding: 5px;
+	color: #CCC;
+}
+
+.editor-help code .identifier {
+	color:yellow;
+}
+
+.editor-help code .string {
+	color:orange;
+}
+
+.editor-help code .comment {
+	color:lightgreen;
+}
+
+/* Share code */
+.share-popup-bg {
+	background-color: #333;
+	opacity: 0.5;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	z-index: 999;
+}
+
+.share-popup {
+	position: fixed;
+    max-width: 800px;
+    position: absolute;
+	top: 200px;
+    left: 50%;
+    transform: translate(-50%, 0);
+	z-index: 999;
+}
+
+.share-popup textarea {
+	background: #000;
+	color: green;
+	padding: 0;
+	margin: 0;
+	height: 200px;
+	width: 400px;
+	box-shadow: 2px 2px 2px black;
+	border: 0;
+}
+
+.share-popup a {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 24px;
+	height: 24px;
+	opacity: 0.3;
+	cursor: pointer;
+}
+.share-popup a:hover {
+	opacity: 1;
+}
+.share-popup a:before, .share-popup a:after {
+	position: absolute;
+	left: 12px;
+	content: ' ';
+	height: 25px;
+	width: 2px;
+	background-color: #AAA;
+}
+.share-popup a:before {
+	transform: rotate(45deg);
+}
+.share-popup a:after {
+	transform: rotate(-45deg);
 }

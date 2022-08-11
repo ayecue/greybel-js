@@ -2,10 +2,6 @@
 
 GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
 
-Lexer and Parser using partly logic from [luaparse](https://www.npmjs.com/package/luaparse). It's heavily modified though to support GreyScript.
-
-Also partly based on my GreyScript preprocessor written in GreyScript [greybel](https://github.com/ayecue/greybel). Without it's issues. That's mainly due to using a lexer and parser instead of string manipulation.
-
 ## Links
 
 - Latest changes: [Changelog](/CHANGELOG.md)
@@ -27,21 +23,21 @@ These modules are used in this CLI. Feel free to create your own tool using thes
 ## Features
 
 - syntax sugar
-	- shortcuts for blocks
-	- multiline lists
-	- multiline maps
-	- math shortcuts
-- import code via `#include` and `#import`
-- environment variables via `#envar`
+	- [shortcuts for blocks](#block-shortcuts)
+	- [multiline lists](#multiline-lists)
+	- [multiline maps](#multiline-maps)
+	- [math shortcuts](#math-shortcuts)
+- [import](#importing) code via `#include` and `#import`
+- [environment variables](#envar) via `#envar`
 - minimizing your script, depending on the size of your project you can save up to 40%
 	- optimizing literals (strings, booleans, numbers)
 	- minifying namespaces
 	- removing whitespaces + tabs
 	- obfuscate your code (even though that's just a side effect of all the steps above)
-- bundling of files
-- interpreter for code execution
-- REPL for GreyScript
-- Web UI with simplified features
+- [bundling of files](#transpiler)
+- [interpreter for code execution](#interpreter)
+- [REPL for GreyScript](#repl)
+- [Web UI with simplified features](#web-ui)
 
 # Install
 
@@ -76,11 +72,104 @@ Options:
 greybel /my/code/file.src
 ```
 
-You can use the installer feature if you are using `import_code`. 
+### When to use the installer flag
+Use the installer flag when using `import_code`. 
 ```
 greybel /my/code/file.src --installer
 ```
 This will create an installer file which pretty much bundles all the files into one. Installer files exceeding the max char limit of Grey Hack will get splitted automatically.
+
+## Envar
+Envar will put environment variables into your script. Just keep in mind to use the `--env-files /path/env.conf` parameter. This might be useful if you want to use different variables for different environments. You can use multiple env files `--env-file /path/default.conf --env-file /path/env.conf`.
+
+You can also define the envars via this parameter. `--env-vars random=SOME_VALUE --env-vars foo=123`
+```
+//File path: env.conf
+# MY COMMENT
+random=SOME_VALUE
+foo=123
+
+//File path: example.src
+somevar = #envar random;
+foovar = #envar foo;
+
+print(somevar) //prints "SOME_VALUE"
+print(foovar) //prints "123"
+```
+
+# Interpreter
+```
+Interpreter CLI
+Example: greybel-execute <myscriptfile>
+
+Options:
+	-p, --params	Execution parameters
+```
+
+For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
+
+## Local environment
+
+[Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics) will automatically generate a local environment. It will also generate other computers, networks, filesystems etc on the fly. Generating is based on a seed called `test`. Therefore generated entities should stay consistent.
+
+The local computer setup is hardcoded. The admin credentials are `root:test`. You will also have `crypto.so` and `metaxploit.so` at your local computer available.
+
+Examples:
+```
+metax = include_lib("/lib/metaxploit.so") //returns metaxploit interface
+print(metax) //prints metaxploit
+
+myShell = get_shell("root", "test") //get local root shell
+```
+
+## Greyscript API support
+
+The intrinsics to support the Greyscript API are provided by [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics) and [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics). Keep in mind that not all of these functions are completly mocked. Also only API that is available in the stable build will be implemented.
+
+Not yet supported:
+- `AptClient`
+- `Metaxploit.aireplay` maxAcks are not yet supported
+- `File.set_group`
+- `Shell.build`
+- `Shell.launch`
+- `FtpShell.put`
+
+## Debugger
+Pauses execution and enables you to inspect/debug your code.
+```
+index = 1
+print("Hello world!")
+print("Another string!")
+debugger
+```
+
+![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
+
+# REPL
+```
+Emulator CLI
+Example: greybel-repl
+```
+
+For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
+
+REPL also features a [local environment](#local-environment) and [greyscript API support](#greyscript-api-support)
+
+# Web-UI
+```
+Emulator UI CLI
+Example: greybel-ui
+```
+
+This is a simple UI where you can [minify code](#transpiler) and [execute code](#interpreter). There is also a VSCode extension. It features a lot of neat features. Like for example a debugger with breakpoints etc.
+
+![Web UI](/assets/emulator-ui-preview.png?raw=true "Web UI")
+
+## Share code
+
+Use the share code button to generate an URL. Currently the implementation just uses the query params so watch out for [any browser limitations](https://stackoverflow.com/a/812962).
+
+It's [planned in the future](#todo) to implement some kind of package manager.
 
 # Syntax
 ## Block shortcuts
@@ -129,8 +218,10 @@ a & b
 a ^ b
 ```
 
+# Importing
+
 ## import_code
-The native `import_code` is now supported as well.
+The native `import_code` is supported as well.
 
 The implementation in this parser enables you to build files in your actual file system via an additional attribute.
 ```
@@ -143,10 +234,10 @@ import_code("somefile.src":"./myProject/test.src");
 
 This going to be very useful if you want to use the new feature but still want your script files to get optimized.
 
-Together with the new `--installer` flag in the CLI it will even bundle your files for you which makes it easier to copy paste code from your file system into the game.
+Together with the `--installer` flag in the CLI it will bundle your files for you which makes it easier to copy/paste code from your file system into the game.
 
-## Importing
-Import will use the relative path from the file it imports to. Also keep in mind to not use the `.src` extension. It will automatically add the extension.
+## Import
+Import will use the relative path from the file it imports to.
 ```
 //File path: library/hello-world.src
 module.exports = function()
@@ -166,8 +257,8 @@ HelloWord() //prints "Hello world!"
 HelloName("Joe") //prints "Hello Joe!"
 ```
 
-## Including
-Include will use the relative path from the file it imports to. Also keep in mind to not use the `.src` extension. Unlike `import` this will not wrap the module. This will just purely put the content of a file into your script.
+## Include
+Include will use the relative path from the file it imports to. This will just purely put the content of a file into your script.
 ```
 //File path: library/hello-world.src
 hello = function()
@@ -180,60 +271,10 @@ end function
 hello() //prints "Hello world!"
 ```
 
-## Envar
-Envar will put environment variables into your script. Just keep in mind to use the `--env-files /path/env.conf` parameter. This might be useful if you want to use different variables for different environments. You can use multiple env files `--env-file /path/default.conf --env-file /path/env.conf`.
+# Todo
 
-Another thing you can do is defining the envars in the console command. `--env-vars test=value --env-vars anothertest=value`
-```
-//File path: env.conf
-# MY COMMENT
-random=SOME_VALUE
+* implement package manager
 
-//File path: example.src
-somevar = #envar random;
+# Contact
 
-print(somevar) //prints "SOME_VALUE"
-```
-
-## Debugger
-Enables you to see the variables in the current scope. It will also set a breakpoint and stop the code execution.
-```
-index = 1
-print("Hello world!")
-print("Another string!")
-debugger
-```
-
-![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
-
-# Interpreter
-```
-Interpreter CLI
-Example: greybel-execute <myscriptfile>
-
-Options:
-	-p, --params	Execution parameters
-```
-
-For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
-
-# REPL
-```
-Emulator CLI
-Example: greybel-repl
-```
-
-For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
-
-# Web-UI
-```
-Emulator UI CLI
-Example: greybel-ui
-```
-
-This is a simple UI where you can minify code and execute code. There is also a VSCode extension. It features a lot of neat features. Like for example a debugger with breakpoints etc.
-
-![Web UI](/assets/emulator-ui-preview.png?raw=true "Web UI")
-
-# TODO
-- debugging (semi integrated)
+Generally you can just create an [issue](https://github.com/ayecue/greybel-js/issues) if you find a bug or got a feature request. Alternatively you can also contact me on discord `ayecue#9086`.

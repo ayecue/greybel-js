@@ -1,185 +1,230 @@
+import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
-    Interpreter,
-    CustomType,
-    Debugger,
-    OperationContext,
-    ResourceProvider as InterpreterResourceProviderBase,
-    ResourceHandler as InterpreterResourceHandler,
-    CustomMap,
-    CustomList
+  CustomFunction,
+  CustomList,
+  CustomMap,
+  CustomString,
+  CustomValue,
+  Debugger,
+  Defaults,
+  HandlerContainer,
+  Interpreter,
+  OperationContext,
+  ResourceHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
-import viewJSON from './json-viewer';
-import { Stdin, Stdout } from './std';
 import process from 'process';
 
-function parseMap(map: Map<string, string>) {
-    return Array.from(map).reduce((result: { [key: string]: any }, item: any) => {
-        return {
-            ...result,
-            [item[0]]: parse(item[1])
-        };
-    }, {});
+import viewJSON from './json-viewer';
+import { Stdin, Stdout } from './std';
+
+function parseMap(map: Map<string, CustomValue>) {
+  return Array.from(map).reduce((result: { [key: string]: any }, item: any) => {
+    return {
+      ...result,
+      [item[0]]: parse(item[1])
+    };
+  }, {});
 }
 
-function parse(item: any): any {
-    if (item instanceof CustomMap) {
-        return parseMap(item.value);
-    } else if (item instanceof CustomList) {
-        return item.value.map((item: any) => {
-            return parse(item);
-        });
-    }
+function parse(item: CustomValue): any {
+  if (item instanceof CustomMap) {
+    return parseMap(item.value);
+  } else if (item instanceof CustomList) {
+    return item.value.map((item: any) => {
+      return parse(item);
+    });
+  }
 
-    return item?.toString();
+  return item.toString();
 }
 
 class GrebyelDebugger extends Debugger {
-    debug(): void {
-        
-    }
+  debug(..._segments: any[]): CustomValue {
+    return Defaults.Void;
+  }
 
-	interact(operationContext: OperationContext): Promise<void> {
-        const me = this;
+  interact(operationContext: OperationContext): Promise<void> {
+    const me = this;
 
-		return new Promise(function(resolve, reject) {
-            const bg = document.createElement('div');
-            const popup = document.createElement('div');
-            const actions = document.createElement('div');
-            const title = document.createElement('label');
-            const replWrapper = document.createElement('div');
-            const replTitle = document.createElement('label');
-            const replInput = document.createElement('input');
-            const replExecute = document.createElement('input');
-            const continueButton = document.createElement('input');
-            const nextButton = document.createElement('input');
-    
-            bg.classList.add('debugger-popup-bg');
-            popup.classList.add('debugger-popup');
+    return new Promise(function (resolve, _reject) {
+      const bg = document.createElement('div');
+      const popup = document.createElement('div');
+      const actions = document.createElement('div');
+      const title = document.createElement('label');
+      const replWrapper = document.createElement('div');
+      const replTitle = document.createElement('label');
+      const replInput = document.createElement('input');
+      const replExecute = document.createElement('input');
+      const continueButton = document.createElement('input');
+      const nextButton = document.createElement('input');
 
-            replWrapper.classList.add('debugger-repl-wrapper');
+      bg.classList.add('debugger-popup-bg');
+      popup.classList.add('debugger-popup');
 
-            actions.classList.add('debugger-actions');
+      replWrapper.classList.add('debugger-repl-wrapper');
 
-            replTitle.innerHTML = "Execute code in current context:"
+      actions.classList.add('debugger-actions');
 
-            replInput.classList.add('debugger-repl');
-            replInput.type = "input";
+      replTitle.innerHTML = 'Execute code in current context:';
 
-            replExecute.classList.add('debugger-repl-execute');
-            replExecute.type = 'button';
-            replExecute.value = 'Execute';
-    
-            continueButton.classList.add('debugger-continue');
-            continueButton.type = 'button';
-            continueButton.value = 'Continue';
+      replInput.classList.add('debugger-repl');
+      replInput.type = 'input';
 
-            nextButton.classList.add('debugger-next');
-            nextButton.type = 'button';
-            nextButton.value = 'Next';
+      replExecute.classList.add('debugger-repl-execute');
+      replExecute.type = 'button';
+      replExecute.value = 'Execute';
 
-            title.innerHTML = `Current line: ${activeInterpreter?.globalContext.getLastActive()?.stackItem?.start.line}`;
-    
-            document.body.appendChild(bg);
-            document.body.appendChild(popup);
+      continueButton.classList.add('debugger-continue');
+      continueButton.type = 'button';
+      continueButton.value = 'Continue';
 
-            const scopes = operationContext.lookupAllScopes().map((item: OperationContext) => {
-                return parseMap(item.scope.value);
-            });
-    
-            popup.appendChild(title);
-            popup.appendChild(viewJSON(scopes));
-            popup.appendChild(replWrapper);
-            popup.appendChild(actions);
+      nextButton.classList.add('debugger-next');
+      nextButton.type = 'button';
+      nextButton.value = 'Next';
 
-            actions.appendChild(continueButton);
-            actions.appendChild(nextButton);
+      title.innerHTML = `Current line: ${
+        activeInterpreter?.globalContext.getLastActive()?.stackItem?.start.line
+      }`;
 
-            replWrapper.appendChild(replTitle);
-            replWrapper.appendChild(replInput);
-            replWrapper.appendChild(replExecute);
-    
-            continueButton.addEventListener('click', function() {
-                document.body.removeChild(bg);
-                document.body.removeChild(popup);
-                me.setBreakpoint(false);
-                resolve();
-            });
+      document.body.appendChild(bg);
+      document.body.appendChild(popup);
 
-            nextButton.addEventListener('click', function() {
-                document.body.removeChild(bg);
-                document.body.removeChild(popup);
-                me.next();
-                resolve();
-            });
-
-            const injectCode = async () => {
-                const code = replInput.value;
-
-                try {
-                    await activeInterpreter?.injectInLastContext(code);
-                } catch (err: any) {
-                    console.error(err);
-                }
-
-                replInput.value = '';
-            };
-
-            replInput.addEventListener('keyup', function (e) {
-                if (e.key === 'Enter' || e.keyCode === 13) {
-                    injectCode();
-                }
-            });
-
-            replExecute.addEventListener('click', injectCode);
+      const scopes = operationContext
+        .lookupAllScopes()
+        .map((item: OperationContext) => {
+          return parseMap(item.scope.value);
         });
-	}
+
+      popup.appendChild(title);
+      popup.appendChild(viewJSON(scopes));
+      popup.appendChild(replWrapper);
+      popup.appendChild(actions);
+
+      actions.appendChild(continueButton);
+      actions.appendChild(nextButton);
+
+      replWrapper.appendChild(replTitle);
+      replWrapper.appendChild(replInput);
+      replWrapper.appendChild(replExecute);
+
+      continueButton.addEventListener('click', function () {
+        document.body.removeChild(bg);
+        document.body.removeChild(popup);
+        me.setBreakpoint(false);
+        resolve();
+      });
+
+      nextButton.addEventListener('click', function () {
+        document.body.removeChild(bg);
+        document.body.removeChild(popup);
+        me.next();
+        resolve();
+      });
+
+      const injectCode = async () => {
+        const code = replInput.value;
+
+        try {
+          await activeInterpreter?.injectInLastContext(code);
+        } catch (err: any) {
+          console.error(err);
+        }
+
+        replInput.value = '';
+      };
+
+      replInput.addEventListener('keyup', function (e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          injectCode();
+        }
+      });
+
+      replExecute.addEventListener('click', injectCode);
+    });
+  }
 }
 
 let activeInterpreter: Interpreter | null;
 let isReady = true;
 
 export interface ExecuteOptions {
-    stdin?: Stdin;
-    stdout?: Stdout;
-	api?: Map<string, Function>;
-	params?: string[];
-    onStart?: Function;
-    onError?: Function;
-    onEnd?: Function;
+  stdin?: Stdin;
+  stdout?: Stdout;
+  api?: Map<string, CustomFunction>;
+  params?: string[];
+  onStart?: Function;
+  onError?: Function;
+  onEnd?: Function;
 }
 
-export default async function execute(code: string, options: ExecuteOptions = {}): Promise<void> {
-    if (!isReady) {
-        return;
-    }
+export default async function execute(
+  code: string,
+  options: ExecuteOptions = {}
+): Promise<void> {
+  if (!isReady) {
+    return;
+  }
 
-    isReady = false;
+  isReady = false;
 
-	const vsAPI = options.api || new Map();
-    const stdin = options.stdin || new Stdin(new Element());
-    const stdout = options.stdout || new Stdout(new Element());
+  const vsAPI: Map<string, CustomFunction> =
+    options.api || new Map<string, CustomFunction>();
+  const stdin = options.stdin || new Stdin(new Element());
+  const stdout = options.stdout || new Stdout(new Element());
 
-    if (activeInterpreter) {
-        await activeInterpreter.exit();
-    }
+  if (activeInterpreter) {
+    await activeInterpreter.exit();
+  }
 
-	vsAPI.set('print', (customValue: CustomType): void => {
-		stdout.write(customValue.toString());
-	});
+  vsAPI.set(
+    'print',
+    CustomFunction.createExternal(
+      'print',
+      (
+        _ctx: OperationContext,
+        _self: CustomValue,
+        args: Map<string, CustomValue>
+      ): Promise<CustomValue> => {
+        stdout.write(args.get('value')?.toString());
+        return Promise.resolve(Defaults.Void);
+      }
+    ).addArgument('value')
+  );
 
-	vsAPI.set('exit', (customValue: CustomType): void => {
-		stdout.write(customValue.toString());
-		interpreter.exit();
-	});
+  vsAPI.set(
+    'exit',
+    CustomFunction.createExternal(
+      'exit',
+      (
+        _ctx: OperationContext,
+        _self: CustomValue,
+        args: Map<string, CustomValue>
+      ): Promise<CustomValue> => {
+        stdout.write(args.get('value')?.toString());
+        interpreter.exit();
+        return Promise.resolve(Defaults.Void);
+      }
+    ).addArgument('value')
+  );
 
-	vsAPI.set('user_input', async (message: CustomType, isPassword: CustomType, anyKey: CustomType): Promise<string | null> => {
-        stdout.write(message.toString());
+  vsAPI.set(
+    'user_input',
+    CustomFunction.createExternal(
+      'user_input',
+      async (
+        _ctx: OperationContext,
+        _self: CustomValue,
+        args: Map<string, CustomValue>
+      ): Promise<CustomValue> => {
+        const message = args.get('message')?.toString();
+        const isPassword = args.get('isPassword')?.toTruthy();
+
+        stdout.write(message);
 
         stdin.enable();
         stdin.focus();
-        stdin.setType(!!isPassword?.valueOf() ? 'password' : 'text');
+        stdin.setType(isPassword ? 'password' : 'text');
 
         await stdin.waitForInput();
 
@@ -189,56 +234,68 @@ export default async function execute(code: string, options: ExecuteOptions = {}
         stdin.disable();
         stdin.setType('text');
 
-        return value;
-	});
+        return new CustomString(value);
+      }
+    )
+      .addArgument('message')
+      .addArgument('isPassword')
+      .addArgument('anyKey')
+  );
 
-    class PseudoInterpeterResourceProvider extends InterpreterResourceProviderBase {
-        getHandler(): InterpreterResourceHandler {
-            return {
-                getTargetRelativeTo: async (source: string, target: string): Promise<string> => {
-                    return Promise.reject(new Error('Cannot get relative files in web.'));
-                },
-                has: async (target: string): Promise<boolean> => {
-                    return Promise.resolve(target === 'default');
-                },
-                get: (target: string): Promise<string> => {
-                    return Promise.resolve(target === 'default' ? code : '');
-                },
-                resolve: (target: string): Promise<string> => {
-                    return Promise.resolve(target === 'default' ? 'default' : '');
-                }
-            };
-        }
+  class PseudoResourceHandler extends ResourceHandler {
+    getTargetRelativeTo(_source: string, _target: string): Promise<string> {
+      return Promise.reject(new Error('Cannot get relative files in web.'));
     }
 
-	const interpreter = new Interpreter({
-        target: 'default',
-		debugger: new GrebyelDebugger(),
-        resourceHandler: new PseudoInterpeterResourceProvider().getHandler(),
-		api: initIntrinsics(initGHIntrinsics(vsAPI))
-	});
+    has(target: string): Promise<boolean> {
+      return Promise.resolve(target === 'default');
+    }
 
-    activeInterpreter = interpreter;
+    get(target: string): Promise<string> {
+      return Promise.resolve(target === 'default' ? code : '');
+    }
 
-    process.nextTick(async () => {
-        isReady = true;
+    resolve(target: string): Promise<string> {
+      return Promise.resolve(target === 'default' ? 'default' : '');
+    }
+  }
 
-        try {
-            interpreter.params = options.params || [];
-            options.onStart?.(interpreter);
-            const operation = interpreter.digest();
-            console.time('Execution');
-            await operation;
-            console.timeEnd('Execution');
-            options.onEnd?.(interpreter);
-        } catch (err: any) {
-            const opc = interpreter.apiContext.getLastActive() || interpreter.globalContext;
-    
-            console.error(err);
+  const interpreter = new Interpreter({
+    target: 'default',
+    debugger: new GrebyelDebugger(),
+    handler: new HandlerContainer({
+      resourceHandler: new PseudoResourceHandler()
+    }),
+    api: initIntrinsics(initGHIntrinsics(vsAPI))
+  });
 
-            options.onError?.(new Error(`${err.message} at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`));
-        }
+  activeInterpreter = interpreter;
 
-        activeInterpreter = null;
-    });
-};
+  process.nextTick(async () => {
+    isReady = true;
+
+    try {
+      interpreter.params = options.params || [];
+      options.onStart?.(interpreter);
+      const operation = interpreter.run();
+      console.time('Execution');
+      await operation;
+      options.onEnd?.(interpreter);
+    } catch (err: any) {
+      const opc =
+        interpreter.apiContext.getLastActive() || interpreter.globalContext;
+
+      console.error(err);
+
+      options.onError?.(
+        new Error(
+          `Error "${err.message}" at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`
+        )
+      );
+    } finally {
+      console.timeEnd('Execution');
+    }
+
+    activeInterpreter = null;
+  });
+}

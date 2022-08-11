@@ -1,0 +1,50 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "promise",
+      "simple-import-sort",
+      "security",
+      "prettier"
+    ],
+    "env": {
+      "node": true
+    },
+    "globals": {
+      "BufferEncoding": true,
+      "NodeJS": true,
+      "localStorage": true,
+      "HTMLElement": true,
+      "HTMLInputElement": true,
+      "Element": true,
+      "location": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "standard",
+      "plugin:promise/recommended",
+      "plugin:security/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "camelcase": "off",
+      "no-unused-vars": "off",
+      "no-empty": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { "args": "after-used", "argsIgnorePattern": "^_" }
+      ],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+      "prettier/prettier": ["error", { "singleQuote": true, "trailingComma": "none" }]
+    },
+    "overrides": [{
+      "files": ["**/*.test.ts", "tests/**/*"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "security/detect-object-injection": "off",
+        "security/detect-unsafe-regex": "off"
+      }
+    }]
+  }
