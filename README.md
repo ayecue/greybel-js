@@ -90,6 +90,32 @@ Options:
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
 
+## Local environment
+
+[Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics) will automatically generate a local environment. It will also generate other computers, networks, filesystems etc on the fly. Generating is based on a seed called `test`. Therefore generated entities should stay consistent.
+
+The local computer setup is hardcoded. The admin credentials are `root:test`. You will also have `crypto.so` and `metaxploit.so` at your local computer available.
+
+Examples:
+```
+metax = include_lib("/lib/metaxploit.so") //returns metaxploit interface
+print(metax) //prints metaxploit
+
+myShell = get_shell("root", "test") //get local root shell
+```
+
+## Greyscript API support
+
+The intrinsics to support the Greyscript API are provided by [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics) and [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics). Keep in mind that not all of these functions are completly mocked. Also only API that is available in the stable build will be implemented.
+
+Not yet supported:
+- `AptClient`
+- `Metaxploit.aireplay` maxAcks are not yet supported
+- `File.set_group`
+- `Shell.build`
+- `Shell.launch`
+- `FtpShell.put`
+
 ## Debugger
 Pauses execution and enables you to inspect/debug your code.
 ```
