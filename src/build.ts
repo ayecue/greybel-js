@@ -229,6 +229,7 @@ export default async function build(
     const result = await new Transpiler({
       target,
       uglify: buildOptions.uglify,
+      excludedNamespaces: buildOptions.excludedNamespaces,
       disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
       disableNamespacesOptimization: buildOptions.disableNamespacesOptimization,
       environmentVariables: new Map(Object.entries(envMapper.map))
