@@ -18,7 +18,7 @@ export default function build(
   const buildOptions = {
     uglify: false,
     maxWords: 80000,
-    obfuscation: true,
+    obfuscation: false,
     excludedNamespaces: [],
     disableLiteralsOptimization: false,
     disableNamespacesOptimization: false,
@@ -28,6 +28,7 @@ export default function build(
   return new Minifier({
     code,
     uglify: buildOptions.uglify,
+    obfuscation: buildOptions.obfuscation,
     excludedNamespaces: buildOptions.excludedNamespaces,
     disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
     disableNamespacesOptimization: buildOptions.disableNamespacesOptimization

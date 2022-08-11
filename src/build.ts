@@ -214,7 +214,7 @@ export default async function build(
   const buildOptions = {
     uglify: false,
     maxWords: 80000,
-    obfuscation: true,
+    obfuscation: false,
     installer: false,
     excludedNamespaces: [],
     disableLiteralsOptimization: false,
@@ -229,6 +229,7 @@ export default async function build(
     const result = await new Transpiler({
       target,
       uglify: buildOptions.uglify,
+      obfuscation: buildOptions.obfuscation,
       excludedNamespaces: buildOptions.excludedNamespaces,
       disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
       disableNamespacesOptimization: buildOptions.disableNamespacesOptimization,
