@@ -356,8 +356,8 @@ export class LookupHelper {
     const root = me.lookupScope(outer);
     const wrappingAssignment = me.lookupAssignment(outer);
 
-    // is wrapped by assignment
-    if (wrappingAssignment) {
+    // is wrapped by assignment; needs refining
+    /*if (wrappingAssignment) {
       const { variable, init } = wrappingAssignment;
 
       if (
@@ -368,7 +368,7 @@ export class LookupHelper {
       ) {
         return me.lookupTypeInfo({ closest: init, outer });
       }
-    }
+    }*/
 
     // resolve path
     if (
