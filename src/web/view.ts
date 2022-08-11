@@ -5,6 +5,7 @@ import execute from './execute';
 import { activate } from './extension';
 import language from './extension/grammar/language';
 import { createDocumentAST } from './extension/helper/model-manager';
+import GithubGist from './gist';
 import minify from './minify';
 import { Stdin, Stdout } from './std';
 
@@ -32,6 +33,7 @@ export interface EditorOptions {
   monaco: typeof Monaco;
   containerEl: HTMLElement;
   errorContainerEl: HTMLElement;
+  gistId?: string;
 
   transpiler: EditorTranspilerOptions;
   runner: EditorRunnerOptions;
@@ -151,27 +153,8 @@ export function initRunner(
 
 export default async function init(options: EditorOptions) {
   const { monaco, containerEl, errorContainerEl } = options;
-
-  monaco.languages.register({ id: 'greyscript' });
-  monaco.languages.setMonarchTokensProvider('greyscript', language);
-
-  activate(monaco);
-
-  const editorModel = monaco.editor.createModel(
-    localStorage.getItem('ide-content') || 'print("Hello world")',
-    'greyscript'
-  );
-
-  monaco.editor.create(containerEl, {
-    model: editorModel,
-    automaticLayout: true,
-    theme: 'vs-dark'
-  });
-
-  editorModel.onDidChangeContent((_event) => {
-    createDocumentAST(editorModel);
-    localStorage.setItem('ide-content', editorModel.getValue());
-  });
+  let initContent =
+    localStorage.getItem('ide-content') || 'print("Hello world")';
 
   const showError = function (msg: string, timeout: number = 10000) {
     const errorEl = document.createElement('div');
@@ -188,6 +171,39 @@ export default async function init(options: EditorOptions) {
       errorContainerEl.removeChild(errorEl);
     });
   };
+
+  if (options.gistId) {
+    const gistService = new GithubGist();
+
+    try {
+      initContent = await gistService.get(options.gistId);
+    } catch (err: any) {
+      showError(err.message);
+    }
+  }
+
+  monaco.languages.register({ id: 'greyscript' });
+  monaco.languages.setMonarchTokensProvider('greyscript', language);
+
+  activate(monaco);
+
+  const editorModel = monaco.editor.createModel(initContent, 'greyscript');
+
+  monaco.editor.create(containerEl, {
+    model: editorModel,
+    automaticLayout: true,
+    theme: 'vs-dark'
+  });
+
+  editorModel.onDidChangeContent((_event) => {
+    createDocumentAST(editorModel);
+
+    try {
+      localStorage.setItem('ide-content', editorModel.getValue());
+    } catch (err: any) {
+      showError(err.message);
+    }
+  });
 
   initTranspiler(editorModel, showError, options.transpiler);
   initRunner(editorModel, showError, options.runner);

@@ -16,7 +16,8 @@
       "localStorage": true,
       "HTMLElement": true,
       "HTMLInputElement": true,
-      "Element": true
+      "Element": true,
+      "location": true
     },
     "extends": [
       "eslint:recommended",

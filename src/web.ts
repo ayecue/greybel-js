@@ -27,11 +27,15 @@ import init from './web/view';
   const stdoutEl = document.getElementById('stdout')!;
   const stdinEl = document.getElementById('stdin')!;
 
+  const urlSearchParams = new URLSearchParams(location.search);
+  const gistId = urlSearchParams.get('gist') || undefined;
+
   // initialize editor + actions
   init({
     monaco,
     containerEl,
     errorContainerEl,
+    gistId,
     transpiler: {
       transpileEl,
       outputEl,

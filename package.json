@@ -22,6 +22,7 @@
     ],
     "dependencies": {
         "@babel/runtime": "^7.16.7",
+        "axios": "^0.27.2",
         "commander": "^7.2.0",
         "greybel-core": "^0.3.1",
         "greybel-gh-mock-intrinsics": "^1.0.5",

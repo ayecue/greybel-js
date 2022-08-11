@@ -543,11 +543,3 @@ export class LookupHelper {
     return me.lookupTypeInfo(astResult);
   }
 }
-
-/* export function lookupType(
-  document: Monaco.editor.ITextModel,
-  position: Monaco.Position
-): MetaData | undefined {
-  const helper = new LookupHelper(document);
-  return helper.lookupType(position);
-} */

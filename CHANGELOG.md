@@ -190,3 +190,4 @@ All notable changes to this project will be documented in this file.
 - major improvements on the editor UI
 - implemented monaco edtior into UI
 - add language config, automcomplete logic and hover logic to UI
+- enable users to load pastebins

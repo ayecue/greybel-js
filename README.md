@@ -265,6 +265,10 @@ end function
 hello() //prints "Hello world!"
 ```
 
+# Todo
+
+* implement package manager
+
 # Contact
 
 Generally you can just create an [issue](https://github.com/ayecue/greybel-js/issues) if you find a bug or got a feature request. Alternatively you can also contact me on discord `ayecue#9086`.
