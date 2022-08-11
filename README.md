@@ -135,13 +135,15 @@ Example: greybel-repl
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
 
+REPL also features a [local environment](#local-environment) and [greyscript API support](#greyscript-api-support)
+
 # Web-UI
 ```
 Emulator UI CLI
 Example: greybel-ui
 ```
 
-This is a simple UI where you can minify code and execute code. There is also a VSCode extension. It features a lot of neat features. Like for example a debugger with breakpoints etc.
+This is a simple UI where you can [minify code](#transpiler) and [execute code](#interpreter). There is also a VSCode extension. It features a lot of neat features. Like for example a debugger with breakpoints etc.
 
 ![Web UI](/assets/emulator-ui-preview.png?raw=true "Web UI")
 
