@@ -307,7 +307,6 @@ body {
 	top: 200px;
     left: 50%;
     transform: translate(-50%, 0);
-    background-color: #AAA;
 	z-index: 999;
 }
 
@@ -318,6 +317,8 @@ body {
 	margin: 0;
 	height: 200px;
 	width: 400px;
+	box-shadow: 2px 2px 2px black;
+	border: 0;
 }
 
 .share-popup a {
@@ -338,7 +339,7 @@ body {
 	content: ' ';
 	height: 25px;
 	width: 2px;
-	background-color: #CCC;
+	background-color: #AAA;
 }
 .share-popup a:before {
 	transform: rotate(45deg);
