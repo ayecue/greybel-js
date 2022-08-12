@@ -192,3 +192,7 @@ All notable changes to this project will be documented in this file.
 - add language config, automcomplete logic and hover logic to UI
 - add simple logic to share code; going to be extended
 - now passing exclude namespace input and obfuscation checkbox to transpiler in UI
+
+## [1.2.1] - 12-08-2022
+
+- prevent error swallow in interpreter with updating to the latest interpreter version
