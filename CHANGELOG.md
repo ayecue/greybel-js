@@ -196,3 +196,7 @@ All notable changes to this project will be documented in this file.
 ## [1.2.1] - 12-08-2022
 
 - prevent error swallow in interpreter with updating to the latest interpreter version
+
+## [1.2.2] - 16-08-2022
+
+- fix range behavior - [issue#24](https://github.com/ayecue/greybel-js/issues/26) - thanks to @Zeta314
