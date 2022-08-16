@@ -1,12 +1,12 @@
 import { ASTCallExpression } from 'greybel-core';
 import { ASTType } from 'greyscript-core';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
-
 import {
   getDefinitions,
   SignatureDefinitionArg,
   SignatureDefinitionContainer
-} from './grammar';
+} from 'greyscript-meta';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
 import {
   LookupHelper,
   TypeInfo,
@@ -195,7 +195,7 @@ export function activate(monaco: typeof Monaco) {
         )
         .join(', ');
       const params: Monaco.languages.ParameterInformation[] = args.map(
-        (argItem) => {
+        (argItem: SignatureDefinitionArg) => {
           return {
             label: `${argItem.label}${argItem.opt ? '?' : ''}: ${argItem.type}`
           };

@@ -1,3 +1,4 @@
+import { SignatureDefinitionArg } from 'greyscript-meta';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import { LookupHelper, TypeInfoWithDefinition } from './helper/lookup-type';
@@ -49,7 +50,7 @@ export function activate(monaco: typeof Monaco) {
         } else {
           const argValues = args
             .map(
-              (item) =>
+              (item: SignatureDefinitionArg) =>
                 `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}`
             )
             .join(', ');

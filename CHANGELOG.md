@@ -204,3 +204,7 @@ All notable changes to this project will be documented in this file.
 ## [1.2.3] - 16-08-2022
 
 - fix debugger resume
+
+## [1.2.4] - 16-08-2022
+
+- use greyscript meta package

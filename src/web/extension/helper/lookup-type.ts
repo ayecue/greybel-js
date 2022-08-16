@@ -11,14 +11,14 @@ import {
   ASTMemberExpression
 } from 'greybel-core';
 import { ASTType } from 'greyscript-core';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
-
 import {
   getDefinition,
   getDefinitions,
   SignatureDefinition,
   SignatureDefinitionArg
-} from '../grammar';
+} from 'greyscript-meta';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
 import * as ASTScraper from './ast-scraper';
 import ASTStringify from './ast-stringify';
 import { getDocumentAST } from './model-manager';
@@ -354,10 +354,10 @@ export class LookupHelper {
     const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
     const name = item.name;
     const root = me.lookupScope(outer);
-    const wrappingAssignment = me.lookupAssignment(outer);
+    // const wrappingAssignment = me.lookupAssignment(outer);
 
     // is wrapped by assignment; needs refining
-    /*if (wrappingAssignment) {
+    /* if (wrappingAssignment) {
       const { variable, init } = wrappingAssignment;
 
       if (
@@ -368,7 +368,7 @@ export class LookupHelper {
       ) {
         return me.lookupTypeInfo({ closest: init, outer });
       }
-    }*/
+    } */
 
     // resolve path
     if (
