@@ -200,3 +200,7 @@ All notable changes to this project will be documented in this file.
 ## [1.2.2] - 16-08-2022
 
 - fix range behavior - [issue#24](https://github.com/ayecue/greybel-js/issues/26) - thanks to @Zeta314
+
+## [1.2.3] - 16-08-2022
+
+- fix debugger resume
