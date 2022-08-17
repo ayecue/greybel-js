@@ -208,3 +208,7 @@ All notable changes to this project will be documented in this file.
 ## [1.2.4] - 16-08-2022
 
 - use greyscript meta package
+
+## [1.2.5] - 16-08-2022
+
+- fix indexes intrinsic for lists and strings
