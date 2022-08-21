@@ -77,13 +77,12 @@ const language: Monaco.languages.IMonarchLanguage = {
               token: 'keyword.decl',
               bracket: '@open'
             },
-            'aptClient|computer|crypto|file|ftpShell|list|map|metaLib|metaMail|metaxploit|netSession|port|router|shell|string|number|null|boolean|any':
+            [[...allTypes.filter((item: string) => item !== 'general'), 'any', 'number', 'null', 'boolean'].join('|')]:
               'type',
             debugger: 'debug-token',
             default: 'constant',
-            [Object.keys(getDefinitions(['default'])).join('|')]:
+            [Object.keys(getDefinitions(['general'])).join('|')]:
               'variable.name',
-            [Object.keys(getDefinitions(allTypes)).join('|')]: 'variable.name',
             '@keywords': 'keyword',
             '@default': 'identifier'
           }
@@ -110,7 +109,7 @@ const language: Monaco.languages.IMonarchLanguage = {
     ],
 
     string: [
-      [/[^\\"]+/, 'string'],
+      [/[^"]+/, 'string'],
       [/""/, 'string.escape'],
       [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }]
     ],

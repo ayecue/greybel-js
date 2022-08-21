@@ -98,7 +98,7 @@ export function activate(monaco: typeof Monaco) {
       }
 
       // get all default methods
-      const defaultDefinitions = getDefinitions(['default']);
+      const defaultDefinitions = getDefinitions(['general']);
       const completionItems: PseudoCompletionItem[] = [
         ...convertDefinitionsToCompletionList(defaultDefinitions, currentRange)
       ];

@@ -212,3 +212,9 @@ All notable changes to this project will be documented in this file.
 ## [1.2.5] - 16-08-2022
 
 - fix indexes intrinsic for lists and strings
+
+## [1.2.6] - 16-08-2022
+
+- add idx local during for loop
+- add placeholders for blockhain, coin, service, wallet, subWallet
+- improved meta information

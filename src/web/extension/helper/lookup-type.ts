@@ -379,7 +379,7 @@ export class LookupHelper {
     }
 
     // check for default namespace
-    const defaultDef = getDefinition(['default'], name);
+    const defaultDef = getDefinition(['general'], name);
 
     if (defaultDef) {
       return new TypeInfoWithDefinition(name, ['function'], defaultDef);
