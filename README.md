@@ -35,6 +35,7 @@ These modules are used in this CLI. Feel free to create your own tool using thes
 	- minifying namespaces
 	- removing whitespaces + tabs
 	- obfuscate your code (even though that's just a side effect of all the steps above)
+- beautify your code (can be useful to deobfuscate code)
 - [bundling of files](#transpiler)
 - [interpreter for code execution](#interpreter)
 - [REPL for GreyScript](#repl)
@@ -61,6 +62,7 @@ Options:
 	-vr, --env-vars <vars...>		Environment varibales
 	-en, --exclude-namespaces <vars...>	Exclude namespaces from optimization
 	-u, --uglify				Uglify your code
+	-b, --beautify				Beautify your code
 	-h, --help				Display help for command
 	-i, --installer				Create installer for GreyScript (Should be used if you use import_code)
 	-dno, --disable-namespaces-optimization	Disable namespace optimization

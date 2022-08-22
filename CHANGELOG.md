@@ -223,3 +223,7 @@ All notable changes to this project will be documented in this file.
 
 - fix range behavior in case of from > to
 - improved meta information
+
+## [1.2.8] - 22-08-2022
+
+- add beautify option

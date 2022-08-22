@@ -1,5 +1,9 @@
-import fs from 'fs';
-import { Transpiler, TranspilerParseResult } from 'greybel-transpiler';
+import fs from 'fs/promises';
+import {
+  BuildType,
+  Transpiler,
+  TranspilerParseResult
+} from 'greybel-transpiler';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
@@ -124,18 +128,18 @@ function createImportList(
   return list.concat(imports);
 }
 
-function createInstaller(
+async function createInstaller(
   parseResult: TranspilerParseResult,
   mainTarget: string,
   buildPath: string,
   maxWords: number
-): void {
+): Promise<void> {
   const importList = createImportList(parseResult, mainTarget);
   const maxWordsWithBuffer = maxWords - 1000;
   let installerSplits = 0;
   let content = createContentHeader();
   let item = importList.shift();
-  const createInstallerFile = function () {
+  const createInstallerFile = async () => {
     if (content.length === 0) {
       return;
     }
@@ -145,30 +149,30 @@ function createInstaller(
       'installer' + installerSplits + '.src'
     );
 
-    fs.writeFileSync(target, content, { encoding: 'utf-8' });
+    await fs.writeFile(target, content, { encoding: 'utf-8' });
 
     installerSplits++;
   };
-  const openFile = function (file: string) {
+  const openFile = async (file: string) => {
     const preparedLine = '\n' + createFileLine(file, true);
     const newContent = content + preparedLine;
 
     if (newContent.length > maxWordsWithBuffer) {
-      createInstallerFile();
+      await createInstallerFile();
       content = createContentHeader() + '\n' + createFileLine(file, true);
     } else {
       content = newContent;
     }
   };
-  const addLine = function (file: string, line: string) {
+  const addLine = async (file: string, line: string) => {
     const preparedLine = '\n' + createCodeInsertLine(line);
     const newContent = content + preparedLine;
 
     if (newContent.length > maxWordsWithBuffer) {
       content += '\n' + createSetContentLine();
-      createInstallerFile();
+      await createInstallerFile();
       content = createContentHeader() + '\n' + createFileLine(file);
-      addLine(file, line);
+      await addLine(file, line);
     } else {
       content = newContent;
     }
@@ -178,10 +182,10 @@ function createInstaller(
     const lines = item.content.split('\n');
     let line = lines.shift();
 
-    openFile(item.pseudoFilepath);
+    await openFile(item.pseudoFilepath);
 
     while (line) {
-      addLine(item.pseudoFilepath, line);
+      await addLine(item.pseudoFilepath, line);
       line = lines.shift();
     }
 
@@ -190,11 +194,12 @@ function createInstaller(
     item = importList.shift();
   }
 
-  createInstallerFile();
+  await createInstallerFile();
 }
 
 export interface BuildOptions {
   uglify?: boolean;
+  beautify?: boolean;
   maxWords?: number;
   obfuscation?: boolean;
   installer?: boolean;
@@ -213,6 +218,7 @@ export default async function build(
   const envMapper = new EnvMapper();
   const buildOptions = {
     uglify: false,
+    beautify: false,
     maxWords: 80000,
     obfuscation: false,
     installer: false,
@@ -221,14 +227,21 @@ export default async function build(
     disableNamespacesOptimization: false,
     ...options
   };
+  let buildType = BuildType.DEFAULT;
 
   envMapper.load(buildOptions.envFiles, buildOptions.envVars);
+
+  if (buildOptions.uglify) {
+    buildType = BuildType.UGLIFY;
+  } else if (buildOptions.beautify) {
+    buildType = BuildType.BEAUTIFY;
+  }
 
   try {
     const target = path.resolve(filepath);
     const result = await new Transpiler({
       target,
-      uglify: buildOptions.uglify,
+      buildType,
       obfuscation: buildOptions.obfuscation,
       excludedNamespaces: buildOptions.excludedNamespaces,
       disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
@@ -240,7 +253,7 @@ export default async function build(
     const targetRoot = path.dirname(target);
 
     try {
-      fs.rmdirSync(buildPath, {
+      await fs.rm(buildPath, {
         recursive: true
       });
     } catch (err) {}
@@ -252,15 +265,15 @@ export default async function build(
         const relativePath = file.replace(targetRoot, '.');
         const fullPath = path.resolve(buildPath, relativePath);
         await mkdirp(path.dirname(fullPath));
-        fs.writeFileSync(fullPath, code, { encoding: 'utf-8' });
+        await fs.writeFile(fullPath, code, { encoding: 'utf-8' });
       })
     );
 
     if (buildOptions.installer) {
-      createInstaller(result, target, buildPath, 75000);
+      await createInstaller(result, target, buildPath, 75000);
     }
 
-    console.log(`Build done. Available ${buildPath}.`);
+    console.log(`Build done. Available in ${buildPath}.`);
   } catch (err: any) {
     console.error(err.message);
     return false;

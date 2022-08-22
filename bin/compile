@@ -34,6 +34,7 @@ program
 	.option('-dlo, --disable-literals-optimization', 'Disable literals optimization')
 	.option('-dno, --disable-namespaces-optimization', 'Disable namespace optimization')
 	.option('-u, --uglify', 'Uglify your code')
+	.option('-b, --beautify', 'Beautify your code')
 	.option('-n, --name', 'Output filename')
 	.option('-i, --installer', 'Create installer for GreyScript (Should be used if you use import_code)');
 
@@ -46,6 +47,7 @@ program.parse(process.argv);
 		envFiles: options.envFiles,
 		envVars: options.envVars,
 		uglify: options.uglify,
+		beautify: options.beautify,
 		disableLiteralsOptimization: options.disableLiteralsOptimization,
 		disableNamespacesOptimization: options.disableNamespacesOptimization,
 		excludedNamespaces: options.excludeNamespaces,

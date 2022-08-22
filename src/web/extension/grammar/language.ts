@@ -77,8 +77,13 @@ const language: Monaco.languages.IMonarchLanguage = {
               token: 'keyword.decl',
               bracket: '@open'
             },
-            [[...allTypes.filter((item: string) => item !== 'general'), 'any', 'number', 'null', 'boolean'].join('|')]:
-              'type',
+            [[
+              ...allTypes.filter((item: string) => item !== 'general'),
+              'any',
+              'number',
+              'null',
+              'boolean'
+            ].join('|')]: 'type',
             debugger: 'debug-token',
             default: 'constant',
             [Object.keys(getDefinitions(['general'])).join('|')]:

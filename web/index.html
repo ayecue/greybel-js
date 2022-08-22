@@ -24,8 +24,12 @@
 								<div class="editor-options">
 									<ul>
 										<li>
-											<input id="uglify" type="checkbox" />
-											<label>Uglify</label>
+											<select id="buildType">
+												<option value="0" selected>Default</option>
+												<option value="1">Uglify</option>
+												<option value="2">Beautify</option>
+											</select>
+											<label>Build type</label>
 										</li>
 										<li>
 											<input id="obfuscation" type="checkbox" />

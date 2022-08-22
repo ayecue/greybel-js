@@ -12,7 +12,7 @@ export interface EditorTranspilerOptions {
   transpileEl: HTMLElement;
   outputEl: HTMLElement;
 
-  uglifyEl: HTMLElement;
+  buildTypeEl: HTMLElement;
   obfuscationEl: HTMLElement;
   disableLiteralsOptimizationEl: HTMLElement;
   disableNamespaceOptimizationEl: HTMLElement;
@@ -48,7 +48,7 @@ export function initTranspiler(
   const {
     transpileEl,
     outputEl,
-    uglifyEl,
+    buildTypeEl,
     obfuscationEl,
     disableLiteralsOptimizationEl,
     disableNamespaceOptimizationEl,
@@ -59,7 +59,9 @@ export function initTranspiler(
     try {
       const output = await minify(model.getValue(), {
         // @ts-ignore: Claims value is not defined
-        uglify: !!uglifyEl?.checked,
+        uglify: buildTypeEl.value === '1',
+        // @ts-ignore: Claims value is not defined
+        beautify: buildTypeEl.value === '2',
         // @ts-ignore: Claims value is not defined
         obfuscation: !!obfuscationEl?.checked,
         // @ts-ignore: Claims value is not defined

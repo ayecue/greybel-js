@@ -1,7 +1,8 @@
-import { Minifier } from 'greybel-transpiler';
+import { BuildType, DirectTranspiler } from 'greybel-transpiler';
 
 export interface MinifyOptions {
   uglify?: boolean;
+  beautify?: boolean;
   maxWords?: number;
   obfuscation?: boolean;
   excludedNamespaces?: string[];
@@ -17,6 +18,8 @@ export default function build(
 ): string {
   const buildOptions = {
     uglify: false,
+    beautify: false,
+
     maxWords: 80000,
     obfuscation: false,
     excludedNamespaces: [],
@@ -24,13 +27,20 @@ export default function build(
     disableNamespacesOptimization: false,
     ...options
   };
+  let buildType = BuildType.DEFAULT;
 
-  return new Minifier({
+  if (buildOptions.uglify) {
+    buildType = BuildType.UGLIFY;
+  } else if (buildOptions.beautify) {
+    buildType = BuildType.BEAUTIFY;
+  }
+
+  return new DirectTranspiler({
     code,
-    uglify: buildOptions.uglify,
+    buildType,
     obfuscation: buildOptions.obfuscation,
     excludedNamespaces: buildOptions.excludedNamespaces,
     disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
     disableNamespacesOptimization: buildOptions.disableNamespacesOptimization
-  }).minify();
+  }).parse();
 }

@@ -13,7 +13,7 @@ import init from './web/view';
   const errorContainerEl = document.getElementById('editor-errors')!;
   const transpileEl = document.getElementById('transpile')!;
   const outputEl = document.getElementById('toutput')!;
-  const uglifyEl = document.getElementById('uglify')!;
+  const buildTypeEl = document.getElementById('buildType')!;
   const obfuscationEl = document.getElementById('obfuscation')!;
   const disableLiteralsOptimizationEl = document.getElementById(
     'disableLiteralsOptimization'
@@ -52,7 +52,7 @@ import init from './web/view';
     transpiler: {
       transpileEl,
       outputEl,
-      uglifyEl,
+      buildTypeEl,
       obfuscationEl,
       disableLiteralsOptimizationEl,
       disableNamespaceOptimizationEl,
