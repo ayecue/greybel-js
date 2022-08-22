@@ -199,7 +199,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.2] - 16-08-2022
 
-- fix range behavior - [issue#24](https://github.com/ayecue/greybel-js/issues/26) - thanks to @Zeta314
+- fix range behavior - [issue#26](https://github.com/ayecue/greybel-js/issues/26) - thanks to @Zeta314
 
 ## [1.2.3] - 16-08-2022
 
@@ -213,8 +213,13 @@ All notable changes to this project will be documented in this file.
 
 - fix indexes intrinsic for lists and strings
 
-## [1.2.6] - 16-08-2022
+## [1.2.6] - 21-08-2022
 
 - add idx local during for loop
 - add placeholders for blockhain, coin, service, wallet, subWallet
+- improved meta information
+
+## [1.2.7] - 22-08-2022
+
+- fix range behavior in case of from > to
 - improved meta information
