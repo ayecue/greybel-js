@@ -65,7 +65,7 @@ Options:
 	-b, --beautify				Beautify your code
 	-h, --help				Display help for command
 	-i, --installer				Create installer for GreyScript (Should be used if you use import_code)
-	-mc, --maxChars			Amount of characters allowed in one file before splitting when creating installer
+	-mc, --maxChars				Amount of characters allowed in one file before splitting when creating installer
 	-dno, --disable-namespaces-optimization	Disable namespace optimization
 	-dlo, --disable-literals-optimization	Disable literals optimization
 ```
