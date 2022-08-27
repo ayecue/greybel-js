@@ -227,3 +227,7 @@ All notable changes to this project will be documented in this file.
 ## [1.2.8] - 22-08-2022
 
 - add beautify option
+
+## [1.2.9] - 27-08-2022
+
+- add maxChars option to define when the installer should split the file

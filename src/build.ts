@@ -198,33 +198,35 @@ async function createInstaller(
 }
 
 export interface BuildOptions {
-  uglify?: boolean;
-  beautify?: boolean;
-  maxWords?: number;
-  obfuscation?: boolean;
-  installer?: boolean;
-  excludedNamespaces?: string[];
-  disableLiteralsOptimization?: boolean;
-  disableNamespacesOptimization?: boolean;
-  envFiles?: string[];
-  envVars?: string[];
+  uglify: boolean;
+  beautify: boolean;
+  obfuscation: boolean;
+  installer: boolean;
+  excludedNamespaces: string[];
+  disableLiteralsOptimization: boolean;
+  disableNamespacesOptimization: boolean;
+  envFiles: string[];
+  envVars: string[];
+  maxChars: number;
 }
 
 export default async function build(
   filepath: string,
   output: string,
-  options: BuildOptions = {}
+  options: Partial<BuildOptions> = {}
 ): Promise<boolean> {
   const envMapper = new EnvMapper();
-  const buildOptions = {
+  const buildOptions: BuildOptions = {
     uglify: false,
     beautify: false,
-    maxWords: 80000,
     obfuscation: false,
     installer: false,
     excludedNamespaces: [],
     disableLiteralsOptimization: false,
     disableNamespacesOptimization: false,
+    maxChars: 155000,
+    envFiles: [],
+    envVars: [],
     ...options
   };
   let buildType = BuildType.DEFAULT;
@@ -270,7 +272,7 @@ export default async function build(
     );
 
     if (buildOptions.installer) {
-      await createInstaller(result, target, buildPath, 75000);
+      await createInstaller(result, target, buildPath, buildOptions.maxChars);
     }
 
     console.log(`Build done. Available in ${buildPath}.`);
