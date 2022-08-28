@@ -19,6 +19,8 @@ import {
   PseudoSignatureInformation
 } from './helper/vs';
 
+import documentParseQueue from './helper/model-manager';
+
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer,
   range: Monaco.Range
@@ -49,6 +51,7 @@ export function activate(monaco: typeof Monaco) {
       _ctx: Monaco.languages.CompletionContext,
       _token: Monaco.CancellationToken
     ): Monaco.languages.ProviderResult<Monaco.languages.CompletionList> {
+      documentParseQueue.refresh(document);
       const currentRange = new monaco.Range(
         position.lineNumber,
         position.column - 1,
@@ -133,6 +136,7 @@ export function activate(monaco: typeof Monaco) {
       _token: Monaco.CancellationToken,
       _ctx: Monaco.languages.SignatureHelpContext
     ): Monaco.languages.ProviderResult<Monaco.languages.SignatureHelpResult> {
+      documentParseQueue.refresh(document);
       const helper = new LookupHelper(monaco, document);
       const astResult = helper.lookupAST(position);
 

@@ -21,7 +21,7 @@ import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import * as ASTScraper from './ast-scraper';
 import ASTStringify from './ast-stringify';
-import { getDocumentAST } from './model-manager';
+import documentParseQueue from './model-manager';
 
 export class TypeInfo {
   label: string;
@@ -122,9 +122,8 @@ export class LookupHelper {
       } else if (item.type === ASTType.AssignmentStatement) {
         const { variable, init } = item as ASTAssignmentStatement;
         const identifierName = ASTStringify(variable);
-        const initName = ASTStringify(init);
 
-        if (identifierName === identifier && initName !== identifier) {
+        if (identifierName === identifier) {
           return {
             valid: true
           };
@@ -176,7 +175,8 @@ export class LookupHelper {
 
   lookupAST(position: Monaco.Position): LookupASTResult | null {
     const me = this;
-    const chunk = getDocumentAST(me.document) as ASTChunk;
+    const result = documentParseQueue.get(me.document);
+    const chunk = result.document as ASTChunk;
 
     // gather all wrapping ASTs
     const outer = ASTScraper.findEx((item: ASTBase, _level: number) => {

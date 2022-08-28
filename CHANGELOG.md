@@ -230,4 +230,6 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.9] - 27-08-2022
 
+- find all identifier now only lookups left side in assignment (WebUI)
+- add queue for AST parsing (WebUI)
 - add maxChars option to define when the installer should split the file
