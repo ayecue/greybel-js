@@ -131,7 +131,12 @@ myShell = get_shell("root", "test") //get local root shell
 The intrinsics to support the Greyscript API are provided by [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics) and [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics). Keep in mind that not all of these functions are completly mocked. Also only API that is available in the stable build will be implemented.
 
 Not yet supported:
-- `AptClient`
+- `AptClient` - only pollyfill which "returns not yet supported"
+- `Blockchain` - only pollyfill which "returns not yet supported"
+- `Wallet` - only pollyfill which "returns not yet supported"
+- `SubWallet` - only pollyfill which "returns not yet supported"
+- `Coin` - only pollyfill which "returns not yet supported"
+- `Service` - only pollyfill which "returns not yet supported"
 - `Metaxploit.aireplay` maxAcks are not yet supported
 - `File.set_group`
 - `Shell.build`
