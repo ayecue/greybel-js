@@ -217,17 +217,16 @@ export default async function build(
 ): Promise<boolean> {
   const envMapper = new EnvMapper();
   const buildOptions: BuildOptions = {
-    uglify: false,
-    beautify: false,
-    obfuscation: false,
-    installer: false,
-    excludedNamespaces: [],
-    disableLiteralsOptimization: false,
-    disableNamespacesOptimization: false,
-    maxChars: 155000,
-    envFiles: [],
-    envVars: [],
-    ...options
+    uglify: options.uglify || false,
+    beautify: options.beautify || false,
+    obfuscation: options.obfuscation || false,
+    installer: options.installer || false,
+    excludedNamespaces: options.excludedNamespaces || [],
+    disableLiteralsOptimization: options.disableLiteralsOptimization || false,
+    disableNamespacesOptimization: options.disableNamespacesOptimization || false,
+    maxChars: options.maxChars || 155000,
+    envFiles: options.envFiles || [],
+    envVars: options.envVars || []
   };
   let buildType = BuildType.DEFAULT;
 

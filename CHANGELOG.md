@@ -236,3 +236,4 @@ All notable changes to this project will be documented in this file.
 - update greyscript-meta, includes newest translations
 - update parser and interpreter to support any value as map key, thanks to [@xephael](https://github.com/xephael)
 - update parser to improve performance regarding automcompletion and hover, generates map of references per line
+- fix compile options, remove merging of options instead just use || fallback pattern
