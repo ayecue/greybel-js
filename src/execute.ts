@@ -37,7 +37,7 @@ class GrebyelPseudoDebugger extends Debugger {
     const iterate = async () => {
       const result = await inquirer.prompt({
         name: 'default',
-        prefix: `[Line: ${stackAst.start.line}] >`,
+        prefix: `[Line: ${stackAst.start!.line}] >`,
         loop: true
       });
       const line = result.default;
@@ -158,7 +158,9 @@ export default async function execute(
       interpreter.apiContext.getLastActive() || interpreter.globalContext;
 
     console.error(
-      `${err.message} at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`
+      `${err.message} at line ${opc.stackItem?.start!.line}:${
+        opc.stackItem?.start!.character
+      } in ${opc.target}`
     );
     console.error(err);
 

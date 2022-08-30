@@ -4,7 +4,7 @@ import {
   getDefinitions,
   SignatureDefinitionArg,
   SignatureDefinitionContainer
-} from 'greyscript-meta';
+} from 'greyscript-meta/dist/meta';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import {
@@ -12,14 +12,13 @@ import {
   TypeInfo,
   TypeInfoWithDefinition
 } from './helper/lookup-type';
+import documentParseQueue from './helper/model-manager';
 import {
   PseudoCompletionItem,
   PseudoCompletionList,
   PseudoSignatureHelp,
   PseudoSignatureInformation
 } from './helper/vs';
-
-import documentParseQueue from './helper/model-manager';
 
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer,
@@ -113,7 +112,7 @@ export function activate(monaco: typeof Monaco) {
       // get all identifer available in scope
       completionItems.push(
         ...helper
-          .findAllAvailableIdentifier(astResult.outer)
+          .findAllAvailableIdentifier(astResult.closest)
           .map((property: string) => {
             return new PseudoCompletionItem({
               label: property,
@@ -164,7 +163,7 @@ export function activate(monaco: typeof Monaco) {
         return;
       }
 
-      const root = helper.lookupScope(astResult.outer);
+      const root = helper.lookupScope(astResult.closest);
       const item = helper.lookupTypeInfo({
         closest: rootCallExpression,
         outer: root ? [root] : []
@@ -177,8 +176,8 @@ export function activate(monaco: typeof Monaco) {
       // figure out argument position
       const astArgs = rootCallExpression.arguments;
       const selectedIndex = astArgs.findIndex((argItem) => {
-        const leftIndex = argItem.start.character - 1;
-        const rightIndex = argItem.end.character;
+        const leftIndex = argItem.start!.character - 1;
+        const rightIndex = argItem.end!.character;
 
         return leftIndex <= position.column && rightIndex >= position.column;
       });

@@ -56,8 +56,13 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   refresh(document: editor.ITextModel): ParseResult {
-    const result = this.create(document);
     const key = document.uri.path;
+
+    if (!this.queue.has(key) && this.results.has(key)) {
+      return this.results.get(key)!;
+    }
+
+    const result = this.create(document);
     this.results.set(key, result);
     this.emit('parsed', document, result);
     this.queue.delete(key);

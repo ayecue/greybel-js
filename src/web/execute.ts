@@ -18,11 +18,11 @@ import process from 'process';
 import viewJSON from './json-viewer';
 import { Stdin, Stdout } from './std';
 
-function parseMap(map: Map<string, CustomValue>) {
+function parseMap(map: Map<CustomValue, CustomValue>) {
   return Array.from(map).reduce((result: { [key: string]: any }, item: any) => {
     return {
       ...result,
-      [item[0]]: parse(item[1])
+      [parse(item[0])]: parse(item[1])
     };
   }, {});
 }
@@ -84,7 +84,7 @@ class GrebyelDebugger extends Debugger {
       nextButton.value = 'Next';
 
       title.innerHTML = `Current line: ${
-        activeInterpreter?.globalContext.getLastActive()?.stackItem?.start.line
+        activeInterpreter?.globalContext.getLastActive()?.stackItem?.start!.line
       }`;
 
       document.body.appendChild(bg);
@@ -289,7 +289,9 @@ export default async function execute(
 
       options.onError?.(
         new Error(
-          `Error "${err.message}" at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`
+          `Error "${err.message}" at line ${opc.stackItem?.start!.line}:${
+            opc.stackItem?.start!.character
+          } in ${opc.target}`
         )
       );
     } finally {
