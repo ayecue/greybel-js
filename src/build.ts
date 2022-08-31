@@ -184,7 +184,7 @@ async function createInstaller(
 
     await openFile(item.pseudoFilepath);
 
-    while (line) {
+    while (line !== undefined) {
       await addLine(item.pseudoFilepath, line);
       line = lines.shift();
     }
