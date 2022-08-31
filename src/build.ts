@@ -198,34 +198,35 @@ async function createInstaller(
 }
 
 export interface BuildOptions {
-  uglify?: boolean;
-  beautify?: boolean;
-  maxWords?: number;
-  obfuscation?: boolean;
-  installer?: boolean;
-  excludedNamespaces?: string[];
-  disableLiteralsOptimization?: boolean;
-  disableNamespacesOptimization?: boolean;
-  envFiles?: string[];
-  envVars?: string[];
+  uglify: boolean;
+  beautify: boolean;
+  obfuscation: boolean;
+  installer: boolean;
+  excludedNamespaces: string[];
+  disableLiteralsOptimization: boolean;
+  disableNamespacesOptimization: boolean;
+  envFiles: string[];
+  envVars: string[];
+  maxChars: number;
 }
 
 export default async function build(
   filepath: string,
   output: string,
-  options: BuildOptions = {}
+  options: Partial<BuildOptions> = {}
 ): Promise<boolean> {
   const envMapper = new EnvMapper();
-  const buildOptions = {
-    uglify: false,
-    beautify: false,
-    maxWords: 80000,
-    obfuscation: false,
-    installer: false,
-    excludedNamespaces: [],
-    disableLiteralsOptimization: false,
-    disableNamespacesOptimization: false,
-    ...options
+  const buildOptions: BuildOptions = {
+    uglify: options.uglify || false,
+    beautify: options.beautify || false,
+    obfuscation: options.obfuscation || false,
+    installer: options.installer || false,
+    excludedNamespaces: options.excludedNamespaces || [],
+    disableLiteralsOptimization: options.disableLiteralsOptimization || false,
+    disableNamespacesOptimization: options.disableNamespacesOptimization || false,
+    maxChars: options.maxChars || 155000,
+    envFiles: options.envFiles || [],
+    envVars: options.envVars || []
   };
   let buildType = BuildType.DEFAULT;
 
@@ -270,7 +271,7 @@ export default async function build(
     );
 
     if (buildOptions.installer) {
-      await createInstaller(result, target, buildPath, 75000);
+      await createInstaller(result, target, buildPath, buildOptions.maxChars);
     }
 
     console.log(`Build done. Available in ${buildPath}.`);

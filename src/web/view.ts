@@ -4,7 +4,7 @@ import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import execute from './execute';
 import { activate } from './extension';
 import language from './extension/grammar/language';
-import { createDocumentAST } from './extension/helper/model-manager';
+import documentParseQueue from './extension/helper/model-manager';
 import minify from './minify';
 import { Stdin, Stdout } from './std';
 
@@ -224,7 +224,7 @@ export default async function init(options: EditorOptions) {
   });
 
   editorModel.onDidChangeContent((_event) => {
-    createDocumentAST(editorModel);
+    documentParseQueue.update(editorModel);
 
     try {
       localStorage.setItem('ide-content', editorModel.getValue());

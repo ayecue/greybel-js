@@ -1,56 +1,130 @@
+import EventEmitter from 'events';
 import { ASTBase, ASTChunkAdvanced, Parser } from 'greybel-core';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
-const activeDocumentASTMap: Map<string, ASTBase> = new Map();
-const lastErrorsMap: Map<string, Error[]> = new Map();
-
-// temporary solution
-export const CACHE_KEY = 'anonymous';
-
-export function createDocumentAST(document: Monaco.editor.ITextModel): {
-  chunk: ASTBase;
+export interface ParseResult {
+  document: ASTBase | null;
   errors: Error[];
-} {
-  const content = document.getValue();
-  const parser = new Parser(content, {
-    unsafe: true
-  });
-  const chunk = parser.parseChunk();
+}
 
-  if ((chunk as ASTChunkAdvanced).body?.length > 0) {
-    activeDocumentASTMap.set(CACHE_KEY, chunk);
-    lastErrorsMap.set(CACHE_KEY, parser.errors);
-  } else {
+export interface QueueItem {
+  document: editor.ITextModel;
+  createdAt: number;
+}
+
+export const DOCUMENT_PARSE_QUEUE_INTERVAL = 1000;
+export const DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT = 5000;
+
+export class DocumentParseQueue extends EventEmitter {
+  results: Map<string, ParseResult>;
+
+  private queue: Map<string, QueueItem>;
+  private interval: NodeJS.Timeout | null;
+  private readonly parseTimeout: number;
+
+  constructor(parseTimeout: number = DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT) {
+    super();
+    this.results = new Map();
+    this.queue = new Map();
+    this.interval = null;
+    this.parseTimeout = parseTimeout;
+  }
+
+  private resume() {
+    if (this.queue.size === 0 || this.interval !== null) {
+      return;
+    }
+
+    const next = () => {
+      const currentTime = Date.now();
+
+      for (const item of this.queue.values()) {
+        if (currentTime - item.createdAt > this.parseTimeout) {
+          this.refresh(item.document);
+        }
+      }
+
+      if (this.queue.size > 0) {
+        this.interval = setTimeout(next, DOCUMENT_PARSE_QUEUE_INTERVAL);
+        return;
+      }
+
+      this.interval = null;
+    };
+
+    this.interval = setTimeout(next, DOCUMENT_PARSE_QUEUE_INTERVAL);
+  }
+
+  refresh(document: editor.ITextModel): ParseResult {
+    const key = document.uri.path;
+
+    if (!this.queue.has(key) && this.results.has(key)) {
+      return this.results.get(key)!;
+    }
+
+    const result = this.create(document);
+    this.results.set(key, result);
+    this.emit('parsed', document, result);
+    this.queue.delete(key);
+    return result;
+  }
+
+  private create(document: editor.ITextModel): ParseResult {
+    const content = document.getValue();
+    const parser = new Parser(content, {
+      unsafe: true
+    });
+    const chunk = parser.parseChunk();
+
+    if ((chunk as ASTChunkAdvanced).body?.length > 0) {
+      return {
+        document: chunk,
+        errors: parser.errors
+      };
+    }
+
     try {
       const strictParser = new Parser(document.getValue());
       const strictChunk = strictParser.parseChunk();
 
-      activeDocumentASTMap.set(CACHE_KEY, strictChunk);
-      lastErrorsMap.set(CACHE_KEY, []);
+      return {
+        document: strictChunk,
+        errors: []
+      };
     } catch (err: any) {
-      lastErrorsMap.set(CACHE_KEY, [err]);
+      console.log('refresh err', err);
+
+      return {
+        document: null,
+        errors: [err]
+      };
     }
   }
 
-  return {
-    chunk,
-    errors: parser.errors
-  };
+  update(document: editor.ITextModel): boolean {
+    const fileName = document.uri.path;
+
+    if (this.queue.has(fileName)) {
+      return false;
+    }
+
+    this.queue.set(fileName, {
+      document,
+      createdAt: Date.now()
+    });
+
+    this.resume();
+
+    return true;
+  }
+
+  get(document: editor.ITextModel): ParseResult {
+    return this.results.get(document.uri.path) || this.refresh(document);
+  }
+
+  clear(document: editor.ITextModel): void {
+    this.results.delete(document.uri.path);
+  }
 }
 
-export function clearDocumentAST(_document: Monaco.editor.ITextModel): void {
-  activeDocumentASTMap.delete(CACHE_KEY);
-  lastErrorsMap.delete(CACHE_KEY);
-}
-
-export function getLastDocumentASTErrors(
-  document: Monaco.editor.ITextModel
-): Error[] {
-  return lastErrorsMap.get(CACHE_KEY) || createDocumentAST(document).errors;
-}
-
-export function getDocumentAST(document: Monaco.editor.ITextModel): ASTBase {
-  return (
-    activeDocumentASTMap.get(CACHE_KEY) || createDocumentAST(document).chunk
-  );
-}
+export default new DocumentParseQueue();

@@ -112,7 +112,9 @@ export default async function repl(
           interpreter.apiContext.getLastActive() || interpreter.globalContext;
 
         console.error(
-          `${err.message} at line ${opc.stackItem?.start.line}:${opc.stackItem?.start.character} in ${opc.target}`
+          `${err.message} at line ${opc.stackItem?.start!.line}:${
+            opc.stackItem?.start!.character
+          } in ${opc.target}`
         );
       }
     }

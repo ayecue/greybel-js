@@ -35,8 +35,9 @@ program
 	.option('-dno, --disable-namespaces-optimization', 'Disable namespace optimization')
 	.option('-u, --uglify', 'Uglify your code')
 	.option('-b, --beautify', 'Beautify your code')
-	.option('-n, --name', 'Output filename')
-	.option('-i, --installer', 'Create installer for GreyScript (Should be used if you use import_code)');
+	.option('-o, --obfuscation', 'Enable obfuscation')
+	.option('-i, --installer', 'Create installer for GreyScript (Should be used if you use import_code)')
+	.option('-mc, --maxChars <number>', 'Amount of characters allowed in one file before splitting when creating installer');
 
 program.parse(process.argv);
 
@@ -52,7 +53,8 @@ program.parse(process.argv);
 		disableNamespacesOptimization: options.disableNamespacesOptimization,
 		excludedNamespaces: options.excludeNamespaces,
 		name: options.name,
-		installer: options.installer
+		installer: options.installer,
+		maxChars: options.maxChars
 	});
 
 	if (!success) {

@@ -332,11 +332,11 @@ export function findAllByLine(
 ): { [type: number]: ASTBase[] } {
   const result: { [type: number]: ASTBase[] } = {};
   const walker = new ScraperWalker((item: ASTBase, level: number) => {
-    const typeResult = result[item.start.line] || [];
+    const typeResult = result[item.start!.line] || [];
 
     if (validate(item, level)) {
       typeResult.push(item);
-      result[item.start.line] = typeResult;
+      result[item.start!.line] = typeResult;
     }
 
     return {

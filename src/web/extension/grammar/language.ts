@@ -1,4 +1,4 @@
-import { allTypes, getDefinitions } from 'greyscript-meta';
+import { allTypes, getDefinitions } from 'greyscript-meta/dist/meta';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 const language: Monaco.languages.IMonarchLanguage = {

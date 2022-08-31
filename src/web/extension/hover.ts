@@ -1,4 +1,4 @@
-import { SignatureDefinitionArg } from 'greyscript-meta';
+import { SignatureDefinitionArg } from 'greyscript-meta/dist/meta';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import { LookupHelper, TypeInfoWithDefinition } from './helper/lookup-type';
@@ -40,7 +40,12 @@ export function activate(monaco: typeof Monaco) {
 
       if (typeInfo instanceof TypeInfoWithDefinition) {
         const defintion = typeInfo.definition;
-        const args = defintion.arguments || [];
+        let args: SignatureDefinitionArg[] = [];
+
+        try {
+          args = defintion.arguments || [];
+        } catch (err: any) {}
+
         const example = defintion.example || [];
         const returnValues = formatTypes(defintion.returns) || 'null';
         let headline;

@@ -227,3 +227,13 @@ All notable changes to this project will be documented in this file.
 ## [1.2.8] - 22-08-2022
 
 - add beautify option
+
+## [1.2.9] - 31-08-2022
+
+- find all identifier now only lookups left side in assignment (WebUI)
+- add queue for AST parsing (WebUI)
+- add maxChars option to define when the installer should split the file
+- update greyscript-meta, includes newest translations
+- update parser and interpreter to support any value as map key, thanks to [@xephael](https://github.com/xephael)
+- update parser to improve performance regarding automcompletion and hover, generates map of references per line
+- fix compile options, remove merging of options instead just use || fallback pattern

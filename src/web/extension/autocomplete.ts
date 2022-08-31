@@ -4,7 +4,7 @@ import {
   getDefinitions,
   SignatureDefinitionArg,
   SignatureDefinitionContainer
-} from 'greyscript-meta';
+} from 'greyscript-meta/dist/meta';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 import {
@@ -12,6 +12,7 @@ import {
   TypeInfo,
   TypeInfoWithDefinition
 } from './helper/lookup-type';
+import documentParseQueue from './helper/model-manager';
 import {
   PseudoCompletionItem,
   PseudoCompletionList,
@@ -49,6 +50,7 @@ export function activate(monaco: typeof Monaco) {
       _ctx: Monaco.languages.CompletionContext,
       _token: Monaco.CancellationToken
     ): Monaco.languages.ProviderResult<Monaco.languages.CompletionList> {
+      documentParseQueue.refresh(document);
       const currentRange = new monaco.Range(
         position.lineNumber,
         position.column - 1,
@@ -110,7 +112,7 @@ export function activate(monaco: typeof Monaco) {
       // get all identifer available in scope
       completionItems.push(
         ...helper
-          .findAllAvailableIdentifier(astResult.outer)
+          .findAllAvailableIdentifier(astResult.closest)
           .map((property: string) => {
             return new PseudoCompletionItem({
               label: property,
@@ -133,6 +135,7 @@ export function activate(monaco: typeof Monaco) {
       _token: Monaco.CancellationToken,
       _ctx: Monaco.languages.SignatureHelpContext
     ): Monaco.languages.ProviderResult<Monaco.languages.SignatureHelpResult> {
+      documentParseQueue.refresh(document);
       const helper = new LookupHelper(monaco, document);
       const astResult = helper.lookupAST(position);
 
@@ -160,7 +163,7 @@ export function activate(monaco: typeof Monaco) {
         return;
       }
 
-      const root = helper.lookupScope(astResult.outer);
+      const root = helper.lookupScope(astResult.closest);
       const item = helper.lookupTypeInfo({
         closest: rootCallExpression,
         outer: root ? [root] : []
@@ -173,8 +176,8 @@ export function activate(monaco: typeof Monaco) {
       // figure out argument position
       const astArgs = rootCallExpression.arguments;
       const selectedIndex = astArgs.findIndex((argItem) => {
-        const leftIndex = argItem.start.character - 1;
-        const rightIndex = argItem.end.character;
+        const leftIndex = argItem.start!.character - 1;
+        const rightIndex = argItem.end!.character;
 
         return leftIndex <= position.column && rightIndex >= position.column;
       });
