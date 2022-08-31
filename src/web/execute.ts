@@ -13,6 +13,7 @@ import {
   ResourceHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import process from 'process';
 
 import viewJSON from './json-viewer';
@@ -40,33 +41,30 @@ function parse(item: CustomValue): any {
 }
 
 class GrebyelDebugger extends Debugger {
+  editorInstance: Monaco.editor.IStandaloneCodeEditor;
+
+  constructor(editorInstance: Monaco.editor.IStandaloneCodeEditor) {
+    super();
+    this.editorInstance = editorInstance;
+  }
+
   debug(..._segments: any[]): CustomValue {
     return Defaults.Void;
   }
 
   interact(operationContext: OperationContext): Promise<void> {
     const me = this;
-
-    return new Promise(function (resolve, _reject) {
-      const bg = document.createElement('div');
-      const popup = document.createElement('div');
-      const actions = document.createElement('div');
-      const title = document.createElement('label');
-      const replWrapper = document.createElement('div');
-      const replTitle = document.createElement('label');
+    let lastActiveLine: Element | undefined;
+    const createNavigationPopup = (options: {
+      onContinue: (ev: MouseEvent) => any;
+      onExecute: (input: HTMLInputElement) => any;
+      onNext: (ev: MouseEvent) => any;
+    }): HTMLElement => {
+      const repl = document.createElement('div');
       const replInput = document.createElement('input');
       const replExecute = document.createElement('input');
-      const continueButton = document.createElement('input');
-      const nextButton = document.createElement('input');
 
-      bg.classList.add('debugger-popup-bg');
-      popup.classList.add('debugger-popup');
-
-      replWrapper.classList.add('debugger-repl-wrapper');
-
-      actions.classList.add('debugger-actions');
-
-      replTitle.innerHTML = 'Execute code in current context:';
+      repl.classList.add('debugger-repl-wrapper');
 
       replInput.classList.add('debugger-repl');
       replInput.type = 'input';
@@ -74,6 +72,15 @@ class GrebyelDebugger extends Debugger {
       replExecute.classList.add('debugger-repl-execute');
       replExecute.type = 'button';
       replExecute.value = 'Execute';
+
+      repl.appendChild(replInput);
+      repl.appendChild(replExecute);
+
+      const actions = document.createElement('div');
+      const continueButton = document.createElement('input');
+      const nextButton = document.createElement('input');
+
+      actions.classList.add('debugger-actions');
 
       continueButton.classList.add('debugger-continue');
       continueButton.type = 'button';
@@ -83,12 +90,33 @@ class GrebyelDebugger extends Debugger {
       nextButton.type = 'button';
       nextButton.value = 'Next';
 
-      title.innerHTML = `Current line: ${
-        activeInterpreter?.globalContext.getLastActive()?.stackItem?.start!.line
-      }`;
+      actions.appendChild(continueButton);
+      actions.appendChild(nextButton);
 
-      document.body.appendChild(bg);
-      document.body.appendChild(popup);
+      const popup = document.createElement('div');
+
+      popup.classList.add('debugger-popup-navigation');
+
+      popup.appendChild(repl);
+      popup.appendChild(actions);
+
+      replInput.addEventListener('keyup', function (ev) {
+        if (ev.key === 'Enter' || ev.keyCode === 13) {
+          options.onExecute(replInput);
+        }
+      });
+      replExecute.addEventListener('click', (ev: MouseEvent) =>
+        options.onExecute(replInput)
+      );
+      continueButton.addEventListener('click', options.onContinue);
+      nextButton.addEventListener('click', options.onNext);
+
+      return popup;
+    };
+    const createScopePopup = (): HTMLElement => {
+      const scope = document.createElement('div');
+
+      scope.classList.add('debugger-popup-scope');
 
       const scopes = operationContext
         .lookupAllScopes()
@@ -96,51 +124,72 @@ class GrebyelDebugger extends Debugger {
           return parseMap(item.scope.value);
         });
 
-      popup.appendChild(title);
-      popup.appendChild(viewJSON(scopes));
-      popup.appendChild(replWrapper);
-      popup.appendChild(actions);
+      scope.appendChild(viewJSON(scopes));
 
-      actions.appendChild(continueButton);
-      actions.appendChild(nextButton);
+      return scope;
+    };
+    const createBackground = (): HTMLElement => {
+      const bg = document.createElement('div');
 
-      replWrapper.appendChild(replTitle);
-      replWrapper.appendChild(replInput);
-      replWrapper.appendChild(replExecute);
+      bg.classList.add('debugger-popup-bg');
 
-      continueButton.addEventListener('click', function () {
-        document.body.removeChild(bg);
-        document.body.removeChild(popup);
-        me.setBreakpoint(false);
-        resolve();
-      });
+      return bg;
+    };
 
-      nextButton.addEventListener('click', function () {
-        document.body.removeChild(bg);
-        document.body.removeChild(popup);
-        me.next();
-        resolve();
-      });
-
-      const injectCode = async () => {
+    return new Promise((resolve, _reject) => {
+      const bg = createBackground();
+      const scope = createScopePopup();
+      const injectCode = async (replInput: HTMLInputElement) => {
         const code = replInput.value;
 
         try {
+          me.setBreakpoint(false);
           await activeInterpreter?.injectInLastContext(code);
         } catch (err: any) {
           console.error(err);
+        } finally {
+          me.setBreakpoint(true);
         }
 
         replInput.value = '';
       };
-
-      replInput.addEventListener('keyup', function (e) {
-        if (e.key === 'Enter' || e.keyCode === 13) {
-          injectCode();
-        }
+      const navigation = createNavigationPopup({
+        onContinue: (_ev: MouseEvent) => {
+          lastActiveLine?.classList.remove('highlight');
+          document.body.removeChild(bg);
+          document.body.removeChild(navigation);
+          document.body.removeChild(scope);
+          me.setBreakpoint(false);
+          resolve();
+        },
+        onNext: (_ev: MouseEvent) => {
+          lastActiveLine?.classList.remove('highlight');
+          document.body.removeChild(bg);
+          document.body.removeChild(navigation);
+          document.body.removeChild(scope);
+          me.next();
+          resolve();
+        },
+        onExecute: injectCode
       });
+      const line =
+        activeInterpreter?.globalContext.getLastActive()?.stackItem?.start!
+          .line || -1;
 
-      replExecute.addEventListener('click', injectCode);
+      if (line !== -1) {
+        lastActiveLine = Array.from(
+          document.querySelectorAll(`.line-numbers`)
+        ).find((item: Element) => {
+          return item.textContent === line.toString();
+        });
+
+        lastActiveLine?.classList.add('highlight');
+        this.editorInstance.revealLineInCenter(line);
+      }
+
+      document.body.appendChild(bg);
+      document.body.appendChild(navigation);
+      document.body.appendChild(scope);
     });
   }
 }
@@ -159,7 +208,8 @@ export interface ExecuteOptions {
 }
 
 export default async function execute(
-  code: string,
+  instance: Monaco.editor.IStandaloneCodeEditor,
+  model: Monaco.editor.IModel,
   options: ExecuteOptions = {}
 ): Promise<void> {
   if (!isReady) {
@@ -168,6 +218,7 @@ export default async function execute(
 
   isReady = false;
 
+  const code = model.getValue();
   const vsAPI: Map<string, CustomFunction> =
     options.api || new Map<string, CustomFunction>();
   const stdin = options.stdin || new Stdin(new Element());
@@ -262,7 +313,7 @@ export default async function execute(
 
   const interpreter = new Interpreter({
     target: 'default',
-    debugger: new GrebyelDebugger(),
+    debugger: new GrebyelDebugger(instance),
     handler: new HandlerContainer({
       resourceHandler: new PseudoResourceHandler()
     }),
