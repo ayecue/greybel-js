@@ -254,3 +254,4 @@ All notable changes to this project will be documented in this file.
 ## [1.3.3] - 31-08-2022
 
 - improve automcompletion + hoverdocs after core update
+- improve web ui debugger
