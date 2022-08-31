@@ -63,17 +63,14 @@ export function activate(monaco: typeof Monaco) {
 
       if (astResult) {
         const { outer } = astResult;
-        const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+        const previous = outer.length > 0 ? outer[1] : undefined;
 
         if (
           previous?.type === ASTType.MemberExpression ||
           previous?.type === ASTType.IndexExpression
         ) {
           const base = helper.lookupBase(previous);
-          const previousTypeInfo = helper.resolvePath(
-            base!,
-            outer.slice(0, -1)
-          );
+          const previousTypeInfo = helper.resolvePath(base!);
 
           if (previousTypeInfo instanceof TypeInfoWithDefinition) {
             const definitions = getDefinitions(

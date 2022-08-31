@@ -250,3 +250,7 @@ All notable changes to this project will be documented in this file.
 
 - update greyscript-meta, added missing general functions
 - update core, added missing natives
+
+## [1.3.3] - 31-08-2022
+
+- improve automcompletion + hoverdocs after core update
