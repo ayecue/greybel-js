@@ -26,6 +26,7 @@ import init from './web/view';
   const executeEl = document.getElementById('execute')!;
   const stopEl = document.getElementById('stop')!;
   const pauseEl = document.getElementById('pause')!;
+  const clearEl = document.getElementById('clear')!;
   const stdoutEl = document.getElementById('stdout')!;
   const stdinEl = document.getElementById('stdin')!;
 
@@ -64,7 +65,8 @@ import init from './web/view';
       stdinEl,
       stdoutEl,
       stopEl,
-      pauseEl
+      pauseEl,
+      clearEl
     }
   });
 })();

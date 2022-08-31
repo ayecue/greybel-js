@@ -21,7 +21,8 @@ const language: Monaco.languages.IMonarchLanguage = {
     'end',
     'then',
     'function',
-    'in'
+    'in',
+    'debugger'
   ],
   operators: [
     '=',

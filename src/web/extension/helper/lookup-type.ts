@@ -252,7 +252,8 @@ export class LookupHelper {
 
           // resolve first identifier
           if (!currentMetaInfo) {
-            currentMetaInfo = me.resolveIdentifier(identifer) || new TypeInfo(name, ['any']);
+            currentMetaInfo =
+              me.resolveIdentifier(identifer) || new TypeInfo(name, ['any']);
             break;
           }
 
@@ -427,16 +428,12 @@ export class LookupHelper {
     });
   }
 
-  resolveCallStatement(
-    item: ASTCallStatement
-  ): TypeInfo | null {
+  resolveCallStatement(item: ASTCallStatement): TypeInfo | null {
     const { expression } = item;
     return this.lookupTypeInfo({ closest: expression, outer: [item] });
   }
 
-  resolveCallExpression(
-    item: ASTCallExpression
-  ): TypeInfo | null {
+  resolveCallExpression(item: ASTCallExpression): TypeInfo | null {
     const { base } = item;
     return this.lookupTypeInfo({ closest: base, outer: [item] });
   }

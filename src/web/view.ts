@@ -24,6 +24,7 @@ export interface EditorRunnerOptions {
   executeEl: HTMLElement;
   stopEl: HTMLElement;
   pauseEl: HTMLElement;
+  clearEl: HTMLElement;
   stdoutEl: HTMLElement;
   stdinEl: HTMLElement;
 }
@@ -86,14 +87,20 @@ export function initTranspiler(
 }
 
 export function initRunner(
+  instance: Monaco.editor.IStandaloneCodeEditor,
   model: Monaco.editor.IModel,
   showError: Function,
   options: EditorRunnerOptions
 ) {
-  const { paramsEl, executeEl, stopEl, pauseEl, stdoutEl, stdinEl } = options;
+  const { paramsEl, executeEl, stopEl, pauseEl, stdoutEl, stdinEl, clearEl } =
+    options;
 
   const stdout = new Stdout(stdoutEl);
   const stdin = new Stdin(stdinEl);
+
+  clearEl.addEventListener('click', () => {
+    stdout.clear();
+  });
 
   stdoutEl.addEventListener('click', () => {
     stdinEl.focus();
@@ -130,7 +137,7 @@ export function initRunner(
         pauseEl?.removeEventListener('click', pause);
       };
 
-      execute(model.getValue(), {
+      execute(instance, model, {
         stdin,
         stdout,
         params: paramsEl.value.split(' ').filter((v) => v !== ''),
@@ -210,8 +217,7 @@ export default async function init(options: EditorOptions) {
   activate(monaco);
 
   const editorModel = monaco.editor.createModel(initContent, 'greyscript');
-
-  monaco.editor.create(containerEl, {
+  const editorInstance = monaco.editor.create(containerEl, {
     model: editorModel,
     automaticLayout: true,
     theme: 'vs-dark'
@@ -234,5 +240,5 @@ export default async function init(options: EditorOptions) {
   });
 
   initTranspiler(editorModel, showError, options.transpiler);
-  initRunner(editorModel, showError, options.runner);
+  initRunner(editorInstance, editorModel, showError, options.runner);
 }

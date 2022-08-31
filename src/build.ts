@@ -223,7 +223,8 @@ export default async function build(
     installer: options.installer || false,
     excludedNamespaces: options.excludedNamespaces || [],
     disableLiteralsOptimization: options.disableLiteralsOptimization || false,
-    disableNamespacesOptimization: options.disableNamespacesOptimization || false,
+    disableNamespacesOptimization:
+      options.disableNamespacesOptimization || false,
     maxChars: options.maxChars || 155000,
     envFiles: options.envFiles || [],
     envVars: options.envVars || []
