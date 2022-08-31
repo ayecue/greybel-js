@@ -245,3 +245,8 @@ All notable changes to this project will be documented in this file.
 ## [1.3.1] - 31-08-2022
 
 - remove wrapper boilerplate from main, [@xephael](https://github.com/xephael)
+
+## [1.3.2] - 31-08-2022
+
+- update greyscript-meta, added missing general functions
+- update core, added missing natives
