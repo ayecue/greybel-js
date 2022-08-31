@@ -240,6 +240,8 @@ All notable changes to this project will be documented in this file.
 
 ## [1.3.0] - 31-08-2022
 
-### Changed
-
 - fix installer randomly stopping parsing file, [@xephael](https://github.com/xephael)
+
+## [1.3.1] - 31-08-2022
+
+- remove wrapper boilerplate from main, [@xephael](https://github.com/xephael)
