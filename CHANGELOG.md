@@ -234,17 +234,17 @@ All notable changes to this project will be documented in this file.
 - add queue for AST parsing (WebUI)
 - add maxChars option to define when the installer should split the file
 - update greyscript-meta, includes newest translations
-- update parser and interpreter to support any value as map key, thanks to [@xephael](https://github.com/xephael)
+- update parser and interpreter to support any value as map key, thanks for reporting to [@xephael](https://github.com/xephael)
 - update parser to improve performance regarding automcompletion and hover, generates map of references per line
 - fix compile options, remove merging of options instead just use || fallback pattern
 
 ## [1.3.0] - 31-08-2022
 
-- fix installer randomly stopping parsing file, [@xephael](https://github.com/xephael)
+- fix installer randomly stopping parsing file, thanks for reporting to [@xephael](https://github.com/xephael)
 
 ## [1.3.1] - 31-08-2022
 
-- remove wrapper boilerplate from main, [@xephael](https://github.com/xephael)
+- remove wrapper boilerplate from main, thanks for reporting to [@xephael](https://github.com/xephael)
 
 ## [1.3.2] - 31-08-2022
 
@@ -255,3 +255,8 @@ All notable changes to this project will be documented in this file.
 
 - improve automcompletion + hoverdocs after core update
 - improve web ui debugger
+
+## [1.3.4] - 08-09-2022
+
+- fix line count inside multiline strings, thanks for reporting to [@xephael](https://github.com/xephael)
+- fix slice operator parsing, thanks for reporting to [@xephael](https://github.com/xephael)
