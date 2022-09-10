@@ -431,7 +431,9 @@ function EditorPopups(options: EditorPopupsOptions) {
     let b64Content = '';
 
     try {
-      b64Content = btoa(content);
+      //prevent none latin1 signs
+      const encoded = encodeURIComponent(content);
+      b64Content = btoa(encoded);
     } catch (err: any) {
       console.error(err);
     }
