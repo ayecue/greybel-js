@@ -5,6 +5,7 @@ const { babel } = require('@rollup/plugin-babel');
 const { terser } = require('rollup-plugin-terser');
 const json = require('@rollup/plugin-json');
 const nodePolyfills = require('rollup-plugin-polyfill-node');
+const externalGlobals  = require('rollup-plugin-external-globals');
 
 const options = {
     input: 'out/web.js',
@@ -12,7 +13,12 @@ const options = {
         file: 'out/web.bundled.js',
         format: 'iife'
     },
+    external: ['react', 'react-dom'],
     plugins: [
+        externalGlobals({
+            'react': 'React',
+            'react-dom': 'ReactDOM'
+        }),
         json(),
         commonjs(),
         nodePolyfills(),
@@ -21,7 +27,7 @@ const options = {
             preferBuiltins: false
         }),
         babel({
-            presets: ['@babel/preset-env', {
+            presets: ['@babel/preset-react', '@babel/preset-env', {
                 exclude: "transform-typeof-symbol"
             }],
             babelHelpers: 'runtime',

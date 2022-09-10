@@ -6,78 +6,11 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <title>GreyScript IDE</title>
 	    <link rel="stylesheet" type="text/css" href="./index.css">
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 	</head>
 	<body>
-		<article>
-			<div class="editor-control">
-				<div id="editor-errors"></div>
-				<div id="editor-popups"></div>
-				<div class="editor-ide">
-					<div id="container"></div>
-				</diV>
-				<div class="editor-side-panel">
-					<div>
-						<div class="editor-actions">
-							<div class="editor-transpile">
-								<a id="transpile">Transpile</a>
-								<a id="share">Share code</a>
-								<div class="editor-options">
-									<ul>
-										<li>
-											<select id="buildType">
-												<option value="0" selected>Default</option>
-												<option value="1">Uglify</option>
-												<option value="2">Beautify</option>
-											</select>
-											<label>Build type</label>
-										</li>
-										<li>
-											<input id="obfuscation" type="checkbox" />
-											<label>Obfuscation</label>
-										</li>
-										<li>
-											<input id="disableLiteralsOptimization" type="checkbox" />
-											<label>Disable literals optimization</label>
-										</li>
-										<li>
-											<input id="disableNamespacesOptimization" type="checkbox" />
-											<label>Disable namespaces optimization</label>
-										</li>
-										<li>
-											<label>Exclude namespaces from optimization</label>
-											<input id="excludedNamespaces" type="text" />
-										</li>
-									</ul>
-								</div>
-								<label>Transpiler output:</label>
-								<textarea id="toutput" class="editor-transpiled-area" readonly></textarea>
-							</div>
-							<div class="editor-execute">
-								<div class="context">
-									<label>Execution parameter:</label>
-									<input id="params" type ="text" />
-								</div>
-								<div class="actions">
-									<a id="execute">Execute</a>
-									<a id="pause" class="disabled">Pause</a>
-									<a id="stop" class="disabled">Stop</a>
-									<a id="clear">Clear</a>
-								</div>
-								<label>Execution output:</label>
-								<textarea id="stdout" class="editor-console-stdout" readonly></textarea>
-								<input id="stdin" class="editor-console-stdin" type="text" disabled />
-							</div>
-							<div class="editor-help">
-								<label>Try this:</label>
-								<code>
-									<span class="identifier">get_shell</span>(<span class="string">"root"</span>, <span class="string">"test"</span>) <span class="comment">//to receive root shell on your local pc</span>
-								</code>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</article>
+		<div id="container"></div>
 		<footer>
 			<script src="./web.bundled.js"></script>
 		</footer>

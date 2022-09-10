@@ -150,6 +150,7 @@ body {
 	bottom: 0;
 	right: 0;
 	left: 0;
+	z-index: 999;
 }
 
 .debugger-popup-scope {
@@ -161,9 +162,10 @@ body {
     padding: 10px;
 	box-shadow: 5px 5px 5px black;
     border-radius: 5px;
+	z-index: 999;
 }
 
-.debugger-popup-scope > .json-formatter-row {
+.debugger-popup-scope > div > .json-formatter-row {
 	height: 300px;
 	width: 340px;
 	overflow: auto;
@@ -182,6 +184,7 @@ body {
     padding: 10px;
 	box-shadow: 5px 5px 5px black;
     border-radius: 5px;
+	z-index: 999;
 }
 
 .debugger-actions {

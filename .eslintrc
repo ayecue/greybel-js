@@ -13,11 +13,16 @@
     "globals": {
       "BufferEncoding": true,
       "NodeJS": true,
-      "localStorage": true,
-      "HTMLElement": true,
-      "HTMLInputElement": true,
       "Element": true,
+      "localStorage": true,
       "location": true
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      }
     },
     "extends": [
       "eslint:recommended",
