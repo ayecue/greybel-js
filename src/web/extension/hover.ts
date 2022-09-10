@@ -56,7 +56,7 @@ export function activate(monaco: typeof Monaco) {
           const argValues = args
             .map(
               (item: SignatureDefinitionArg) =>
-                `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}`
+                `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}${item.default ? ` = ${item.default}` : ''}`
             )
             .join(', ');
 

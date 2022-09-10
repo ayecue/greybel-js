@@ -98,13 +98,6 @@ body {
 	padding: 0;
 }
 
-.editor-actions .editor-console-stdin {
-	background: #000;
-	color: green;
-	border-radius: 5px;
-	border: 1px solid #FFF;
-}
-
 .editor-options {
 	border: 1px solid #AAA;
 	padding: 5px;
@@ -113,6 +106,14 @@ body {
 
 .editor-options label {
 	color: #CCC;
+}
+
+.editor-options select {
+	margin: 0 5px 0 0;
+}
+
+.editor-options input[type=checkbox] {
+	margin: 0 5px 0 0;
 }
 
 .editor-options ul {
@@ -137,11 +138,6 @@ body {
 	height: 200px;
 }
 
-.editor-console-stdin {
-	width: 100%;
-	padding: 0;
-}
-
 .debugger-popup-bg {
 	background-color: #333;
 	opacity: 0.5;
@@ -150,6 +146,7 @@ body {
 	bottom: 0;
 	right: 0;
 	left: 0;
+	z-index: 999;
 }
 
 .debugger-popup-scope {
@@ -161,9 +158,10 @@ body {
     padding: 10px;
 	box-shadow: 5px 5px 5px black;
     border-radius: 5px;
+	z-index: 999;
 }
 
-.debugger-popup-scope > .json-formatter-row {
+.debugger-popup-scope > div > .json-formatter-row {
 	height: 300px;
 	width: 340px;
 	overflow: auto;
@@ -182,6 +180,7 @@ body {
     padding: 10px;
 	box-shadow: 5px 5px 5px black;
     border-radius: 5px;
+	z-index: 999;
 }
 
 .debugger-actions {
@@ -250,6 +249,27 @@ body {
 
 .line-numbers.highlight {
 	color: red!important;
+}
+
+.editor-actions > .editor-execute {
+	position: relative;
+	padding: 0 0 24px;
+}
+
+.editor-execute .editor-console-stdin {
+	background: #000;
+	color: green;
+	border-radius: 5px;
+	border: 1px solid #FFF;
+	padding: 5px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.editor-execute .editor-console-stdin:focus {
+	outline: 2px groove orange;
 }
 
 .editor-execute .context {
