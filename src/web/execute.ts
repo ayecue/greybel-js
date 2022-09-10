@@ -177,15 +177,17 @@ export default async function execute(
       const opc =
         interpreter.apiContext.getLastActive() || interpreter.globalContext;
 
-      console.error(err);
-
-      options.onError(
-        new Error(
-          `Error "${err.message}" at line ${opc.stackItem?.start!.line}:${
-            opc.stackItem?.start!.character
-          } in ${opc.target}`
-        )
-      );
+      if (opc.stackItem) {
+        options.onError(
+          new Error(
+            `Error "${err.message}" at line ${opc.stackItem.start!.line}:${
+              opc.stackItem.start!.character
+            } in ${opc.target}`
+          )
+        );
+      } else {
+        options.onError(err);
+      }
     } finally {
       console.timeEnd('Execution');
     }

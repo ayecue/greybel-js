@@ -493,6 +493,8 @@ export interface AppOptions {
   initContent?: string;
 }
 
+const activeErrors: ErrorEntry[] = [];
+
 export default function (options: AppOptions) {
   const [editorContext, setEditorContext] = useState<EditorContext | null>(
     null
@@ -533,21 +535,27 @@ export default function (options: AppOptions) {
     return <div>Loading</div>;
   }
 
+  const removeError = (id: string) => {
+    const index = activeErrors.findIndex((entry) => id === entry.id);
+
+    if (index !== -1) {
+      activeErrors.splice(index, 1);
+      setErrorEntries([...activeErrors]);
+    }
+  };
   const showError = (msg: string, timeout: number = 10000) => {
     const id = guid();
     const remove = () => {
       clearTimeout(timer);
-      setErrorEntries([...errorEntries.filter((entry) => id !== entry.id)]);
+      removeError(id);
     };
 
-    setErrorEntries([
-      ...errorEntries,
-      {
-        id,
-        msg,
-        onClick: remove
-      }
-    ]);
+    activeErrors.push({
+      id,
+      msg,
+      onClick: remove
+    });
+    setErrorEntries([...activeErrors]);
     const timer = setTimeout(remove, timeout);
   };
 
