@@ -271,3 +271,4 @@ All notable changes to this project will be documented in this file.
 - add allow_import polyfill in file intrinsics
 - add default value info in hoverdocs
 - use react instead of plain html
+- fix obfuscation flag getting ignored
