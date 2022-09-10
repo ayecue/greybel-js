@@ -84,27 +84,27 @@ function Transpile({ showError, model, onShare }: TranspileOptions) {
             </select>
             <label>Build type</label>
           </li>
-          <li>
+          <li onClick={() => setObfuscation(!obfuscation)}>
             <input
               id="obfuscation"
               type="checkbox"
-              onChange={(ev) => setObfuscation(ev.target.checked)}
+              checked={obfuscation}
             />
             <label>Obfuscation</label>
           </li>
-          <li>
+          <li onClick={() => setDisableLO(!disableLO)}>
             <input
               id="disableLiteralsOptimization"
               type="checkbox"
-              onChange={(ev) => setDisableLO(ev.target.checked)}
+              checked={disableLO}
             />
             <label>Disable literals optimization</label>
           </li>
-          <li>
+          <li onClick={() => setDisableNO(!disableNO)}>
             <input
               id="disableNamespacesOptimization"
               type="checkbox"
-              onChange={(ev) => setDisableNO(ev.target.checked)}
+              checked={disableNO}
             />
             <label>Disable namespaces optimization</label>
           </li>
@@ -389,8 +389,6 @@ function DebugScopePopup({
       .map((item: OperationContext) => {
         return parseMap(item.scope.value);
       });
-
-    console.log(operationContext);
 
     containerRef.current!.appendChild(viewJSON(scopes));
   }, []);
