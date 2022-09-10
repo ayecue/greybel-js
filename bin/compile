@@ -49,6 +49,7 @@ program.parse(process.argv);
 		envVars: options.envVars,
 		uglify: options.uglify,
 		beautify: options.beautify,
+		obfuscation: options.obfuscation,
 		disableLiteralsOptimization: options.disableLiteralsOptimization,
 		disableNamespacesOptimization: options.disableNamespacesOptimization,
 		excludedNamespaces: options.excludeNamespaces,
