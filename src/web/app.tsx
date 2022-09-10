@@ -89,6 +89,7 @@ function Transpile({ showError, model, onShare }: TranspileOptions) {
               id="obfuscation"
               type="checkbox"
               checked={obfuscation}
+              readOnly
             />
             <label>Obfuscation</label>
           </li>
@@ -97,6 +98,7 @@ function Transpile({ showError, model, onShare }: TranspileOptions) {
               id="disableLiteralsOptimization"
               type="checkbox"
               checked={disableLO}
+              readOnly
             />
             <label>Disable literals optimization</label>
           </li>
@@ -105,6 +107,7 @@ function Transpile({ showError, model, onShare }: TranspileOptions) {
               id="disableNamespacesOptimization"
               type="checkbox"
               checked={disableNO}
+              readOnly
             />
             <label>Disable namespaces optimization</label>
           </li>

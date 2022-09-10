@@ -98,13 +98,6 @@ body {
 	padding: 0;
 }
 
-.editor-actions .editor-console-stdin {
-	background: #000;
-	color: green;
-	border-radius: 5px;
-	border: 1px solid #FFF;
-}
-
 .editor-options {
 	border: 1px solid #AAA;
 	padding: 5px;
@@ -143,11 +136,6 @@ body {
 .editor-console-stdout {
 	width: 100%;
 	height: 200px;
-}
-
-.editor-console-stdin {
-	width: 100%;
-	padding: 0;
 }
 
 .debugger-popup-bg {
@@ -261,6 +249,27 @@ body {
 
 .line-numbers.highlight {
 	color: red!important;
+}
+
+.editor-actions > .editor-execute {
+	position: relative;
+	padding: 0 0 24px;
+}
+
+.editor-execute .editor-console-stdin {
+	background: #000;
+	color: green;
+	border-radius: 5px;
+	border: 1px solid #FFF;
+	padding: 5px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.editor-execute .editor-console-stdin:focus {
+	outline: 2px groove orange;
 }
 
 .editor-execute .context {
