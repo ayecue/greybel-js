@@ -115,6 +115,14 @@ body {
 	color: #CCC;
 }
 
+.editor-options select {
+	margin: 0 5px 0 0;
+}
+
+.editor-options input[type=checkbox] {
+	margin: 0 5px 0 0;
+}
+
 .editor-options ul {
 	padding: 0;
 	margin: 0;
