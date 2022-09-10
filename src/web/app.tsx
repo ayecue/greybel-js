@@ -428,7 +428,15 @@ function EditorPopups(options: EditorPopupsOptions) {
     const { content, onClose } = options.share;
 
     const url = new URL(location.href);
-    url.searchParams.set('c', btoa(content));
+    let b64Content = '';
+
+    try {
+      b64Content = btoa(content);
+    } catch (err: any) {
+      console.error(err);
+    }
+
+    url.searchParams.set('c', b64Content);
 
     popups.push(
       <div
