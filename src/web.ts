@@ -8,7 +8,7 @@ let content = urlSearchParams.get('c') || undefined;
 
 if (content) {
   try {
-    const decoded = encodeURIComponent(content);
+    const decoded = decodeURIComponent(content);
     content = decodeURIComponent(atob(decoded));
   } catch (err: any) {
     content = undefined;

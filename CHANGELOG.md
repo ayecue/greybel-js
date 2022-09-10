@@ -272,3 +272,7 @@ All notable changes to this project will be documented in this file.
 - add default value info in hoverdocs
 - use react instead of plain html
 - fix obfuscation flag getting ignored
+
+## [1.3.6] - 10-09-2022
+
+- fix share feature in web-ui
