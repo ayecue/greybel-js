@@ -51,6 +51,7 @@ class GrebyelPseudoDebugger extends Debugger {
       }
 
       try {
+        me.interpreter.debugger.setBreakpoint(false);
         await me.interpreter.injectInLastContext(line);
         console.log(
           `Execution of ${line}:${operationContext.target} was successful.`
@@ -58,6 +59,8 @@ class GrebyelPseudoDebugger extends Debugger {
       } catch (err: any) {
         console.error(`Execution of ${line} failed.`);
         console.error(err);
+      } finally {
+        me.interpreter.debugger.setBreakpoint(true);
       }
 
       await iterate();
