@@ -173,8 +173,8 @@ export function nodeJSKeyEventToKeyEvent(nodeJSKeyEvent: NodeJSKeyEvent): KeyEve
     case NodeJSKey.F12:
       return create(123, 'F12');
     default: {
-      const char = nodeJSKeyEvent.sequence.toLowerCase();
-      const keyCode = char.charCodeAt(0);
+      const char = nodeJSKeyEvent.sequence;
+      const keyCode = char.toUpperCase().charCodeAt(0);
       const code = nodeJSKeyEvent.name || char;
       return create(keyCode, code);
     }
@@ -216,6 +216,7 @@ export class CLIOutputHandler extends OutputHandler {
     return inquirer
         .prompt({
           name: 'default',
+          message: 'Input:',
           type: isPassword ? 'password' : 'input',
           loop: false
         })
