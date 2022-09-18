@@ -1,7 +1,6 @@
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
-  CustomString,
   CustomValue,
   Debugger,
   Defaults,
@@ -97,8 +96,8 @@ export default async function execute(
             return;
           }
 
-          const elapsedPercentage = 100 * elapsed / timeout;
-          const progress = Math.floor(elapsedPercentage * max / 100);
+          const elapsedPercentage = (100 * elapsed) / timeout;
+          const progress = Math.floor((elapsedPercentage * max) / 100);
           const right = max - progress;
 
           stdout.updateLast(`[${'#'.repeat(progress)}${'-'.repeat(right)}]`);
@@ -136,7 +135,7 @@ export default async function execute(
         code: keyEvent.code
       };
     }
-  }
+  };
 
   class PseudoResourceHandler extends ResourceHandler {
     getTargetRelativeTo(_source: string, _target: string): Promise<string> {

@@ -15,7 +15,8 @@
       "NodeJS": true,
       "Element": true,
       "localStorage": true,
-      "location": true
+      "location": true,
+      "KeyboardEvent": true
     },
     "settings": {
       "import/resolver": {
