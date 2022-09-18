@@ -39,15 +39,15 @@ export class Stdin {
     me.target.type = type;
   }
 
-  waitForInput() {
+  waitForInput(): Promise<void> {
     const me = this;
     const target = me.target;
     const id = v4();
 
     me.queue.unshift(id);
 
-    return new Promise((resolve: any) => {
-      const handler = (evt: any) => {
+    return new Promise((resolve) => {
+      const handler = (evt: KeyboardEvent) => {
         if (evt.keyCode === 13) {
           const currentId = me.queue[0];
 
@@ -58,6 +58,20 @@ export class Stdin {
             resolve();
           }
         }
+      };
+
+      target.addEventListener('keydown', handler);
+    });
+  }
+
+  waitForKeyPress(): Promise<KeyboardEvent> {
+    const me = this;
+    const target = me.target;
+
+    return new Promise((resolve) => {
+      const handler = (evt: KeyboardEvent) => {
+        target.removeEventListener('keydown', handler);
+        resolve(evt);
       };
 
       target.addEventListener('keydown', handler);
@@ -77,6 +91,12 @@ export class Stdout {
   write(value: any) {
     const me = this;
     me.history.push(...value.split('\\n'));
+    me.render();
+  }
+
+  updateLast(value: any) {
+    const me = this;
+    me.history[me.history.length - 1] = value;
     me.render();
   }
 

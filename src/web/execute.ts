@@ -7,7 +7,9 @@ import {
   Defaults,
   HandlerContainer,
   Interpreter,
+  KeyEvent,
   OperationContext,
+  OutputHandler,
   ResourceHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
@@ -69,70 +71,72 @@ export default async function execute(
     await activeInterpreter.exit();
   }
 
-  vsAPI.set(
-    'print',
-    CustomFunction.createExternal(
-      'print',
-      (
-        _ctx: OperationContext,
-        _self: CustomValue,
-        args: Map<string, CustomValue>
-      ): Promise<CustomValue> => {
-        stdout.write(args.get('value')?.toString());
-        return Promise.resolve(Defaults.Void);
-      }
-    ).addArgument('value')
-  );
+  const WebOutputHandler = class extends OutputHandler {
+    print(message: string) {
+      stdout.write(message);
+    }
 
-  vsAPI.set(
-    'exit',
-    CustomFunction.createExternal(
-      'exit',
-      (
-        _ctx: OperationContext,
-        _self: CustomValue,
-        args: Map<string, CustomValue>
-      ): Promise<CustomValue> => {
-        stdout.write(args.get('value')?.toString());
-        interpreter.exit();
-        return Promise.resolve(Defaults.Void);
-      }
-    ).addArgument('value')
-  );
+    clear() {
+      stdout.clear();
+    }
 
-  vsAPI.set(
-    'user_input',
-    CustomFunction.createExternal(
-      'user_input',
-      async (
-        _ctx: OperationContext,
-        _self: CustomValue,
-        args: Map<string, CustomValue>
-      ): Promise<CustomValue> => {
-        const message = args.get('message')?.toString();
-        const isPassword = args.get('isPassword')?.toTruthy();
+    progress(timeout: number): Promise<void> {
+      const startTime = Date.now();
+      const max = 20;
+      stdout.write(`[${'-'.repeat(max)}]`);
 
-        stdout.write(message);
+      return new Promise((resolve, _reject) => {
+        const interval = setInterval(() => {
+          const currentTime = Date.now();
+          const elapsed = currentTime - startTime;
 
-        stdin.enable();
-        stdin.focus();
-        stdin.setType(isPassword ? 'password' : 'text');
+          if (elapsed > timeout) {
+            stdout.updateLast(`[${'#'.repeat(max)}]`);
+            clearInterval(interval);
+            resolve();
+            return;
+          }
 
-        await stdin.waitForInput();
+          const elapsedPercentage = 100 * elapsed / timeout;
+          const progress = Math.floor(elapsedPercentage * max / 100);
+          const right = max - progress;
 
-        const value = stdin.getValue();
+          stdout.updateLast(`[${'#'.repeat(progress)}${'-'.repeat(right)}]`);
+        });
+      });
+    }
 
-        stdin.clear();
-        stdin.disable();
-        stdin.setType('text');
+    async waitForInput(isPassword: boolean): Promise<string> {
+      stdin.enable();
+      stdin.focus();
+      stdin.setType(isPassword ? 'password' : 'text');
 
-        return new CustomString(value);
-      }
-    )
-      .addArgument('message')
-      .addArgument('isPassword')
-      .addArgument('anyKey')
-  );
+      await stdin.waitForInput();
+
+      const value = stdin.getValue();
+
+      stdin.clear();
+      stdin.disable();
+      stdin.setType('text');
+
+      return value;
+    }
+
+    async waitForKeyPress(): Promise<KeyEvent> {
+      stdin.enable();
+      stdin.focus();
+
+      const keyEvent = await stdin.waitForKeyPress();
+
+      stdin.clear();
+      stdin.disable();
+
+      return {
+        keyCode: keyEvent.keyCode,
+        code: keyEvent.code
+      };
+    }
+  }
 
   class PseudoResourceHandler extends ResourceHandler {
     getTargetRelativeTo(_source: string, _target: string): Promise<string> {
@@ -156,7 +160,8 @@ export default async function execute(
     target: 'default',
     debugger: new GrebyelDebugger(options.onInteract),
     handler: new HandlerContainer({
-      resourceHandler: new PseudoResourceHandler()
+      resourceHandler: new PseudoResourceHandler(),
+      outputHandler: new WebOutputHandler()
     }),
     api: initIntrinsics(initGHIntrinsics(vsAPI))
   });
