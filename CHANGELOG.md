@@ -283,7 +283,6 @@ All notable changes to this project will be documented in this file.
 - add sort key logic in sort intrinsic, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
 - add missing tan intrinsics
 - add same errors in basic intrinsics as in ms
-- use asap for nextTick behavior in interpreter
 - implement format_columns logic
 - improve output handler logic
 - user_input supports anyKey now
