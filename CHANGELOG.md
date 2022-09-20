@@ -290,3 +290,6 @@ All notable changes to this project will be documented in this file.
 - deactivate breakpoint for injection during debugging in cli execution
 - keep pending state after injection
 - update meta version with a few corrections
+- update parser with removed ";" checks
+- support nested import_code
+- support outer imports using ".."
