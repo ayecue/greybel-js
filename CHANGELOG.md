@@ -293,3 +293,4 @@ All notable changes to this project will be documented in this file.
 - update parser with removed ";" checks
 - support nested import_code
 - support outer imports using ".."
+- fix [List can be different even if the same](https://github.com/ayecue/greybel-js/issues/32), thanks for reporting [@brahermoon](https://github.com/brahermoon)
