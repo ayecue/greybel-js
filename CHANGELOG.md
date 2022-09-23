@@ -286,6 +286,15 @@ All notable changes to this project will be documented in this file.
 - implement format_columns logic
 - improve output handler logic
 - user_input supports anyKey now
+- add proper router intrinsics
+- rework shell intriniscs for connect_service + scp
+- add shell intriniscs for launch + build + ping
+- add ftpShell intrinsics for put
+- add computer intrinsics for connect eth + connect wifi
+- update computer intrinsics for touch + create_folder
+- update file intrinsics for move + copy + chmod + set_content + get_content + set_owner
+- add groups to mock env
+- update crypo intrinsics
 - loading bars are supported now
 - deactivate breakpoint for injection during debugging in cli execution
 - keep pending state after injection
@@ -294,3 +303,4 @@ All notable changes to this project will be documented in this file.
 - support nested import_code
 - support outer imports using ".."
 - fix [List can be different even if the same](https://github.com/ayecue/greybel-js/issues/32), thanks for reporting [@brahermoon](https://github.com/brahermoon)
+- add __isa logic for maps
