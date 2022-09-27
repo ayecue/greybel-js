@@ -277,7 +277,7 @@ All notable changes to this project will be documented in this file.
 
 - fix share feature in web-ui
 
-## [1.3.7] - 15-09-2022
+## [1.3.7] - 28-09-2022
 
 - minor fix for file.get_content, return empty string instead of undefined, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
 - add sort key logic in sort intrinsic, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
@@ -295,6 +295,9 @@ All notable changes to this project will be documented in this file.
 - update file intrinsics for move + copy + chmod + set_content + get_content + set_owner
 - add groups to mock env
 - update crypo intrinsics
+- update metaxploit intrinsics
+- update metalib intrinsics
+- update netsession intrinsics
 - loading bars are supported now
 - deactivate breakpoint for injection during debugging in cli execution
 - keep pending state after injection
