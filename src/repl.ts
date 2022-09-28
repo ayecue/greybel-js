@@ -10,6 +10,7 @@ import {
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import inquirer from 'inquirer';
+
 import { CLIOutputHandler } from './execute';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 

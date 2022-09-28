@@ -14,7 +14,7 @@ import {
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import process from 'process';
-import transform, { TagRecord, Tag } from 'text-mesh-transformer';
+import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 
 import { Stdin, Stdout } from './std';
 
@@ -116,9 +116,12 @@ export default async function execute(
 
   const WebOutputHandler = class extends OutputHandler {
     print(message: string) {
-      const transformed = transform(message, (openTag: TagRecord, content: string): string => {
-        return wrapWithTag(openTag, content);
-      });
+      const transformed = transform(
+        message,
+        (openTag: TagRecord, content: string): string => {
+          return wrapWithTag(openTag, content);
+        }
+      );
 
       stdout.write(transformed);
     }

@@ -1,8 +1,7 @@
+import cliProgress from 'cli-progress';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
-  CustomString,
-  CustomValue,
   Debugger,
   Defaults,
   HandlerContainer,
@@ -11,13 +10,12 @@ import {
   OperationContext,
   OutputHandler
 } from 'greybel-interpreter';
-import readline from 'readline';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { ASTBase } from 'greyscript-core';
-import cliProgress from 'cli-progress';
 import inquirer from 'inquirer';
-import transform, { TagRecord, Tag } from 'text-mesh-transformer';
 import picocolors from 'picocolors';
+import readline from 'readline';
+import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 
 class GrebyelPseudoDebugger extends Debugger {
@@ -116,8 +114,13 @@ export enum NodeJSKey {
   F12 = 'f12'
 }
 
-export function nodeJSKeyEventToKeyEvent(nodeJSKeyEvent: NodeJSKeyEvent): KeyEvent {
-  const create = (keyCode: number, code: string): KeyEvent => ({ keyCode, code });
+export function nodeJSKeyEventToKeyEvent(
+  nodeJSKeyEvent: NodeJSKeyEvent
+): KeyEvent {
+  const create = (keyCode: number, code: string): KeyEvent => ({
+    keyCode,
+    code
+  });
 
   switch (nodeJSKeyEvent.name) {
     case NodeJSKey.Return:
@@ -260,9 +263,12 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
 
 export class CLIOutputHandler extends OutputHandler {
   print(message: string) {
-    const transformed = transform(message, (openTag: TagRecord, content: string): string => {
-      return wrapWithTag(openTag, content);
-    });
+    const transformed = transform(
+      message,
+      (openTag: TagRecord, content: string): string => {
+        return wrapWithTag(openTag, content);
+      }
+    );
 
     console.log(transformed);
   }
@@ -273,7 +279,10 @@ export class CLIOutputHandler extends OutputHandler {
 
   progress(timeout: number): Promise<void> {
     const startTime = Date.now();
-    const loadingBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
+    const loadingBar = new cliProgress.SingleBar(
+      {},
+      cliProgress.Presets.shades_classic
+    );
     loadingBar.start(timeout, 0);
 
     return new Promise((resolve, _reject) => {
@@ -295,18 +304,18 @@ export class CLIOutputHandler extends OutputHandler {
 
   waitForInput(isPassword: boolean): Promise<string> {
     return inquirer
-        .prompt({
-          name: 'default',
-          message: 'Input:',
-          type: isPassword ? 'password' : 'input',
-          loop: false
-        })
-        .then((inputMap) => {
-          return inputMap.default;
-        })
-        .catch((err) => {
-          throw err;
-        });
+      .prompt({
+        name: 'default',
+        message: 'Input:',
+        type: isPassword ? 'password' : 'input',
+        loop: false
+      })
+      .then((inputMap) => {
+        return inputMap.default;
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   waitForKeyPress(): Promise<KeyEvent> {
@@ -316,13 +325,16 @@ export class CLIOutputHandler extends OutputHandler {
       process.stdin.resume();
       process.stdin.setRawMode(true);
 
-      process.stdin.once('keypress', (character: string, key: NodeJSKeyEvent) => {
+      process.stdin.once(
+        'keypress',
+        (character: string, key: NodeJSKeyEvent) => {
           process.stdin.pause();
           resolve(nodeJSKeyEventToKeyEvent(key));
-      });
+        }
+      );
     });
   }
-};
+}
 
 export interface ExecuteOptions {
   api?: Map<string, CustomFunction>;
