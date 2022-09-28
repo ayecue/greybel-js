@@ -148,6 +148,40 @@ debugger
 
 ![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
 
+## TextMesh Pro Rich Text support
+[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
+
+### CLI
+Supports:
+	- color: `black, red, green, yellow, blue, magenta, cyan, white, gray`
+	- mark: `black, red, green, yellow, blue, magenta, cyan, white`
+	- underline
+	- italic
+	- bold
+	- strikethrough
+	- lowercase
+	- uppercase
+
+### UI
+Supports:
+	- color
+	- mark
+	- underline
+	- italic
+	- bold
+	- strikethrough
+	- lowercase
+	- uppercase
+	- align
+	- cspace
+	- lineheight
+	- margin
+	- nobr
+	- pos
+	- size
+	- voffset
+
+
 # REPL
 ```
 Emulator CLI
