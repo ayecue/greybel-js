@@ -276,7 +276,7 @@ export default async function build(
         filtered.push(current);
       }
 
-      return filePath.replace(`${path.sep}${path.join(...filtered)}`, '.');
+      return filePath.replace(`${path.join(...filtered)}`, '.');
     };
 
     await Promise.all(
