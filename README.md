@@ -136,12 +136,6 @@ Not yet supported:
 - `Wallet` - only pollyfill which "returns not yet supported"
 - `SubWallet` - only pollyfill which "returns not yet supported"
 - `Coin` - only pollyfill which "returns not yet supported"
-- `Service` - only pollyfill which "returns not yet supported"
-- `Metaxploit.aireplay` maxAcks are not yet supported
-- `File.set_group`
-- `Shell.build`
-- `Shell.launch`
-- `FtpShell.put`
 
 ## Debugger
 Pauses execution and enables you to inspect/debug your code.
@@ -244,6 +238,9 @@ import_code("somefile.src":"./myProject/test.src");
 This going to be very useful if you want to use the new feature but still want your script files to get optimized.
 
 Together with the `--installer` flag in the CLI it will bundle your files for you which makes it easier to copy/paste code from your file system into the game.
+
+### Nested import_code
+Nested `import_code` is supported now as well. Each nested `import_code` will be moved to the entry file when transpiling/building.
 
 ## Import
 Import will use the relative path from the file it imports to.

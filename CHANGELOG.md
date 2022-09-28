@@ -300,7 +300,7 @@ All notable changes to this project will be documented in this file.
 - update netsession intrinsics
 - loading bars are supported now
 - deactivate breakpoint for injection during debugging in cli execution
-- keep pending state after injection
+- keep pending state after injection in interpreter
 - update meta version with a few corrections
 - update parser with removed ";" checks
 - support nested import_code
