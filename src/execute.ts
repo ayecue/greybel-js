@@ -199,7 +199,7 @@ function useColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.bgHex(color)(content);
+  return ansis.hex(color)(content);
 }
 
 function useBgColor(color: string | undefined, content: string): string {
@@ -212,7 +212,7 @@ function useBgColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.hex(color)(content);
+  return ansis.bgHex(color)(content);
 }
 
 function wrapWithTag(openTag: TagRecord, content: string): string {
