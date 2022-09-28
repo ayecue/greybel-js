@@ -140,7 +140,7 @@ interface ExecuteOptions {
 }
 
 function Execute({ model, showError, instance, setDebug }: ExecuteOptions) {
-  const stdoutRef = useRef<HTMLTextAreaElement>(null);
+  const stdoutRef = useRef<HTMLDivElement>(null);
   const stdinRef = useRef<HTMLInputElement>(null);
   const [stdout, setStdout] = useState<Stdout | undefined>(undefined);
   const [stdin, setStdin] = useState<Stdin | undefined>(undefined);
@@ -262,13 +262,12 @@ function Execute({ model, showError, instance, setDebug }: ExecuteOptions) {
         </a>
       </div>
       <label>Execution output:</label>
-      <textarea
+      <div
         id="stdout"
         className="editor-console-stdout"
-        readOnly
         ref={stdoutRef}
         onClick={() => stdinRef.current?.focus()}
-      ></textarea>
+      ></div>
       <input
         id="stdin"
         className="editor-console-stdin"

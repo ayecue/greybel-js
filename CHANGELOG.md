@@ -298,6 +298,7 @@ All notable changes to this project will be documented in this file.
 - update metaxploit intrinsics
 - update metalib intrinsics
 - update netsession intrinsics
+- more realistic usernames, passwords, vulnerability zone names
 - loading bars are supported now
 - deactivate breakpoint for injection during debugging in cli execution
 - keep pending state after injection in interpreter
@@ -307,3 +308,4 @@ All notable changes to this project will be documented in this file.
 - support outer imports using ".."
 - fix [List can be different even if the same](https://github.com/ayecue/greybel-js/issues/32), thanks for reporting [@brahermoon](https://github.com/brahermoon)
 - add __isa logic for maps
+- minor TextMesh Pro support for output

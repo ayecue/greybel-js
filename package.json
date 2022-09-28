@@ -37,7 +37,9 @@
         "localstoragedb": "git+https://github.com/ayecue/localStorageDB.git",
         "mkdirp": "^1.0.4",
         "open": "^8.2.1",
+        "picocolors": "^1.0.0",
         "semver": "^5.3.0",
+        "text-mesh-transformer": "^1.0.2",
         "uuid": "^8.3.2"
     },
     "peerDependencies": {

@@ -14,6 +14,7 @@ import {
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import process from 'process';
+import transform, { TagRecord, Tag } from 'text-mesh-transformer';
 
 import { Stdin, Stdout } from './std';
 
@@ -50,6 +51,49 @@ export interface ExecuteOptions {
   onInteract: (dbgr: Debugger, context: OperationContext) => Promise<void>;
 }
 
+function wrapWithTag(openTag: TagRecord, content: string): string {
+  switch (openTag.tag) {
+    case Tag.Color:
+      return `<span style="color:${openTag.value};">${content}</span>`;
+    case Tag.Underline:
+      return `<span style="text-decoration:underline;">${content}</span>`;
+    case Tag.Italic:
+      return `<span style="font-style:italic;">${content}</span>`;
+    case Tag.Bold:
+      return `<span style="font-weight:bold;">${content}</span>`;
+    case Tag.Strikethrough:
+      return `<span style="text-decoration:line-through;">${content}</span>`;
+    case Tag.Mark:
+      return `<span style="background-color:${openTag.value};">${content}</span>`;
+    case Tag.Lowercase:
+      return `<span style="text-transform:lowercase;">${content}</span>`;
+    case Tag.Uppercase:
+      return `<span style="text-transform:uppercase;">${content}</span>`;
+    case Tag.Align:
+      return `<span style="text-align:${openTag.value};display:block;">${content}</span>`;
+    case Tag.CSpace:
+      return `<span style="letter-spacing:${openTag.value};">${content}</span>`;
+    case Tag.LineHeight:
+      return `<span style="line-height:${openTag.value};">${content}</span>`;
+    case Tag.Margin:
+      return `<span style="margin:0 ${openTag.value};">${content}</span>`;
+    case Tag.NoBR:
+      return `<nobr>${content}</nobr>`;
+    case Tag.Pos:
+      return `<span style="position:absolute;top:${openTag.value};">${content}</span>`;
+    case Tag.Size:
+      return `<span style="font-size:${openTag.value};">${content}</span>`;
+    case Tag.VOffset:
+      return `<span style="margin-top:${openTag.value};">${content}</span>`;
+  }
+
+  if (openTag.value) {
+    return `&lt${openTag.tag}&#61;${openTag.value}&gt;${content}&lt/${openTag.tag}&gt;`;
+  }
+
+  return `&lt${openTag.tag}&gt;${content}&lt/${openTag.tag}&gt;`;
+}
+
 export default async function execute(
   model: Monaco.editor.IModel,
   options: ExecuteOptions
@@ -72,7 +116,11 @@ export default async function execute(
 
   const WebOutputHandler = class extends OutputHandler {
     print(message: string) {
-      stdout.write(message);
+      const transformed = transform(message, (openTag: TagRecord, content: string): string => {
+        return wrapWithTag(openTag, content);
+      });
+
+      stdout.write(transformed);
     }
 
     clear() {

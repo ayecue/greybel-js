@@ -103,7 +103,7 @@ export class Stdout {
   render() {
     const me = this;
     const target = me.target;
-    target.value = me.history.join('\n');
+    target.innerHTML = me.history.join('</br>');
     target.scrollTop = target.scrollHeight;
   }
 
@@ -111,7 +111,7 @@ export class Stdout {
     const me = this;
     const target = me.target;
     me.history = [];
-    target.value = '';
+    target.innerHTML = '';
     target.scrollTop = target.scrollHeight;
   }
 }
