@@ -276,7 +276,13 @@ export default async function build(
         filtered.push(current);
       }
 
-      return filePath.replace(`${path.join(...filtered)}`, '.');
+      let relativePath = filePath.replace(`${path.join(...filtered)}`, '.');
+
+      if (relativePath.startsWith(path.sep)) {
+        relativePath = relativePath.slice(1);
+      }
+
+      return relativePath;
     };
 
     await Promise.all(
