@@ -153,33 +153,33 @@ debugger
 
 ### CLI
 Supports:
-	- color: `black, red, green, yellow, blue, magenta, cyan, white, gray`
-	- mark: `black, red, green, yellow, blue, magenta, cyan, white`
-	- underline
-	- italic
-	- bold
-	- strikethrough
-	- lowercase
-	- uppercase
+* color: `black, red, green, yellow, blue, magenta, cyan, white, gray`
+* mark: `black, red, green, yellow, blue, magenta, cyan, white`
+* underline
+* italic
+* bold
+* strikethrough
+* lowercase
+* uppercase
 
 ### UI
 Supports:
-	- color
-	- mark
-	- underline
-	- italic
-	- bold
-	- strikethrough
-	- lowercase
-	- uppercase
-	- align
-	- cspace
-	- lineheight
-	- margin
-	- nobr
-	- pos
-	- size
-	- voffset
+* color
+* mark
+* underline
+* italic
+* bold
+* strikethrough
+* lowercase
+* uppercase
+* align
+* cspace
+* lineheight
+* margin
+* nobr
+* pos
+* size
+* voffset
 
 
 # REPL
