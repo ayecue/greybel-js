@@ -13,10 +13,13 @@ import {
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { ASTBase } from 'greyscript-core';
 import inquirer from 'inquirer';
-import picocolors from 'picocolors';
 import readline from 'readline';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
+import cssColorNames from 'css-color-names';
+import ansis from 'ansis';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
+
+const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 class GrebyelPseudoDebugger extends Debugger {
   interpreter: Interpreter;
@@ -186,68 +189,46 @@ export function nodeJSKeyEventToKeyEvent(
   }
 }
 
-function picoColor(color: string | undefined, content: string): string {
-  switch (color) {
-    case 'black':
-      return picocolors.black(content);
-    case 'red':
-      return picocolors.red(content);
-    case 'green':
-      return picocolors.green(content);
-    case 'yellow':
-      return picocolors.yellow(content);
-    case 'blue':
-      return picocolors.blue(content);
-    case 'magenta':
-      return picocolors.magenta(content);
-    case 'cyan':
-      return picocolors.cyan(content);
-    case 'white':
-      return picocolors.white(content);
-    case 'gray':
-      return picocolors.gray(content);
+function useColor(color: string | undefined, content: string): string {
+  if (!color) return content;
+
+  const cssColorMap = cssColorNames as { [key: string]: string };
+
+  if (hasOwnProperty.call(cssColorMap, color)) {
+    const item = cssColorMap[color];
+    color = item;
   }
 
-  return content;
+  return ansis.bgHex(color)(content);
 }
 
-function picoBgColor(color: string | undefined, content: string): string {
-  switch (color) {
-    case 'black':
-      return picocolors.bgBlack(content);
-    case 'red':
-      return picocolors.bgRed(content);
-    case 'green':
-      return picocolors.bgGreen(content);
-    case 'yellow':
-      return picocolors.bgYellow(content);
-    case 'blue':
-      return picocolors.bgBlue(content);
-    case 'magenta':
-      return picocolors.bgMagenta(content);
-    case 'cyan':
-      return picocolors.bgCyan(content);
-    case 'white':
-      return picocolors.bgWhite(content);
+function useBgColor(color: string | undefined, content: string): string {
+  if (!color) return content;
+
+  const cssColorMap = cssColorNames as { [key: string]: string };
+
+  if (hasOwnProperty.call(cssColorMap, color)) {
+    const item = cssColorMap[color];
+    color = item;
   }
 
-  return content;
+  return ansis.hex(color)(content);
 }
 
 function wrapWithTag(openTag: TagRecord, content: string): string {
   switch (openTag.tag) {
     case Tag.Color:
-      return picoColor(openTag.value, content);
+      return useColor(openTag.value, content);
     case Tag.Underline:
-      return picocolors.underline(content);
+      return ansis.underline(content);
     case Tag.Italic:
-      return picocolors.italic(content);
+      return ansis.italic(content);
     case Tag.Bold:
-      return picocolors.bold(content);
+      return ansis.bold(content);
     case Tag.Strikethrough:
-      return picocolors.strikethrough(content);
+      return ansis.strikethrough(content);
     case Tag.Mark:
-      return picoBgColor(openTag.value, content);
+      return useBgColor(openTag.value, content);
     case Tag.Lowercase:
       return content.toLowerCase();
     case Tag.Uppercase:
@@ -285,12 +266,17 @@ export class CLIOutputHandler extends OutputHandler {
     );
     loadingBar.start(timeout, 0);
 
+    if (!process.stdin.isTTY) {
+      console.warn('Stdin TTY is false. Therefore the progress bar cannot be shown.');
+    }
+
     return new Promise((resolve, _reject) => {
       const interval = setInterval(() => {
         const currentTime = Date.now();
         const elapsed = currentTime - startTime;
 
         if (elapsed > timeout) {
+          loadingBar.update(timeout);
           clearInterval(interval);
           loadingBar.stop();
           resolve();
@@ -323,7 +309,12 @@ export class CLIOutputHandler extends OutputHandler {
       readline.emitKeypressEvents(process.stdin);
 
       process.stdin.resume();
-      process.stdin.setRawMode(true);
+
+      if (process.stdin.isTTY) {
+        process.stdin.setRawMode(true);
+      } else {
+        console.warn('Stdin TTY is false. Therefore anyKey isn\'t able to detect any input. Press enter to continue.');
+      }
 
       process.stdin.once(
         'keypress',

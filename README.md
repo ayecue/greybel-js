@@ -153,8 +153,8 @@ debugger
 
 ### CLI
 Supports:
-* color: `black, red, green, yellow, blue, magenta, cyan, white, gray`
-* mark: `black, red, green, yellow, blue, magenta, cyan, white`
+* color
+* mark
 * underline
 * italic
 * bold
