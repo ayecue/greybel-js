@@ -357,27 +357,6 @@ function DebugReplPopup({ onExecute, onContinue, onNext }: DebugReplOptions) {
   );
 }
 
-function parseMap(map: Map<CustomValue, CustomValue>) {
-  return Array.from(map).reduce((result: { [key: string]: any }, item: any) => {
-    return {
-      ...result,
-      [parse(item[0])]: parse(item[1])
-    };
-  }, {});
-}
-
-function parse(item: CustomValue): any {
-  if (item instanceof CustomMap) {
-    return parseMap(item.value);
-  } else if (item instanceof CustomList) {
-    return item.value.map((item: any) => {
-      return parse(item);
-    });
-  }
-
-  return item.toString();
-}
-
 function DebugScopePopup({
   operationContext
 }: {
@@ -388,9 +367,7 @@ function DebugScopePopup({
   useEffect(() => {
     const scopes = operationContext
       .lookupAllScopes()
-      .map((item: OperationContext) => {
-        return parseMap(item.scope.value);
-      });
+      .map((scope) => scope.locals.scope.value);
 
     containerRef.current!.appendChild(viewJSON(scopes));
   }, []);
