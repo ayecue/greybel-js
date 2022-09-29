@@ -107,7 +107,8 @@ Interpreter CLI
 Example: greybel-execute <myscriptfile>
 
 Options:
-	-p, --params	Execution parameters
+	-p, --params		Execution parameters
+	-i, --interactive	Interactive parameters
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.

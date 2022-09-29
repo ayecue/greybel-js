@@ -1,4 +1,6 @@
+import ansis from 'ansis';
 import cliProgress from 'cli-progress';
+import cssColorNames from 'css-color-names';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
@@ -15,8 +17,6 @@ import { ASTBase } from 'greyscript-core';
 import inquirer from 'inquirer';
 import readline from 'readline';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
-import cssColorNames from 'css-color-names';
-import ansis from 'ansis';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -267,7 +267,9 @@ export class CLIOutputHandler extends OutputHandler {
     loadingBar.start(timeout, 0);
 
     if (!process.stdin.isTTY) {
-      console.warn('Stdin TTY is false. Therefore the progress bar cannot be shown.');
+      console.warn(
+        'Stdin TTY is false. Therefore the progress bar cannot be shown.'
+      );
     }
 
     return new Promise((resolve, _reject) => {
@@ -313,7 +315,9 @@ export class CLIOutputHandler extends OutputHandler {
       if (process.stdin.isTTY) {
         process.stdin.setRawMode(true);
       } else {
-        console.warn('Stdin TTY is false. Therefore anyKey isn\'t able to detect any input. Press enter to continue.');
+        console.warn(
+          "Stdin TTY is false. Therefore anyKey isn't able to detect any input. Press enter to continue."
+        );
       }
 
       process.stdin.once(

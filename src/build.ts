@@ -110,13 +110,6 @@ function createImportList(
   mainTarget: string
 ): any[] {
   const pseudoRoot = path.dirname(mainTarget) || '';
-  const list = [
-    {
-      filepath: mainTarget,
-      pseudoFilepath: path.basename(mainTarget),
-      content: parseResult[mainTarget]
-    }
-  ];
   const imports = Object.entries(parseResult).map(([target, code]) => {
     return {
       filepath: target,
@@ -125,7 +118,7 @@ function createImportList(
     };
   });
 
-  return list.concat(imports);
+  return imports;
 }
 
 async function createInstaller(
