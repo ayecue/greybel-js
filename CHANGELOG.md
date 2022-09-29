@@ -277,7 +277,7 @@ All notable changes to this project will be documented in this file.
 
 - fix share feature in web-ui
 
-## [1.3.7] - 28-09-2022
+## [1.3.7] - 29-09-2022
 
 - minor fix for file.get_content, return empty string instead of undefined, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
 - add sort key logic in sort intrinsic, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
