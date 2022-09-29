@@ -117,7 +117,9 @@ export default async function execute(
   const WebOutputHandler = class extends OutputHandler {
     print(message: string) {
       const transformed = transform(
-        message.replace(/\n/g, '<br>'),
+        message
+          .replace(/\n/g, '<br>')
+          .replace(/\s/g, '&nbsp;'),
         (openTag: TagRecord, content: string): string => {
           return wrapWithTag(openTag, content);
         }

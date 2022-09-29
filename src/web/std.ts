@@ -90,7 +90,7 @@ export class Stdout {
 
   write(value: any) {
     const me = this;
-    me.history.push(...value.split('\\n'));
+    me.history.push(value);
     me.render();
   }
 
@@ -103,7 +103,7 @@ export class Stdout {
   render() {
     const me = this;
     const target = me.target;
-    target.innerHTML = me.history.join('</br>');
+    target.innerHTML = me.history.join('<br>');
     target.scrollTop = target.scrollHeight;
   }
 
