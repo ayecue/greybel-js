@@ -321,3 +321,7 @@ All notable changes to this project will be documented in this file.
 ## [1.4.0] - 29-09-2022
 
 - use js extension in bins to support win10
+
+## [1.4.1] - 29-09-2022
+
+- add bin header
