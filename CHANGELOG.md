@@ -329,3 +329,9 @@ All notable changes to this project will be documented in this file.
 ## [1.4.2] - 29-09-2022
 
 - support line breaks again in ui stdout window
+
+## [1.4.3] - 29-09-2022
+
+- replace whitespaces with `&bnbsp;` in ui
+- fix crash in scope inspector in ui
+- use other package for scope inspection in ui
