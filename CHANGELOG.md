@@ -317,3 +317,7 @@ All notable changes to this project will be documented in this file.
 ## [1.3.9] - 29-09-2022
 
 - revert node execute
+
+## [1.4.0] - 29-09-2022
+
+- use js extension in bins to support win10

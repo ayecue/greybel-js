@@ -1,4 +1,3 @@
-#! /usr/bin/env node
 const inquirer = require('inquirer');
 const semver = require('semver');
 const package = require('../package.json');
