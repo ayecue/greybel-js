@@ -1,15 +1,17 @@
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
-  CustomString,
   CustomValue,
   Debugger,
   Defaults,
+  HandlerContainer,
   Interpreter,
   OperationContext
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import inquirer from 'inquirer';
+
+import { CLIOutputHandler } from './execute';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 
 class GrebyelPseudoDebugger extends Debugger {
@@ -35,65 +37,26 @@ export default async function repl(
   let active = true;
 
   vsAPI.set(
-    'print',
-    CustomFunction.createExternal(
-      'print',
-      (
-        _ctx: OperationContext,
-        _self: CustomValue,
-        args: Map<string, CustomValue>
-      ): Promise<CustomValue> => {
-        console.log(args.get('value')?.toString());
-        return Promise.resolve(Defaults.Void);
-      }
-    ).addArgument('value')
-  );
-
-  vsAPI.set(
     'exit',
     CustomFunction.createExternal(
       'exit',
       (
-        _ctx: OperationContext,
+        ctx: OperationContext,
         _self: CustomValue,
         args: Map<string, CustomValue>
       ): Promise<CustomValue> => {
-        console.log(args.get('value')?.toString());
+        ctx.handler.outputHandler.print(args.get('value')!.toString());
         active = false;
         return Promise.resolve(Defaults.Void);
       }
     ).addArgument('value')
   );
 
-  vsAPI.set(
-    'user_input',
-    CustomFunction.createExternal(
-      'user_input',
-      async (
-        _ctx: OperationContext,
-        _self: CustomValue,
-        args: Map<string, CustomValue>
-      ): Promise<CustomValue> => {
-        const message = args.get('message')?.toString();
-        const isPassword = args.get('isPassword')?.toTruthy();
-
-        const result = await inquirer.prompt({
-          name: 'default',
-          message,
-          type: isPassword ? 'password' : 'input',
-          loop: false
-        });
-
-        return new CustomString(result?.default);
-      }
-    )
-      .addArgument('message')
-      .addArgument('isPassword')
-      .addArgument('anyKey')
-  );
-
   const interpreter = new Interpreter({
     debugger: new GrebyelPseudoDebugger(),
+    handler: new HandlerContainer({
+      outputHandler: new CLIOutputHandler()
+    }),
     api: initIntrinsics(initGHIntrinsics(vsAPI))
   });
 

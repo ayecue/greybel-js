@@ -110,13 +110,6 @@ function createImportList(
   mainTarget: string
 ): any[] {
   const pseudoRoot = path.dirname(mainTarget) || '';
-  const list = [
-    {
-      filepath: mainTarget,
-      pseudoFilepath: path.basename(mainTarget),
-      content: parseResult[mainTarget]
-    }
-  ];
   const imports = Object.entries(parseResult).map(([target, code]) => {
     return {
       filepath: target,
@@ -125,7 +118,7 @@ function createImportList(
     };
   });
 
-  return list.concat(imports);
+  return imports;
 }
 
 async function createInstaller(
@@ -252,7 +245,7 @@ export default async function build(
     }).parse();
 
     const buildPath = path.resolve(output, './build');
-    const targetRoot = path.dirname(target);
+    const targetRootSegments = path.dirname(target).split(path.sep);
 
     try {
       await fs.rm(buildPath, {
@@ -262,9 +255,32 @@ export default async function build(
 
     await mkdirp(buildPath);
 
+    const getRelativePath = (filePath: string) => {
+      const pathSegments = filePath.split(path.sep);
+      const filtered = [];
+
+      for (const segment of targetRootSegments) {
+        const current = pathSegments.shift();
+
+        if (current !== segment) {
+          break;
+        }
+
+        filtered.push(current);
+      }
+
+      let relativePath = filePath.replace(`${path.join(...filtered)}`, '.');
+
+      if (relativePath.startsWith(path.sep)) {
+        relativePath = relativePath.slice(1);
+      }
+
+      return relativePath;
+    };
+
     await Promise.all(
       Object.entries(result).map(async ([file, code]) => {
-        const relativePath = file.replace(targetRoot, '.');
+        const relativePath = getRelativePath(file);
         const fullPath = path.resolve(buildPath, relativePath);
         await mkdirp(path.dirname(fullPath));
         await fs.writeFile(fullPath, code, { encoding: 'utf-8' });

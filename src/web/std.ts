@@ -39,15 +39,15 @@ export class Stdin {
     me.target.type = type;
   }
 
-  waitForInput() {
+  waitForInput(): Promise<void> {
     const me = this;
     const target = me.target;
     const id = v4();
 
     me.queue.unshift(id);
 
-    return new Promise((resolve: any) => {
-      const handler = (evt: any) => {
+    return new Promise((resolve) => {
+      const handler = (evt: KeyboardEvent) => {
         if (evt.keyCode === 13) {
           const currentId = me.queue[0];
 
@@ -58,6 +58,20 @@ export class Stdin {
             resolve();
           }
         }
+      };
+
+      target.addEventListener('keydown', handler);
+    });
+  }
+
+  waitForKeyPress(): Promise<KeyboardEvent> {
+    const me = this;
+    const target = me.target;
+
+    return new Promise((resolve) => {
+      const handler = (evt: KeyboardEvent) => {
+        target.removeEventListener('keydown', handler);
+        resolve(evt);
       };
 
       target.addEventListener('keydown', handler);
@@ -80,10 +94,16 @@ export class Stdout {
     me.render();
   }
 
+  updateLast(value: any) {
+    const me = this;
+    me.history[me.history.length - 1] = value;
+    me.render();
+  }
+
   render() {
     const me = this;
     const target = me.target;
-    target.value = me.history.join('\n');
+    target.innerHTML = me.history.join('</br>');
     target.scrollTop = target.scrollHeight;
   }
 
@@ -91,7 +111,7 @@ export class Stdout {
     const me = this;
     const target = me.target;
     me.history = [];
-    target.value = '';
+    target.innerHTML = '';
     target.scrollTop = target.scrollHeight;
   }
 }

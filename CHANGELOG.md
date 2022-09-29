@@ -276,3 +276,36 @@ All notable changes to this project will be documented in this file.
 ## [1.3.6] - 10-09-2022
 
 - fix share feature in web-ui
+
+## [1.3.7] - 29-09-2022
+
+- minor fix for file.get_content, return empty string instead of undefined, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
+- add sort key logic in sort intrinsic, thanks for reporting [@TopRoupi](https://github.com/TopRoupi)
+- add missing tan intrinsics
+- add same errors in basic intrinsics as in ms
+- implement format_columns logic
+- improve output handler logic
+- user_input supports anyKey now
+- add proper router intrinsics
+- rework shell intriniscs for connect_service + scp
+- add shell intriniscs for launch + build + ping
+- add ftpShell intrinsics for put
+- add computer intrinsics for connect eth + connect wifi
+- update computer intrinsics for touch + create_folder
+- update file intrinsics for move + copy + chmod + set_content + get_content + set_owner
+- add groups to mock env
+- update crypo intrinsics
+- update metaxploit intrinsics
+- update metalib intrinsics
+- update netsession intrinsics
+- more realistic usernames, passwords, vulnerability zone names
+- loading bars are supported now
+- deactivate breakpoint for injection during debugging in cli execution
+- keep pending state after injection in interpreter
+- update meta version with a few corrections
+- update parser with removed ";" checks
+- support nested import_code
+- support outer imports using ".."
+- fix [List can be different even if the same](https://github.com/ayecue/greybel-js/issues/32), thanks for reporting [@brahermoon](https://github.com/brahermoon)
+- add __isa logic for maps
+- minor TextMesh Pro support for output

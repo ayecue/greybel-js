@@ -107,7 +107,8 @@ Interpreter CLI
 Example: greybel-execute <myscriptfile>
 
 Options:
-	-p, --params	Execution parameters
+	-p, --params		Execution parameters
+	-i, --interactive	Interactive parameters
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
@@ -136,12 +137,6 @@ Not yet supported:
 - `Wallet` - only pollyfill which "returns not yet supported"
 - `SubWallet` - only pollyfill which "returns not yet supported"
 - `Coin` - only pollyfill which "returns not yet supported"
-- `Service` - only pollyfill which "returns not yet supported"
-- `Metaxploit.aireplay` maxAcks are not yet supported
-- `File.set_group`
-- `Shell.build`
-- `Shell.launch`
-- `FtpShell.put`
 
 ## Debugger
 Pauses execution and enables you to inspect/debug your code.
@@ -153,6 +148,39 @@ debugger
 ```
 
 ![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
+
+## TextMesh Pro Rich Text support
+[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
+
+### CLI
+Supports:
+* color
+* mark
+* underline
+* italic
+* bold
+* strikethrough
+* lowercase
+* uppercase
+
+### UI
+Supports:
+* color
+* mark
+* underline
+* italic
+* bold
+* strikethrough
+* lowercase
+* uppercase
+* align
+* cspace
+* lineheight
+* margin
+* nobr
+* pos
+* size
+* voffset
 
 # REPL
 ```
@@ -244,6 +272,9 @@ import_code("somefile.src":"./myProject/test.src");
 This going to be very useful if you want to use the new feature but still want your script files to get optimized.
 
 Together with the `--installer` flag in the CLI it will bundle your files for you which makes it easier to copy/paste code from your file system into the game.
+
+### Nested import_code
+Nested `import_code` is supported now as well. Each nested `import_code` will be moved to the entry file when transpiling/building.
 
 ## Import
 Import will use the relative path from the file it imports to.
