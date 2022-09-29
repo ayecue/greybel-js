@@ -313,3 +313,7 @@ All notable changes to this project will be documented in this file.
 ## [1.3.8] - 29-09-2022
 
 - use node to execute bins to support win10
+
+## [1.3.9] - 29-09-2022
+
+- revert node execute
