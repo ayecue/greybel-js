@@ -40,7 +40,7 @@
         "open": "^8.2.1",
         "semver": "^5.3.0",
         "text-mesh-transformer": "^1.0.2",
-        "transform-json-to-html": "^1.0.8",
+        "transform-json-to-html": "^1.1.0",
         "uuid": "^8.3.2"
     },
     "peerDependencies": {
