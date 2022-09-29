@@ -309,3 +309,7 @@ All notable changes to this project will be documented in this file.
 - fix [List can be different even if the same](https://github.com/ayecue/greybel-js/issues/32), thanks for reporting [@brahermoon](https://github.com/brahermoon)
 - add __isa logic for maps
 - minor TextMesh Pro support for output
+
+## [1.3.8] - 29-09-2022
+
+- use node to execute bins to support win10
