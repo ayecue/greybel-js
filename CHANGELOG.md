@@ -341,3 +341,4 @@ All notable changes to this project will be documented in this file.
 - fix shuffle intrinsic for maps
 - fix possible overflow in core parser
 - fix kernel_version intrinsic
+- fix nested unary in core parser
