@@ -335,3 +335,9 @@ All notable changes to this project will be documented in this file.
 - replace whitespaces with `&bnbsp;` in ui
 - fix crash in scope inspector in ui
 - use other package for scope inspection in ui
+
+## [1.4.4] - 01-10-2022
+
+- fix shuffle intrinsic for maps
+- fix possible overflow in core parser
+- fix kernel_version intrinsic
