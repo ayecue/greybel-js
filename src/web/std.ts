@@ -81,7 +81,7 @@ export class Stdin {
 
 export class Stdout {
   target: HTMLElement;
-  textNodes: Text[][];
+  textNodes: HTMLSpanElement[][];
 
   constructor(target: any) {
     this.target = target;
@@ -96,18 +96,21 @@ export class Stdout {
   write(value: string) {
     const me = this;
     const lines = value.split('\n');
-    const subMessages: Text[] = [];
+    const subMessages: HTMLSpanElement[] = [];
     let item;
 
     while (item = lines.shift()) {
-      const node = document.createTextNode(item);
+      const node = document.createElement('span');
 
+      node.classList.add('line');
+      node.innerHTML = item;
       me.target.appendChild(node);
       subMessages.push(node);
       me.addNewLine();
     }
 
     me.textNodes.push(subMessages);
+    me.target.scrollTop = me.target.scrollHeight;
   }
 
   updateLast(value: string) {
@@ -116,7 +119,7 @@ export class Stdout {
     const lines = value.split('\n');
 
     for (let index = 0; index < lines.length; index++) {
-      lastNodeGroup[index].textContent = lines[index];
+      lastNodeGroup[index].innerHTML = lines[index];
     }
   }
 
