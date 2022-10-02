@@ -346,3 +346,4 @@ All notable changes to this project will be documented in this file.
 ## [1.4.5] - 02-10-2022
 
 - fix stdin width in firefox
+- update core in env script builder
