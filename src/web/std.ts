@@ -1,8 +1,8 @@
 import { v4 } from 'uuid';
 
 export class Stdin {
-  target: any;
-  queue: any[];
+  target: HTMLInputElement;
+  queue: string[];
 
   constructor(target: any) {
     this.queue = [];
@@ -80,37 +80,50 @@ export class Stdin {
 }
 
 export class Stdout {
-  target: any;
-  history: any[];
+  target: HTMLElement;
+  textNodes: Text[][];
 
   constructor(target: any) {
     this.target = target;
-    this.history = [];
+    this.textNodes = [];
   }
 
-  write(value: any) {
-    const me = this;
-    me.history.push(value);
-    me.render();
+  addNewLine() {
+    const lineBreakNode = document.createElement('br');
+    this.target.appendChild(lineBreakNode);
   }
 
-  updateLast(value: any) {
+  write(value: string) {
     const me = this;
-    me.history[me.history.length - 1] = value;
-    me.render();
+    const lines = value.split('\n');
+    const subMessages: Text[] = [];
+    let item;
+
+    while (item = lines.shift()) {
+      const node = document.createTextNode(item);
+
+      me.target.appendChild(node);
+      subMessages.push(node);
+      me.addNewLine();
+    }
+
+    me.textNodes.push(subMessages);
   }
 
-  render() {
+  updateLast(value: string) {
     const me = this;
-    const target = me.target;
-    target.innerHTML = me.history.join('<br>');
-    target.scrollTop = target.scrollHeight;
+    const lastNodeGroup = me.textNodes[me.textNodes.length - 1];
+    const lines = value.split('\n');
+
+    for (let index = 0; index < lines.length; index++) {
+      lastNodeGroup[index].textContent = lines[index];
+    }
   }
 
   clear() {
     const me = this;
     const target = me.target;
-    me.history = [];
+    me.textNodes = [];
     target.innerHTML = '';
     target.scrollTop = target.scrollHeight;
   }

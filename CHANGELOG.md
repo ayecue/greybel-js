@@ -347,3 +347,4 @@ All notable changes to this project will be documented in this file.
 
 - fix stdin width in firefox
 - update core in env script builder
+- improve stdout code in ui

@@ -141,6 +141,7 @@ body {
 	overflow: auto;
 	border: 1px solid #FFF;
 	position: relative;
+	white-space: pre;
 }
 
 .debugger-popup-bg {
