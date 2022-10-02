@@ -342,3 +342,7 @@ All notable changes to this project will be documented in this file.
 - fix possible overflow in core parser
 - fix kernel_version intrinsic
 - fix nested unary in core parser
+
+## [1.4.5] - 02-10-2022
+
+- fix stdin width in firefox
