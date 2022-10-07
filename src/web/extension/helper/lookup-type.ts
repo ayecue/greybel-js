@@ -8,9 +8,10 @@ import {
   ASTIdentifier,
   ASTIndexExpression,
   ASTLiteral,
-  ASTMemberExpression
+  ASTMemberExpression,
+  ASTBaseBlockWithScope,
+  ASTType
 } from 'greyscript-core';
-import { ASTBaseBlockWithScope, ASTType } from 'greyscript-core';
 import {
   getDefinition,
   getDefinitions,

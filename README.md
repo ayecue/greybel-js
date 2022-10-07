@@ -2,6 +2,8 @@
 
 GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
 
+Supports newest version `0.8.4478a` (experimental).
+
 ## Links
 
 - Latest changes: [Changelog](/CHANGELOG.md)
