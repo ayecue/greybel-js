@@ -355,3 +355,5 @@ All notable changes to this project will be documented in this file.
 - implement outer, get_custom_object, log, bitXor, bitAnd, bitOr, insert, yield
 - optimize transpiler output, removed unnecessary parenthesis
 - update meta with new descriptions
+- drop support for scuffed if syntax
+- drop support for bugged index call
