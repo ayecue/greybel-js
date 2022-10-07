@@ -1,5 +1,4 @@
-import { ASTCallExpression } from 'greybel-core';
-import { ASTType } from 'greyscript-core';
+import { ASTCallExpression, ASTType, ASTBase } from 'greyscript-core';
 import {
   getDefinitions,
   SignatureDefinitionArg,
@@ -172,7 +171,7 @@ export function activate(monaco: typeof Monaco) {
 
       // figure out argument position
       const astArgs = rootCallExpression.arguments;
-      const selectedIndex = astArgs.findIndex((argItem) => {
+      const selectedIndex = astArgs.findIndex((argItem: ASTBase) => {
         const leftIndex = argItem.start!.character - 1;
         const rightIndex = argItem.end!.character;
 

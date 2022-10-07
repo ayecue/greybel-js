@@ -9,7 +9,7 @@ import {
   ASTIndexExpression,
   ASTLiteral,
   ASTMemberExpression
-} from 'greybel-core';
+} from 'greyscript-core';
 import { ASTBaseBlockWithScope, ASTType } from 'greyscript-core';
 import {
   getDefinition,

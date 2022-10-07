@@ -1,12 +1,12 @@
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
-  CustomFunction,
   CustomValue,
   Debugger,
   Defaults,
   HandlerContainer,
   Interpreter,
   KeyEvent,
+  ObjectValue,
   OperationContext,
   OutputHandler,
   ResourceHandler
@@ -43,7 +43,7 @@ let isReady = true;
 export interface ExecuteOptions {
   stdin?: Stdin;
   stdout?: Stdout;
-  api?: Map<string, CustomFunction>;
+  api?: ObjectValue;
   params: string[];
   onStart: (interpreter: Interpreter) => void;
   onError: (err: any) => void;
@@ -105,8 +105,8 @@ export default async function execute(
   isReady = false;
 
   const code = model.getValue();
-  const vsAPI: Map<string, CustomFunction> =
-    options.api || new Map<string, CustomFunction>();
+  const vsAPI: ObjectValue =
+    options.api || new ObjectValue();
   const stdin = options.stdin || new Stdin(new Element());
   const stdout = options.stdout || new Stdout(new Element());
 

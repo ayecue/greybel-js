@@ -1,11 +1,13 @@
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
+  CustomString,
   CustomValue,
   Debugger,
   Defaults,
   HandlerContainer,
   Interpreter,
+  ObjectValue,
   OperationContext
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
@@ -27,17 +29,17 @@ class GrebyelPseudoDebugger extends Debugger {
 }
 
 export interface REPLOptions {
-  api?: Map<string, CustomFunction>;
+  api?: ObjectValue;
 }
 
 export default async function repl(
   options: REPLOptions = {}
 ): Promise<boolean> {
-  const vsAPI = options.api || new Map<string, CustomFunction>();
+  const vsAPI = options.api || new ObjectValue();
   let active = true;
 
   vsAPI.set(
-    'exit',
+    new CustomString('exit'),
     CustomFunction.createExternal(
       'exit',
       (
