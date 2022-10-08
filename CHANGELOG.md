@@ -361,3 +361,5 @@ All notable changes to this project will be documented in this file.
 ## [1.5.1] - 08-10-2022
 
 - fix outer behavior
+- fix token end for hover tooltip in ui
+- support multiple statements at same line for hover tooltips
