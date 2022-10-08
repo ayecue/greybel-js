@@ -30,7 +30,7 @@
         "greybel-gh-mock-intrinsics": "^1.4.1",
         "greybel-interpreter": "^1.4.9",
         "greybel-intrinsics": "^1.4.6",
-        "greybel-transpiler": "^0.7.1",
+        "greybel-transpiler": "^0.7.2",
         "greyscript-core": "^0.5.3",
         "greyscript-meta": "^1.1.9",
         "inquirer": "^8.1.0",
