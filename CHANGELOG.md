@@ -357,3 +357,7 @@ All notable changes to this project will be documented in this file.
 - update meta with new descriptions
 - drop support for scuffed if syntax
 - drop support for bugged index call
+
+## [1.5.1] - 08-10-2022
+
+- fix outer behavior
