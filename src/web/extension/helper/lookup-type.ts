@@ -126,28 +126,26 @@ export class LookupHelper {
   lookupAST(position: Position): LookupASTResult | null {
     const me = this;
     const chunk = documentParseQueue.get(me.document).document as ASTChunk;
-    const lineItem = chunk.lines.get(position.lineNumber);
+    const lineItems = chunk.lines.get(position.lineNumber);
 
-    if (!lineItem) {
+    if (!lineItems) {
       return null;
     }
 
-    const outer = ASTScraper.findEx((item: ASTBase, _level: number) => {
-      const startLine = item.start!.line;
-      const startCharacter = item.start!.character;
-      const endLine = item.end!.line;
-      const endCharacter = item.end!.character;
+    for (let index = 0; index < lineItems.length; index++) {
+      const lineItem = lineItems[index];
+      const outer = ASTScraper.findEx((item: ASTBase, _level: number) => {
+        const startLine = item.start!.line;
+        const startCharacter = item.start!.character;
+        const endLine = item.end!.line;
+        const endCharacter = item.end!.character;
 
-      if (startLine > position.lineNumber) {
-        return {
-          exit: true
-        };
-      }
+        if (startLine > position.lineNumber) {
+          return {
+            exit: true
+          };
+        }
 
-      if (
-        startLine === position.lineNumber &&
-        endLine === position.lineNumber
-      ) {
         return {
           valid:
             startLine <= position.lineNumber &&
@@ -155,39 +153,22 @@ export class LookupHelper {
             endLine >= position.lineNumber &&
             endCharacter >= position.column
         };
-      } else if (startLine === position.lineNumber) {
-        return {
-          valid:
-            startLine <= position.lineNumber &&
-            startCharacter <= position.column &&
-            endLine >= position.lineNumber
-        };
-      } else if (endLine === position.lineNumber) {
-        return {
-          valid:
-            startLine <= position.lineNumber &&
-            endLine >= position.lineNumber &&
-            endCharacter >= position.column
-        };
+      }, lineItem) as LookupOuter;
+      // get closest AST
+      const closest = outer.pop();
+
+      // nothing to get info for
+      if (!closest) {
+        continue;
       }
 
       return {
-        valid:
-          startLine <= position.lineNumber && endLine >= position.lineNumber
+        closest,
+        outer
       };
-    }, lineItem) as LookupOuter;
-    // get closest AST
-    const closest = outer.pop();
-
-    // nothing to get info for
-    if (!closest) {
-      return null;
     }
 
-    return {
-      closest,
-      outer
-    };
+    return null;
   }
 
   lookupIdentifier(root: ASTBase): ASTBase | null {
