@@ -1,4 +1,4 @@
-import { ASTBase } from 'greybel-core';
+import { ASTBase } from 'greyscript-core';
 import { Context, Transformer } from 'greybel-transpiler';
 import DefaultMapProvider, {
   BuildMap

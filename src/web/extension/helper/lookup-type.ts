@@ -8,9 +8,10 @@ import {
   ASTIdentifier,
   ASTIndexExpression,
   ASTLiteral,
-  ASTMemberExpression
-} from 'greybel-core';
-import { ASTBaseBlockWithScope, ASTType } from 'greyscript-core';
+  ASTMemberExpression,
+  ASTBaseBlockWithScope,
+  ASTType
+} from 'greyscript-core';
 import {
   getDefinition,
   getDefinitions,

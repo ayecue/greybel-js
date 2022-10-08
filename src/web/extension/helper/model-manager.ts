@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
-import { ASTBase, ASTChunkAdvanced, Parser } from 'greybel-core';
+import { ASTChunkAdvanced, Parser } from 'greybel-core';
+import { ASTBase } from 'greyscript-core';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
 export interface ParseResult {
