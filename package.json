@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "engines": {
         "node": ">=14.0.0"
     },
@@ -27,7 +27,7 @@
         "commander": "^7.2.0",
         "css-color-names": "^1.0.1",
         "greybel-core": "^0.6.1",
-        "greybel-gh-mock-intrinsics": "^1.4.5",
+        "greybel-gh-mock-intrinsics": "^1.4.6",
         "greybel-interpreter": "^1.5.3",
         "greybel-intrinsics": "^1.5.0",
         "greybel-transpiler": "^0.7.7",
