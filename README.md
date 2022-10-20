@@ -13,7 +13,7 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 ## Features
 
 - [simplifying the process of importing your code into the game](#transpiler)
-	- [imports](#importing) (supports nested `import_code`)
+	- [imports](#importing) (supports [nested import_code](#nested-import_code))
 	- [bundler](#when-to-use-the-installer-flag)
 	- [environment variables](#envar)
 	- [syntax sugar](#syntax)
@@ -144,9 +144,8 @@ print("Another string!")
 [TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
 ### CLI
-Supports:
 <details>
-<summary>See more</summary>
+<summary>Supports</summary>
 
 * color
 * mark
@@ -159,9 +158,8 @@ Supports:
 </details>
 
 ### UI
-Supports:
 <details>
-<summary>See more</summary>
+<summary>Supports</summary>
 
 * color
 * mark
