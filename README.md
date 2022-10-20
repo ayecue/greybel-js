@@ -181,7 +181,7 @@ print("Another string!")
 
 # REPL
 ```
-Emulator CLI
+REPL CLI
 Example: greybel-repl
 ```
 
@@ -191,7 +191,7 @@ REPL also features a [local environment](#local-environment) and [greyscript API
 
 # Web-UI
 ```
-Emulator UI CLI
+Web UI CLI
 Example: greybel-ui
 ```
 
