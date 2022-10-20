@@ -2,8 +2,6 @@
 
 GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
 
-Supports newest version `0.8.4478a` (experimental).
-
 ## Links
 
 - Latest changes: [Changelog](/CHANGELOG.md)
@@ -12,36 +10,27 @@ Supports newest version `0.8.4478a` (experimental).
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
 - Greyscript API: [greyscript-meta](https://greyscript-meta.netlify.app/)
 
-## Greybel Modules
-
-These modules are used in this CLI. Feel free to create your own tool using these.
-
-- [GreyScript Core](https://github.com/ayecue/greyscript-core)
-- [Greybel Core](https://github.com/ayecue/greybel-core)
-- [Greybel Transpiler](https://github.com/ayecue/greybel-transpiler)
-- [Greybel Interpreter](https://github.com/ayecue/greybel-interpreter)
-- [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics)
-- [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics)
-
 ## Features
 
-- syntax sugar
-	- [shortcuts for blocks](#block-shortcuts)
-	- [multiline lists](#multiline-lists)
-	- [multiline maps](#multiline-maps)
-	- [math shortcuts](#math-shortcuts)
-- [import](#importing) code via `#include` and `#import`
-- [environment variables](#envar) via `#envar`
-- minimizing your script, depending on the size of your project you can save up to 40%
-	- optimizing literals (strings, booleans, numbers)
-	- minifying namespaces
-	- removing whitespaces + tabs
-	- obfuscate your code (even though that's just a side effect of all the steps above)
-- beautify your code (can be useful to deobfuscate code)
-- [bundling of files](#transpiler)
-- [interpreter for code execution](#interpreter)
+- [simplifying the process of importing your code into the game](#transpiler)
+	- [imports](#importing) (supports [nested import_code](#nested-import_code))
+	- [bundler](#when-to-use-the-installer-flag)
+	- [environment variables](#envar)
+	- [syntax sugar](#syntax)
+	- minimizing your script, depending on the size of your project you can save up to 40%
+		- optimizing literals (strings, booleans, numbers)
+		- minifying namespaces
+		- removing whitespaces + tabs
+		- obfuscate your code (even though that's just a side effect of all the steps above)
+	- beautify your code (can be useful to deobfuscate code)
+- [execute/test your code outside of GreyHack](#interpreter)
+	- [local mock environment](#local-environment)
+	- [Greyscript API support](#greyscript-api-support)
+	- [debugger](#debugger)
+	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support)
 - [REPL for GreyScript](#repl)
 - [Web UI with simplified features](#web-ui)
+	- [share core](#share-code)
 
 # Install
 
@@ -145,8 +134,8 @@ Pauses execution and enables you to inspect/debug your code.
 ```
 index = 1
 print("Hello world!")
-print("Another string!")
 debugger
+print("Another string!")
 ```
 
 ![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
@@ -155,7 +144,9 @@ debugger
 [TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
 ### CLI
-Supports:
+<details>
+<summary>Supports</summary>
+
 * color
 * mark
 * underline
@@ -164,9 +155,12 @@ Supports:
 * strikethrough
 * lowercase
 * uppercase
+</details>
 
 ### UI
-Supports:
+<details>
+<summary>Supports</summary>
+
 * color
 * mark
 * underline
@@ -183,10 +177,11 @@ Supports:
 * pos
 * size
 * voffset
+</details>
 
 # REPL
 ```
-Emulator CLI
+REPL CLI
 Example: greybel-repl
 ```
 
@@ -196,7 +191,7 @@ REPL also features a [local environment](#local-environment) and [greyscript API
 
 # Web-UI
 ```
-Emulator UI CLI
+Web UI CLI
 Example: greybel-ui
 ```
 
