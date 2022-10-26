@@ -14,6 +14,9 @@
       "BufferEncoding": true,
       "NodeJS": true,
       "Element": true,
+      "HTMLElement": true,
+      "HTMLSpanElement": true,
+      "HTMLInputElement": true,
       "localStorage": true,
       "location": true,
       "KeyboardEvent": true
