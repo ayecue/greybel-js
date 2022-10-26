@@ -99,7 +99,7 @@ export class Stdout {
     const subMessages: HTMLSpanElement[] = [];
     let item;
 
-    while (item = lines.shift()) {
+    while ((item = lines.shift())) {
       const node = document.createElement('span');
 
       node.classList.add('line');

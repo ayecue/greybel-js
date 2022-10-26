@@ -105,8 +105,7 @@ export default async function execute(
   isReady = false;
 
   const code = model.getValue();
-  const vsAPI: ObjectValue =
-    options.api || new ObjectValue();
+  const vsAPI: ObjectValue = options.api || new ObjectValue();
   const stdin = options.stdin || new Stdin(new Element());
   const stdout = options.stdout || new Stdout(new Element());
 
