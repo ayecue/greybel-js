@@ -168,6 +168,10 @@ const getScraperMap = function (
     ) {
       visit(item.argument, level);
     },
+    IsaExpression: function (item: ASTEvaluationExpression, level: number) {
+      visit(item.left, level);
+      visit(item.right, level);
+    },
     LogicalExpression: function (item: ASTEvaluationExpression, level: number) {
       visit(item.left, level);
       visit(item.right, level);

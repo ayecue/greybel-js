@@ -373,3 +373,13 @@ All notable changes to this project will be documented in this file.
 - filter current connected wifi from list which is presented when looking for close wifis
 - minor fix in used_ports intrinsic which caused unwanted behavior
 - service ports are closer to ingame service port numbers
+
+## [1.5.4] - 27-10-2022
+
+- implement super + isa logic
+- add super + isa keyword
+- support super + isa in highlighting
+- exclude super and isa from uglify
+- improve function declaration uglify
+- improve interpreter map __isa logic
+- show current file in debugger mode
