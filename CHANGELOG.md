@@ -383,3 +383,8 @@ All notable changes to this project will be documented in this file.
 - improve function declaration uglify
 - improve interpreter map __isa logic
 - show current file in debugger mode
+
+## [1.5.5] - 28-10-2022
+
+- fix react dependency in ui
+- update meta
