@@ -387,3 +387,4 @@ All notable changes to this project will be documented in this file.
 ## [1.5.5] - 28-10-2022
 
 - fix react dependency in ui
+- update meta
