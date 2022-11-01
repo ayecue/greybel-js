@@ -388,3 +388,7 @@ All notable changes to this project will be documented in this file.
 
 - fix react dependency in ui
 - update meta
+
+## [1.5.6] - 01-11-2022
+
+- use proper context in super call
