@@ -392,3 +392,8 @@ All notable changes to this project will be documented in this file.
 ## [1.5.6] - 01-11-2022
 
 - use proper context in super call
+
+## [1.5.7] - 04-11-2022
+
+- allow empty string in split
+- use regexp in split
