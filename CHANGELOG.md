@@ -397,3 +397,9 @@ All notable changes to this project will be documented in this file.
 
 - allow empty string in split
 - use regexp in split
+
+## [1.5.8] - 05-11-2022
+
+- fix state forwarding in context
+- interfaces use maps instead of custom interface
+- revert regexp in split
