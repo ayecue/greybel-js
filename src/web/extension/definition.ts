@@ -19,7 +19,7 @@ const findAllDefinitions = (monaco: typeof Monaco, helper: LookupHelper, identif
       uri: helper.document.uri,
       range: new monaco.Range(
         assignment.start.line,
-        assignment.start.character - 1,
+        assignment.start.character,
         assignment.end.line,
         assignment.end.character
       )
