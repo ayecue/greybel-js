@@ -2,6 +2,7 @@ import EventEmitter from 'events';
 import { ASTChunkAdvanced, Parser } from 'greybel-core';
 import { ASTBase } from 'greyscript-core';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
+import LRU from 'lru-cache';
 
 export interface ParseResult {
   document: ASTBase | null;
@@ -17,7 +18,7 @@ export const DOCUMENT_PARSE_QUEUE_INTERVAL = 1000;
 export const DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT = 5000;
 
 export class DocumentParseQueue extends EventEmitter {
-  results: Map<string, ParseResult>;
+  results: LRU<string, ParseResult>;
 
   private queue: Map<string, QueueItem>;
   private interval: NodeJS.Timeout | null;
@@ -25,7 +26,9 @@ export class DocumentParseQueue extends EventEmitter {
 
   constructor(parseTimeout: number = DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT) {
     super();
-    this.results = new Map();
+    this.results = new LRU({
+      ttl: 1000 * 60 * 20
+    });
     this.queue = new Map();
     this.interval = null;
     this.parseTimeout = parseTimeout;
