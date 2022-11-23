@@ -1,8 +1,8 @@
 import EventEmitter from 'events';
 import { ASTChunkAdvanced, Parser } from 'greybel-core';
 import { ASTBase } from 'greyscript-core';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 import LRU from 'lru-cache';
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
 export interface ParseResult {
   document: ASTBase | null;

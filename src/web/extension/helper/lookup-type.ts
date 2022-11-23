@@ -1,6 +1,7 @@
 import {
   ASTAssignmentStatement,
   ASTBase,
+  ASTBaseBlockWithScope,
   ASTCallExpression,
   ASTCallStatement,
   ASTChunk,
@@ -9,7 +10,6 @@ import {
   ASTIndexExpression,
   ASTLiteral,
   ASTMemberExpression,
-  ASTBaseBlockWithScope,
   ASTType
 } from 'greyscript-core';
 import {

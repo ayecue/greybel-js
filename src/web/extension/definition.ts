@@ -1,12 +1,15 @@
 import { ASTBase, ASTIdentifier, ASTMemberExpression } from 'greyscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
-import {
-  LookupHelper
-} from './helper/lookup-type';
 import ASTStringify from './helper/ast-stringify';
+import { LookupHelper } from './helper/lookup-type';
 
-const findAllDefinitions = (monaco: typeof Monaco, helper: LookupHelper, identifer: string, root: ASTBase): Monaco.languages.LocationLink[] => {
+const findAllDefinitions = (
+  monaco: typeof Monaco,
+  helper: LookupHelper,
+  identifer: string,
+  root: ASTBase
+): Monaco.languages.LocationLink[] => {
   const assignments = helper.findAllAssignmentsOfIdentifier(identifer, root);
   const definitions: Monaco.languages.LocationLink[] = [];
 
@@ -29,7 +32,7 @@ const findAllDefinitions = (monaco: typeof Monaco, helper: LookupHelper, identif
   }
 
   return definitions;
-}
+};
 
 export function activate(monaco: typeof Monaco) {
   monaco.languages.registerDefinitionProvider('greyscript', {
@@ -53,12 +56,17 @@ export function activate(monaco: typeof Monaco) {
 
       const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
       let identifer = closest.name;
-      
+
       if (previous && previous instanceof ASTMemberExpression) {
         identifer = ASTStringify(previous);
       }
 
-      const definitions = findAllDefinitions(monaco, helper, identifer, closest.scope!);
+      const definitions = findAllDefinitions(
+        monaco,
+        helper,
+        identifer,
+        closest.scope!
+      );
 
       return definitions;
     }

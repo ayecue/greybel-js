@@ -66,8 +66,8 @@
         "build:local": "tsc -p ./",
         "build:web": "rollup --config rollup.config.js",
         "watch": "tsc -watch -p ./",
-        "lint": "eslint ./src/**/*.ts",
-        "lint:fix": "eslint --fix ./src/**/*.ts"
+        "lint": "eslint './src/**/*.ts'",
+        "lint:fix": "eslint --fix './src/**/*.ts'"
     },
     "directories": {},
     "keywords": [

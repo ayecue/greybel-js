@@ -1,4 +1,4 @@
-import { ASTCallExpression, ASTType, ASTBase } from 'greyscript-core';
+import { ASTBase, ASTCallExpression, ASTType } from 'greyscript-core';
 import {
   getDefinitions,
   SignatureDefinitionArg,
