@@ -408,3 +408,13 @@ All notable changes to this project will be documented in this file.
 
 - fix router intrinsics in regards of forwarded ports
 - fix bug in meta lib overflow
+
+## [1.6.0] - 27-11-2022
+
+### Changed
+
+- implement definitions provider
+- use lru cache
+- implement document symbol provider
+- implement workspace symbol provider
+- fix automcomplete not working in certain cases in the ui
