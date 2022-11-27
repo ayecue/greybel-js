@@ -418,3 +418,4 @@ All notable changes to this project will be documented in this file.
 - implement document symbol provider
 - implement workspace symbol provider
 - fix automcomplete not working in certain cases in the ui
+- optimized ast document cache in ui
