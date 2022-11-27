@@ -40,6 +40,37 @@ export const convertDefinitionsToCompletionList = (
   return completionItems;
 };
 
+export const getCompletionList = (
+  helper: LookupHelper,
+  item: ASTBase,
+  range: Monaco.Range
+): PseudoCompletionList | null => {
+  const base = helper.lookupBase(item);
+  const typeInfo = helper.resolvePath(base!);
+
+  if (typeInfo instanceof TypeInfoWithDefinition) {
+    const definitions = getDefinitions(typeInfo.definition.returns);
+    const completionItems: PseudoCompletionItem[] = [
+      ...convertDefinitionsToCompletionList(definitions, range)
+    ];
+
+    if (completionItems.length > 0) {
+      return new PseudoCompletionList(completionItems);
+    }
+  } else if (typeInfo instanceof TypeInfo) {
+    const definitions = getDefinitions(typeInfo.type);
+    const completionItems: PseudoCompletionItem[] = [
+      ...convertDefinitionsToCompletionList(definitions, range)
+    ];
+
+    if (completionItems.length > 0) {
+      return new PseudoCompletionList(completionItems);
+    }
+  }
+
+  return null;
+};
+
 export function activate(monaco: typeof Monaco) {
   monaco.languages.registerCompletionItemProvider('greyscript', {
     triggerCharacters: ['.'],
@@ -61,37 +92,22 @@ export function activate(monaco: typeof Monaco) {
       const astResult = helper.lookupAST(position);
 
       if (astResult) {
-        const { outer } = astResult;
+        const { closest, outer } = astResult;
         const previous = outer.length > 0 ? outer[1] : undefined;
 
         if (
           previous?.type === ASTType.MemberExpression ||
           previous?.type === ASTType.IndexExpression
         ) {
-          const base = helper.lookupBase(previous);
-          const previousTypeInfo = helper.resolvePath(base!);
-
-          if (previousTypeInfo instanceof TypeInfoWithDefinition) {
-            const definitions = getDefinitions(
-              previousTypeInfo.definition.returns
-            );
-            const completionItems: PseudoCompletionItem[] = [
-              ...convertDefinitionsToCompletionList(definitions, currentRange)
-            ];
-
-            if (completionItems.length > 0) {
-              return new PseudoCompletionList(completionItems).valueOf();
-            }
-          } else if (previousTypeInfo instanceof TypeInfo) {
-            const definitions = getDefinitions(previousTypeInfo.type);
-            const completionItems: PseudoCompletionItem[] = [
-              ...convertDefinitionsToCompletionList(definitions, currentRange)
-            ];
-
-            if (completionItems.length > 0) {
-              return new PseudoCompletionList(completionItems).valueOf();
-            }
-          }
+          const list = getCompletionList(helper, previous, currentRange);
+          if (list) return list.valueOf();
+        } else if (
+          (document.getValueInRange(currentRange) === '.' &&
+            closest?.type === ASTType.MemberExpression) ||
+          closest?.type === ASTType.IndexExpression
+        ) {
+          const list = getCompletionList(helper, closest, currentRange);
+          if (list) return list.valueOf();
         }
       }
 
