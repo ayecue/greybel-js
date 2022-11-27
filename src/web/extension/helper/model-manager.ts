@@ -1,9 +1,12 @@
 import EventEmitter from 'events';
 import { ASTChunkAdvanced, Parser } from 'greybel-core';
 import { ASTBase } from 'greyscript-core';
+import LRU from 'lru-cache';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
 export interface ParseResult {
+  content: string;
+  textDocument: editor.ITextModel;
   document: ASTBase | null;
   errors: Error[];
 }
@@ -17,7 +20,7 @@ export const DOCUMENT_PARSE_QUEUE_INTERVAL = 1000;
 export const DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT = 5000;
 
 export class DocumentParseQueue extends EventEmitter {
-  results: Map<string, ParseResult>;
+  results: LRU<string, ParseResult>;
 
   private queue: Map<string, QueueItem>;
   private interval: NodeJS.Timeout | null;
@@ -25,7 +28,10 @@ export class DocumentParseQueue extends EventEmitter {
 
   constructor(parseTimeout: number = DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT) {
     super();
-    this.results = new Map();
+    this.results = new LRU({
+      ttl: 1000 * 60 * 20,
+      ttlAutopurge: true
+    });
     this.queue = new Map();
     this.interval = null;
     this.parseTimeout = parseTimeout;
@@ -67,6 +73,7 @@ export class DocumentParseQueue extends EventEmitter {
     this.results.set(key, result);
     this.emit('parsed', document, result);
     this.queue.delete(key);
+
     return result;
   }
 
@@ -79,6 +86,8 @@ export class DocumentParseQueue extends EventEmitter {
 
     if ((chunk as ASTChunkAdvanced).body?.length > 0) {
       return {
+        content,
+        textDocument: document,
         document: chunk,
         errors: parser.errors
       };
@@ -89,13 +98,15 @@ export class DocumentParseQueue extends EventEmitter {
       const strictChunk = strictParser.parseChunk();
 
       return {
+        content,
+        textDocument: document,
         document: strictChunk,
         errors: []
       };
     } catch (err: any) {
-      console.log('refresh err', err);
-
       return {
+        content,
+        textDocument: document,
         document: null,
         errors: [err]
       };
@@ -104,8 +115,13 @@ export class DocumentParseQueue extends EventEmitter {
 
   update(document: editor.ITextModel): boolean {
     const fileName = document.uri.path;
+    const content = document.getValue();
 
     if (this.queue.has(fileName)) {
+      return false;
+    }
+
+    if (this.results.get(fileName)?.content === content) {
       return false;
     }
 
@@ -125,6 +141,7 @@ export class DocumentParseQueue extends EventEmitter {
 
   clear(document: editor.ITextModel): void {
     this.results.delete(document.uri.path);
+    this.emit('cleared', document);
   }
 }
 

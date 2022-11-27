@@ -62,7 +62,9 @@ class GrebyelPseudoDebugger extends Debugger {
         me.interpreter.debugger.setBreakpoint(false);
         await me.interpreter.injectInLastContext(line);
         console.log(
-          `Execution on ${operationContext.target}:${stackAst.start!.line} was successful.`
+          `Execution on ${operationContext.target}:${
+            stackAst.start!.line
+          } was successful.`
         );
       } catch (err: any) {
         console.error(`Execution of ${line} failed.`);

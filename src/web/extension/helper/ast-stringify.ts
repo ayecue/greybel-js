@@ -1,8 +1,8 @@
-import { ASTBase } from 'greyscript-core';
 import { Context, Transformer } from 'greybel-transpiler';
 import DefaultMapProvider, {
   BuildMap
 } from 'greybel-transpiler/dist/build-map/default';
+import { ASTBase } from 'greyscript-core';
 
 export default function transform(item: ASTBase): string {
   const provider = <(make: Function, context: Context) => BuildMap>(
