@@ -93,7 +93,7 @@ export function activate(monaco: typeof Monaco) {
 
       if (astResult) {
         const { closest, outer } = astResult;
-        const previous = outer.length > 0 ? outer[1] : undefined;
+        const previous = outer.length > 0 ? outer.at(-1) : undefined;
 
         if (
           previous?.type === ASTType.MemberExpression ||
