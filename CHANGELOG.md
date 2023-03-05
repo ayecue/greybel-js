@@ -419,3 +419,7 @@ All notable changes to this project will be documented in this file.
 - implement workspace symbol provider
 - fix automcomplete not working in certain cases in the ui
 - optimized ast document cache in ui
+
+## [1.6.1] - 05-03-2023
+
+- fix autocomplete in call body
