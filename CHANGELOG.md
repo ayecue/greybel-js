@@ -422,4 +422,6 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.1] - 05-03-2023
 
-- fix autocomplete in call body
+- fix autocomplete in call body in UI
+- fix error on trailing comma in maps and lists
+- add check for metaxploit if file exists to prevent error
