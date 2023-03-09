@@ -30,7 +30,7 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support)
 - [REPL for GreyScript](#repl)
 - [Web UI with simplified features](#web-ui)
-	- [share core](#share-code)
+	- [share code](#share-code)
 
 # Install
 
