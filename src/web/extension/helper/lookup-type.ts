@@ -306,6 +306,8 @@ export class LookupHelper {
         return new TypeInfo(name, ['map:any']);
       case 'locals':
         return new TypeInfo(name, ['map:any']);
+      case 'self':
+        return new TypeInfo(name, ['any']);
     }
 
     // assignment to var
@@ -313,10 +315,26 @@ export class LookupHelper {
       const assignmentStatement = previous as ASTAssignmentStatement;
 
       if (assignmentStatement.init !== item) {
-        return me.lookupTypeInfo({
+        const assignInitType = me.lookupTypeInfo({
           closest: assignmentStatement.init,
           outer: [previous]
         });
+
+        console.log('assignInitType', assignInitType);
+
+        if (
+          assignmentStatement.init instanceof ASTFunctionStatement &&
+          assignInitType instanceof TypeInfoWithDefinition
+        ) {
+          return assignInitType;
+        } else if (assignInitType instanceof TypeInfoWithDefinition) {
+          return new TypeInfo(
+            name,
+            assignInitType.definition.returns || ['any']
+          );
+        }
+
+        return assignInitType || new TypeInfo(name, ['any']);
       }
     }
 
@@ -369,10 +387,12 @@ export class LookupHelper {
         return new TypeInfo(name, initMeta.definition.returns);
       }
 
-      return initMeta || new TypeInfo(name, ['any']);
+      console.log('initMeta', initMeta);
+
+      return new TypeInfo(name, initMeta?.type || ['any']);
     }
 
-    return null;
+    return new TypeInfo(name, ['any']);
   }
 
   resolveFunctionDeclaration(
