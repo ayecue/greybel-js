@@ -320,8 +320,6 @@ export class LookupHelper {
           outer: [previous]
         });
 
-        console.log('assignInitType', assignInitType);
-
         if (
           assignmentStatement.init instanceof ASTFunctionStatement &&
           assignInitType instanceof TypeInfoWithDefinition
@@ -386,8 +384,6 @@ export class LookupHelper {
       if (initMeta instanceof TypeInfoWithDefinition) {
         return new TypeInfo(name, initMeta.definition.returns);
       }
-
-      console.log('initMeta', initMeta);
 
       return new TypeInfo(name, initMeta?.type || ['any']);
     }
