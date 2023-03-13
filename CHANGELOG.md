@@ -420,8 +420,9 @@ All notable changes to this project will be documented in this file.
 - fix automcomplete not working in certain cases in the ui
 - optimized ast document cache in ui
 
-## [1.6.1] - 05-03-2023
+## [1.6.1] - 13-03-2023
 
 - fix autocomplete in call body in UI
 - fix error on trailing comma in maps and lists
 - add check for metaxploit if file exists to prevent error
+- add type-manager for improved type resolving in UI
