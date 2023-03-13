@@ -2,49 +2,17 @@ import {
   ASTAssignmentStatement,
   ASTBase,
   ASTBaseBlockWithScope,
-  ASTCallExpression,
-  ASTCallStatement,
   ASTChunk,
   ASTFunctionStatement,
   ASTIdentifier,
-  ASTIndexExpression,
-  ASTLiteral,
-  ASTMemberExpression,
   ASTType
 } from 'greyscript-core';
-import {
-  getDefinition,
-  getDefinitions,
-  SignatureDefinition,
-  SignatureDefinitionArg
-} from 'greyscript-meta/dist/meta';
-import Monaco, {
-  editor,
-  Position
-} from 'monaco-editor/esm/vs/editor/editor.api';
+import { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api';
 
 import * as ASTScraper from './ast-scraper';
 import ASTStringify from './ast-stringify';
 import documentParseQueue from './model-manager';
-
-export class TypeInfo {
-  label: string;
-  type: string[];
-
-  constructor(label: string, type: string[]) {
-    this.label = label;
-    this.type = type;
-  }
-}
-
-export class TypeInfoWithDefinition extends TypeInfo {
-  definition: SignatureDefinition;
-
-  constructor(label: string, type: string[], definition: SignatureDefinition) {
-    super(label, type);
-    this.definition = definition;
-  }
-}
+import typeManager, { lookupBase, TypeInfo } from './type-manager';
 
 export type LookupOuter = ASTBase[];
 
@@ -54,23 +22,10 @@ export interface LookupASTResult {
 }
 
 export class LookupHelper {
-  readonly monaco: typeof Monaco;
   readonly document: editor.ITextModel;
 
-  constructor(monaco: typeof Monaco, document: editor.ITextModel) {
-    this.monaco = monaco;
+  constructor(document: editor.ITextModel) {
     this.document = document;
-  }
-
-  findAllAvailableIdentifier(item: ASTBase): string[] {
-    const scopes = this.lookupScopes(item);
-    const result: string[] = [];
-
-    for (const scope of scopes) {
-      result.push(...scope.namespaces);
-    }
-
-    return result;
   }
 
   findAllAssignmentsOfIdentifier(
@@ -88,6 +43,25 @@ export class LookupHelper {
       }
     }
 
+    if (root instanceof ASTChunk) {
+      const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
+
+      for (const item of scopes) {
+        for (const assignmentItem of item.assignments) {
+          const assignment = assignmentItem as ASTAssignmentStatement;
+          const current = ASTStringify(assignment.variable);
+
+          if (!current.startsWith('globals.')) {
+            continue;
+          }
+
+          if (current.replace(/^globals./, '') === identifier) {
+            result.push(assignment);
+          }
+        }
+      }
+    }
+
     return result;
   }
 
@@ -101,6 +75,50 @@ export class LookupHelper {
     }
 
     return result;
+  }
+
+  findAllAvailableIdentifier(item: ASTBase): string[] {
+    const scopes = this.lookupScopes(item);
+    const result: string[] = [];
+
+    for (const scope of scopes) {
+      result.push(...scope.namespaces);
+    }
+
+    return Array.from(new Set(result));
+  }
+
+  findAllAvailableIdentifierRelatedToPosition(item: ASTBase): string[] {
+    const scopes = this.lookupScopes(item);
+    const result: string[] = [];
+    const rootScope = scopes.shift();
+
+    if (rootScope) {
+      if (rootScope instanceof ASTFunctionStatement) {
+        for (const parameter of rootScope.parameters) {
+          if (parameter instanceof ASTAssignmentStatement) {
+            result.push((parameter.variable as ASTIdentifier).name);
+          } else if (parameter instanceof ASTIdentifier) {
+            result.push(parameter.name);
+          }
+        }
+      }
+
+      for (const assignmentItem of rootScope.assignments) {
+        const assignment = assignmentItem as ASTAssignmentStatement;
+
+        if (assignment.end!.line >= item.end!.line) break;
+
+        const current = ASTStringify(assignment.variable);
+        result.push(current);
+      }
+    }
+
+    for (const scope of scopes) {
+      result.push(...scope.namespaces);
+    }
+
+    return Array.from(new Set(result));
   }
 
   lookupScope(item: ASTBase): ASTBaseBlockWithScope | null {
@@ -171,306 +189,34 @@ export class LookupHelper {
     return null;
   }
 
-  lookupIdentifier(root: ASTBase): ASTBase | null {
-    // non greey identifier to string method; can be used instead of ASTStringify
-    const me = this;
+  lookupBasePath(item: ASTBase): TypeInfo | null {
+    const base = lookupBase(item);
+    const typeMap = typeManager.get(this.document);
 
-    switch (root.type) {
-      case ASTType.CallStatement:
-        return me.lookupIdentifier((root as ASTCallStatement).expression);
-      case ASTType.CallExpression:
-        return me.lookupIdentifier((root as ASTCallExpression).base);
-      case ASTType.Identifier:
-        return root;
-      case ASTType.MemberExpression:
-        return me.lookupIdentifier((root as ASTMemberExpression).identifier);
-      case ASTType.IndexExpression:
-        return me.lookupIdentifier((root as ASTIndexExpression).index);
-      default:
-        return null;
-    }
-  }
-
-  lookupBase(node: ASTBase | null = null): ASTBase | null {
-    switch (node?.type) {
-      case ASTType.MemberExpression:
-        return (node as ASTMemberExpression).base;
-      case ASTType.IndexExpression:
-        return (node as ASTIndexExpression).base;
-      case ASTType.CallExpression:
-        return (node as ASTCallExpression).base;
-      default:
-        return null;
-    }
-  }
-
-  resolvePath(item: ASTBase): TypeInfo | null {
-    const me = this;
-    let base: ASTBase | null = item;
-    const traversalPath = [];
-
-    // prepare traversal path
-    while (base) {
-      if (base.type === ASTType.CallExpression) {
-        base = me.lookupBase(base);
-        continue;
-      }
-
-      const identifer = me.lookupIdentifier(base);
-      traversalPath.unshift(identifer || base);
-
-      base = me.lookupBase(base);
-    }
-
-    // retreive type
-    let origin;
-    let currentMetaInfo = null;
-
-    while ((origin = traversalPath.shift())) {
-      switch (origin.type) {
-        case ASTType.Identifier: {
-          const identifer = origin as ASTIdentifier;
-          const name = identifer.name;
-
-          // resolve first identifier
-          if (!currentMetaInfo) {
-            currentMetaInfo =
-              me.resolveIdentifier(identifer) || new TypeInfo(name, ['any']);
-            break;
-          }
-
-          // get signature
-          let definitions = null;
-
-          if (currentMetaInfo instanceof TypeInfoWithDefinition) {
-            const definition = currentMetaInfo.definition;
-
-            definitions = getDefinitions(definition.returns);
-          } else {
-            definitions = getDefinitions(currentMetaInfo.type);
-          }
-
-          if (name in definitions) {
-            const defintion = definitions[name];
-            currentMetaInfo = new TypeInfoWithDefinition(
-              name,
-              ['function'],
-              defintion
-            );
-            break;
-          }
-
-          // todo add retrieval for object/lists
-          return null;
-        }
-        case ASTType.IndexExpression: {
-          // add index
-          console.log('not yet supported');
-          return null;
-        }
-        default: {
-          if (!currentMetaInfo) {
-            currentMetaInfo = me.resolveDefault(origin);
-            break;
-          }
-          return null;
-        }
-      }
-    }
-
-    return currentMetaInfo;
-  }
-
-  resolveIdentifier(
-    item: ASTIdentifier,
-    outer: LookupOuter = []
-  ): TypeInfo | null {
-    const me = this;
-    const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
-    const name = item.name;
-    const root = me.lookupScope(item);
-
-    // resolve path
-    if (
-      previous?.type === ASTType.MemberExpression ||
-      previous?.type === ASTType.IndexExpression
-    ) {
-      return me.resolvePath(previous);
-    }
-
-    // special behavior for global variables
-    switch (name) {
-      case 'params':
-        return new TypeInfo(name, ['list:string']);
-      case 'globals':
-        return new TypeInfo(name, ['map:any']);
-      case 'locals':
-        return new TypeInfo(name, ['map:any']);
-    }
-
-    // assignment to var
-    if (previous?.type === ASTType.AssignmentStatement) {
-      const assignmentStatement = previous as ASTAssignmentStatement;
-
-      if (assignmentStatement.init !== item) {
-        return me.lookupTypeInfo({
-          closest: assignmentStatement.init,
-          outer: [previous]
-        });
-      }
-    }
-
-    // check for default namespace
-    const defaultDef = getDefinition(['general'], name);
-
-    if (defaultDef) {
-      return new TypeInfoWithDefinition(name, ['function'], defaultDef);
-    }
-
-    if (!root) {
-      return new TypeInfo(name, ['any']);
-    }
-
-    // get arguments if inside function
-    if (root.type === ASTType.FunctionDeclaration) {
-      const fnBlockMeta = me.resolveFunctionDeclaration(
-        root as ASTFunctionStatement
-      );
-
-      if (!fnBlockMeta) {
-        return new TypeInfo(name, ['any']);
-      }
-
-      const args = fnBlockMeta.definition.arguments || [];
-
-      for (const argMeta of args) {
-        if (argMeta.label === name) {
-          return new TypeInfo(argMeta.label, [argMeta.type]);
-        }
-      }
-    }
-
-    // gather all available assignments in scope with certain namespace
-    const assignments = this.findAllAssignmentsOfIdentifier(name, root).filter(
-      (assignment) => {
-        return assignment.start!.line < item.start!.line;
-      }
-    );
-    const lastAssignment = assignments[0];
-
-    if (lastAssignment) {
-      const { init } = lastAssignment as ASTAssignmentStatement;
-      const initMeta = me.lookupTypeInfo({
-        closest: init,
-        outer: [lastAssignment]
-      });
-
-      if (initMeta instanceof TypeInfoWithDefinition) {
-        return new TypeInfo(name, initMeta.definition.returns);
-      }
-
-      return initMeta || new TypeInfo(name, ['any']);
+    if (typeMap && base) {
+      return typeMap.resolvePath(base);
     }
 
     return null;
   }
 
-  resolveFunctionDeclaration(
-    item: ASTFunctionStatement,
-    outer: LookupOuter = []
-  ): TypeInfoWithDefinition | null {
-    const me = this;
-    const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
-    let name = null;
-
-    if (previous?.type === ASTType.AssignmentStatement) {
-      name = ASTStringify((previous as ASTAssignmentStatement).variable);
-    }
-
-    return new TypeInfoWithDefinition(name || 'anonymous', ['function'], {
-      arguments: item.parameters.map((arg: ASTBase) => {
-        if (arg.type === ASTType.Identifier) {
-          return {
-            label: ASTStringify(arg),
-            type: 'any'
-          } as SignatureDefinitionArg;
-        }
-
-        const assignment = arg as ASTAssignmentStatement;
-
-        return {
-          label: ASTStringify(assignment.variable),
-          type:
-            me.lookupTypeInfo({ closest: assignment.init, outer: [] })
-              ?.type[0] || 'any'
-        };
-      }),
-      returns: ['any'],
-      description: 'This is a custom method.'
-    });
-  }
-
-  resolveCallStatement(item: ASTCallStatement): TypeInfo | null {
-    const { expression } = item;
-    return this.lookupTypeInfo({ closest: expression, outer: [item] });
-  }
-
-  resolveCallExpression(item: ASTCallExpression): TypeInfo | null {
-    const { base } = item;
-    return this.lookupTypeInfo({ closest: base, outer: [item] });
-  }
-
-  resolveDefault(item: ASTBase): TypeInfo | null {
-    switch (item.type) {
-      case ASTType.NilLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['null']);
-      case ASTType.StringLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['string']);
-      case ASTType.NumericLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['number']);
-      case ASTType.BooleanLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['boolean']);
-      case ASTType.MapConstructorExpression:
-        return new TypeInfo('{}', ['map:any']);
-      case ASTType.ListConstructorExpression:
-        return new TypeInfo('[]', ['list:any']);
-      case ASTType.BinaryExpression:
-        return new TypeInfo('Binary expression', ['number']);
-      case ASTType.LogicalExpression:
-        return new TypeInfo('Logical expression', ['boolean']);
-      default:
-        return null;
-    }
-  }
-
   lookupTypeInfo({ closest, outer }: LookupASTResult): TypeInfo | null {
-    const me = this;
+    const typeMap = typeManager.get(this.document);
 
-    switch (closest.type) {
-      case ASTType.Identifier:
-        return me.resolveIdentifier(closest as ASTIdentifier, outer);
-      case ASTType.MemberExpression:
-      case ASTType.IndexExpression:
-        return me.resolvePath(closest);
-      case ASTType.FunctionDeclaration:
-        return me.resolveFunctionDeclaration(
-          closest as ASTFunctionStatement,
-          outer
-        );
-      case ASTType.CallStatement:
-        return me.resolveCallStatement(closest as ASTCallStatement);
-      case ASTType.CallExpression:
-        return me.resolveCallExpression(closest as ASTCallExpression);
-      case ASTType.NilLiteral:
-      case ASTType.StringLiteral:
-      case ASTType.NumericLiteral:
-      case ASTType.BooleanLiteral:
-      case ASTType.MapConstructorExpression:
-      case ASTType.ListConstructorExpression:
-        return me.resolveDefault(closest);
-      default:
-        return null;
+    if (!typeMap) {
+      return null;
     }
+
+    const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+
+    if (
+      previous?.type === ASTType.MemberExpression ||
+      previous?.type === ASTType.IndexExpression
+    ) {
+      return typeMap.resolvePath(previous);
+    }
+
+    return typeMap.resolve(closest);
   }
 
   lookupType(position: Position): TypeInfo | null {

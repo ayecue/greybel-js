@@ -1,7 +1,8 @@
 import { SignatureDefinitionArg } from 'greyscript-meta/dist/meta';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
-import { LookupHelper, TypeInfoWithDefinition } from './helper/lookup-type';
+import { LookupHelper } from './helper/lookup-type';
+import { TypeInfoWithDefinition } from './helper/type-manager';
 import { PseudoHover, PseudoMarkdownString } from './helper/vs';
 
 function formatType(type: string): string {
@@ -23,7 +24,7 @@ export function activate(monaco: typeof Monaco) {
       position: Monaco.Position,
       _token: Monaco.CancellationToken
     ): Monaco.languages.ProviderResult<Monaco.languages.Hover> {
-      const helper = new LookupHelper(monaco, document);
+      const helper = new LookupHelper(document);
       const astResult = helper.lookupAST(position);
 
       if (!astResult) {
