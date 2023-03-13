@@ -4,6 +4,8 @@ import { ASTBase } from 'greyscript-core';
 import LRU from 'lru-cache';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
 
+import typeManager from './type-manager';
+
 export interface ParseResult {
   content: string;
   textDocument: editor.ITextModel;
@@ -85,6 +87,8 @@ export class DocumentParseQueue extends EventEmitter {
     const chunk = parser.parseChunk();
 
     if ((chunk as ASTChunkAdvanced).body?.length > 0) {
+      typeManager.analyze(document, chunk as ASTChunkAdvanced);
+
       return {
         content,
         textDocument: document,
@@ -96,6 +100,8 @@ export class DocumentParseQueue extends EventEmitter {
     try {
       const strictParser = new Parser(document.getValue());
       const strictChunk = strictParser.parseChunk();
+
+      typeManager.analyze(document, strictChunk as ASTChunkAdvanced);
 
       return {
         content,

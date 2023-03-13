@@ -41,7 +41,7 @@ export function activate(monaco: typeof Monaco) {
       position: Monaco.Position,
       _token: Monaco.CancellationToken
     ): Monaco.languages.ProviderResult<Monaco.languages.LocationLink[]> {
-      const helper = new LookupHelper(monaco, document);
+      const helper = new LookupHelper(document);
       const astResult = helper.lookupAST(position);
 
       if (!astResult) {
