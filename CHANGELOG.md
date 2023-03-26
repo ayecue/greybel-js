@@ -426,3 +426,9 @@ All notable changes to this project will be documented in this file.
 - fix error on trailing comma in maps and lists
 - add check for metaxploit if file exists to prevent error
 - add type-manager for improved type resolving in UI
+
+## [1.6.2] - 26-03-2023
+
+- fix nested #import in interpreter
+- proper json output when map/list gets stringified in interpreter
+- fix refresh interval sometimes not parsing in UI

@@ -5,7 +5,7 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 ## Links
 
 - Latest changes: [Changelog](/CHANGELOG.md)
-- Demo Project: [TEdit](https://github.com/ayecue/tedit)
+- Demo Projects: [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - Greybel UI Demo: [greybel-ui](https://greybel-ui.netlify.app/)
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
 - Greyscript API: [greyscript-meta](https://greyscript-meta.netlify.app/)

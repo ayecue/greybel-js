@@ -35,33 +35,21 @@ export class DocumentParseQueue extends EventEmitter {
       ttlAutopurge: true
     });
     this.queue = new Map();
-    this.interval = null;
+    this.interval = setInterval(
+      () => this.tick(),
+      DOCUMENT_PARSE_QUEUE_INTERVAL
+    );
     this.parseTimeout = parseTimeout;
   }
 
-  private resume() {
-    if (this.queue.size === 0 || this.interval !== null) {
-      return;
+  private tick() {
+    const currentTime = Date.now();
+
+    for (const item of this.queue.values()) {
+      if (currentTime - item.createdAt > this.parseTimeout) {
+        this.refresh(item.document);
+      }
     }
-
-    const next = () => {
-      const currentTime = Date.now();
-
-      for (const item of this.queue.values()) {
-        if (currentTime - item.createdAt > this.parseTimeout) {
-          this.refresh(item.document);
-        }
-      }
-
-      if (this.queue.size > 0) {
-        this.interval = setTimeout(next, DOCUMENT_PARSE_QUEUE_INTERVAL);
-        return;
-      }
-
-      this.interval = null;
-    };
-
-    this.interval = setTimeout(next, DOCUMENT_PARSE_QUEUE_INTERVAL);
   }
 
   refresh(document: editor.ITextModel): ParseResult {
@@ -135,8 +123,6 @@ export class DocumentParseQueue extends EventEmitter {
       document,
       createdAt: Date.now()
     });
-
-    this.resume();
 
     return true;
   }
