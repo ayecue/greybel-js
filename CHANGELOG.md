@@ -432,3 +432,7 @@ All notable changes to this project will be documented in this file.
 - fix nested #import in interpreter
 - proper json output when map/list gets stringified in interpreter
 - fix refresh interval sometimes not parsing in UI
+
+## [1.6.3] - 26-03-2023
+
+- fix replace intrinsic
