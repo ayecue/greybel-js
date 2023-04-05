@@ -32,7 +32,7 @@
         "greybel-intrinsics": "^1.6.4",
         "greybel-transpiler": "^0.8.2",
         "greyscript-core": "^0.6.2",
-        "greyscript-meta": "^1.2.3",
+        "greyscript-meta": "^1.2.4",
         "inquirer": "^8.1.0",
         "inquirer-command-prompt": "^0.1.0",
         "localstoragedb": "git+https://github.com/ayecue/localStorageDB.git",
