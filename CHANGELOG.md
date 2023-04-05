@@ -452,3 +452,9 @@ All notable changes to this project will be documented in this file.
 - typeof for MetaMail returns now in the right capitalization
 - fix power operator handling
 - update meta descriptions
+
+## [1.6.6] - 05-04-2023
+
+- remove key interaction on airplay to prevent issue
+- fix wifi networks return value
+- minor fixes for meta examples
