@@ -458,3 +458,7 @@ All notable changes to this project will be documented in this file.
 - remove key interaction on airplay to prevent issue
 - fix wifi networks return value
 - minor fixes for meta examples
+
+## [1.6.7] - 07-04-2023
+
+- update meta version
