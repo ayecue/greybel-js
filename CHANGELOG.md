@@ -462,3 +462,8 @@ All notable changes to this project will be documented in this file.
 ## [1.6.7] - 07-04-2023
 
 - update meta version
+
+## [1.6.8] - 08-04-2023
+
+- update meta version
+- update readme
