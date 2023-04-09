@@ -45,7 +45,7 @@ class GrebyelPseudoDebugger extends Debugger {
     const iterate = async () => {
       const result = await inquirer.prompt({
         name: 'default',
-        prefix: `[${operationContext.target}:${stackAst.start!.line}] >`,
+        prefix: `[${operationContext.target}:${stackAst?.start?.line}] >`,
         loop: true
       });
       const line = result.default;
@@ -63,7 +63,7 @@ class GrebyelPseudoDebugger extends Debugger {
         await me.interpreter.injectInLastContext(line);
         console.log(
           `Execution on ${operationContext.target}:${
-            stackAst.start!.line
+            stackAst?.start?.line
           } was successful.`
         );
       } catch (err: any) {
