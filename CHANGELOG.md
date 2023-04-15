@@ -478,3 +478,7 @@ All notable changes to this project will be documented in this file.
 - fix list insert behaviour, return mutated list now
 - update meta descriptions
 - update meta performance
+
+## [1.7.1] - 15-04-2023
+
+- escape dot in split intrinsic
