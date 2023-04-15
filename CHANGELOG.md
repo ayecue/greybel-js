@@ -471,3 +471,8 @@ All notable changes to this project will be documented in this file.
 ## [1.6.9] - 09-04-2023
 
 - fix potential crash in debugger
+
+## [1.7.0] - 15-04-2023
+
+- use regex in split intrinsic
+- fix list insert behaviour, return mutated list now
