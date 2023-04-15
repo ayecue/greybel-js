@@ -476,3 +476,4 @@ All notable changes to this project will be documented in this file.
 
 - use regex in split intrinsic
 - fix list insert behaviour, return mutated list now
+- update meta descriptions
