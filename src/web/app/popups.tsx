@@ -5,13 +5,13 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import viewJSON from '../json-viewer';
 
-interface DebugReplOptions {
+export interface DebugReplOptions {
   onExecute: (replInput: string) => void;
   onContinue: () => void;
   onNext: () => void;
 }
 
-function DebugReplPopup({ onExecute, onContinue, onNext }: DebugReplOptions) {
+export function DebugReplPopup({ onExecute, onContinue, onNext }: DebugReplOptions) {
   const [replInput, setReplInput] = useState('');
 
   return (
@@ -59,7 +59,7 @@ function DebugReplPopup({ onExecute, onContinue, onNext }: DebugReplOptions) {
   );
 }
 
-function DebugScopePopup({
+export function DebugScopePopup({
   operationContext
 }: {
   operationContext: OperationContext;
@@ -88,13 +88,13 @@ export interface DebugPopup {
   onNext: () => void;
 }
 
-interface SharePopup {
+export interface SharePopup {
   content: string;
   active: boolean;
   onClose: () => void;
 }
 
-interface EditorPopupsOptions {
+export interface EditorPopupsOptions {
   share: SharePopup;
   debug?: DebugPopup;
 }

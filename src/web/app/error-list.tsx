@@ -6,7 +6,7 @@ export interface ErrorEntry {
   onClick: () => void;
 }
 
-interface ErrorsOptions {
+export interface ErrorsOptions {
   errors: ErrorEntry[];
 }
 

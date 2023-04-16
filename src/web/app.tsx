@@ -11,6 +11,7 @@ import { guid } from './app/utils';
 import Editor from './app/editor';
 import Transpile from './app/transpile';
 import Execute from './app/execute';
+import ExternalLinks, { AppExternalLink } from './app/external-links';
 
 interface EditorContext {
   instance?: Monaco.editor.IStandaloneCodeEditor;
@@ -20,6 +21,7 @@ interface EditorContext {
 
 export interface AppOptions {
   initContent?: string;
+  externalLinks: AppExternalLink[];
 }
 
 const activeErrors: ErrorEntry[] = [];
@@ -143,6 +145,9 @@ export default function (options: AppOptions) {
               </div>
             </div>
           </div>
+        </div>
+        <div className="readme">
+          <ExternalLinks externalLinks={options.externalLinks} />
         </div>
       </div>
     </article>

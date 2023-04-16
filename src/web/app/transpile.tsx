@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import minify from '../minify';
 
-interface TranspileOptions {
+export interface TranspileOptions {
   model: Monaco.editor.ITextModel;
   onShare: () => void;
   showError: (msg: string, timeout?: number) => void;

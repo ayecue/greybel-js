@@ -10,7 +10,7 @@ import execute from '../execute';
 import { Stdin, Stdout } from '../std';
 import { DebugPopup } from './popups';
 
-interface ExecuteOptions {
+export interface ExecuteOptions {
   model: Monaco.editor.ITextModel;
   showError: (msg: string, timeout?: number) => void;
   instance: Monaco.editor.IStandaloneCodeEditor;
