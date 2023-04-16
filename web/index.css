@@ -398,3 +398,46 @@ body {
 .share-popup a:after {
 	transform: rotate(-45deg);
 }
+
+.readme ul {
+	margin: 0;
+	padding: 0;
+	left: 5px;
+	bottom: 5px;
+	position: fixed;
+	z-index: 999;
+	background: #333;
+	opacity: 0.7;
+}
+
+.readme li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: inline-block;
+}
+
+.readme ul .collapse {
+	cursor: pointer;
+	padding: 0.7em 1.4em;
+	color: #CCC;
+}
+
+.readme .external-links a {
+	display: inline-block;
+	padding: 0.7em 1.4em;
+	margin: 0 0 0 0.3em;
+	border-radius: 0.15em;
+	box-sizing: border-box;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-weight: bold;
+	color: #fff;
+	text-align: center;
+	position: relative;
+	cursor: pointer;
+}
+
+.readme .external-links a:active {
+	border: 1px solid #000;
+}
