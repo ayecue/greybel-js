@@ -482,3 +482,8 @@ All notable changes to this project will be documented in this file.
 ## [1.7.1] - 15-04-2023
 
 - escape dot in split intrinsic
+
+## [1.7.2] - 16-04-2023
+
+- split react components in UI
+- add external links in UI
