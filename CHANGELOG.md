@@ -487,3 +487,8 @@ All notable changes to this project will be documented in this file.
 
 - split react components in UI
 - add external links in UI
+
+## [1.7.3] - 21-04-2023
+
+- fix output format of show_procs in intrinsics
+- update meta descriptions
