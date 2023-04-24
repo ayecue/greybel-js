@@ -19,6 +19,8 @@ import { ASTBase } from 'greyscript-core';
 import inquirer from 'inquirer';
 import readline from 'readline';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
+
+import EnvMapper from './build/env-mapper';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -334,15 +336,21 @@ export class CLIOutputHandler extends OutputHandler {
 }
 
 export interface ExecuteOptions {
-  api?: Map<string, CustomFunction>;
-  params?: string[];
-  seed?: string;
+  api: Map<string, CustomFunction>;
+  params: string[];
+  seed: string;
+  envFiles: string[];
+  envVars: string[];
 }
 
 export default async function execute(
   target: string,
-  options: ExecuteOptions = {}
+  options: Partial<ExecuteOptions> = {}
 ): Promise<boolean> {
+  const envMapper = new EnvMapper();
+
+  envMapper.load(options.envFiles, options.envVars);
+
   const interpreter = new Interpreter({
     target,
     handler: new HandlerContainer({
@@ -350,7 +358,8 @@ export default async function execute(
     }),
     api: initIntrinsics(
       initGHIntrinsics(new ObjectValue(), createMockEnvironment(options.seed))
-    )
+    ),
+    environmentVariables: new Map(Object.entries(envMapper.map))
   });
 
   interpreter.setDebugger(new GrebyelPseudoDebugger(interpreter));

@@ -26,7 +26,9 @@ program
 	})
 	.option('-p, --params <params...>', 'Execution parameters')
 	.option('-i, --interactive', 'Interactive parameters')
-	.option('-s, --seed <seed>', 'Seed parameter');
+	.option('-s, --seed <seed>', 'Seed parameter')
+	.option('-ev, --env-files <file...>', 'Environment variables files')
+	.option('-vr, --env-vars <var...>', 'Environment variables');
 
 program.parse(process.argv);
 
@@ -51,7 +53,9 @@ program.parse(process.argv);
 
 	const success = await execute(options.filepath, {
 		params: options.params,
-		seed: options.seed
+		seed: options.seed,
+		envFiles: options.envFiles,
+		envVars: options.envVars,
 	});
 
 	if (!success) {

@@ -98,9 +98,11 @@ Interpreter CLI
 Example: greybel-execute <myscriptfile>
 
 Options:
-	-p, --params		Execution parameters
-	-i, --interactive	Interactive parameter
+	-p, --params			Execution parameters
+	-i, --interactive		Interactive parameter
 	-s, --seed			Seed parameter
+	-ev, --env-files <file...>	Environment varibales files
+	-vr, --env-vars <vars...>	Environment varibales
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
