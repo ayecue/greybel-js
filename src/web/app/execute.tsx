@@ -23,6 +23,7 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
   const [stdout, setStdout] = useState<Stdout | undefined>(undefined);
   const [stdin, setStdin] = useState<Stdin | undefined>(undefined);
   const [parameters, setParameters] = useState('');
+  const [seed, setSeed] = useState('test');
   const [interpreter, setInterpreter] = useState<Interpreter | null>(null);
   const run = () => {
     if (interpreter !== null) return;
@@ -33,6 +34,7 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
       stdin,
       stdout,
       params: parameters.split(' ').filter((v) => v !== ''),
+      seed,
       onStart: (interpreter: Interpreter) => {
         activeInterpreter = interpreter;
         setInterpreter(activeInterpreter);
@@ -119,6 +121,15 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
           id="params"
           type="text"
           onChange={(ev) => setParameters(ev.target.value)}
+        />
+      </div>
+      <div className="context">
+        <label>Seed:</label>
+        <input
+          id="seed"
+          type="text"
+          value={seed}
+          onChange={(ev) => setSeed(ev.target.value)}
         />
       </div>
       <div className="actions">

@@ -24,8 +24,9 @@ program
 	.action(function (filepath, output) {
 		options.filepath = filepath;
 	})
-	.option('-params, --params <params...>', 'Execution parameters')
-	.option('-i, --interactive', 'Interactive parameters');
+	.option('-p, --params <params...>', 'Execution parameters')
+	.option('-i, --interactive', 'Interactive parameters')
+	.option('-s, --seed <seed>', 'Seed parameter');
 
 program.parse(process.argv);
 
@@ -49,7 +50,8 @@ program.parse(process.argv);
 	}
 
 	const success = await execute(options.filepath, {
-		params: options.params
+		params: options.params,
+		seed: options.seed
 	});
 
 	if (!success) {

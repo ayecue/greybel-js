@@ -99,7 +99,8 @@ Example: greybel-execute <myscriptfile>
 
 Options:
 	-p, --params		Execution parameters
-	-i, --interactive	Interactive parameters
+	-i, --interactive	Interactive parameter
+	-s, --seed			Seed parameter
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.

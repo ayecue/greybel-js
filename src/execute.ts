@@ -2,6 +2,7 @@ import ansis from 'ansis';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import createMockEnvironment from 'greybel-gh-mock-intrinsics/dist/mock/environment';
 import {
   CustomFunction,
   Debugger,
@@ -9,6 +10,7 @@ import {
   HandlerContainer,
   Interpreter,
   KeyEvent,
+  ObjectValue,
   OperationContext,
   OutputHandler
 } from 'greybel-interpreter';
@@ -334,6 +336,7 @@ export class CLIOutputHandler extends OutputHandler {
 export interface ExecuteOptions {
   api?: Map<string, CustomFunction>;
   params?: string[];
+  seed?: string;
 }
 
 export default async function execute(
@@ -345,7 +348,9 @@ export default async function execute(
     handler: new HandlerContainer({
       outputHandler: new CLIOutputHandler()
     }),
-    api: initIntrinsics(initGHIntrinsics())
+    api: initIntrinsics(
+      initGHIntrinsics(new ObjectValue(), createMockEnvironment(options.seed))
+    )
   });
 
   interpreter.setDebugger(new GrebyelPseudoDebugger(interpreter));
