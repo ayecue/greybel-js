@@ -2,6 +2,7 @@ import ansis from 'ansis';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import createMockEnvironment from 'greybel-gh-mock-intrinsics/dist/mock/environment';
 import {
   CustomFunction,
   Debugger,
@@ -9,6 +10,7 @@ import {
   HandlerContainer,
   Interpreter,
   KeyEvent,
+  ObjectValue,
   OperationContext,
   OutputHandler
 } from 'greybel-interpreter';
@@ -17,6 +19,8 @@ import { ASTBase } from 'greyscript-core';
 import inquirer from 'inquirer';
 import readline from 'readline';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
+
+import EnvMapper from './build/env-mapper';
 inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -332,20 +336,30 @@ export class CLIOutputHandler extends OutputHandler {
 }
 
 export interface ExecuteOptions {
-  api?: Map<string, CustomFunction>;
-  params?: string[];
+  api: Map<string, CustomFunction>;
+  params: string[];
+  seed: string;
+  envFiles: string[];
+  envVars: string[];
 }
 
 export default async function execute(
   target: string,
-  options: ExecuteOptions = {}
+  options: Partial<ExecuteOptions> = {}
 ): Promise<boolean> {
+  const envMapper = new EnvMapper();
+
+  envMapper.load(options.envFiles, options.envVars);
+
   const interpreter = new Interpreter({
     target,
     handler: new HandlerContainer({
       outputHandler: new CLIOutputHandler()
     }),
-    api: initIntrinsics(initGHIntrinsics())
+    api: initIntrinsics(
+      initGHIntrinsics(new ObjectValue(), createMockEnvironment(options.seed))
+    ),
+    environmentVariables: new Map(Object.entries(envMapper.map))
   });
 
   interpreter.setDebugger(new GrebyelPseudoDebugger(interpreter));

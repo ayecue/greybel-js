@@ -8,7 +8,7 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 - Demo Projects: [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - Greybel UI Demo: [greybel-ui](https://editor.greyscript.org)
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
-- Greyscript API: [greyscript-meta](https://documentation.greyscript.org)
+- Greyscript API: [GreyScript Documentation](https://documentation.greyscript.org)
 
 ## Features
 
@@ -98,15 +98,18 @@ Interpreter CLI
 Example: greybel-execute <myscriptfile>
 
 Options:
-	-p, --params		Execution parameters
-	-i, --interactive	Interactive parameters
+	-p, --params			Execution parameters
+	-i, --interactive		Interactive parameter
+	-s, --seed			Seed parameter
+	-ev, --env-files <file...>	Environment varibales files
+	-vr, --env-vars <vars...>	Environment varibales
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
 
 ## Local environment
 
-[Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics) will automatically generate a local environment. It will also generate other computers, networks, filesystems etc on the fly. Generating is based on a seed called `test`. Therefore generated entities should stay consistent.
+[Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics) will automatically generate a local environment. It will also generate other computers, networks, filesystems etc on the fly. Generating is by default based on a seed called `test`. The seed can be modified with the seed option. While using the same seed generated entities should stay consistent.
 
 The local computer setup is hardcoded. The admin credentials are `root:test`. You will also have `crypto.so` and `metaxploit.so` at your local computer available.
 

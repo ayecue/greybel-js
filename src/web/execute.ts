@@ -1,4 +1,5 @@
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import createMockEnvironment from 'greybel-gh-mock-intrinsics/dist/mock/environment';
 import {
   CustomValue,
   Debugger,
@@ -45,6 +46,7 @@ export interface ExecuteOptions {
   stdout?: Stdout;
   api?: ObjectValue;
   params: string[];
+  seed?: string;
   onStart: (interpreter: Interpreter) => void;
   onError: (err: any) => void;
   onEnd: (interpreter: Interpreter) => void;
@@ -212,7 +214,9 @@ export default async function execute(
       resourceHandler: new PseudoResourceHandler(),
       outputHandler: new WebOutputHandler()
     }),
-    api: initIntrinsics(initGHIntrinsics(vsAPI))
+    api: initIntrinsics(
+      initGHIntrinsics(vsAPI, createMockEnvironment(options.seed))
+    )
   });
 
   activeInterpreter = interpreter;

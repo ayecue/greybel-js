@@ -1,13 +1,15 @@
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React, { useEffect, useRef } from 'react';
+import { buildClassName } from './utils';
 
 export interface EditorOptions {
   model: Monaco.editor.ITextModel;
   monaco: typeof Monaco;
   onCreate: (instance: Monaco.editor.IStandaloneCodeEditor) => void;
+  className?: string;
 }
 
-export default function Editor({ monaco, model, onCreate }: EditorOptions) {
+export default function Editor({ monaco, model, onCreate, className }: EditorOptions) {
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -20,5 +22,8 @@ export default function Editor({ monaco, model, onCreate }: EditorOptions) {
     onCreate(instance);
   }, []);
 
-  return <div className="editor-ide" ref={editorRef}></div>;
+  return <div className={buildClassName(
+    'editor-ide',
+    { shouldAdd: !!className && className.length > 0, className: className! }
+  )} ref={editorRef}></div>;
 }

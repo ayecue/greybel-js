@@ -2,6 +2,7 @@ import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import React, { useState } from 'react';
 
 import minify from '../minify';
+import { buildClassName } from './utils';
 
 export interface TranspileOptions {
   model: Monaco.editor.ITextModel;
@@ -15,6 +16,7 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
   const [obfuscation, setObfuscation] = useState(false);
   const [disableLO, setDisableLO] = useState(false);
   const [disableNO, setDisableNO] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [excludedNamespaces, setExcludedNamespaces] = useState('');
   const transpile = async () => {
     try {
@@ -39,13 +41,34 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
 
   return (
     <div className="editor-transpile">
-      <a id="transpile" onClick={() => transpile()}>
-        Transpile
-      </a>
-      <a id="share" onClick={onShare}>
-        Share code
-      </a>
-      <div className="editor-options">
+      <div className="actions">
+        <a
+          id="transpile"
+          className="material-icons"
+          title="Transpile"
+          onClick={() => transpile()}
+        ></a>
+        <a
+          id="share"
+          className="material-icons"
+          title="Share"
+          onClick={onShare}
+        ></a>
+        <a 
+          className={buildClassName(
+            'collapse',
+            'material-icons',
+            { shouldAdd: collapsed, className: 'closed' },
+            { shouldAdd: !collapsed, className: 'open' }
+          )}
+          onClick={() => setCollapsed(!collapsed)}
+          title="Collapse"
+        ></a>
+      </div>
+      <div className={buildClassName(
+          'editor-options',
+          { shouldAdd: collapsed, className: 'hidden' }
+        )}>
         <ul>
           <li>
             <select
