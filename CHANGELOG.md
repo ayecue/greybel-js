@@ -496,6 +496,9 @@ All notable changes to this project will be documented in this file.
 
 ## [1.7.4] - 24-04-2023
 
+- use mac and wifi name for bssid and essid to emulate ingame intrinsic
 - fix potential crash caused by meta due to not using hasOwnProperty
 - support customizable seed in interpreter
 - support customizable environment variables in interpreter
+- support circular dependencies for interpreter
+- add circular dependency check for build
