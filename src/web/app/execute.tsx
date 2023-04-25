@@ -9,6 +9,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import execute from '../execute';
 import { Stdin, Stdout } from '../std';
 import { DebugPopup } from './popups';
+import { buildClassName } from './utils';
 
 export interface ExecuteOptions {
   model: Monaco.editor.ITextModel;
@@ -24,6 +25,7 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
   const [stdin, setStdin] = useState<Stdin | undefined>(undefined);
   const [parameters, setParameters] = useState('');
   const [seed, setSeed] = useState('test');
+  const [collapsed, setCollapsed] = useState(true);
   const [interpreter, setInterpreter] = useState<Interpreter | null>(null);
   const run = () => {
     if (interpreter !== null) return;
@@ -115,40 +117,65 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
 
   return (
     <div className="editor-execute">
-      <div className="context">
-        <label>Execution parameter:</label>
-        <input
-          id="params"
-          type="text"
-          onChange={(ev) => setParameters(ev.target.value)}
-        />
-      </div>
-      <div className="context">
-        <label>Seed:</label>
-        <input
-          id="seed"
-          type="text"
-          value={seed}
-          onChange={(ev) => setSeed(ev.target.value)}
-        />
-      </div>
       <div className="actions">
-        <a id="execute" onClick={run} className={interpreter ? 'disabled' : ''}>
-          Execute
-        </a>
+        <a
+          id="execute"
+          title="Execute"
+          onClick={run}
+          className={buildClassName('material-icons', { shouldAdd: !!interpreter, className: 'disabled' })}
+        ></a>
         <a
           id="pause"
+          title="Pause"
           onClick={pause}
-          className={!interpreter ? 'disabled' : ''}
-        >
-          Pause
-        </a>
-        <a id="stop" onClick={stop} className={!interpreter ? 'disabled' : ''}>
-          Stop
-        </a>
-        <a id="clear" onClick={() => stdout?.clear()}>
-          Clear
-        </a>
+          className={buildClassName('material-icons', { shouldAdd: !interpreter, className: 'disabled' })}
+        ></a>
+        <a 
+          id="stop"
+          title="Stop"
+          onClick={stop}
+          className={buildClassName('material-icons', { shouldAdd: !interpreter, className: 'disabled' })}
+        ></a>
+        <a
+          id="clear"
+          title="Clear"
+          onClick={() => stdout?.clear()}
+          className="material-icons"
+        ></a>
+        <a 
+          className={buildClassName(
+            'collapse',
+            'material-icons',
+            { shouldAdd: collapsed, className: 'closed' },
+            { shouldAdd: !collapsed, className: 'open' }
+          )}
+          onClick={() => setCollapsed(!collapsed)}
+          title="Collapse"
+        ></a>
+      </div>
+      <div className="context">
+        <ul className={buildClassName(
+          'items',
+          { shouldAdd: collapsed, className: 'hidden' }
+        )}>
+          <li className="item">
+            <label>Execution parameter:</label>
+            <input
+              id="params"
+              type="text"
+              onChange={(ev) => setParameters(ev.target.value)}
+            />
+          </li>
+          <li className="item">
+            <label>Seed:</label>
+            <input
+              id="seed"
+              type="text"
+              value={seed}
+              onChange={(ev) => setSeed(ev.target.value)}
+            />
+          </li>
+        </ul>
       </div>
       <label>Execution output:</label>
       <div

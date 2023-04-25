@@ -66,15 +66,15 @@ body {
 
 .editor-actions a {
 	display: inline-block;
-	padding: 0.7em 1.4em;
-	margin: 0 0.3em 0.3em 0;
+	padding: 5px;
+	margin: 0 5px 0 0;
 	border-radius: 0.15em;
 	box-sizing: border-box;
 	text-decoration: none;
 	text-transform: uppercase;
 	font-weight: 400;
-	color: #333;
-	background-color: #999;
+	color: #ffffff;
+	background-color: #03b140;
 	box-shadow: inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
 	text-align: center;
 	position: relative;
@@ -82,9 +82,50 @@ body {
 	border: 1px solid transparent;
 }
 
+.editor-actions #execute:before {
+	content: "\eb8e";
+}
+
+.editor-actions #pause {
+	background-color: #f2de04;
+}
+
+.editor-actions #pause:before {
+	content: "\e034";
+}
+
+.editor-actions #stop {
+	background-color: #f23004;
+}
+
+.editor-actions #stop:before {
+	content: "\e047";
+}
+
+.editor-actions #clear:before {
+	content: "\e872";
+}
+
+.editor-actions a.collapse {
+	background: none;
+	box-shadow: none;
+}
+
+.editor-actions a.collapse:active {
+	border: none;
+}
+
+.editor-actions .collapse.open:before {
+	content: "\e5ce";
+}
+
+.editor-actions .collapse.closed:before {
+	content: "\e5cf";
+}
+
 .editor-actions a.disabled {
-	background-color: rgb(26, 26, 26);
-	color: rgb(136, 136, 136);
+	background-color: rgb(26, 26, 26)!important;
+	color: rgb(136, 136, 136)!important;
 	cursor: default;
 }
 
@@ -102,6 +143,10 @@ body {
 	border: 1px solid #AAA;
 	padding: 5px;
 	margin: 10px 0;
+}
+
+.editor-options.hidden {
+	display: none;
 }
 
 .editor-options label {
@@ -262,6 +307,14 @@ body {
 	color: red!important;
 }
 
+.editor-transpile .actions #transpile:before {
+	content: "\ef6d";
+}
+
+.editor-transpile .actions #share:before {
+	content: "\e80d";
+}
+
 .editor-actions > .editor-execute {
 	position: relative;
 	padding: 0 0 24px;
@@ -284,11 +337,6 @@ body {
 	outline: 2px groove orange;
 }
 
-.editor-execute .context {
-	display: block;
-	position: relative;
-}
-
 .editor-execute label {
 	display: block;
 	color: #CCC;
@@ -296,6 +344,11 @@ body {
 
 .editor-execute .actions {
 	clear: both;
+}
+
+.editor-execute .context {
+	display: block;
+	position: relative;
 }
 
 .editor-execute .context input {
@@ -306,6 +359,22 @@ body {
 	width: 60%;
 	height: 28px;
 	margin: 5px 0;
+}
+
+.editor-execute .context ul {
+	margin: 5px 0 0;
+	padding: 0;
+}
+
+.editor-execute .context ul.hidden {
+	display: none;
+}
+
+.editor-execute .context li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: block;
 }
 
 #excludedNamespaces {
