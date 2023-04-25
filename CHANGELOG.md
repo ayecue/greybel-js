@@ -502,3 +502,4 @@ All notable changes to this project will be documented in this file.
 - support customizable environment variables in interpreter
 - support circular dependencies for interpreter
 - add circular dependency check for build
+- web UI improvements
