@@ -28,6 +28,32 @@ body {
 	height: 100%;
 }
 
+.editor-control > .collapse {
+	position: absolute;
+	top: 5px;
+	color: #FFF;
+	font-size: 20px;
+	background: #000;
+	cursor: pointer;
+	border: 1px solid #fff;
+}
+
+.editor-control > .collapse.open {
+	right: 30.5%;
+}
+
+.editor-control > .collapse.closed {
+	right: 5px;
+}
+
+.editor-control > .collapse.open:before {
+	content: "\e409";
+}
+
+.editor-control > .collapse.closed:before {
+	content: "\e5cb";
+}
+
 /* IDE */
 .editor-ide {
 	position: absolute;
@@ -36,6 +62,10 @@ body {
 	bottom: 0px;
 	border: 1px solid #000;
 	background-color: #000;
+}
+
+.editor-ide.fullscreen {
+	width: 100%;
 }
 
 .editor-ide #container {
@@ -52,6 +82,10 @@ body {
 	right: 0;
 	top: 0;
 	overflow: auto;
+}
+
+.editor-side-panel.hidden {
+	display: none;
 }
 
 .editor-actions > div > label {

@@ -7,7 +7,7 @@ import language from './extension/grammar/language';
 import documentParseQueue from './extension/helper/model-manager';
 import EditorPopups, { DebugPopup } from './app/popups';
 import ErrorList, { ErrorEntry } from './app/error-list';
-import { guid } from './app/utils';
+import { buildClassName, guid } from './app/utils';
 import Editor from './app/editor';
 import Transpile from './app/transpile';
 import Execute from './app/execute';
@@ -33,6 +33,7 @@ export default function (options: AppOptions) {
   const [errorEntries, setErrorEntries] = useState<ErrorEntry[]>([]);
   const [share, setShare] = useState<boolean>(false);
   const [debug, setDebug] = useState<DebugPopup | undefined>(undefined);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     monacoLoader.init().then((resolvedMonaco: typeof Monaco) => {
@@ -115,8 +116,24 @@ export default function (options: AppOptions) {
               instance
             });
           }}
+          className={buildClassName(
+            { shouldAdd: collapsed, className: 'fullscreen' }
+          )}
         />
-        <div className="editor-side-panel">
+        <a
+          className={buildClassName(
+            'collapse',
+            'material-icons',
+            { shouldAdd: collapsed, className: 'closed' },
+            { shouldAdd: !collapsed, className: 'open' }
+          )}
+          onClick={() => setCollapsed(!collapsed)}
+          title="Collapse"
+        ></a>
+        <div className={buildClassName(
+            'editor-side-panel',
+            { shouldAdd: collapsed, className: 'hidden' }
+        )}>
           <div>
             <div className="editor-actions">
               <Transpile
