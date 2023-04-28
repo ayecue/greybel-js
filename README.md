@@ -49,8 +49,8 @@ Arguments:
 
 Options:
 	-V, --version				Output the version number
-	-ev, --env-files <file...>		Environment varibales files
-	-vr, --env-vars <vars...>		Environment varibales
+	-ev, --env-files <file...>		Environment variables files
+	-vr, --env-vars <vars...>		Environment variables
 	-en, --exclude-namespaces <vars...>	Exclude namespaces from optimization
 	-u, --uglify				Uglify your code
 	-b, --beautify				Beautify your code
@@ -101,8 +101,8 @@ Options:
 	-p, --params			Execution parameters
 	-i, --interactive		Interactive parameter
 	-s, --seed			Seed parameter
-	-ev, --env-files <file...>	Environment varibales files
-	-vr, --env-vars <vars...>	Environment varibales
+	-ev, --env-files <file...>	Environment variables files
+	-vr, --env-vars <vars...>	Environment variables
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
