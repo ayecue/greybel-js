@@ -146,6 +146,43 @@ print("Another string!")
 ## TextMesh Pro Rich Text support
 [TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
+## TestLib
+Adds testing methods for setting up envs and debugging. Keep in mind that this library is not available in the actual game.
+```
+testLib = include("/lib/testlib.so")
+
+// returns all active shell sessions
+sessions = testLib.sessions
+
+// can be used to generate routers, get_router will do the same
+router = testLib.get_or_create_router("12.12.12.12")
+
+// can be used to get all computers with root access which are related to router
+computers = testLib.get_computers_connected_to_router(router)
+computer = computers.values[0]
+
+// can be used to receive root shell of certain computer
+shell = testLib.get_shell_for_computer(computer)
+
+// can be used to receive root shell of certain file
+shell = testLib.get_shell_for_file(computer.File("/lib"))
+
+// can be used to receive computer with root access of certain file
+computer = testLib.get_computer_for_file(computer.File("/lib"))
+
+// can be used for debugging purposes, will wrap code into try-catch statement
+failureFn = function
+  get_shell(null, null)
+end function
+
+onError = function(errMessage, trace)
+  print("An error appeared " + errMessage)
+  print(trace)
+end function
+
+testLib.try_to_execute(@failureFn, @onError)
+```
+
 ### CLI
 <details>
 <summary>Supports</summary>
