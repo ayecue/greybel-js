@@ -503,3 +503,8 @@ All notable changes to this project will be documented in this file.
 - support circular dependencies for interpreter
 - add circular dependency check for build
 - web UI improvements
+
+## [1.7.5] - 28.04.2023
+
+- support gh intrinsic references
+- support program to launch itself
