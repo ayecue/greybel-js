@@ -513,3 +513,4 @@ All notable changes to this project will be documented in this file.
 ## [1.7.6] - 28.04.2023
 
 - returning proper library type names when using typeof
+- time now returns elapsed time in seconds
