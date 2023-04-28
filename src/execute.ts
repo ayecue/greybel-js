@@ -1,8 +1,7 @@
 import ansis from 'ansis';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names';
-import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
-import createMockEnvironment from 'greybel-gh-mock-intrinsics/dist/mock/environment';
+import { createGHMockEnv, init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
   Debugger,
@@ -12,7 +11,8 @@ import {
   KeyEvent,
   ObjectValue,
   OperationContext,
-  OutputHandler
+  OutputHandler,
+  DefaultResourceHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { ASTBase } from 'greyscript-core';
@@ -351,13 +351,18 @@ export default async function execute(
 
   envMapper.load(options.envFiles, options.envVars);
 
+  const resourceHandler = new DefaultResourceHandler();
   const interpreter = new Interpreter({
     target,
     handler: new HandlerContainer({
-      outputHandler: new CLIOutputHandler()
+      outputHandler: new CLIOutputHandler(),
+      resourceHandler
     }),
     api: initIntrinsics(
-      initGHIntrinsics(new ObjectValue(), createMockEnvironment(options.seed))
+      initGHIntrinsics(new ObjectValue(), createGHMockEnv({
+        seed: options.seed,
+        myProgramContent: await resourceHandler.get(target)
+      }))
     ),
     environmentVariables: new Map(Object.entries(envMapper.map))
   });
