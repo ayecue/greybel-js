@@ -49,8 +49,8 @@ Arguments:
 
 Options:
 	-V, --version				Output the version number
-	-ev, --env-files <file...>		Environment varibales files
-	-vr, --env-vars <vars...>		Environment varibales
+	-ev, --env-files <file...>		Environment variables files
+	-vr, --env-vars <vars...>		Environment variables
 	-en, --exclude-namespaces <vars...>	Exclude namespaces from optimization
 	-u, --uglify				Uglify your code
 	-b, --beautify				Beautify your code
@@ -101,8 +101,8 @@ Options:
 	-p, --params			Execution parameters
 	-i, --interactive		Interactive parameter
 	-s, --seed			Seed parameter
-	-ev, --env-files <file...>	Environment varibales files
-	-vr, --env-vars <vars...>	Environment varibales
+	-ev, --env-files <file...>	Environment variables files
+	-vr, --env-vars <vars...>	Environment variables
 ```
 
 For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
@@ -145,6 +145,47 @@ print("Another string!")
 
 ## TextMesh Pro Rich Text support
 [TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
+
+## TestLib
+Adds testing methods for setting up envs and debugging. Keep in mind that this library is not available in the actual game.
+```
+testLib = include("/lib/testlib.so")
+
+// returns all active shell sessions
+sessions = testLib.sessions
+
+// can be used to generate routers, get_router will do the same
+router = testLib.get_or_create_router("12.12.12.12")
+
+// can be used to get all computers with root access which are related to router
+computers = testLib.get_computers_connected_to_router(router)
+computer = computers.values[0]
+
+// can be used to receive root shell of certain computer
+shell = testLib.get_shell_for_computer(computer)
+
+// can be used to receive root shell of certain file
+shell = testLib.get_shell_for_file(computer.File("/lib"))
+
+// can be used to receive computer with root access of certain file
+computer = testLib.get_computer_for_file(computer.File("/lib"))
+
+// can be used for debugging purposes, will call onError callback in case function fails
+// onError gets called with an error message and information on where the error happened
+failureFn = function
+  get_shell(null, null)
+end function
+
+onError = function(errMessage, trace)
+  print("An error appeared " + errMessage)
+  print(trace)
+end function
+
+testLib.try_to_execute(@failureFn, @onError)
+
+// can be used for debugging purposes, will create a breakpoint and go into debug mode on failure
+testLib.try_to_execute_with_debug(@failureFn)
+```
 
 ### CLI
 <details>
