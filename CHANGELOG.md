@@ -509,3 +509,7 @@ All notable changes to this project will be documented in this file.
 - support gh intrinsic references
 - support program to launch itself
 - add test-lib for setting up envs and debugging - [read more](https://github.com/ayecue/greybel-js#testlib)
+
+## [1.7.6] - 28.04.2023
+
+- returning proper library type names when using typeof
