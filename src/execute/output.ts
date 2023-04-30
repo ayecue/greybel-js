@@ -143,14 +143,7 @@ export default class CLIOutputHandler extends OutputHandler {
 
   waitForKeyPress(message: string): Promise<KeyEvent> {
     return new Promise((resolve, _reject) => {
-      const transformed = transform(
-        message,
-        (openTag: TagRecord, content: string): string => {
-          return wrapWithTag(openTag, content);
-        }
-      ).replace(/\\n/g, '\n');
-
-      process.stdout.write(transformed);
+      this.print(message, false);
 
       readline.emitKeypressEvents(process.stdin);
 
