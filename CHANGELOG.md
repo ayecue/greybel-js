@@ -515,7 +515,7 @@ All notable changes to this project will be documented in this file.
 - returning proper library type names when using typeof
 - time now returns elapsed time in seconds
 
-## [1.7.7] - 29.04.2023
+## [1.7.7] - 30.04.2023
 
 - replace newline in print with actual newline
 - use editor inquirer component for repl
