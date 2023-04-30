@@ -164,8 +164,10 @@ export default async function execute(
       });
     }
 
-    waitForInput(isPassword: boolean): Promise<string> {
+    waitForInput(isPassword: boolean, message: string): Promise<string> {
       return new Promise((resolve, reject) => {
+        this.print(message, false);
+
         stdin.enable();
         stdin.focus();
         stdin.setType(isPassword ? 'password' : 'text');
@@ -186,8 +188,10 @@ export default async function execute(
       });
     }
 
-    waitForKeyPress(): Promise<KeyEvent> {
+    waitForKeyPress(message: string): Promise<KeyEvent> {
       return new Promise((resolve, reject) => {
+        this.print(message, false);
+
         stdin.enable();
         stdin.focus();
 
