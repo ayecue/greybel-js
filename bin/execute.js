@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const inquirer = require('inquirer');
+const { prompt } = require('enquirer');
 const semver = require('semver');
 const package = require('../package.json');
 
@@ -36,19 +36,13 @@ program.parse(process.argv);
 	options = Object.assign(options, program.opts());
 
 	if (options.interactive) {
-		options.params = await inquirer
-			.prompt({
-				name: 'default',
-				message: 'Params:',
-				type: 'input',
-				loop: false
-			})
-			.then((inputMap) => {
-				return inputMap.default.split(' ');
-			})
-			.catch((err) => {
-				throw err;
-			});
+		const interactiveParams = await prompt({
+			name: 'default',
+			message: 'Params:',
+			type: 'input'
+		});
+
+		options.params = interactiveParams.default.split(' ');
 	}
 
 	const success = await execute(options.filepath, {

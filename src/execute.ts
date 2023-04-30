@@ -16,12 +16,11 @@ import {
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { ASTBase } from 'greyscript-core';
-import inquirer from 'inquirer';
+import { prompt } from 'enquirer';
 import readline from 'readline';
 import transform, { Tag, TagRecord } from 'text-mesh-transformer';
 
 import EnvMapper from './build/env-mapper';
-inquirer.registerPrompt('command', require('inquirer-command-prompt'));
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -47,10 +46,10 @@ class GrebyelPseudoDebugger extends Debugger {
 
     const me = this;
     const iterate = async () => {
-      const result = await inquirer.prompt({
+      const result = await prompt<{ default: string }>({
+        type: 'input',
         name: 'default',
-        prefix: `[${operationContext.target}:${stackAst?.start?.line}] >`,
-        loop: true
+        message: `[${operationContext.target}:${stackAst?.start?.line}] >`
       });
       const line = result.default;
 
@@ -294,20 +293,14 @@ export class CLIOutputHandler extends OutputHandler {
     });
   }
 
-  waitForInput(isPassword: boolean): Promise<string> {
-    return inquirer
-      .prompt({
-        name: 'default',
-        message: 'Input:',
-        type: isPassword ? 'password' : 'input',
-        loop: false
-      })
-      .then((inputMap) => {
-        return inputMap.default;
-      })
-      .catch((err) => {
-        throw err;
-      });
+  async waitForInput(isPassword: boolean): Promise<string> {
+    const answer = await prompt<{ default: string }>({
+      name: 'default',
+      message: '',
+      type: isPassword ? 'password' : 'input',
+    });
+
+    return answer.default;
   }
 
   waitForKeyPress(): Promise<KeyEvent> {
