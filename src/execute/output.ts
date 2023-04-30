@@ -1,5 +1,5 @@
 import { input, password } from '@inquirer/prompts';
-import { default as ansis } from 'ansis';
+import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
 import { KeyEvent, OutputHandler } from 'greybel-interpreter';
@@ -8,6 +8,7 @@ import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 
 import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
 
+const ansiProvider = new AnotherAnsiProvider();
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 function useColor(color: string | undefined, content: string): string {
@@ -20,7 +21,7 @@ function useColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.hex(color)(content);
+  return ansiProvider.colorWithHex(color, content);
 }
 
 function useBgColor(color: string | undefined, content: string): string {
@@ -33,7 +34,7 @@ function useBgColor(color: string | undefined, content: string): string {
     color = item;
   }
 
-  return ansis.bgHex(color)(content);
+  return ansiProvider.bgColorWithHex(color, content);
 }
 
 function wrapWithTag(openTag: TagRecord, content: string): string {
@@ -41,13 +42,13 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
     case Tag.Color:
       return useColor(openTag.value, content);
     case Tag.Underline:
-      return ansis.underline(content);
+      return ansiProvider.modify(ModifierType.Underline, content);
     case Tag.Italic:
-      return ansis.italic(content);
+      return ansiProvider.modify(ModifierType.Italic, content);
     case Tag.Bold:
-      return ansis.bold(content);
+      return ansiProvider.modify(ModifierType.Bold, content);
     case Tag.Strikethrough:
-      return ansis.strikethrough(content);
+      return ansiProvider.modify(ModifierType.Strikethrough, content);
     case Tag.Mark:
       return useBgColor(openTag.value, content);
     case Tag.Lowercase:
@@ -115,26 +116,42 @@ export default class CLIOutputHandler extends OutputHandler {
     });
   }
 
-  waitForInput(isPassword: boolean): Promise<string> {
+  waitForInput(isPassword: boolean, message: string): Promise<string> {
     return new Promise((resolve, reject) => {
+      const transformed = transform(
+        message,
+        (openTag: TagRecord, content: string): string => {
+          return wrapWithTag(openTag, content);
+        }
+      ).replace(/\\n/g, '\n');
+
       if (isPassword) {
         return password({
-          message: '¶'
+          message: transformed
         })
           .then(resolve)
           .catch(reject);
       }
 
       return input({
-        message: '¶'
+        message: transformed
       })
         .then(resolve)
         .catch(reject);
     });
   }
 
-  waitForKeyPress(): Promise<KeyEvent> {
+  waitForKeyPress(message: string): Promise<KeyEvent> {
     return new Promise((resolve, _reject) => {
+      const transformed = transform(
+        message,
+        (openTag: TagRecord, content: string): string => {
+          return wrapWithTag(openTag, content);
+        }
+      ).replace(/\\n/g, '\n');
+
+      process.stdout.write(transformed);
+
       readline.emitKeypressEvents(process.stdin);
 
       process.stdin.resume();

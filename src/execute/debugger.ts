@@ -1,11 +1,10 @@
 import { editor } from '@inquirer/prompts';
-import GreybelInterpreter, {
+import {
+  Debugger, DefaultType,
   Interpreter,
   OperationContext
 } from 'greybel-interpreter';
 import { ASTBase } from 'greyscript-core';
-
-const { Debugger, DefaultType } = GreybelInterpreter;
 
 export default class GrebyelPseudoDebugger extends Debugger {
   interpreter: Interpreter;

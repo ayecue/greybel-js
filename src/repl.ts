@@ -1,23 +1,20 @@
 import { editor } from '@inquirer/prompts';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
-import GreybelInterpreter, {
+import {
   CustomValue,
   ObjectValue as ObjectValueType,
-  OperationContext
-} from 'greybel-interpreter';
-import { init as initIntrinsics } from 'greybel-intrinsics';
-
-import CLIOutputHandler from './execute/output.js';
-import GrebyelPseudoDebugger from './repl/debugger.js';
-
-const {
+  OperationContext,
   DefaultType,
   CustomFunction,
   CustomString,
   HandlerContainer,
   Interpreter,
   ObjectValue
-} = GreybelInterpreter;
+} from 'greybel-interpreter';
+import { init as initIntrinsics } from 'greybel-intrinsics';
+
+import CLIOutputHandler from './execute/output.js';
+import GrebyelPseudoDebugger from './repl/debugger.js';
 
 export interface REPLOptions {
   api?: ObjectValueType;

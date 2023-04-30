@@ -1,4 +1,4 @@
-import { default as monacoLoader } from '@monaco-editor/loader';
+import monacoLoader from '@monaco-editor/loader';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useEffect, useState } from 'react';
 

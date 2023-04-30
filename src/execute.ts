@@ -1,18 +1,13 @@
-import GreybelGHMockIntrinsics from 'greybel-gh-mock-intrinsics';
-import GreybelInterpreter, {
+import { createGHMockEnv, init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import {
   CustomFunction,
-  DefaultResourceHandler
+  DefaultResourceHandler, HandlerContainer, Interpreter, ObjectValue
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
 import EnvMapper from './build/env-mapper.js';
 import GrebyelPseudoDebugger from './execute/debugger.js';
 import CLIOutputHandler from './execute/output.js';
-
-const { HandlerContainer, Interpreter, ObjectValue } = GreybelInterpreter;
-
-const createGHMockEnv = GreybelGHMockIntrinsics.createGHMockEnv;
-const initGHIntrinsics = GreybelGHMockIntrinsics.init;
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;

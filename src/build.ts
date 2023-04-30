@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
-import GreybelTranspiler, {
+import {
+  Transpiler,
   BuildType,
   TranspilerParseResult
 } from 'greybel-transpiler';
@@ -7,8 +8,6 @@ import mkdirp from 'mkdirp';
 import path from 'path';
 
 import EnvMapper from './build/env-mapper.js';
-
-const { Transpiler } = GreybelTranspiler;
 
 function createContentHeader(): string {
   return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
