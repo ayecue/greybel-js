@@ -7,7 +7,6 @@
       "outDir": "out",
       "sourceMap": true,
       "rootDir": "src",
-      "strict": true,
       "resolveJsonModule": true,
       "esModuleInterop": true,
       "downlevelIteration": true,
