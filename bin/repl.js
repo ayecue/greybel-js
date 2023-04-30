@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --no-warnings
 import semver from 'semver';
 import packageJSON from '../package.json' assert {
 	type: 'json'
