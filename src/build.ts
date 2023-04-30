@@ -1,13 +1,14 @@
 import fs from 'fs/promises';
-import {
+import GreybelTranspiler, {
   BuildType,
-  Transpiler,
   TranspilerParseResult
 } from 'greybel-transpiler';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
-import EnvMapper from './build/env-mapper';
+import EnvMapper from './build/env-mapper.js';
+
+const { Transpiler } = GreybelTranspiler;
 
 function createContentHeader(): string {
   return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
@@ -257,7 +258,7 @@ export default async function build(
 
     const getRelativePath = (filePath: string) => {
       const pathSegments = filePath.split(path.sep);
-      const filtered = [];
+      const filtered: string[] = [];
 
       for (const segment of targetRootSegments) {
         const current = pathSegments.shift();

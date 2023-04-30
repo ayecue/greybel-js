@@ -223,6 +223,10 @@ body {
 	white-space: pre;
 }
 
+.editor-console-stdout .line {
+	display: block;
+}
+
 .debugger-popup-bg {
 	background-color: #333;
 	opacity: 0.5;

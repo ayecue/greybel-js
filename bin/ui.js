@@ -1,16 +1,20 @@
 #!/usr/bin/env node
-const semver = require('semver');
-const package = require('../package.json');
+import semver from 'semver';
+import packageJSON from '../package.json' assert {
+	type: 'json'
+};
 
-const engineVersion = package.engines.node;
+const engineVersion = packageJSON.engines.node;
 
 if (!semver.satisfies(process.version, engineVersion)) {
 	console.log(`Required node version ${engineVersion} not satisfied with current version ${process.version}.`);
 	process.exit(1);
 }
 
-const program = require('commander').program;
-const version = package.version;
+import { program } from 'commander';
+import open from 'open';
+
+const version = packageJSON.version;
 
 let options = {};
 
@@ -20,11 +24,8 @@ program
 
 program.parse(process.argv);
 
-(function() {
-	options = Object.assign(options, program.opts());
+options = Object.assign(options, program.opts());
 
-	const open = require('open');
-	const path = require('path');
+const indexFile = new URL('../out/index.html', import.meta.url);
 
-	open(path.resolve(__dirname, '../out/index.html'));
-})();
+open(indexFile.toString());

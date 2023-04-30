@@ -2,9 +2,9 @@ import EventEmitter from 'events';
 import { ASTChunkAdvanced, Parser } from 'greybel-core';
 import { ASTBase } from 'greyscript-core';
 import LRU from 'lru-cache';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import typeManager from './type-manager';
+import typeManager from './type-manager.js';
 
 export interface ParseResult {
   content: string;

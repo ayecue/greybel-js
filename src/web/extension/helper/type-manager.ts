@@ -18,11 +18,12 @@ import {
   getDefinition,
   getDefinitions,
   SignatureDefinition,
-  SignatureDefinitionArg
+  SignatureDefinitionArg,
+  SignatureDefinitionContainer
 } from 'greyscript-meta';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api';
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import ASTStringify from './ast-stringify';
+import ASTStringify from './ast-stringify.js';
 
 export class TypeInfo {
   label: string;
@@ -121,7 +122,7 @@ export class TypeMap {
     }
 
     let base: ASTBase | null = item;
-    const traversalPath = [];
+    const traversalPath: ASTBase[] = [];
 
     // prepare traversal path
     while (base) {
@@ -154,7 +155,7 @@ export class TypeMap {
           }
 
           // get signature
-          let definitions = null;
+          let definitions: SignatureDefinitionContainer | null = null;
 
           if (currentMetaInfo instanceof TypeInfoWithDefinition) {
             const definition = currentMetaInfo.definition;

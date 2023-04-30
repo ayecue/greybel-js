@@ -1,8 +1,8 @@
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useState } from 'react';
 
-import minify from '../minify';
-import { buildClassName } from './utils';
+import minify from '../minify.js';
+import { buildClassName } from './utils.js';
 
 export interface TranspileOptions {
   model: Monaco.editor.ITextModel;

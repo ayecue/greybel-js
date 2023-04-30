@@ -7,12 +7,12 @@ import {
   ASTIdentifier,
   ASTType
 } from 'greyscript-core';
-import { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api';
+import { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import * as ASTScraper from './ast-scraper';
-import ASTStringify from './ast-stringify';
-import documentParseQueue from './model-manager';
-import typeManager, { lookupBase, TypeInfo } from './type-manager';
+import * as ASTScraper from './ast-scraper.js';
+import ASTStringify from './ast-stringify.js';
+import documentParseQueue from './model-manager.js';
+import typeManager, { lookupBase, TypeInfo } from './type-manager.js';
 
 export type LookupOuter = ASTBase[];
 

@@ -1,8 +1,8 @@
 import { ASTBase, ASTIdentifier, ASTMemberExpression } from 'greyscript-core';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import ASTStringify from './helper/ast-stringify';
-import { LookupHelper } from './helper/lookup-type';
+import ASTStringify from './helper/ast-stringify.js';
+import { LookupHelper } from './helper/lookup-type.js';
 
 const findAllDefinitions = (
   monaco: typeof Monaco,

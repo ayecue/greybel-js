@@ -1,18 +1,20 @@
 #!/usr/bin/env node
-const { prompt } = require('enquirer');
-const semver = require('semver');
-const package = require('../package.json');
+import semver from 'semver';
+import packageJSON from '../package.json' assert {
+	type: 'json'
+};
 
-const engineVersion = package.engines.node;
+const engineVersion = packageJSON.engines.node;
 
 if (!semver.satisfies(process.version, engineVersion)) {
   console.log(`Required node version ${engineVersion} not satisfied with current version ${process.version}.`);
   process.exit(1);
 }
 
-const execute = require('../out/execute').default;
-const program = require('commander').program;
-const version = package.version;
+import execute from '../out/execute.js';
+import { program } from 'commander';
+
+const version = packageJSON.version;
 let options = {};
 
 program.version(version);
@@ -36,7 +38,8 @@ program.parse(process.argv);
 	options = Object.assign(options, program.opts());
 
 	if (options.interactive) {
-		const interactiveParams = await prompt({
+		const inquirer = require('inquirer');
+		const interactiveParams = await inquirer.prompt({
 			name: 'default',
 			message: 'Params:',
 			type: 'input'

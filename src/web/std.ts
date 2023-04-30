@@ -81,46 +81,58 @@ export class Stdin {
 
 export class Stdout {
   target: HTMLElement;
-  textNodes: HTMLSpanElement[][];
+  textNodes: HTMLSpanElement[];
 
   constructor(target: any) {
     this.target = target;
     this.textNodes = [];
   }
 
-  addNewLine() {
-    const lineBreakNode = document.createElement('br');
-    this.target.appendChild(lineBreakNode);
+  addLine(message: string) {
+    const me = this;
+    const node = document.createElement('span');
+
+    node.classList.add('line');
+    node.innerHTML = message;
+    me.target.appendChild(node);
+
+    return node;
   }
 
   write(value: string) {
     const me = this;
     const lines = value.split('\n');
+    const firstLine = lines.shift();
+    const lastLine = lines.pop();
     const subMessages: HTMLSpanElement[] = [];
     let item;
 
-    while ((item = lines.shift())) {
-      const node = document.createElement('span');
-
-      node.classList.add('line');
-      node.innerHTML = item;
-      me.target.appendChild(node);
-      subMessages.push(node);
-      me.addNewLine();
+    if (firstLine !== undefined) {
+      if (me.textNodes.length === 0) {
+        subMessages.push(me.addLine(firstLine));
+      } else {
+        const lastNode = me.textNodes[me.textNodes.length - 1];
+        lastNode.innerHTML += firstLine;
+      }
     }
 
-    me.textNodes.push(subMessages);
+    while ((item = lines.shift())) {
+      const node = me.addLine(item);
+      subMessages.push(node);
+    }
+
+    if (lastLine !== undefined) {
+      subMessages.push(me.addLine(lastLine!));
+    }
+
+    me.textNodes.push(...subMessages);
     me.target.scrollTop = me.target.scrollHeight;
   }
 
   updateLast(value: string) {
     const me = this;
     const lastNodeGroup = me.textNodes[me.textNodes.length - 1];
-    const lines = value.split('\n');
-
-    for (let index = 0; index < lines.length; index++) {
-      lastNodeGroup[index].innerHTML = lines[index];
-    }
+    lastNodeGroup.innerHTML = value;
   }
 
   clear() {

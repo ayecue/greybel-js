@@ -3,18 +3,18 @@ import {
   getDefinitions,
   SignatureDefinitionArg,
   SignatureDefinitionContainer
-} from 'greyscript-meta/dist/meta';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+} from 'greyscript-meta/dist/meta.js';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import { LookupHelper } from './helper/lookup-type';
-import documentParseQueue from './helper/model-manager';
-import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager';
+import { LookupHelper } from './helper/lookup-type.js';
+import documentParseQueue from './helper/model-manager.js';
+import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager.js';
 import {
   PseudoCompletionItem,
   PseudoCompletionList,
   PseudoSignatureHelp,
   PseudoSignatureInformation
-} from './helper/vs';
+} from './helper/vs.js';
 
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer,
