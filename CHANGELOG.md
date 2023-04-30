@@ -518,5 +518,5 @@ All notable changes to this project will be documented in this file.
 ## [1.7.7] - 29.04.2023
 
 - replace newline in print with actual newline
-- replace inquirer with enquirer for inputs
-- enabled multiline input for repl
+- use editor inquirer component for repl
+- refactor output handler enabling user_input not forcing newline
