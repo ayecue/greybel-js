@@ -3,13 +3,13 @@ import {
   Interpreter,
   OperationContext
 } from 'greybel-interpreter';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useEffect, useRef, useState } from 'react';
 
-import execute from '../execute';
-import { Stdin, Stdout } from '../std';
-import { DebugPopup } from './popups';
-import { buildClassName } from './utils';
+import execute from '../execute.js';
+import { Stdin, Stdout } from '../std.js';
+import { DebugPopup } from './popups.js';
+import { buildClassName } from './utils.js';
 
 export interface ExecuteOptions {
   model: Monaco.editor.ITextModel;

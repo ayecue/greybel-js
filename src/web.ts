@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import App from './web/app';
+import App from './web/app.js';
 
 const urlSearchParams = new URLSearchParams(location.search);
 let content = urlSearchParams.get('c') || undefined;

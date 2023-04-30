@@ -3,10 +3,10 @@ import {
   ASTBaseBlockWithScope,
   ASTChunk
 } from 'greyscript-core';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import ASTStringify from './helper/ast-stringify';
-import documentParseQueue from './helper/model-manager';
+import ASTStringify from './helper/ast-stringify.js';
+import documentParseQueue from './helper/model-manager.js';
 
 const findAllAssignments = (
   monaco: typeof Monaco,

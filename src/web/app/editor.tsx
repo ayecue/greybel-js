@@ -1,6 +1,7 @@
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useEffect, useRef } from 'react';
-import { buildClassName } from './utils';
+
+import { buildClassName } from './utils.js';
 
 export interface EditorOptions {
   model: Monaco.editor.ITextModel;

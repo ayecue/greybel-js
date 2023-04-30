@@ -1,4 +1,4 @@
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 export class PseudoMarkdownString {
   value: string;

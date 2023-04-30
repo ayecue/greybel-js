@@ -1,9 +1,9 @@
-import { SignatureDefinitionArg } from 'greyscript-meta/dist/meta';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { SignatureDefinitionArg } from 'greyscript-meta/dist/meta.js';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import { LookupHelper } from './helper/lookup-type';
-import { TypeInfoWithDefinition } from './helper/type-manager';
-import { PseudoHover, PseudoMarkdownString } from './helper/vs';
+import { LookupHelper } from './helper/lookup-type.js';
+import { TypeInfoWithDefinition } from './helper/type-manager.js';
+import { PseudoHover, PseudoMarkdownString } from './helper/vs.js';
 
 function formatType(type: string): string {
   const segments = type.split(':');

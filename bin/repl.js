@@ -1,17 +1,20 @@
-#!/usr/bin/env node
-const semver = require('semver');
-const package = require('../package.json');
+#!/usr/bin/env node --no-warnings
+import semver from 'semver';
+import packageJSON from '../package.json' assert {
+	type: 'json'
+};
 
-const engineVersion = package.engines.node;
+const engineVersion = packageJSON.engines.node;
 
 if (!semver.satisfies(process.version, engineVersion)) {
   console.log(`Required node version ${engineVersion} not satisfied with current version ${process.version}.`);
   process.exit(1);
 }
 
-const repl = require('../out/repl').default;
-const program = require('commander').program;
-const version = package.version;
+import repl from '../out/repl.js';
+import { program } from 'commander';
+
+const version = packageJSON.version;
 let options = {};
 
 program.version(version);

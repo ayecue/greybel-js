@@ -3,7 +3,7 @@ import {
 } from 'greybel-interpreter';
 import React, { useEffect, useRef, useState } from 'react';
 
-import viewJSON from '../json-viewer';
+import viewJSON from '../json-viewer.js';
 
 export interface DebugReplOptions {
   onExecute: (replInput: string) => void;

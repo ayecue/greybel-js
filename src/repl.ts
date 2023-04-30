@@ -1,35 +1,23 @@
+import { editor } from '@inquirer/prompts';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
   CustomString,
   CustomValue,
-  Debugger,
-  Defaults,
+  DefaultType,
   HandlerContainer,
   Interpreter,
   ObjectValue,
+  ObjectValue as ObjectValueType,
   OperationContext
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import inquirer from 'inquirer';
 
-import { CLIOutputHandler } from './execute';
-inquirer.registerPrompt('command', require('inquirer-command-prompt'));
-
-class GrebyelPseudoDebugger extends Debugger {
-  debug() {
-    return Defaults.Void;
-  }
-
-  getBreakpoint(_operationContext: OperationContext): boolean {
-    return false;
-  }
-
-  interact(_operationContext: OperationContext) {}
-}
+import CLIOutputHandler from './execute/output.js';
+import GrebyelPseudoDebugger from './repl/debugger.js';
 
 export interface REPLOptions {
-  api?: ObjectValue;
+  api?: ObjectValueType;
 }
 
 export default async function repl(
@@ -49,7 +37,7 @@ export default async function repl(
       ): Promise<CustomValue> => {
         ctx.handler.outputHandler.print(args.get('value')!.toString());
         active = false;
-        return Promise.resolve(Defaults.Void);
+        return Promise.resolve(DefaultType.Void);
       }
     ).addArgument('value')
   );
@@ -65,13 +53,12 @@ export default async function repl(
   try {
     /* eslint-disable-next-line no-unmodified-loop-condition */
     while (active) {
-      const inputMap = await inquirer.prompt({
-        prefix: '>',
-        name: 'repl'
+      const code = await editor({
+        message: '>'
       });
 
       try {
-        await interpreter.run(inputMap.repl);
+        await interpreter.run(code);
       } catch (err: any) {
         const opc =
           interpreter.apiContext.getLastActive() || interpreter.globalContext;

@@ -1,8 +1,11 @@
-import { createGHMockEnv, init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import {
+  createGHMockEnv,
+  init as initGHIntrinsics
+} from 'greybel-gh-mock-intrinsics';
 import {
   CustomValue,
   Debugger,
-  Defaults,
+  DefaultType,
   HandlerContainer,
   Interpreter,
   KeyEvent,
@@ -12,11 +15,11 @@ import {
   ResourceHandler
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import process from 'process';
-import transform, { Tag, TagRecord } from 'text-mesh-transformer';
+import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 
-import { Stdin, Stdout } from './std';
+import { Stdin, Stdout } from './std.js';
 
 class GrebyelDebugger extends Debugger {
   onInteract: (dbgr: Debugger, context: OperationContext) => Promise<void>;
@@ -29,7 +32,7 @@ class GrebyelDebugger extends Debugger {
   }
 
   debug(..._segments: any[]): CustomValue {
-    return Defaults.Void;
+    return DefaultType.Void;
   }
 
   interact(operationContext: OperationContext): Promise<void> {
@@ -115,15 +118,19 @@ export default async function execute(
   }
 
   const WebOutputHandler = class extends OutputHandler {
-    print(message: string) {
+    print(message: string, appendNewLine: boolean = true) {
       const transformed = transform(
         message,
         (openTag: TagRecord, content: string): string => {
           return wrapWithTag(openTag, content);
         }
-      );
+      ).replace(/\\n/g, '\n');
 
-      stdout.write(transformed);
+      if (appendNewLine) {
+        stdout.write(transformed + '\n');
+      } else {
+        stdout.write(transformed);
+      }
     }
 
     clear() {
@@ -142,6 +149,7 @@ export default async function execute(
 
           if (elapsed > timeout) {
             stdout.updateLast(`[${'#'.repeat(max)}]`);
+            stdout.write('\n');
             clearInterval(interval);
             resolve();
             return;
@@ -156,35 +164,51 @@ export default async function execute(
       });
     }
 
-    async waitForInput(isPassword: boolean): Promise<string> {
-      stdin.enable();
-      stdin.focus();
-      stdin.setType(isPassword ? 'password' : 'text');
+    waitForInput(isPassword: boolean, message: string): Promise<string> {
+      return new Promise((resolve, reject) => {
+        this.print(message, false);
 
-      await stdin.waitForInput();
+        stdin.enable();
+        stdin.focus();
+        stdin.setType(isPassword ? 'password' : 'text');
 
-      const value = stdin.getValue();
+        return stdin
+          .waitForInput()
+          .then(() => {
+            const value = stdin.getValue();
 
-      stdin.clear();
-      stdin.disable();
-      stdin.setType('text');
-
-      return value;
+            return resolve(value);
+          })
+          .catch(reject)
+          .finally(() => {
+            stdin.clear();
+            stdin.disable();
+            stdin.setType('text');
+          });
+      });
     }
 
-    async waitForKeyPress(): Promise<KeyEvent> {
-      stdin.enable();
-      stdin.focus();
+    waitForKeyPress(message: string): Promise<KeyEvent> {
+      return new Promise((resolve, reject) => {
+        this.print(message, false);
 
-      const keyEvent = await stdin.waitForKeyPress();
+        stdin.enable();
+        stdin.focus();
 
-      stdin.clear();
-      stdin.disable();
-
-      return {
-        keyCode: keyEvent.keyCode,
-        code: keyEvent.code
-      };
+        return stdin
+          .waitForKeyPress()
+          .then((keyEvent) => {
+            return resolve({
+              keyCode: keyEvent.keyCode,
+              code: keyEvent.code
+            });
+          })
+          .catch(reject)
+          .finally(() => {
+            stdin.clear();
+            stdin.disable();
+          });
+      });
     }
   };
 
@@ -215,10 +239,13 @@ export default async function execute(
       outputHandler: new WebOutputHandler()
     }),
     api: initIntrinsics(
-      initGHIntrinsics(vsAPI, createGHMockEnv({
-        seed: options.seed,
-        myProgramContent: await resourceHandler.get('default')
-      }))
+      initGHIntrinsics(
+        vsAPI,
+        createGHMockEnv({
+          seed: options.seed,
+          myProgramContent: await resourceHandler.get('default')
+        })
+      )
     )
   });
 

@@ -252,7 +252,7 @@ export function find(
   validate: ScraperValidate,
   rootItem: ASTBase
 ): ASTBase | null {
-  let result = null;
+  let result: ASTBase | null = null;
   const walker = new ScraperWalker((item: ASTBase, level: number) => {
     if (validate(item, level)) {
       result = item;

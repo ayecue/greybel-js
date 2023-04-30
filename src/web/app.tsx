@@ -1,17 +1,17 @@
 import monacoLoader from '@monaco-editor/loader';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useEffect, useState } from 'react';
 
-import { activate } from './extension';
-import language from './extension/grammar/language';
-import documentParseQueue from './extension/helper/model-manager';
-import EditorPopups, { DebugPopup } from './app/popups';
-import ErrorList, { ErrorEntry } from './app/error-list';
-import { buildClassName, guid } from './app/utils';
-import Editor from './app/editor';
-import Transpile from './app/transpile';
-import Execute from './app/execute';
-import ExternalLinks, { AppExternalLink } from './app/external-links';
+import { activate } from './extension.js';
+import language from './extension/grammar/language.js';
+import documentParseQueue from './extension/helper/model-manager.js';
+import EditorPopups, { DebugPopup } from './app/popups.js';
+import ErrorList, { ErrorEntry } from './app/error-list.js';
+import { buildClassName, guid } from './app/utils.js';
+import Editor from './app/editor.js';
+import Transpile from './app/transpile.js';
+import Execute from './app/execute.js';
+import ExternalLinks, { AppExternalLink } from './app/external-links.js';
 
 interface EditorContext {
   instance?: Monaco.editor.IStandaloneCodeEditor;
