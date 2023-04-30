@@ -123,7 +123,7 @@ export default async function execute(
         }
       );
 
-      stdout.write(transformed);
+      stdout.write(transformed.replace(/\\n/g, '\n'));
     }
 
     clear() {

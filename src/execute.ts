@@ -255,7 +255,7 @@ export class CLIOutputHandler extends OutputHandler {
       }
     );
 
-    console.log(transformed);
+    console.log(transformed.replace(/\\n/g, '\n'));
   }
 
   clear() {
