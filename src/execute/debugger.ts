@@ -1,6 +1,7 @@
 import { editor } from '@inquirer/prompts';
 import {
-  Debugger, DefaultType,
+  Debugger,
+  DefaultType,
   Interpreter,
   OperationContext
 } from 'greybel-interpreter';

@@ -1,4 +1,3 @@
-import { input, password } from '@inquirer/prompts';
 import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
@@ -7,6 +6,7 @@ import readline from 'readline';
 import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 
 import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
+import { customInput as input, customPassword as password } from './prompts.js';
 
 const ansiProvider = new AnotherAnsiProvider();
 const hasOwnProperty = Object.prototype.hasOwnProperty;

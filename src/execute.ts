@@ -1,7 +1,13 @@
-import { createGHMockEnv, init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import {
+  createGHMockEnv,
+  init as initGHIntrinsics
+} from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
-  DefaultResourceHandler, HandlerContainer, Interpreter, ObjectValue
+  DefaultResourceHandler,
+  HandlerContainer,
+  Interpreter,
+  ObjectValue
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 

@@ -1,8 +1,4 @@
-import {
-  DefaultType,
-  Debugger,
-  OperationContext
-} from 'greybel-interpreter';
+import { Debugger, DefaultType, OperationContext } from 'greybel-interpreter';
 
 export default class GrebyelPseudoDebugger extends Debugger {
   debug() {

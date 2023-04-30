@@ -1,15 +1,15 @@
 import { editor } from '@inquirer/prompts';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
-  CustomValue,
-  ObjectValue as ObjectValueType,
-  OperationContext,
-  DefaultType,
   CustomFunction,
   CustomString,
+  CustomValue,
+  DefaultType,
   HandlerContainer,
   Interpreter,
-  ObjectValue
+  ObjectValue,
+  ObjectValue as ObjectValueType,
+  OperationContext
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
