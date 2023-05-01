@@ -296,7 +296,9 @@ export default async function build(
     console.log(`Build done. Available in ${buildPath}.`);
   } catch (err: any) {
     if (err instanceof BuildError) {
-      console.error(useColor('red', `${err.message} in ${err.relatedTarget}`));
+      console.error(
+        useColor('red', `Build error: ${err.message} in ${err.relatedTarget}`)
+      );
     } else {
       console.error(
         useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)

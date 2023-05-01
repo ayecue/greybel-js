@@ -265,11 +265,14 @@ export default async function execute(
       options.onEnd(interpreter);
     } catch (err: any) {
       if (err instanceof PrepareError) {
-        options.onError(new Error(`${err.message} in ${err.relatedTarget}`));
+        options.onError(
+          new Error(`Prepare error: ${err.message} in ${err.relatedTarget}`)
+        );
       } else if (err instanceof RuntimeError) {
         options.onError(
-          new Error(`${err.message} in ${err.relatedTarget}
-        ${err.stack}`)
+          new Error(
+            `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
+          )
         );
       } else {
         options.onError(err);

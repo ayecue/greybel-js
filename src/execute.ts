@@ -61,10 +61,15 @@ export default async function execute(
     console.timeEnd('Execution');
   } catch (err: any) {
     if (err instanceof PrepareError) {
-      console.error(useColor('red', `${err.message} in ${err.relatedTarget}`));
+      console.error(
+        useColor('red', `Prepare error: ${err.message} in ${err.relatedTarget}`)
+      );
     } else if (err instanceof RuntimeError) {
       console.error(
-        useColor('red', `${err.message} in ${err.relatedTarget}\n${err.stack}`)
+        useColor(
+          'red',
+          `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
+        )
       );
     } else {
       console.error(
