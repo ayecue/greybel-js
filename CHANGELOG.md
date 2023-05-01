@@ -527,3 +527,7 @@ All notable changes to this project will be documented in this file.
 - fix return value of name intrinsic for top file
 - fix bug in regards of return getting swallowed in while/for iteration causing infinite loops
 - improved error logging with actual stack trace on failure
+
+## [1.7.9] - 01.05.2023
+
+- fix bug in regards of return getting ignored in wrapping while/for
