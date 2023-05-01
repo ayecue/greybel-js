@@ -82,7 +82,7 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
           });
 
           const line =
-            activeInterpreter?.globalContext.getLastActive()?.stackItem?.start!
+            activeInterpreter?.globalContext.getLastActive()?.stackTrace[0]?.item?.start!
               .line || -1;
 
           if (line !== -1) {

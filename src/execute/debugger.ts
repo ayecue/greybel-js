@@ -1,4 +1,4 @@
-import { editor } from '@inquirer/prompts';
+import { input } from '@inquirer/prompts';
 import {
   Debugger,
   DefaultType,
@@ -29,7 +29,7 @@ export default class GrebyelPseudoDebugger extends Debugger {
 
     const me = this;
     const iterate = async () => {
-      const line = await editor({
+      const line = await input({
         message: `[${operationContext.target}:${stackAst?.start?.line}] >`
       });
 

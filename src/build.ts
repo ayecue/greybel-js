@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import {
+  BuildError,
   BuildType,
   Transpiler,
   TranspilerParseResult
@@ -293,7 +294,12 @@ export default async function build(
 
     console.log(`Build done. Available in ${buildPath}.`);
   } catch (err: any) {
-    console.error(err.message);
+    if (err instanceof BuildError) {
+      console.error(`${err.message} in ${err.relatedTarget}`);
+    } else {
+      console.error(err);
+    }
+
     return false;
   }
 

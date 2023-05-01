@@ -7,7 +7,9 @@ import {
   DefaultResourceHandler,
   HandlerContainer,
   Interpreter,
-  ObjectValue
+  ObjectValue,
+  PrepareError,
+  RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
@@ -33,7 +35,7 @@ export default async function execute(
 
   const resourceHandler = new DefaultResourceHandler();
   const interpreter = new Interpreter({
-    target,
+    target: await resourceHandler.resolve(target),
     handler: new HandlerContainer({
       outputHandler: new CLIOutputHandler(),
       resourceHandler
@@ -58,15 +60,14 @@ export default async function execute(
     await interpreter.run();
     console.timeEnd('Execution');
   } catch (err: any) {
-    const opc =
-      interpreter.apiContext.getLastActive() || interpreter.globalContext;
-
-    console.error(
-      `${err.message} at line ${opc.stackItem?.start!.line}:${
-        opc.stackItem?.start!.character
-      } in ${opc.target}`
-    );
-    console.error(err);
+    if (err instanceof PrepareError) {
+      console.error(`${err.message} in ${err.relatedTarget}`);
+    } else if (err instanceof RuntimeError) {
+      console.error(`${err.message} in ${err.relatedTarget}`);
+      console.error(err.stack);
+    } else {
+      console.error(err);
+    }
 
     return false;
   }

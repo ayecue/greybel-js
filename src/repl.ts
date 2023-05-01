@@ -9,7 +9,9 @@ import {
   Interpreter,
   ObjectValue,
   ObjectValue as ObjectValueType,
-  OperationContext
+  OperationContext,
+  PrepareError,
+  RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
@@ -60,14 +62,14 @@ export default async function repl(
       try {
         await interpreter.run(code);
       } catch (err: any) {
-        const opc =
-          interpreter.apiContext.getLastActive() || interpreter.globalContext;
-
-        console.error(
-          `${err.message} at line ${opc.stackItem?.start!.line}:${
-            opc.stackItem?.start!.character
-          } in ${opc.target}`
-        );
+        if (err instanceof PrepareError) {
+          console.error(`${err.message} in ${err.relatedTarget}`);
+        } else if (err instanceof RuntimeError) {
+          console.error(`${err.message} in ${err.relatedTarget}`);
+          console.error(err.stack);
+        } else {
+          console.error(err);
+        }
       }
     }
   } catch (err: any) {
