@@ -1,3 +1,4 @@
+import { ModifierType } from 'another-ansi';
 import {
   createGHMockEnv,
   init as initGHIntrinsics
@@ -15,7 +16,7 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 
 import EnvMapper from './build/env-mapper.js';
 import GrebyelPseudoDebugger from './execute/debugger.js';
-import CLIOutputHandler, { useColor } from './execute/output.js';
+import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;
@@ -62,18 +63,30 @@ export default async function execute(
   } catch (err: any) {
     if (err instanceof PrepareError) {
       console.error(
-        useColor('red', `Prepare error: ${err.message} in ${err.relatedTarget}`)
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+            err.message
+          } in ${err.relatedTarget}`
+        )
       );
     } else if (err instanceof RuntimeError) {
       console.error(
         useColor(
           'red',
-          `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
+          `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+            err.message
+          } in ${err.relatedTarget}\n${err.stack}`
         )
       );
     } else {
       console.error(
-        useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+            err.message
+          }\n${err.stack}`
+        )
       );
     }
 

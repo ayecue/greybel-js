@@ -1,4 +1,5 @@
 import { editor } from '@inquirer/prompts';
+import { ModifierType } from 'another-ansi';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
@@ -15,7 +16,7 @@ import {
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
-import CLIOutputHandler, { useColor } from './execute/output.js';
+import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 import GrebyelPseudoDebugger from './repl/debugger.js';
 
 export interface REPLOptions {
@@ -72,19 +73,28 @@ export default async function repl(
           console.error(
             useColor(
               'red',
-              `Prepare error: ${err.message} in ${err.relatedTarget}`
+              `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+                err.message
+              } in ${err.relatedTarget}`
             )
           );
         } else if (err instanceof RuntimeError) {
           console.error(
             useColor(
               'red',
-              `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
+              `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+                err.message
+              } in ${err.relatedTarget}\n${err.stack}`
             )
           );
         } else {
           console.error(
-            useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)
+            useColor(
+              'red',
+              `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+                err.message
+              }\n${err.stack}`
+            )
           );
         }
       }

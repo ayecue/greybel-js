@@ -8,7 +8,7 @@ import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
 import { customInput as input, customPassword as password } from './prompts.js';
 
-const ansiProvider = new AnotherAnsiProvider();
+export const ansiProvider = new AnotherAnsiProvider();
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export function useColor(color: string | undefined, content: string): string {
