@@ -520,3 +520,10 @@ All notable changes to this project will be documented in this file.
 - replace newline in print with actual newline
 - use editor inquirer component for repl
 - refactor output handler enabling user_input not forcing newline
+
+## [1.7.8] - 01.05.2023
+
+- fix potential crash in device_ports
+- fix return value of name intrinsic for top file
+- fix bug in regards of return getting swallowed in while/for iteration causing infinite loops
+- improved error logging with actual stack trace on failure

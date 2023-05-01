@@ -1,3 +1,4 @@
+import { ModifierType } from 'another-ansi';
 import {
   createGHMockEnv,
   init as initGHIntrinsics
@@ -7,13 +8,15 @@ import {
   DefaultResourceHandler,
   HandlerContainer,
   Interpreter,
-  ObjectValue
+  ObjectValue,
+  PrepareError,
+  RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
 import EnvMapper from './build/env-mapper.js';
 import GrebyelPseudoDebugger from './execute/debugger.js';
-import CLIOutputHandler from './execute/output.js';
+import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;
@@ -33,7 +36,7 @@ export default async function execute(
 
   const resourceHandler = new DefaultResourceHandler();
   const interpreter = new Interpreter({
-    target,
+    target: await resourceHandler.resolve(target),
     handler: new HandlerContainer({
       outputHandler: new CLIOutputHandler(),
       resourceHandler
@@ -58,15 +61,34 @@ export default async function execute(
     await interpreter.run();
     console.timeEnd('Execution');
   } catch (err: any) {
-    const opc =
-      interpreter.apiContext.getLastActive() || interpreter.globalContext;
-
-    console.error(
-      `${err.message} at line ${opc.stackItem?.start!.line}:${
-        opc.stackItem?.start!.character
-      } in ${opc.target}`
-    );
-    console.error(err);
+    if (err instanceof PrepareError) {
+      console.error(
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+            err.message
+          } in ${err.relatedTarget}`
+        )
+      );
+    } else if (err instanceof RuntimeError) {
+      console.error(
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+            err.message
+          } in ${err.relatedTarget}\n${err.stack}`
+        )
+      );
+    } else {
+      console.error(
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+            err.message
+          }\n${err.stack}`
+        )
+      );
+    }
 
     return false;
   }

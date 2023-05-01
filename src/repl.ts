@@ -1,4 +1,5 @@
 import { editor } from '@inquirer/prompts';
+import { ModifierType } from 'another-ansi';
 import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
@@ -9,11 +10,13 @@ import {
   Interpreter,
   ObjectValue,
   ObjectValue as ObjectValueType,
-  OperationContext
+  OperationContext,
+  PrepareError,
+  RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
-import CLIOutputHandler from './execute/output.js';
+import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 import GrebyelPseudoDebugger from './repl/debugger.js';
 
 export interface REPLOptions {
@@ -57,18 +60,46 @@ export default async function repl(
         message: '>'
       });
 
+      if (code === '') continue;
+
+      const outputGroupLabel = useColor('cyan', `Execution:`);
+
+      console.group(outputGroupLabel);
+
       try {
         await interpreter.run(code);
       } catch (err: any) {
-        const opc =
-          interpreter.apiContext.getLastActive() || interpreter.globalContext;
-
-        console.error(
-          `${err.message} at line ${opc.stackItem?.start!.line}:${
-            opc.stackItem?.start!.character
-          } in ${opc.target}`
-        );
+        if (err instanceof PrepareError) {
+          console.error(
+            useColor(
+              'red',
+              `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+                err.message
+              } in ${err.relatedTarget}`
+            )
+          );
+        } else if (err instanceof RuntimeError) {
+          console.error(
+            useColor(
+              'red',
+              `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+                err.message
+              } in ${err.relatedTarget}\n${err.stack}`
+            )
+          );
+        } else {
+          console.error(
+            useColor(
+              'red',
+              `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+                err.message
+              }\n${err.stack}`
+            )
+          );
+        }
       }
+
+      console.groupEnd();
     }
   } catch (err: any) {
     console.error(err);

@@ -1,11 +1,16 @@
-import { editor } from '@inquirer/prompts';
+import { input } from '@inquirer/prompts';
+import { ModifierType } from 'another-ansi';
 import {
   Debugger,
   DefaultType,
   Interpreter,
-  OperationContext
+  OperationContext,
+  PrepareError,
+  RuntimeError
 } from 'greybel-interpreter';
 import { ASTBase } from 'greyscript-core';
+
+import { ansiProvider, useColor } from './output.js';
 
 export default class GrebyelPseudoDebugger extends Debugger {
   interpreter: Interpreter;
@@ -20,17 +25,30 @@ export default class GrebyelPseudoDebugger extends Debugger {
   }
 
   async interact(operationContext: OperationContext, stackAst: ASTBase) {
-    console.log(`REPL - Console`);
-    console.log(`You can execute code in the current context.`);
+    console.log(
+      useColor('cyan', ansiProvider.modify(ModifierType.Bold, `REPL - Console`))
+    );
+    console.log(
+      useColor('cyan', `You can execute code in the current context.`)
+    );
     console.log(``);
     console.log(
-      `Press "next" or "exit" to either move to the next line or continue execution.`
+      useColor(
+        'cyan',
+        `Press "next" or "exit" to either move to the next line or continue execution.`
+      )
     );
 
     const me = this;
     const iterate = async () => {
-      const line = await editor({
-        message: `[${operationContext.target}:${stackAst?.start?.line}] >`
+      const line = await input({
+        message: useColor(
+          'cyan',
+          `${ansiProvider.modify(
+            ModifierType.Bold,
+            `[${operationContext.target}:${stackAst?.start?.line}]`
+          )} >`
+        )
       });
 
       if (line === 'next') {
@@ -45,11 +63,40 @@ export default class GrebyelPseudoDebugger extends Debugger {
         me.interpreter.debugger.setBreakpoint(false);
         await me.interpreter.injectInLastContext(line);
         console.log(
-          `Execution on ${operationContext.target}:${stackAst?.start?.line} was successful.`
+          useColor(
+            'green',
+            `Execution on ${operationContext.target}:${stackAst?.start?.line} was successful.`
+          )
         );
       } catch (err: any) {
-        console.error(`Execution of ${line} failed.`);
-        console.error(err);
+        if (err instanceof PrepareError) {
+          console.error(
+            useColor(
+              'red',
+              `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+                err.message
+              } in ${err.relatedTarget}`
+            )
+          );
+        } else if (err instanceof RuntimeError) {
+          console.error(
+            useColor(
+              'red',
+              `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+                err.message
+              } in ${err.relatedTarget}\n${err.stack}`
+            )
+          );
+        } else {
+          console.error(
+            useColor(
+              'red',
+              `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+                err.message
+              }\n${err.stack}`
+            )
+          );
+        }
       } finally {
         me.interpreter.debugger.setBreakpoint(true);
       }

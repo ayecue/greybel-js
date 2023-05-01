@@ -1,5 +1,7 @@
+import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
 import {
+  BuildError,
   BuildType,
   Transpiler,
   TranspilerParseResult
@@ -8,6 +10,7 @@ import mkdirp from 'mkdirp';
 import path from 'path';
 
 import EnvMapper from './build/env-mapper.js';
+import { ansiProvider, useColor } from './execute/output.js';
 
 function createContentHeader(): string {
   return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
@@ -293,7 +296,26 @@ export default async function build(
 
     console.log(`Build done. Available in ${buildPath}.`);
   } catch (err: any) {
-    console.error(err.message);
+    if (err instanceof BuildError) {
+      console.error(
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
+            err.message
+          } in ${err.relatedTarget}`
+        )
+      );
+    } else {
+      console.error(
+        useColor(
+          'red',
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+            err.message
+          }\n${err.stack}`
+        )
+      );
+    }
+
     return false;
   }
 

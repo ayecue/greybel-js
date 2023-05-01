@@ -8,10 +8,10 @@ import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
 import { customInput as input, customPassword as password } from './prompts.js';
 
-const ansiProvider = new AnotherAnsiProvider();
+export const ansiProvider = new AnotherAnsiProvider();
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
-function useColor(color: string | undefined, content: string): string {
+export function useColor(color: string | undefined, content: string): string {
   if (!color) return content;
 
   const cssColorMap = cssColorNames as { [key: string]: string };
@@ -24,7 +24,7 @@ function useColor(color: string | undefined, content: string): string {
   return ansiProvider.colorWithHex(color, content);
 }
 
-function useBgColor(color: string | undefined, content: string): string {
+export function useBgColor(color: string | undefined, content: string): string {
   if (!color) return content;
 
   const cssColorMap = cssColorNames as { [key: string]: string };
@@ -37,7 +37,7 @@ function useBgColor(color: string | undefined, content: string): string {
   return ansiProvider.bgColorWithHex(color, content);
 }
 
-function wrapWithTag(openTag: TagRecord, content: string): string {
+export function wrapWithTag(openTag: TagRecord, content: string): string {
   switch (openTag.tag) {
     case Tag.Color:
       return useColor(openTag.value, content);

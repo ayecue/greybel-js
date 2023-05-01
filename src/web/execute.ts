@@ -12,7 +12,9 @@ import {
   ObjectValue,
   OperationContext,
   OutputHandler,
-  ResourceHandler
+  PrepareError,
+  ResourceHandler,
+  RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
@@ -262,15 +264,14 @@ export default async function execute(
       await operation;
       options.onEnd(interpreter);
     } catch (err: any) {
-      const opc =
-        interpreter.apiContext.getLastActive() || interpreter.globalContext;
-
-      if (opc.stackItem) {
+      if (err instanceof PrepareError) {
+        options.onError(
+          new Error(`Prepare error: ${err.message} in ${err.relatedTarget}`)
+        );
+      } else if (err instanceof RuntimeError) {
         options.onError(
           new Error(
-            `Error "${err.message}" at line ${opc.stackItem.start!.line}:${
-              opc.stackItem.start!.character
-            } in ${opc.target}`
+            `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
           )
         );
       } else {
