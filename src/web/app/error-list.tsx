@@ -15,9 +15,11 @@ export default function ErrorList({ errors }: ErrorsOptions) {
     <div id="editor-errors">
       {errors.map(({ id, msg, onClick }) => {
         return (
-          <div key={id} onClick={() => onClick()}>
-            {msg}
-          </div>
+          <ul key={id} onClick={() => onClick()}>
+            {msg.split('\n').map((item, index) => {
+              return <li key={index}>{item}</li>
+            })}
+          </ul>
         );
       })}
     </div>

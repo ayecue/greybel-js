@@ -14,12 +14,16 @@ body {
 	overflow: auto;
 }
 
-#editor-errors > div {
+#editor-errors ul {
 	background: red;
 	margin: 20px 40px;
 	padding: 5px 10px;
 	border-radius: 10px;
 	cursor: pointer;
+}
+
+#editor-errors li {
+	list-style: none;
 }
 
 .editor-control {
