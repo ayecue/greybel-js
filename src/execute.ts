@@ -15,7 +15,7 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 
 import EnvMapper from './build/env-mapper.js';
 import GrebyelPseudoDebugger from './execute/debugger.js';
-import CLIOutputHandler from './execute/output.js';
+import CLIOutputHandler, { useColor } from './execute/output.js';
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;
@@ -61,12 +61,15 @@ export default async function execute(
     console.timeEnd('Execution');
   } catch (err: any) {
     if (err instanceof PrepareError) {
-      console.error(`${err.message} in ${err.relatedTarget}`);
+      console.error(useColor('red', `${err.message} in ${err.relatedTarget}`));
     } else if (err instanceof RuntimeError) {
-      console.error(`${err.message} in ${err.relatedTarget}`);
-      console.error(err.stack);
+      console.error(
+        useColor('red', `${err.message} in ${err.relatedTarget}\n${err.stack}`)
+      );
     } else {
-      console.error(err);
+      console.error(
+        useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)
+      );
     }
 
     return false;

@@ -9,6 +9,7 @@ import mkdirp from 'mkdirp';
 import path from 'path';
 
 import EnvMapper from './build/env-mapper.js';
+import { useColor } from './execute/output.js';
 
 function createContentHeader(): string {
   return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
@@ -295,9 +296,11 @@ export default async function build(
     console.log(`Build done. Available in ${buildPath}.`);
   } catch (err: any) {
     if (err instanceof BuildError) {
-      console.error(`${err.message} in ${err.relatedTarget}`);
+      console.error(useColor('red', `${err.message} in ${err.relatedTarget}`));
     } else {
-      console.error(err);
+      console.error(
+        useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)
+      );
     }
 
     return false;
