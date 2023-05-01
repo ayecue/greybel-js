@@ -15,7 +15,7 @@ import {
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
-import CLIOutputHandler from './execute/output.js';
+import CLIOutputHandler, { useColor } from './execute/output.js';
 import GrebyelPseudoDebugger from './repl/debugger.js';
 
 export interface REPLOptions {
@@ -59,18 +59,34 @@ export default async function repl(
         message: '>'
       });
 
+      if (code === '') continue;
+
+      const outputGroupLabel = useColor('cyan', `Execution:`);
+
+      console.group(outputGroupLabel);
+
       try {
         await interpreter.run(code);
       } catch (err: any) {
         if (err instanceof PrepareError) {
-          console.error(`${err.message} in ${err.relatedTarget}`);
+          console.error(
+            useColor('red', `${err.message} in ${err.relatedTarget}`)
+          );
         } else if (err instanceof RuntimeError) {
-          console.error(`${err.message} in ${err.relatedTarget}`);
-          console.error(err.stack);
+          console.error(
+            useColor(
+              'red',
+              `${err.message} in ${err.relatedTarget}\n${err.stack}`
+            )
+          );
         } else {
-          console.error(err);
+          console.error(
+            useColor('red', `Unexpected error: ${err.message}\n${err.stack}`)
+          );
         }
       }
+
+      console.groupEnd();
     }
   } catch (err: any) {
     console.error(err);
