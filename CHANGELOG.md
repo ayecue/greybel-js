@@ -531,3 +531,10 @@ All notable changes to this project will be documented in this file.
 ## [1.7.9] - 01.05.2023
 
 - fix bug in regards of return getting ignored in wrapping while/for
+
+## [1.8.0] - 02.05.2023
+
+- support behaviour of self in arguments
+- expose join, split, to_int and replace functions in general namespace
+- support map and list in replace
+- update meta
