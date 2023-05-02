@@ -31,7 +31,7 @@
         "commander": "^7.2.0",
         "css-color-names": "^1.0.1",
         "greybel-core": "^0.6.7",
-        "greybel-gh-mock-intrinsics": "^2.0.9",
+        "greybel-gh-mock-intrinsics": "^2.1.1",
         "greybel-interpreter": "^1.8.7",
         "greybel-intrinsics": "^1.8.9",
         "greybel-transpiler": "^0.8.7",

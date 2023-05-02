@@ -538,3 +538,4 @@ All notable changes to this project will be documented in this file.
 - expose join, split, to_int and replace functions in general namespace
 - support map and list in replace
 - update meta
+- fix faulty mock data which could potentially cause crash
