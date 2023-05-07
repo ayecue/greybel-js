@@ -532,10 +532,11 @@ All notable changes to this project will be documented in this file.
 
 - fix bug in regards of return getting ignored in wrapping while/for
 
-## [1.8.0] - 02.05.2023
+## [1.8.0] - 08.05.2023
 
 - support behaviour of self in arguments
 - expose join, split, to_int and replace functions in general namespace
 - support map and list in replace
 - update meta
 - fix faulty mock data which could potentially cause crash
+- rework parser to emulate greyscript behaviour more accurate
