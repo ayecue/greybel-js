@@ -311,6 +311,8 @@ export class TypeMap {
   }
 
   resolve(item: ASTBase): TypeInfo | null {
+    if (item == null) return null;
+
     const me = this;
 
     switch (item.type) {
