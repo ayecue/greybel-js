@@ -16,7 +16,7 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 	- [imports](#importing) (supports [nested import_code](#nested-import_code))
 	- [bundler](#when-to-use-the-installer-flag)
 	- [environment variables](#envar)
-	- [syntax sugar](#syntax)
+	- [minor syntax additions](#syntax)
 	- minimizing your script, depending on the size of your project you can save up to 40%
 		- optimizing literals (strings, booleans, numbers)
 		- minifying namespaces
@@ -250,50 +250,47 @@ Use the share code button to generate an URL. Currently the implementation just 
 It's [planned in the future](#todo) to implement some kind of package manager.
 
 # Syntax
-## Block shortcuts
+
+Keep in mind that the following syntax is not valid in GreyScript. The transpiler can be used to transform code into valid GreyScript.
+
+## While, For and Function - shorthand
 ```
-while(true) if (true) then print("hello"); print("world"); return false;
+while(true) print("hello world")
+for item in [1, 2, 3] print(item)
+test = function() return 42
 ```
 
-## Multiline lists
+## No trailing comma required in maps or lists
 ```
-test = [
-	[
-		"value1",
-		"value3",
-		true
-	],
+myList = [
 	false,
 	null
 ]
-```
 
-## Multiline maps
-```
-test = {
+myMap = {
 	"test": {
 		"level2": {
-			"enough": true
+			"bar": true
 		}
-	},
-	"somelist": [
-		0, 1, 2
-	]
+	}
 }
 ```
 
-## Math shortcuts
+## Math - shorthand
 ```
 a /= b
 a *= b
 a -= b
 a += b
-a << b
-a >> b
-w = a >>> (b << c) >> a
-a | b
-a & b
-a ^ b
+```
+
+## Bitwise - shorthand
+```
+a = b << c
+a = b >> c
+a = b >>> c
+a = b | c
+a = b & c
 ```
 
 # Importing
