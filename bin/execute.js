@@ -38,14 +38,12 @@ program.parse(process.argv);
 	options = Object.assign(options, program.opts());
 
 	if (options.interactive) {
-		const inquirer = require('inquirer');
-		const interactiveParams = await inquirer.prompt({
-			name: 'default',
-			message: 'Params:',
-			type: 'input'
+		const inquirer = await import('@inquirer/prompts');
+		const interactiveParams = await inquirer.input({
+			message: 'Params:'
 		});
 
-		options.params = interactiveParams.default.split(' ');
+		options.params = interactiveParams.split(' ');
 	}
 
 	const success = await execute(options.filepath, {
