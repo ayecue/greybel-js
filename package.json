@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "engines": {
         "node": ">=16.0.0"
     },
@@ -42,7 +42,7 @@
         "mkdirp": "^1.0.4",
         "open": "^8.2.1",
         "semver": "^5.3.0",
-        "text-mesh-transformer": "^1.0.3",
+        "text-mesh-transformer": "^1.0.4",
         "transform-json-to-html": "^1.1.1",
         "uuid": "^8.3.2"
     },
