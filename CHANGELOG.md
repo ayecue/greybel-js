@@ -548,3 +548,8 @@ All notable changes to this project will be documented in this file.
 ## [1.8.2] - 08.05.2023
 
 - fix interactive flag in execute
+
+## [1.8.3] - 09.05.2023
+
+- fix get library type in mock env, potentially fixing crash in netsession intrinsic
+- fix paths starting with null resolving to general properties
