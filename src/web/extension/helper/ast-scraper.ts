@@ -12,7 +12,9 @@ import {
   ASTIfStatement,
   ASTIndexExpression,
   ASTListConstructorExpression,
+  ASTListValue,
   ASTMapConstructorExpression,
+  ASTMapKeyString,
   ASTMemberExpression,
   ASTParenthesisExpression,
   ASTReturnStatement,
@@ -74,6 +76,13 @@ const getScraperMap = function (
     IndexExpression: function (item: ASTIndexExpression, level: number) {
       visit(item.base, level);
       visit(item.index, level);
+    },
+    ListValue: function (item: ASTListValue, level: number) {
+      visit(item.value, level);
+    },
+    MapKeyString: function (item: ASTMapKeyString, level: number) {
+      visit(item.key, level);
+      visit(item.value, level);
     },
     IfShortcutStatement: function (item: ASTIfStatement, level: number) {
       for (const clausesItem of item.clauses) {
