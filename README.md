@@ -146,6 +146,42 @@ print("Another string!")
 ## TextMesh Pro Rich Text support
 [TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
+### CLI
+<details>
+<summary>Supports</summary>
+
+* color
+* mark
+* underline
+* italic
+* bold
+* strikethrough
+* lowercase
+* uppercase
+</details>
+
+### UI
+<details>
+<summary>Supports</summary>
+
+* color
+* mark
+* underline
+* italic
+* bold
+* strikethrough
+* lowercase
+* uppercase
+* align
+* cspace
+* lineheight
+* margin
+* nobr
+* pos
+* size
+* voffset
+</details>
+
 ## TestLib
 Adds testing methods for setting up envs and debugging. Keep in mind that this library is not available in the actual game.
 ```
@@ -186,42 +222,6 @@ testLib.try_to_execute(@failureFn, @onError)
 // can be used for debugging purposes, will create a breakpoint and go into debug mode on failure
 testLib.try_to_execute_with_debug(@failureFn)
 ```
-
-### CLI
-<details>
-<summary>Supports</summary>
-
-* color
-* mark
-* underline
-* italic
-* bold
-* strikethrough
-* lowercase
-* uppercase
-</details>
-
-### UI
-<details>
-<summary>Supports</summary>
-
-* color
-* mark
-* underline
-* italic
-* bold
-* strikethrough
-* lowercase
-* uppercase
-* align
-* cspace
-* lineheight
-* margin
-* nobr
-* pos
-* size
-* voffset
-</details>
 
 # REPL
 ```
