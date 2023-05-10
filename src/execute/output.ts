@@ -1,7 +1,8 @@
 import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
+import ansiEscapes from 'ansi-escapes';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
-import { KeyEvent, OutputHandler } from 'greybel-interpreter';
+import { KeyEvent, OutputHandler, PrintOptions } from 'greybel-interpreter';
 import readline from 'readline';
 import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 
@@ -65,7 +66,17 @@ export function wrapWithTag(openTag: TagRecord, content: string): string {
 }
 
 export default class CLIOutputHandler extends OutputHandler {
-  print(message: string, appendNewLine: boolean = true) {
+  previousLinesCount: number;
+
+  constructor() {
+    super();
+    this.previousLinesCount = 0;
+  }
+
+  print(
+    message: string,
+    { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
+  ) {
     const transformed = transform(
       message,
       (openTag: TagRecord, content: string): string => {
@@ -73,8 +84,15 @@ export default class CLIOutputHandler extends OutputHandler {
       }
     ).replace(/\\n/g, '\n');
 
+    if (replace) {
+      process.stdout.write(ansiEscapes.eraseLines(this.previousLinesCount));
+    }
+
+    this.previousLinesCount = transformed.split('\n').length;
+
     if (appendNewLine) {
       process.stdout.write(transformed + '\n');
+      this.previousLinesCount++;
     } else {
       process.stdout.write(transformed);
     }
@@ -143,7 +161,9 @@ export default class CLIOutputHandler extends OutputHandler {
 
   waitForKeyPress(message: string): Promise<KeyEvent> {
     return new Promise((resolve, _reject) => {
-      this.print(message, false);
+      this.print(message, {
+        appendNewLine: false
+      });
 
       readline.emitKeypressEvents(process.stdin);
 

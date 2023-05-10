@@ -13,6 +13,7 @@ import {
   OperationContext,
   OutputHandler,
   PrepareError,
+  PrintOptions,
   ResourceHandler,
   RuntimeError
 } from 'greybel-interpreter';
@@ -120,7 +121,10 @@ export default async function execute(
   }
 
   const WebOutputHandler = class extends OutputHandler {
-    print(message: string, appendNewLine: boolean = true) {
+    print(
+      message: string,
+      { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
+    ) {
       const transformed = transform(
         message,
         (openTag: TagRecord, content: string): string => {
@@ -128,7 +132,9 @@ export default async function execute(
         }
       ).replace(/\\n/g, '\n');
 
-      if (appendNewLine) {
+      if (replace) {
+        stdout.updateLast(transformed + '\n');
+      } else if (appendNewLine) {
         stdout.write(transformed + '\n');
       } else {
         stdout.write(transformed);
@@ -168,7 +174,9 @@ export default async function execute(
 
     waitForInput(isPassword: boolean, message: string): Promise<string> {
       return new Promise((resolve, reject) => {
-        this.print(message, false);
+        this.print(message, {
+          appendNewLine: false
+        });
 
         stdin.enable();
         stdin.focus();
@@ -192,7 +200,9 @@ export default async function execute(
 
     waitForKeyPress(message: string): Promise<KeyEvent> {
       return new Promise((resolve, reject) => {
-        this.print(message, false);
+        this.print(message, {
+          appendNewLine: false
+        });
 
         stdin.enable();
         stdin.focus();
