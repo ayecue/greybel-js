@@ -131,8 +131,17 @@ export class Stdout {
 
   updateLast(value: string) {
     const me = this;
-    const lastNodeGroup = me.textNodes[me.textNodes.length - 1];
-    lastNodeGroup.innerHTML = value;
+
+    const lines = value.split('\n');
+    let index = Math.max(me.textNodes.length - lines.length, 0);
+
+    for (; index < me.textNodes.length; index++) {
+      me.textNodes[index].innerHTML = lines.shift();
+    }
+
+    if (lines.length > 0) {
+      me.write(lines.join('\n'));
+    }
   }
 
   clear() {

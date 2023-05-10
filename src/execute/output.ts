@@ -1,7 +1,7 @@
 import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
-import { KeyEvent, OutputHandler } from 'greybel-interpreter';
+import { KeyEvent, OutputHandler, PrintOptions } from 'greybel-interpreter';
 import readline from 'readline';
 import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 
@@ -65,7 +65,7 @@ export function wrapWithTag(openTag: TagRecord, content: string): string {
 }
 
 export default class CLIOutputHandler extends OutputHandler {
-  print(message: string, appendNewLine: boolean = true) {
+  print(message: string, { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}) {
     const transformed = transform(
       message,
       (openTag: TagRecord, content: string): string => {
@@ -143,7 +143,9 @@ export default class CLIOutputHandler extends OutputHandler {
 
   waitForKeyPress(message: string): Promise<KeyEvent> {
     return new Promise((resolve, _reject) => {
-      this.print(message, false);
+      this.print(message, {
+        appendNewLine: false
+      });
 
       readline.emitKeypressEvents(process.stdin);
 
