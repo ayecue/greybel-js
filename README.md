@@ -105,7 +105,7 @@ Options:
 	-vr, --env-vars <vars...>	Environment variables
 ```
 
-For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
+For Windows you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
 
 ## Local environment
 
@@ -229,7 +229,7 @@ REPL CLI
 Example: greybel-repl
 ```
 
-For Windows you can use something like [gitbash](https://gitforwindows.org/). Or just use the UI.
+For Windows you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
 
 REPL also features a [local environment](#local-environment) and [greyscript API support](#greyscript-api-support)
 
