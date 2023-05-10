@@ -121,7 +121,10 @@ export default async function execute(
   }
 
   const WebOutputHandler = class extends OutputHandler {
-    print(message: string, { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}) {
+    print(
+      message: string,
+      { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
+    ) {
       const transformed = transform(
         message,
         (openTag: TagRecord, content: string): string => {

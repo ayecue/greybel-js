@@ -82,10 +82,12 @@ export class Stdin {
 export class Stdout {
   target: HTMLElement;
   textNodes: HTMLSpanElement[];
+  previousIndex: number;
 
   constructor(target: any) {
     this.target = target;
     this.textNodes = [];
+    this.previousIndex = 0;
   }
 
   addLine(message: string) {
@@ -125,6 +127,8 @@ export class Stdout {
       subMessages.push(me.addLine(lastLine!));
     }
 
+    me.previousIndex = me.textNodes.length;
+
     me.textNodes.push(...subMessages);
     me.target.scrollTop = me.target.scrollHeight;
   }
@@ -132,16 +136,16 @@ export class Stdout {
   updateLast(value: string) {
     const me = this;
 
-    const lines = value.split('\n');
-    let index = Math.max(me.textNodes.length - lines.length, 0);
-
-    for (; index < me.textNodes.length; index++) {
-      me.textNodes[index].innerHTML = lines.shift();
+    for (
+      let index = me.textNodes.length - 1;
+      index >= me.previousIndex;
+      index--
+    ) {
+      const node = me.textNodes.pop();
+      me.target.removeChild(node);
     }
 
-    if (lines.length > 0) {
-      me.write(lines.join('\n'));
-    }
+    me.write(value);
   }
 
   clear() {

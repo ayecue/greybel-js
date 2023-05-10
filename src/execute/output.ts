@@ -1,4 +1,5 @@
 import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
+import ansiEscapes from 'ansi-escapes';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
 import { KeyEvent, OutputHandler, PrintOptions } from 'greybel-interpreter';
@@ -65,7 +66,17 @@ export function wrapWithTag(openTag: TagRecord, content: string): string {
 }
 
 export default class CLIOutputHandler extends OutputHandler {
-  print(message: string, { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}) {
+  previousLinesCount: number;
+
+  constructor() {
+    super();
+    this.previousLinesCount = 0;
+  }
+
+  print(
+    message: string,
+    { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
+  ) {
     const transformed = transform(
       message,
       (openTag: TagRecord, content: string): string => {
@@ -74,9 +85,14 @@ export default class CLIOutputHandler extends OutputHandler {
     ).replace(/\\n/g, '\n');
 
     if (replace) {
-      process.stdout.write('\u001B[1A' + transformed + '\n');
-    } else if (appendNewLine) {
+      process.stdout.write(ansiEscapes.eraseLines(this.previousLinesCount));
+    }
+
+    this.previousLinesCount = transformed.split('\n').length;
+
+    if (appendNewLine) {
       process.stdout.write(transformed + '\n');
+      this.previousLinesCount++;
     } else {
       process.stdout.write(transformed);
     }

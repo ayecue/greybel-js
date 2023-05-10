@@ -340,9 +340,7 @@ export class TypeMap {
           item as ASTParenthesisExpression
         );
       case ASTType.ListValue:
-        return me.resolveListValue(
-          item as ASTListValue
-        );
+        return me.resolveListValue(item as ASTListValue);
       case ASTType.NilLiteral:
       case ASTType.StringLiteral:
       case ASTType.NumericLiteral:
