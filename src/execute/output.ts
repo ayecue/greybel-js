@@ -73,7 +73,9 @@ export default class CLIOutputHandler extends OutputHandler {
       }
     ).replace(/\\n/g, '\n');
 
-    if (appendNewLine) {
+    if (replace) {
+      process.stdout.write('\u001B[1A' + transformed + '\n');
+    } else if (appendNewLine) {
       process.stdout.write(transformed + '\n');
     } else {
       process.stdout.write(transformed);
