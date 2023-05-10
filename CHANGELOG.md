@@ -553,3 +553,10 @@ All notable changes to this project will be documented in this file.
 
 - fix get library type in mock env, potentially fixing crash in netsession intrinsic
 - fix paths starting with null resolving to general properties
+
+## [1.8.4] - 10.05.2023
+
+- fix type resolve in UI
+- fix firewall_rules intrinsic return value
+- fix wait not using seconds but milliseconds
+- support refresh in ui
