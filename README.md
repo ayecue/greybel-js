@@ -5,7 +5,7 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 ## Links
 
 - Latest changes: [Changelog](/CHANGELOG.md)
-- Demo Projects: [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
+- Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - Greybel UI Demo: [greybel-ui](https://editor.greyscript.org)
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
 - Greyscript API: [GreyScript Documentation](https://documentation.greyscript.org)
