@@ -560,3 +560,7 @@ All notable changes to this project will be documented in this file.
 - fix firewall_rules intrinsic return value
 - fix wait not using seconds but milliseconds
 - support refresh in ui
+
+## [1.8.5] - 12.05.2023
+
+- forbid literal optimization in default args
