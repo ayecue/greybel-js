@@ -1,59 +1,78 @@
 #!/usr/bin/env node --no-warnings
+import { AnotherAnsiProvider, ColorType } from 'another-ansi';
+import { program } from 'commander';
+import pacote from 'pacote';
 import semver from 'semver';
-import packageJSON from '../package.json' assert {
-	type: 'json'
-};
 
+import execute from '../out/execute.js';
+import packageJSON from '../package.json' assert { type: 'json' };
+
+const ansiProvider = new AnotherAnsiProvider();
 const engineVersion = packageJSON.engines.node;
 
 if (!semver.satisfies(process.version, engineVersion)) {
-  console.log(`Required node version ${engineVersion} not satisfied with current version ${process.version}.`);
+  console.log(
+    ansiProvider.color(
+      ColorType.Yellow,
+      `Required node version ${engineVersion} not satisfied with current version ${process.version}.`
+    )
+  );
   process.exit(1);
 }
 
-import execute from '../out/execute.js';
-import { program } from 'commander';
+(async function () {
+  const version = packageJSON.version;
+  const latestManifest = await pacote.manifest(packageJSON.name, {
+    fullMetadata: false
+  });
 
-const version = packageJSON.version;
-let options = {};
+  if (latestManifest.version !== version) {
+    console.warn(
+      ansiProvider.color(
+        ColorType.Yellow,
+        `New version of ${packageJSON.name} is available ${latestManifest.version}.`
+      )
+    );
+  }
 
-program.version(version);
-program
-	.arguments('<filepath>')
-	.description('Interpreter for Greyscript.', {
-		filepath: 'File to run'
-	})
-	.action(function (filepath, output) {
-		options.filepath = filepath;
-	})
-	.option('-p, --params <params...>', 'Execution parameters')
-	.option('-i, --interactive', 'Interactive parameters')
-	.option('-s, --seed <seed>', 'Seed parameter')
-	.option('-ev, --env-files <file...>', 'Environment variables files')
-	.option('-vr, --env-vars <var...>', 'Environment variables');
+  let options = {};
 
-program.parse(process.argv);
+  program.version(version);
+  program
+    .arguments('<filepath>')
+    .description('Interpreter for Greyscript.', {
+      filepath: 'File to run'
+    })
+    .action(function (filepath, _output) {
+      options.filepath = filepath;
+    })
+    .option('-p, --params <params...>', 'Execution parameters')
+    .option('-i, --interactive', 'Interactive parameters')
+    .option('-s, --seed <seed>', 'Seed parameter')
+    .option('-ev, --env-files <file...>', 'Environment variables files')
+    .option('-vr, --env-vars <var...>', 'Environment variables');
 
-(async function() {
-	options = Object.assign(options, program.opts());
+  program.parse(process.argv);
 
-	if (options.interactive) {
-		const inquirer = await import('@inquirer/prompts');
-		const interactiveParams = await inquirer.input({
-			message: 'Params:'
-		});
+  options = Object.assign(options, program.opts());
 
-		options.params = interactiveParams.split(' ');
-	}
+  if (options.interactive) {
+    const inquirer = await import('@inquirer/prompts');
+    const interactiveParams = await inquirer.input({
+      message: 'Params:'
+    });
 
-	const success = await execute(options.filepath, {
-		params: options.params,
-		seed: options.seed,
-		envFiles: options.envFiles,
-		envVars: options.envVars,
-	});
+    options.params = interactiveParams.split(' ');
+  }
 
-	if (!success) {
-		process.exit(1);
-	}
+  const success = await execute(options.filepath, {
+    params: options.params,
+    seed: options.seed,
+    envFiles: options.envFiles,
+    envVars: options.envVars
+  });
+
+  if (!success) {
+    process.exit(1);
+  }
 })();
