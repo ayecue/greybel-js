@@ -564,3 +564,8 @@ All notable changes to this project will be documented in this file.
 ## [1.8.5] - 12.05.2023
 
 - forbid literal optimization in default args
+
+## [1.8.6] - 12.05.2023
+
+- fix isa regarding boolean value, boolean now gets recognized by it as a member of number
+- add version check to inform about latest version
