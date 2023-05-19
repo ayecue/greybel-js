@@ -35,7 +35,7 @@ export const getAvailableOperators = (
   return AVAILABLE_OPERATORS.map((label: string) => {
     return new PseudoCompletionItem({
       label,
-      kind: Monaco.languages.CompletionItemKind.Operator,
+      kind: 11,
       insertText: label,
       range
     });

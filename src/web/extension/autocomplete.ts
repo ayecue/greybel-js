@@ -100,24 +100,14 @@ export function activate(monaco: typeof Monaco) {
           previous?.type === ASTType.MemberExpression ||
           previous?.type === ASTType.IndexExpression
         ) {
-          const list = getCompletionList(
-            helper,
-            previous,
-            currentRange,
-            Monaco.languages.CompletionItemKind.Method
-          );
+          const list = getCompletionList(helper, previous, currentRange, 0);
           if (list) return list.valueOf();
         } else if (
           (document.getValueInRange(currentRange) === '.' &&
             closest?.type === ASTType.MemberExpression) ||
           closest?.type === ASTType.IndexExpression
         ) {
-          const list = getCompletionList(
-            helper,
-            closest,
-            currentRange,
-            Monaco.languages.CompletionItemKind.Method
-          );
+          const list = getCompletionList(helper, closest, currentRange, 0);
           if (list) return list.valueOf();
         }
       }
@@ -131,7 +121,7 @@ export function activate(monaco: typeof Monaco) {
         ...convertDefinitionsToCompletionList(
           defaultDefinitions,
           currentRange,
-          Monaco.languages.CompletionItemKind.Function
+          1
         )
       ];
 
@@ -146,7 +136,7 @@ export function activate(monaco: typeof Monaco) {
           .map((property: string) => {
             return new PseudoCompletionItem({
               label: property,
-              kind: Monaco.languages.CompletionItemKind.Variable,
+              kind: 4,
               insertText: property,
               range: currentRange
             });

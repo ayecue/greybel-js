@@ -35,7 +35,7 @@ export const getAvailableKeywords = (
   return AVAILABLE_KEYWORDS.map((label: string) => {
     return new PseudoCompletionItem({
       label,
-      kind: Monaco.languages.CompletionItemKind.Keyword,
+      kind: 17,
       insertText: label,
       range
     });

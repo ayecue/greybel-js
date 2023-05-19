@@ -10,7 +10,7 @@ export const getAvailableConstants = (
   return AVAILABLE_CONSTANTS.map((label: string) => {
     return new PseudoCompletionItem({
       label,
-      kind: Monaco.languages.CompletionItemKind.Constant,
+      kind: 14,
       insertText: label,
       range
     });
