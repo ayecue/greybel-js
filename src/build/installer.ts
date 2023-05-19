@@ -151,7 +151,6 @@ class Installer {
       this.buffer =
         this.createContentHeader() + '\n' + this.createFileLine(file, true);
     } else {
-      this.segments.push(this.buffer);
       this.buffer = newContent;
     }
   }
