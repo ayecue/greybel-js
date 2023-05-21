@@ -49,6 +49,7 @@ Arguments:
 
 Options:
 	-V, --version				Output the version number
+	-id, --ingame-directory <ingameDirectory>	Ingame directory to where the files should be imported to
 	-ev, --env-files <file...>		Environment variables files
 	-vr, --env-vars <vars...>		Environment variables
 	-en, --exclude-namespaces <vars...>	Exclude namespaces from optimization
@@ -298,21 +299,17 @@ a = b & c
 ## import_code
 The native `import_code` is supported as well.
 
-The implementation in this parser enables you to build files in your actual file system via an additional attribute.
+Through the transpiler it is possible to refer to actual files in your file system which then get transformed to ingame file paths. Additionally the transpiler makes it possible to nest `import_code`.
 ```
-// The default import_code command will just be parsed but won't actually include a file from your file system
-import_code("somefile.src");
-
-// As you can see this will adds another string behind the actual parameter. This enables the parser to build a dependency in your file system.
-import_code("somefile.src":"./myProject/test.src");
+import_code("./myProject/test.src");
 ```
 
-This going to be very useful if you want to use the new feature but still want your script files to get optimized.
+Via the `--ingameDirectory` parameter it is possible to define the ingame directory it should be imported to. By default the ingame directory will be `/root/`.
 
-Together with the `--installer` flag in the CLI it will bundle your files for you which makes it easier to copy/paste code from your file system into the game.
+Through the `--installer` flag in the CLI you can bundle your files which makes it easier to copy/paste code from your file system into the ingame file system.
 
 ### Nested import_code
-Nested `import_code` is supported now as well. Each nested `import_code` will be moved to the entry file when transpiling/building.
+Nested `import_code` is supported now as well. Each nested `import_code` will be moved to the entry file when transpiling.
 
 ## Import
 Import will use the relative path from the file it imports to.
