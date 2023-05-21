@@ -4,3 +4,4 @@ src
 .circleci
 web
 test.src
+test.js

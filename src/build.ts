@@ -66,7 +66,7 @@ export default async function build(
       environmentVariables: new Map(Object.entries(envMapper.map)),
       processImportPathCallback: (importPath: string) => {
         const relativePath = createBasePath(target, importPath);
-        return path.join(buildOptions.ingameDirectory, relativePath);
+        return path.posix.join(buildOptions.ingameDirectory, relativePath);
       }
     }).parse();
 

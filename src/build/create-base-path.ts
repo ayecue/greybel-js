@@ -19,11 +19,15 @@ export const createBasePath = (
     filtered.push(current);
   }
 
-  let relativePath = filePath.replace(`${path.join(...filtered)}`, base);
-
-  if (relativePath.startsWith(path.sep)) {
-    relativePath = relativePath.slice(1);
+  if (path.win32.sep === path.sep) {
+    return filePath
+      .replace(`${path.win32.join(...filtered)}`, base)
+      .split(path.win32.sep)
+      .join(path.posix.sep);
   }
 
-  return relativePath;
+  return filePath.replace(
+    `${path.posix.sep}${path.posix.join(...filtered)}`,
+    base
+  );
 };
