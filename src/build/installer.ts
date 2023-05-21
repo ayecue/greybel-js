@@ -56,7 +56,7 @@ class Installer {
     const target = path.basename(folder);
     let output: string[] = [];
 
-    if (this.isRootDirectory(target)) {
+    if (this.isRootDirectory(target) || target === '') {
       return output;
     }
 
