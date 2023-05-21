@@ -49,7 +49,7 @@ Arguments:
 
 Options:
 	-V, --version				Output the version number
-	-id, --ingame-directory <ingameDirectory>	Ingame directory to where the files should be imported to
+	-id, --ingame-directory <dir>	Ingame directory to where the files should be imported to
 	-ev, --env-files <file...>		Environment variables files
 	-vr, --env-vars <vars...>		Environment variables
 	-en, --exclude-namespaces <vars...>	Exclude namespaces from optimization
