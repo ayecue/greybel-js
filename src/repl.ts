@@ -38,7 +38,7 @@ export default async function repl(
         _self: CustomValue,
         args: Map<string, CustomValue>
       ): Promise<CustomValue> => {
-        ctx.handler.outputHandler.print(args.get('value')!.toString());
+        ctx.handler.outputHandler.print(ctx, args.get('value')!.toString());
         active = false;
         return Promise.resolve(DefaultType.Void);
       }

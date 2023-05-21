@@ -1,3 +1,4 @@
+import { OperationContext } from 'greybel-interpreter';
 import { v4 } from 'uuid';
 
 export class Stdin {
@@ -39,7 +40,7 @@ export class Stdin {
     me.target.type = type;
   }
 
-  waitForInput(): Promise<void> {
+  waitForInput(ctx: OperationContext): Promise<void> {
     const me = this;
     const target = me.target;
     const id = v4();
@@ -47,6 +48,11 @@ export class Stdin {
     me.queue.unshift(id);
 
     return new Promise((resolve) => {
+      const onExit = () => {
+        me.queue.shift();
+        target.removeEventListener('keydown', handler);
+        resolve();
+      };
       const handler = (evt: KeyboardEvent) => {
         if (evt.keyCode === 13) {
           const currentId = me.queue[0];
@@ -54,26 +60,34 @@ export class Stdin {
           if (id === currentId) {
             evt.stopImmediatePropagation();
             me.queue.shift();
+            ctx.processState.removeListener('exit', onExit);
             target.removeEventListener('keydown', handler);
             resolve();
           }
         }
       };
 
+      ctx.processState.once('exit', onExit);
       target.addEventListener('keydown', handler);
     });
   }
 
-  waitForKeyPress(): Promise<KeyboardEvent> {
+  waitForKeyPress(ctx: OperationContext): Promise<KeyboardEvent> {
     const me = this;
     const target = me.target;
 
     return new Promise((resolve) => {
+      const onExit = () => {
+        target.removeEventListener('keydown', handler);
+        resolve(null);
+      };
       const handler = (evt: KeyboardEvent) => {
+        ctx.processState.removeListener('exit', onExit);
         target.removeEventListener('keydown', handler);
         resolve(evt);
       };
 
+      ctx.processState.once('exit', onExit);
       target.addEventListener('keydown', handler);
     });
   }

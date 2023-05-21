@@ -49,6 +49,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
       options.filepath = filepath;
       options.output = output || '.';
     })
+    .option('-id, --ingame-directory <ingameDirectory>', 'Ingame directory to where the files should be imported to')
     .option('-ev, --env-files <file...>', 'Environment variables files')
     .option('-vr, --env-vars <var...>', 'Environment variables')
     .option(
@@ -90,7 +91,8 @@ if (!semver.satisfies(process.version, engineVersion)) {
     excludedNamespaces: options.excludeNamespaces,
     name: options.name,
     installer: options.installer,
-    maxChars: options.maxChars
+    maxChars: options.maxChars,
+    ingameDirectory: options.ingameDirectory
   });
 
   if (!success) {

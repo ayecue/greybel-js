@@ -6,6 +6,9 @@ import {
 } from 'greyscript-meta/dist/meta.js';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
+import { getAvailableConstants } from './autocomplete/constants.js';
+import { getAvailableKeywords } from './autocomplete/keywords.js';
+import { getAvailableOperators } from './autocomplete/operators.js';
 import { LookupHelper } from './helper/lookup-type.js';
 import documentParseQueue from './helper/model-manager.js';
 import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager.js';
@@ -18,7 +21,8 @@ import {
 
 export const convertDefinitionsToCompletionList = (
   definitions: SignatureDefinitionContainer,
-  range: Monaco.Range
+  range: Monaco.Range,
+  kind: Monaco.languages.CompletionItemKind
 ): PseudoCompletionItem[] => {
   const completionItems: PseudoCompletionItem[] = [];
   const keys = Object.keys(definitions);
@@ -27,7 +31,7 @@ export const convertDefinitionsToCompletionList = (
     completionItems.push(
       new PseudoCompletionItem({
         label: keys[index],
-        kind: 0,
+        kind,
         insertText: keys[index],
         range
       })
@@ -40,14 +44,15 @@ export const convertDefinitionsToCompletionList = (
 export const getCompletionList = (
   helper: LookupHelper,
   item: ASTBase,
-  range: Monaco.Range
+  range: Monaco.Range,
+  kind: Monaco.languages.CompletionItemKind
 ): PseudoCompletionList | null => {
   const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
     const definitions = getDefinitions(typeInfo.definition.returns);
     const completionItems: PseudoCompletionItem[] = [
-      ...convertDefinitionsToCompletionList(definitions, range)
+      ...convertDefinitionsToCompletionList(definitions, range, kind)
     ];
 
     if (completionItems.length > 0) {
@@ -56,7 +61,7 @@ export const getCompletionList = (
   } else if (typeInfo instanceof TypeInfo) {
     const definitions = getDefinitions(typeInfo.type);
     const completionItems: PseudoCompletionItem[] = [
-      ...convertDefinitionsToCompletionList(definitions, range)
+      ...convertDefinitionsToCompletionList(definitions, range, kind)
     ];
 
     if (completionItems.length > 0) {
@@ -95,14 +100,14 @@ export function activate(monaco: typeof Monaco) {
           previous?.type === ASTType.MemberExpression ||
           previous?.type === ASTType.IndexExpression
         ) {
-          const list = getCompletionList(helper, previous, currentRange);
+          const list = getCompletionList(helper, previous, currentRange, 0);
           if (list) return list.valueOf();
         } else if (
           (document.getValueInRange(currentRange) === '.' &&
             closest?.type === ASTType.MemberExpression) ||
           closest?.type === ASTType.IndexExpression
         ) {
-          const list = getCompletionList(helper, closest, currentRange);
+          const list = getCompletionList(helper, closest, currentRange, 0);
           if (list) return list.valueOf();
         }
       }
@@ -110,7 +115,14 @@ export function activate(monaco: typeof Monaco) {
       // get all default methods
       const defaultDefinitions = getDefinitions(['general']);
       const completionItems: PseudoCompletionItem[] = [
-        ...convertDefinitionsToCompletionList(defaultDefinitions, currentRange)
+        ...getAvailableConstants(currentRange),
+        ...getAvailableKeywords(currentRange),
+        ...getAvailableOperators(currentRange),
+        ...convertDefinitionsToCompletionList(
+          defaultDefinitions,
+          currentRange,
+          1
+        )
       ];
 
       if (!astResult) {
@@ -124,7 +136,7 @@ export function activate(monaco: typeof Monaco) {
           .map((property: string) => {
             return new PseudoCompletionItem({
               label: property,
-              kind: 0,
+              kind: 4,
               insertText: property,
               range: currentRange
             });

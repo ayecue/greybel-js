@@ -154,13 +154,26 @@ export class LookupHelper {
       const lineItem = lineItems[index];
       const outer = ASTScraper.findEx((item: ASTBase, _level: number) => {
         const startLine = item.start!.line;
-        const startCharacter = item.start!.character;
-        const endLine = item.end!.line;
-        const endCharacter = item.end!.character;
 
         if (startLine > position.lineNumber) {
           return {
             exit: true
+          };
+        }
+
+        const startCharacter = item.start!.character;
+        const endLine = item.end!.line;
+        const endCharacter = item.end!.character;
+
+        if (startLine < endLine) {
+          return {
+            valid:
+              (position.lineNumber > startLine &&
+                position.lineNumber < endLine) ||
+              (position.lineNumber === startLine &&
+                startCharacter <= position.column) ||
+              (position.lineNumber === endLine &&
+                endCharacter >= position.column)
           };
         }
 

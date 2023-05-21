@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "1.8.6",
+    "version": "1.8.7",
     "engines": {
         "node": ">=16.0.0"
     },
@@ -31,12 +31,12 @@
         "cli-progress": "^3.11.2",
         "commander": "^7.2.0",
         "css-color-names": "^1.0.1",
-        "greybel-core": "^0.7.6",
-        "greybel-gh-mock-intrinsics": "^2.2.5",
-        "greybel-interpreter": "^1.9.8",
-        "greybel-intrinsics": "^2.0.2",
-        "greybel-transpiler": "^0.9.4",
-        "greyscript-core": "^0.7.6",
+        "greybel-core": "^0.8.4",
+        "greybel-gh-mock-intrinsics": "^2.3.2",
+        "greybel-interpreter": "^2.0.4",
+        "greybel-intrinsics": "^2.0.9",
+        "greybel-transpiler": "^1.0.1",
+        "greyscript-core": "^0.8.4",
         "greyscript-meta": "^1.3.9",
         "localstoragedb": "git+https://github.com/ayecue/localStorageDB.git",
         "lru-cache": "^7.14.1",
