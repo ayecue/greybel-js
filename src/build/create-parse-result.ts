@@ -3,40 +3,16 @@ import { TranspilerParseResult } from 'greybel-transpiler';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
-const createRelativePath = (
-  targetRootSegments: string[],
-  filePath: string
-): string => {
-  const pathSegments = filePath.split(path.sep);
-  const filtered: string[] = [];
-
-  for (const segment of targetRootSegments) {
-    const current = pathSegments.shift();
-
-    if (current !== segment) {
-      break;
-    }
-
-    filtered.push(current);
-  }
-
-  let relativePath = filePath.replace(`${path.join(...filtered)}`, '.');
-
-  if (relativePath.startsWith(path.sep)) {
-    relativePath = relativePath.slice(1);
-  }
-
-  return relativePath;
-};
+import { createBasePath } from './create-base-path.js';
 
 export const createParseResult = async (
   target: string,
   buildPath: string,
   result: TranspilerParseResult
 ): Promise<void> => {
-  const targetRootSegments = path.dirname(target).split(path.sep);
-  const relativePathFactory: (filePath: string) => string =
-    createRelativePath.bind(null, targetRootSegments);
+  const relativePathFactory: (filePath: string) => string = (
+    filePath: string
+  ) => createBasePath(target, filePath);
 
   await Promise.all(
     Object.entries(result).map(async ([file, code]) => {

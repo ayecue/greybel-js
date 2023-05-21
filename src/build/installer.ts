@@ -2,39 +2,49 @@ import fs from 'fs/promises';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
 
+import { createBasePath } from './create-base-path.js';
+
 type ImportItem = {
   filepath: string;
   ingameFilepath: string;
   content: string;
 };
 
+export interface InstallerOptions {
+  target: string;
+  ingameDirectory: string;
+  buildPath: string;
+  result: TranspilerParseResult;
+  maxChars: number;
+}
+
 class Installer {
   private importList: ImportItem[];
   private target: string;
+  private ingameDirectory: string;
   private buildPath: string;
   private maxChars: number;
 
   private segments: string[];
   private buffer: string;
 
-  constructor(
-    target: string,
-    buildPath: string,
-    result: TranspilerParseResult,
-    maxChars: number
-  ) {
-    this.importList = this.createImportList(target, result);
-    this.target = target;
-    this.buildPath = buildPath;
-    this.maxChars = maxChars - 1000;
+  constructor(options: InstallerOptions) {
+    this.target = options.target;
+    this.buildPath = options.buildPath;
+    this.ingameDirectory = options.ingameDirectory;
+    this.maxChars = options.maxChars - 1000;
     this.segments = [];
+    this.importList = this.createImportList(options.target, options.result);
     this.buffer = this.createContentHeader();
   }
 
   private createContentHeader(): string {
-    return ['s=get_shell', 'c=s.host_computer', 'h=home_dir', 'p=@push'].join(
-      '\n'
-    );
+    return [
+      's=get_shell',
+      'c=s.host_computer',
+      'h="' + this.ingameDirectory + '"',
+      'p=@push'
+    ].join('\n');
   }
 
   private isRootDirectory(target: string): boolean {
@@ -173,14 +183,15 @@ class Installer {
   }
 
   private createImportList(
-    target: string,
+    rootTarget: string,
     parseResult: TranspilerParseResult
   ): ImportItem[] {
-    const pseudoRoot = path.dirname(target) || '';
     const imports = Object.entries(parseResult).map(([target, code]) => {
+      const ingameFilepath = createBasePath(rootTarget, target, '');
+
       return {
         filepath: target,
-        ingameFilepath: target.replace(pseudoRoot, '').replace(path.sep, '/'),
+        ingameFilepath,
         content: code
       };
     });
@@ -208,11 +219,8 @@ class Installer {
 }
 
 export const createInstaller = async (
-  target: string,
-  buildPath: string,
-  result: TranspilerParseResult,
-  maxChars: number
+  options: InstallerOptions
 ): Promise<void> => {
-  const installer = new Installer(target, buildPath, result, maxChars);
+  const installer = new Installer(options);
   await installer.build();
 };

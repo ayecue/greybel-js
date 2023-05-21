@@ -4,6 +4,7 @@ import { BuildError, BuildType, Transpiler } from 'greybel-transpiler';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
+import { createBasePath } from './build/create-base-path.js';
 import { createParseResult } from './build/create-parse-result.js';
 import EnvMapper from './build/env-mapper.js';
 import { createInstaller } from './build/installer.js';
@@ -20,6 +21,7 @@ export interface BuildOptions {
   envFiles: string[];
   envVars: string[];
   maxChars: number;
+  ingameDirectory: string;
 }
 
 export default async function build(
@@ -39,7 +41,8 @@ export default async function build(
       options.disableNamespacesOptimization || false,
     maxChars: options.maxChars || 155000,
     envFiles: options.envFiles || [],
-    envVars: options.envVars || []
+    envVars: options.envVars || [],
+    ingameDirectory: options.ingameDirectory || '/root/'
   };
   let buildType = BuildType.DEFAULT;
 
@@ -60,7 +63,11 @@ export default async function build(
       excludedNamespaces: buildOptions.excludedNamespaces,
       disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
       disableNamespacesOptimization: buildOptions.disableNamespacesOptimization,
-      environmentVariables: new Map(Object.entries(envMapper.map))
+      environmentVariables: new Map(Object.entries(envMapper.map)),
+      processImportPathCallback: (importPath: string) => {
+        const relativePath = createBasePath(target, importPath);
+        return path.join(buildOptions.ingameDirectory, relativePath);
+      }
     }).parse();
 
     const buildPath = path.resolve(output, './build');
@@ -75,7 +82,13 @@ export default async function build(
     await createParseResult(target, buildPath, result);
 
     if (buildOptions.installer) {
-      await createInstaller(target, buildPath, result, buildOptions.maxChars);
+      await createInstaller({
+        target,
+        ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
+        buildPath,
+        result,
+        maxChars: buildOptions.maxChars
+      });
     }
 
     console.log(`Build done. Available in ${buildPath}.`);
