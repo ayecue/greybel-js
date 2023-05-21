@@ -576,3 +576,4 @@ All notable changes to this project will be documented in this file.
 - add ingame directory option in build command
 - simplify import_code logic by removing second custom argument and allowing to create an installer to whatever ingame directory
 - improve autocomplete in UI including keywords, constants and operators
+- fix hover tooltip for multiline strings in UI
