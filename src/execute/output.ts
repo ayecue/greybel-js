@@ -2,7 +2,12 @@ import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
-import { KeyEvent, OutputHandler, PrintOptions } from 'greybel-interpreter';
+import {
+  KeyEvent,
+  OperationContext,
+  OutputHandler,
+  PrintOptions
+} from 'greybel-interpreter';
 import readline from 'readline';
 import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 
@@ -74,6 +79,7 @@ export default class CLIOutputHandler extends OutputHandler {
   }
 
   print(
+    _ctx: OperationContext,
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
@@ -98,11 +104,11 @@ export default class CLIOutputHandler extends OutputHandler {
     }
   }
 
-  clear() {
+  clear(_ctx: OperationContext) {
     console.clear();
   }
 
-  progress(timeout: number): Promise<void> {
+  progress(ctx: OperationContext, timeout: number): Promise<void> {
     const startTime = Date.now();
     const loadingBar = new cliProgress.SingleBar(
       {},
@@ -117,12 +123,18 @@ export default class CLIOutputHandler extends OutputHandler {
     }
 
     return new Promise((resolve, _reject) => {
+      const onExit = () => {
+        clearInterval(interval);
+        loadingBar.stop();
+        resolve();
+      };
       const interval = setInterval(() => {
         const currentTime = Date.now();
         const elapsed = currentTime - startTime;
 
         if (elapsed > timeout) {
           loadingBar.update(timeout);
+          ctx.processState.removeListener('exit', onExit);
           clearInterval(interval);
           loadingBar.stop();
           resolve();
@@ -131,10 +143,16 @@ export default class CLIOutputHandler extends OutputHandler {
 
         loadingBar.update(elapsed);
       });
+
+      ctx.processState.once('exit', onExit);
     });
   }
 
-  waitForInput(isPassword: boolean, message: string): Promise<string> {
+  waitForInput(
+    _ctx: OperationContext,
+    isPassword: boolean,
+    message: string
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       const transformed = transform(
         message,
@@ -159,9 +177,9 @@ export default class CLIOutputHandler extends OutputHandler {
     });
   }
 
-  waitForKeyPress(message: string): Promise<KeyEvent> {
+  waitForKeyPress(ctx: OperationContext, message: string): Promise<KeyEvent> {
     return new Promise((resolve, _reject) => {
-      this.print(message, {
+      this.print(ctx, message, {
         appendNewLine: false
       });
 
@@ -180,6 +198,10 @@ export default class CLIOutputHandler extends OutputHandler {
       process.stdin.once(
         'keypress',
         (_character: string, key: NodeJSKeyEvent) => {
+          if (key.ctrl && key.name === 'c') {
+            ctx.exit();
+          }
+
           process.stdin.pause();
           resolve(nodeJSKeyEventToKeyEvent(key));
         }

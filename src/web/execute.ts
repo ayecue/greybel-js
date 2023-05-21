@@ -122,6 +122,7 @@ export default async function execute(
 
   const WebOutputHandler = class extends OutputHandler {
     print(
+      _ctx: OperationContext,
       message: string,
       { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
     ) {
@@ -145,12 +146,16 @@ export default async function execute(
       stdout.clear();
     }
 
-    progress(timeout: number): Promise<void> {
+    progress(ctx: OperationContext, timeout: number): Promise<void> {
       const startTime = Date.now();
       const max = 20;
       stdout.write(`[${'-'.repeat(max)}]`);
 
       return new Promise((resolve, _reject) => {
+        const onExit = () => {
+          clearInterval(interval);
+          resolve();
+        };
         const interval = setInterval(() => {
           const currentTime = Date.now();
           const elapsed = currentTime - startTime;
@@ -158,6 +163,7 @@ export default async function execute(
           if (elapsed > timeout) {
             stdout.updateLast(`[${'#'.repeat(max)}]`);
             stdout.write('\n');
+            ctx.processState.removeListener('exit', onExit);
             clearInterval(interval);
             resolve();
             return;
@@ -169,12 +175,18 @@ export default async function execute(
 
           stdout.updateLast(`[${'#'.repeat(progress)}${'-'.repeat(right)}]`);
         });
+
+        ctx.processState.once('exit', onExit);
       });
     }
 
-    waitForInput(isPassword: boolean, message: string): Promise<string> {
+    waitForInput(
+      ctx: OperationContext,
+      isPassword: boolean,
+      message: string
+    ): Promise<string> {
       return new Promise((resolve, reject) => {
-        this.print(message, {
+        this.print(ctx, message, {
           appendNewLine: false
         });
 
@@ -183,7 +195,7 @@ export default async function execute(
         stdin.setType(isPassword ? 'password' : 'text');
 
         return stdin
-          .waitForInput()
+          .waitForInput(ctx)
           .then(() => {
             const value = stdin.getValue();
 
@@ -198,9 +210,9 @@ export default async function execute(
       });
     }
 
-    waitForKeyPress(message: string): Promise<KeyEvent> {
+    waitForKeyPress(ctx: OperationContext, message: string): Promise<KeyEvent> {
       return new Promise((resolve, reject) => {
-        this.print(message, {
+        this.print(ctx, message, {
           appendNewLine: false
         });
 
@@ -208,7 +220,7 @@ export default async function execute(
         stdin.focus();
 
         return stdin
-          .waitForKeyPress()
+          .waitForKeyPress(ctx)
           .then((keyEvent) => {
             return resolve({
               keyCode: keyEvent.keyCode,

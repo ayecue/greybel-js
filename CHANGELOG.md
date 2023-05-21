@@ -577,3 +577,5 @@ All notable changes to this project will be documented in this file.
 - simplify import_code logic by removing second custom argument and allowing to create an installer to whatever ingame directory
 - improve autocomplete in UI including keywords, constants and operators
 - fix hover tooltip for multiline strings in UI
+- register control + c in user_input with anyKey enabled
+- instant exit on process termination
