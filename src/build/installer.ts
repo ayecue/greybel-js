@@ -63,14 +63,14 @@ class Installer {
     if (this.isRootDirectory(parent)) {
       output = output.concat([
         'd=c.File(h+"/' + target + '")',
-        'if (d == null) then c.create_folder(h,"/' + target + '")'
+        'if (d == null) then c.create_folder(h,"' + target + '")'
       ]);
     } else {
       output = output.concat([
         'd=c.File(h+"' + parent + '/' + target + '")',
         'if (d == null) then c.create_folder(h+"' +
           parent +
-          '","/' +
+          '","' +
           target +
           '")'
       ]);
