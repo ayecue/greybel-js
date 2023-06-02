@@ -583,3 +583,6 @@ All notable changes to this project will be documented in this file.
 ## [1.8.8] - 02.06.2023
 
 - fix lastIndexOf behaviour, only works with strings now and returns -1 instead of null
+- fix return type of indexOf signature in UI
+- fix tooltip for lastIndexOf in UI
+- remove usage of boolean type in tooltips and signatures to avoid confusion since technically booleans do not exist
