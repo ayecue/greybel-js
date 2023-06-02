@@ -297,7 +297,7 @@ export class TypeMap {
       case ASTType.NumericLiteral:
         return new TypeInfo((item as ASTLiteral).raw.toString(), ['number']);
       case ASTType.BooleanLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['boolean']);
+        return new TypeInfo((item as ASTLiteral).raw.toString(), ['number']);
       case ASTType.MapConstructorExpression:
         return new TypeInfo('{}', ['map:any']);
       case ASTType.ListConstructorExpression:
@@ -310,7 +310,7 @@ export class TypeMap {
           'map:any'
         ]);
       case ASTType.LogicalExpression:
-        return new TypeInfo('Logical expression', ['boolean']);
+        return new TypeInfo('Logical expression', ['number']);
       default:
         return null;
     }

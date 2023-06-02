@@ -85,8 +85,7 @@ const language: Monaco.languages.IMonarchLanguage = {
               ...allTypes.filter((item: string) => item !== 'general'),
               'any',
               'number',
-              'null',
-              'boolean'
+              'null'
             ].join('|')]: 'type',
             debugger: 'debug-token',
             default: 'constant',
