@@ -586,4 +586,4 @@ All notable changes to this project will be documented in this file.
 - fix return type of indexOf signature in UI
 - fix tooltip for lastIndexOf in UI
 - remove usage of boolean type in tooltips and signatures to avoid confusion since technically booleans do not exist
-- minor improvement to index expression type analyzing
+- minor improvement to index expression type analyzing in UI
