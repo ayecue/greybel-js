@@ -180,9 +180,48 @@ export class TypeMap {
           break;
         }
         case ASTType.IndexExpression: {
-          // add index
-          console.log('not yet supported');
-          return null;
+          if (!currentMetaInfo) {
+            return null;
+          }
+
+          const indexExpr = origin as ASTIndexExpression;
+          const indexValue = indexExpr.index;
+
+          if (
+            indexValue instanceof ASTLiteral &&
+            indexValue.type === ASTType.StringLiteral
+          ) {
+            // get signature
+            let definitions = null;
+
+            if (currentMetaInfo instanceof TypeInfoWithDefinition) {
+              const definition = currentMetaInfo.definition;
+              definitions = getDefinitions(definition.returns);
+            } else {
+              definitions = getDefinitions(currentMetaInfo.type);
+            }
+
+            const key = indexValue.value.toString();
+
+            if (key in definitions) {
+              const definition = definitions[key];
+              currentMetaInfo = new TypeInfoWithDefinition(
+                key,
+                ['function'],
+                definition
+              );
+              break;
+            }
+
+            // todo add better retrieval
+            currentMetaInfo = new TypeInfo(key, ['any']);
+            break;
+          }
+
+          // todo add better retrieval
+          const indexType = me.resolve(indexValue);
+          currentMetaInfo = new TypeInfo(indexType.type[0], ['any']);
+          break;
         }
         default: {
           if (!currentMetaInfo) {
