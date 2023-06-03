@@ -7,6 +7,7 @@ import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import transformASTToString from './helper/ast-stringify.js';
 import documentParseQueue from './helper/model-manager.js';
+import { removeContextPrefixInNamespace } from './helper/utils.js';
 
 const findAllAssignments = (
   monaco: typeof Monaco,
@@ -20,7 +21,9 @@ const findAllAssignments = (
   for (const item of scopes) {
     for (const assignmentItem of item.assignments) {
       const assignment = assignmentItem as ASTAssignmentStatement;
-      const current = transformASTToString(assignment.variable);
+      const current = removeContextPrefixInNamespace(
+        transformASTToString(assignment.variable)
+      );
 
       if (!isValid(current)) {
         continue;

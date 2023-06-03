@@ -62,12 +62,18 @@ export function activate(monaco: typeof Monaco) {
       const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
       let identifer = closest.name;
 
-      if (
-        previous &&
-        (previous instanceof ASTMemberExpression ||
-          previous instanceof ASTIndexExpression)
-      ) {
-        identifer = transformASTToNamespace(previous);
+      if (previous) {
+        if (
+          previous instanceof ASTMemberExpression &&
+          previous.identifier === closest
+        ) {
+          identifer = transformASTToNamespace(previous);
+        } else if (
+          previous instanceof ASTIndexExpression &&
+          previous.index === closest
+        ) {
+          identifer = transformASTToNamespace(previous);
+        }
       }
 
       const definitions = findAllDefinitions(

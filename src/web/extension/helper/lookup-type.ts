@@ -6,6 +6,8 @@ import {
   ASTChunk,
   ASTFunctionStatement,
   ASTIdentifier,
+  ASTIndexExpression,
+  ASTMemberExpression,
   ASTType
 } from 'greyscript-core';
 import { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api.js';
@@ -291,9 +293,14 @@ export class LookupHelper {
     const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
 
     if (
-      previous?.type === ASTType.MemberExpression ||
-      (previous?.type === ASTType.IndexExpression &&
-        closest.type === ASTType.StringLiteral)
+      previous?.type === ASTType.MemberExpression &&
+      closest === (previous as ASTMemberExpression).identifier
+    ) {
+      return typeMap.resolvePath(previous);
+    } else if (
+      previous?.type === ASTType.IndexExpression &&
+      closest === (previous as ASTIndexExpression).index &&
+      closest.type === ASTType.StringLiteral
     ) {
       return typeMap.resolvePath(previous);
     }
