@@ -311,21 +311,13 @@ export function namespaceFactory(
       item: ASTFeatureImportExpression,
       _data: TransformerDataObject
     ): string => {
-      if (!item.chunk) {
-        return '#import "' + make(item.name) + ' from ' + item.path + '";';
-      }
-
-      return make(item.name) + ' = __REQUIRE("' + item.namespace + '")';
+      return '#import "' + make(item.name) + ' from ' + item.path + '";';
     },
     FeatureIncludeExpression: (
       item: ASTFeatureIncludeExpression,
       _data: TransformerDataObject
     ): string => {
-      if (!item.chunk) {
-        return '#include "' + item.path + '";';
-      }
-
-      return make(item.chunk);
+      return '#include "' + item.path + '";';
     },
     FeatureDebuggerExpression: (): string => {
       return '//debugger';

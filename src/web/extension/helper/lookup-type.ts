@@ -1,3 +1,4 @@
+import { ASTChunkAdvanced } from 'greybel-core';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -14,6 +15,11 @@ import * as ASTScraper from './ast-scraper.js';
 import transformASTToString from './ast-stringify.js';
 import documentParseQueue from './model-manager.js';
 import typeManager, { lookupBase, TypeInfo } from './type-manager.js';
+import {
+  isGlobalsContextNamespace,
+  removeContextPrefixInNamespace,
+  removeGlobalsContextPrefixInNamespace
+} from './utils.js';
 
 export type LookupOuter = ASTBase[];
 
@@ -33,13 +39,16 @@ export class LookupHelper {
     identifier: string,
     root: ASTBase
   ): ASTAssignmentStatement[] {
+    const identiferWithoutPrefix = removeContextPrefixInNamespace(identifier);
     const assignments = this.lookupAssignments(root);
     const result: ASTAssignmentStatement[] = [];
 
     for (const item of assignments) {
-      const current = transformASTToNamespace(item.variable);
+      const current = removeContextPrefixInNamespace(
+        transformASTToNamespace(item.variable)
+      );
 
-      if (current === identifier) {
+      if (current === identiferWithoutPrefix) {
         result.push(item);
       }
     }
@@ -52,11 +61,14 @@ export class LookupHelper {
           const assignment = assignmentItem as ASTAssignmentStatement;
           const current = transformASTToNamespace(assignment.variable);
 
-          if (!current.startsWith('globals.')) {
+          if (!isGlobalsContextNamespace(current)) {
             continue;
           }
 
-          if (current.replace(/^globals./, '') === identifier) {
+          if (
+            removeGlobalsContextPrefixInNamespace(current) ===
+            identiferWithoutPrefix
+          ) {
             result.push(assignment);
           }
         }
@@ -81,9 +93,25 @@ export class LookupHelper {
   findAllAvailableIdentifier(item: ASTBase): string[] {
     const scopes = this.lookupScopes(item);
     const result: string[] = [];
+    const outerScope = scopes.length > 1 ? scopes[1] : null;
+    const globalScope = this.lookupGlobalScope(item);
 
     for (const scope of scopes) {
-      result.push(...scope.namespaces);
+      for (const assignmentItem of scope.assignments) {
+        const assignment = assignmentItem as ASTAssignmentStatement;
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
+        result.push(current);
+
+        if (scope === globalScope) {
+          result.push(`globals.${current}`);
+        }
+
+        if (scope === outerScope) {
+          result.push(`outer.${current}`);
+        }
+      }
     }
 
     return Array.from(new Set(result));
@@ -93,14 +121,17 @@ export class LookupHelper {
     const scopes = this.lookupScopes(item);
     const result: string[] = [];
     const rootScope = scopes.shift();
+    const outerScope = scopes.length > 0 ? scopes[0] : null;
+    const globalScope = this.lookupGlobalScope(item);
 
     if (rootScope) {
       if (rootScope instanceof ASTFunctionStatement) {
         for (const parameter of rootScope.parameters) {
           if (parameter instanceof ASTAssignmentStatement) {
-            result.push((parameter.variable as ASTIdentifier).name);
+            const parameterName = (parameter.variable as ASTIdentifier).name;
+            result.push(parameterName, `locals.${parameterName}`);
           } else if (parameter instanceof ASTIdentifier) {
-            result.push(parameter.name);
+            result.push(parameter.name, `locals.${parameter.name}`);
           }
         }
       }
@@ -110,13 +141,33 @@ export class LookupHelper {
 
         if (assignment.end!.line >= item.end!.line) break;
 
-        const current = transformASTToString(assignment.variable);
-        result.push(current);
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
+        result.push(current, `locals.${current}`);
+
+        if (rootScope === globalScope) {
+          result.push(`globals.${current}`);
+        }
       }
     }
 
     for (const scope of scopes) {
-      result.push(...scope.namespaces);
+      for (const assignmentItem of scope.assignments) {
+        const assignment = assignmentItem as ASTAssignmentStatement;
+        const current = removeContextPrefixInNamespace(
+          transformASTToString(assignment.variable)
+        );
+        result.push(current);
+
+        if (scope === globalScope) {
+          result.push(`globals.${current}`);
+        }
+
+        if (scope === outerScope) {
+          result.push(`outer.${current}`);
+        }
+      }
     }
 
     return Array.from(new Set(result));
@@ -140,6 +191,22 @@ export class LookupHelper {
     }
 
     return result;
+  }
+
+  lookupGlobalScope(item: ASTBase): ASTChunkAdvanced {
+    let result: ASTBaseBlockWithScope = null;
+    let current = item.scope;
+
+    if (item instanceof ASTBaseBlockWithScope) {
+      result = item;
+    }
+
+    while (current) {
+      result = current;
+      current = current.scope;
+    }
+
+    return result as ASTChunkAdvanced;
   }
 
   lookupAST(position: Position): LookupASTResult | null {

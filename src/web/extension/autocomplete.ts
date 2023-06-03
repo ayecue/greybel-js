@@ -132,7 +132,7 @@ export function activate(monaco: typeof Monaco) {
       // get all identifer available in scope
       completionItems.push(
         ...helper
-          .findAllAvailableIdentifier(astResult.closest)
+          .findAllAvailableIdentifierRelatedToPosition(astResult.closest)
           .map((property: string) => {
             return new PseudoCompletionItem({
               label: property,
