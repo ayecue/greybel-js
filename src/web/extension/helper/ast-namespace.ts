@@ -344,7 +344,7 @@ export function namespaceFactory(
       return 'number';
     },
     BinaryNegatedExpression: (): string => {
-      return 'boolean';
+      return 'number';
     },
     Chunk: (item: ASTChunk, _data: TransformerDataObject): string => {
       const body = [];
