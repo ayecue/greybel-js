@@ -5,7 +5,7 @@ import {
 } from 'greyscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import ASTStringify from './helper/ast-stringify.js';
+import transformASTToString from './helper/ast-stringify.js';
 import documentParseQueue from './helper/model-manager.js';
 
 const findAllAssignments = (
@@ -20,7 +20,7 @@ const findAllAssignments = (
   for (const item of scopes) {
     for (const assignmentItem of item.assignments) {
       const assignment = assignmentItem as ASTAssignmentStatement;
-      const current = ASTStringify(assignment.variable);
+      const current = transformASTToString(assignment.variable);
 
       if (!isValid(current)) {
         continue;
@@ -36,6 +36,7 @@ const findAllAssignments = (
         assignment.variable.end.line,
         assignment.variable.end.character
       );
+
       result.push({
         name: current,
         detail: current,

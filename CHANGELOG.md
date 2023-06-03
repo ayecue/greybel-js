@@ -587,3 +587,4 @@ All notable changes to this project will be documented in this file.
 - fix tooltip for lastIndexOf in UI
 - remove usage of boolean type in tooltips and signatures to avoid confusion since technically booleans do not exist
 - minor improvement to index expression type analyzing in UI
+- use modified transformer to get namespace for type in UI

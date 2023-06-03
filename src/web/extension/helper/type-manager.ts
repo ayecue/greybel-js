@@ -24,7 +24,8 @@ import {
 } from 'greyscript-meta';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import ASTStringify from './ast-stringify.js';
+import transformASTToNamespace from './ast-namespace.js';
+import transformASTToString from './ast-stringify.js';
 
 export class TypeInfo {
   label: string;
@@ -95,7 +96,7 @@ export class TypeMap {
 
   lookupTypeOfNamespace(item: ASTBase): TypeInfo | null {
     const me = this;
-    const name = ASTStringify(item);
+    const name = transformASTToNamespace(item);
     let currentScope = item.scope;
 
     while (currentScope) {
@@ -278,7 +279,7 @@ export class TypeMap {
       arguments: item.parameters.map((arg: ASTBase) => {
         if (arg.type === ASTType.Identifier) {
           return {
-            label: ASTStringify(arg),
+            label: transformASTToString(arg),
             type: 'any'
           } as SignatureDefinitionArg;
         }
@@ -286,7 +287,7 @@ export class TypeMap {
         const assignment = arg as ASTAssignmentStatement;
 
         return {
-          label: ASTStringify(assignment.variable),
+          label: transformASTToString(assignment.variable),
           type: me.resolve(assignment.init)?.type[0] || 'any'
         };
       }),
@@ -402,7 +403,7 @@ export class TypeMap {
     me.refs.set(scope, identiferTypes);
 
     for (const assignment of assignments) {
-      const name = ASTStringify(assignment.variable);
+      const name = transformASTToNamespace(assignment.variable);
       const resolved = me.resolve(assignment.init);
 
       if (resolved === null) continue;
