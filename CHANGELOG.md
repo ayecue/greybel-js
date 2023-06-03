@@ -591,3 +591,4 @@ All notable changes to this project will be documented in this file.
 - fix type resolve within slice expression in UI
 - improve type resolve for assignments using locals, globals or outer prefix in UI
 - extend namespace find method to use assignment instead of namespaces coming from parser in UI
+- fix possibly wrong start position of member, index and call expression in UI
