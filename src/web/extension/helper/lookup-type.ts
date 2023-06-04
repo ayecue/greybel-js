@@ -19,7 +19,6 @@ import transformASTToString from './ast-stringify.js';
 import documentParseQueue from './model-manager.js';
 import typeManager, { lookupBase, TypeInfo } from './type-manager.js';
 import {
-  injectMapContructorNamespaces,
   isGlobalsContextNamespace,
   removeContextPrefixInNamespace,
   removeGlobalsContextPrefixInNamespace
@@ -56,15 +55,6 @@ export class LookupHelper {
       if (current === identiferWithoutPrefix) {
         result.push(assignment);
       }
-
-      if (assignment.init instanceof ASTMapConstructorExpression) {
-        assignments.push(
-          ...injectMapContructorNamespaces(
-            assignment.variable,
-            assignment.init.fields
-          )
-        );
-      }
     }
 
     if (root instanceof ASTChunk) {
@@ -86,15 +76,6 @@ export class LookupHelper {
             identiferWithoutPrefix
           ) {
             result.push(assignment);
-          }
-
-          if (assignment.init instanceof ASTMapConstructorExpression) {
-            assignments.push(
-              ...injectMapContructorNamespaces(
-                assignment.variable,
-                assignment.init.fields
-              )
-            );
           }
         }
       }
@@ -138,15 +119,6 @@ export class LookupHelper {
         if (scope === outerScope) {
           result.push(`outer.${current}`);
         }
-
-        if (assignment.init instanceof ASTMapConstructorExpression) {
-          assignments.push(
-            ...injectMapContructorNamespaces(
-              assignment.variable,
-              assignment.init.fields
-            )
-          );
-        }
       }
     }
 
@@ -187,15 +159,6 @@ export class LookupHelper {
         if (rootScope === globalScope) {
           result.push(`globals.${current}`);
         }
-
-        if (assignment.init instanceof ASTMapConstructorExpression) {
-          assignments.push(
-            ...injectMapContructorNamespaces(
-              assignment.variable,
-              assignment.init.fields
-            )
-          );
-        }
       }
     }
 
@@ -215,15 +178,6 @@ export class LookupHelper {
 
         if (scope === outerScope) {
           result.push(`outer.${current}`);
-        }
-
-        if (assignment.init instanceof ASTMapConstructorExpression) {
-          assignments.push(
-            ...injectMapContructorNamespaces(
-              assignment.variable,
-              assignment.init.fields
-            )
-          );
         }
       }
     }

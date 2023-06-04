@@ -1,10 +1,3 @@
-import {
-  ASTAssignmentStatement,
-  ASTBase,
-  ASTIndexExpression,
-  ASTMapKeyString
-} from 'greyscript-core';
-
 export const CONTEXT_PREFIX_PATTERN = /^(globals|locals|outer)\./;
 export const removeContextPrefixInNamespace = (namespace: string): string =>
   namespace.replace(CONTEXT_PREFIX_PATTERN, '');
@@ -32,29 +25,3 @@ export const isOuterContextNamespace = (namespace: string): boolean =>
 export const removeOuterContextPrefixInNamespace = (
   namespace: string
 ): string => namespace.replace(OUTER_CONTEXT_PREFIX_PATTERN, '');
-
-export const injectMapContructorNamespaces = (
-  base: ASTBase,
-  fields: ASTMapKeyString[]
-): ASTAssignmentStatement[] => {
-  const assignments: ASTAssignmentStatement[] = [];
-
-  for (const field of fields) {
-    assignments.push(
-      new ASTAssignmentStatement({
-        variable: new ASTIndexExpression({
-          index: field.key,
-          base,
-          start: field.key.start,
-          end: field.key.end,
-          scope: field.scope
-        }),
-        init: field.value,
-        start: field.start,
-        end: field.end
-      })
-    );
-  }
-
-  return assignments;
-};
