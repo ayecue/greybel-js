@@ -7,6 +7,7 @@ import {
   ASTFunctionStatement,
   ASTIdentifier,
   ASTIndexExpression,
+  ASTMapConstructorExpression,
   ASTMemberExpression,
   ASTType
 } from 'greyscript-core';
@@ -18,6 +19,7 @@ import transformASTToString from './ast-stringify.js';
 import documentParseQueue from './model-manager.js';
 import typeManager, { lookupBase, TypeInfo } from './type-manager.js';
 import {
+  injectMapContructorNamespaces,
   isGlobalsContextNamespace,
   removeContextPrefixInNamespace,
   removeGlobalsContextPrefixInNamespace
@@ -42,16 +44,26 @@ export class LookupHelper {
     root: ASTBase
   ): ASTAssignmentStatement[] {
     const identiferWithoutPrefix = removeContextPrefixInNamespace(identifier);
-    const assignments = this.lookupAssignments(root);
+    const assignments = [...this.lookupAssignments(root)];
     const result: ASTAssignmentStatement[] = [];
 
-    for (const item of assignments) {
+    for (let index = 0; index < assignments.length; index++) {
+      const assignment = assignments[index] as ASTAssignmentStatement;
       const current = removeContextPrefixInNamespace(
-        transformASTToNamespace(item.variable)
+        transformASTToNamespace(assignment.variable)
       );
 
       if (current === identiferWithoutPrefix) {
-        result.push(item);
+        result.push(assignment);
+      }
+
+      if (assignment.init instanceof ASTMapConstructorExpression) {
+        assignments.push(
+          ...injectMapContructorNamespaces(
+            assignment.variable,
+            assignment.init.fields
+          )
+        );
       }
     }
 
@@ -59,8 +71,10 @@ export class LookupHelper {
       const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
 
       for (const item of scopes) {
-        for (const assignmentItem of item.assignments) {
-          const assignment = assignmentItem as ASTAssignmentStatement;
+        const assignments = [...item.assignments];
+
+        for (let index = 0; index < assignments.length; index++) {
+          const assignment = assignments[index] as ASTAssignmentStatement;
           const current = transformASTToNamespace(assignment.variable);
 
           if (!isGlobalsContextNamespace(current)) {
@@ -72,6 +86,15 @@ export class LookupHelper {
             identiferWithoutPrefix
           ) {
             result.push(assignment);
+          }
+
+          if (assignment.init instanceof ASTMapConstructorExpression) {
+            assignments.push(
+              ...injectMapContructorNamespaces(
+                assignment.variable,
+                assignment.init.fields
+              )
+            );
           }
         }
       }
@@ -99,8 +122,10 @@ export class LookupHelper {
     const globalScope = this.lookupGlobalScope(item);
 
     for (const scope of scopes) {
-      for (const assignmentItem of scope.assignments) {
-        const assignment = assignmentItem as ASTAssignmentStatement;
+      const assignments = [...scope.assignments];
+
+      for (let index = 0; index < assignments.length; index++) {
+        const assignment = assignments[index] as ASTAssignmentStatement;
         const current = removeContextPrefixInNamespace(
           transformASTToString(assignment.variable)
         );
@@ -112,6 +137,15 @@ export class LookupHelper {
 
         if (scope === outerScope) {
           result.push(`outer.${current}`);
+        }
+
+        if (assignment.init instanceof ASTMapConstructorExpression) {
+          assignments.push(
+            ...injectMapContructorNamespaces(
+              assignment.variable,
+              assignment.init.fields
+            )
+          );
         }
       }
     }
@@ -138,8 +172,10 @@ export class LookupHelper {
         }
       }
 
-      for (const assignmentItem of rootScope.assignments) {
-        const assignment = assignmentItem as ASTAssignmentStatement;
+      const assignments = [...rootScope.assignments];
+
+      for (let index = 0; index < assignments.length; index++) {
+        const assignment = assignments[index] as ASTAssignmentStatement;
 
         if (assignment.end!.line >= item.end!.line) break;
 
@@ -151,12 +187,23 @@ export class LookupHelper {
         if (rootScope === globalScope) {
           result.push(`globals.${current}`);
         }
+
+        if (assignment.init instanceof ASTMapConstructorExpression) {
+          assignments.push(
+            ...injectMapContructorNamespaces(
+              assignment.variable,
+              assignment.init.fields
+            )
+          );
+        }
       }
     }
 
     for (const scope of scopes) {
-      for (const assignmentItem of scope.assignments) {
-        const assignment = assignmentItem as ASTAssignmentStatement;
+      const assignments = [...scope.assignments];
+
+      for (let index = 0; index < assignments.length; index++) {
+        const assignment = assignments[index] as ASTAssignmentStatement;
         const current = removeContextPrefixInNamespace(
           transformASTToString(assignment.variable)
         );
@@ -168,6 +215,15 @@ export class LookupHelper {
 
         if (scope === outerScope) {
           result.push(`outer.${current}`);
+        }
+
+        if (assignment.init instanceof ASTMapConstructorExpression) {
+          assignments.push(
+            ...injectMapContructorNamespaces(
+              assignment.variable,
+              assignment.init.fields
+            )
+          );
         }
       }
     }

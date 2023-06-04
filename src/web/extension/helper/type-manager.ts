@@ -8,8 +8,10 @@ import {
   ASTFunctionStatement,
   ASTIdentifier,
   ASTIndexExpression,
+  ASTListConstructorExpression,
   ASTListValue,
   ASTLiteral,
+  ASTMapConstructorExpression,
   ASTMemberExpression,
   ASTParenthesisExpression,
   ASTType,
@@ -420,17 +422,15 @@ export class TypeMap {
     me.refs.set(scope, identiferTypes);
 
     const globalIdentifierTypes = me.refs.get(me.root);
+    const setReference = (name: string, item: ASTBase) => {
+      const resolved = me.resolve(item);
 
-    for (const assignment of assignments) {
-      const name = transformASTToNamespace(assignment.variable);
-      const resolved = me.resolve(assignment.init);
-
-      if (resolved === null) continue;
+      if (resolved === null) return;
 
       let typeInfo: TypeInfo;
 
       if (
-        assignment.init instanceof ASTFunctionStatement &&
+        item instanceof ASTFunctionStatement &&
         resolved instanceof TypeInfoWithDefinition
       ) {
         typeInfo = new TypeInfoWithDefinition(
@@ -439,8 +439,8 @@ export class TypeMap {
           (resolved as TypeInfoWithDefinition).definition
         );
       } else if (
-        assignment.init instanceof ASTUnaryExpression &&
-        assignment.init.operator === '@' &&
+        item instanceof ASTUnaryExpression &&
+        item.operator === '@' &&
         resolved instanceof TypeInfoWithDefinition
       ) {
         typeInfo = new TypeInfoWithDefinition(
@@ -448,6 +448,26 @@ export class TypeMap {
           resolved.type,
           (resolved as TypeInfoWithDefinition).definition
         );
+      } else if (
+        item instanceof ASTMapConstructorExpression &&
+        resolved instanceof TypeInfo
+      ) {
+        for (const field of item.fields) {
+          const key = `${name}.${transformASTToNamespace(field.key)}`;
+          setReference(key, field.value);
+        }
+
+        typeInfo = new TypeInfo(name, resolved.type);
+      } else if (
+        item instanceof ASTListConstructorExpression &&
+        resolved instanceof TypeInfo
+      ) {
+        for (const field of item.fields) {
+          const key = `${name}[number]`;
+          setReference(key, field.value);
+        }
+
+        typeInfo = new TypeInfo(name, resolved.type);
       } else {
         typeInfo =
           resolved instanceof TypeInfoWithDefinition
@@ -472,14 +492,14 @@ export class TypeMap {
         }
 
         globalIdentifierTypes.set(nameWithoutGlobalsPrefix, typeInfo);
-        continue;
+        return;
         // in case outer is used variable needs to get attached to outer scope
       } else if (
         isOuterContextNamespace(name) &&
-        assignment.scope?.scope != null &&
-        me.refs.has(assignment.scope.scope)
+        item.scope?.scope != null &&
+        me.refs.has(item.scope.scope)
       ) {
-        const outerIdentifierTypes = me.refs.get(assignment.scope.scope);
+        const outerIdentifierTypes = me.refs.get(item.scope.scope);
         const nameWithoutOuterPrefix =
           removeOuterContextPrefixInNamespace(name);
 
@@ -495,7 +515,7 @@ export class TypeMap {
         }
 
         outerIdentifierTypes.set(nameWithoutOuterPrefix, typeInfo);
-        continue;
+        return;
         // in case locals is used variable needs to get attached to locals scope
       } else if (isLocalsContextNamespace(name)) {
         const nameWithoutLocalsPrefix =
@@ -513,7 +533,7 @@ export class TypeMap {
         }
 
         identiferTypes.set(nameWithoutLocalsPrefix, typeInfo);
-        continue;
+        return;
       }
 
       if (identiferTypes.has(name)) {
@@ -523,6 +543,11 @@ export class TypeMap {
       }
 
       identiferTypes.set(name, typeInfo);
+    };
+
+    for (const assignment of assignments) {
+      const name = transformASTToNamespace(assignment.variable);
+      setReference(name, assignment.init);
     }
   }
 
