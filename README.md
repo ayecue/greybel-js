@@ -294,6 +294,14 @@ a = b | c
 a = b & c
 ```
 
+## Block comment
+```
+/*
+	My block comment
+*/
+print("test")
+```
+
 # Importing
 
 ## import_code

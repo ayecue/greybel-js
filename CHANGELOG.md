@@ -594,3 +594,4 @@ All notable changes to this project will be documented in this file.
 - fix possibly wrong start position of member, index and call expression in UI
 - inject map constructor namespaces in UI
 - inject list constructor namespaces in UI
+- add block comment support
