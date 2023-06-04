@@ -159,11 +159,12 @@ export function activate(monaco: typeof Monaco) {
         astResult.closest
       );
 
-      // get all identifer available in scope but filtered by already existing base
+      // filter for existing base
       if (base.length > 0) {
         const baseStart = `${base}.`;
         const basePattern = new RegExp(`^${base}\\.`);
 
+        // get all identifer available in scope
         completionItems.push(
           ...identifers
             .filter((property) => property.startsWith(baseStart))
