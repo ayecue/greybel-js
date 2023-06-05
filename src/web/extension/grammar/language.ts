@@ -124,16 +124,16 @@ const language: Monaco.languages.IMonarchLanguage = {
 
     whitespace: [
       [/[ \t\r\n]+/, 'white'],
-      [/\/\*/, 'comment', '@comment' ],
+      [/\/\*/, 'comment', '@comment'],
       [/\/\/.*$/, 'comment']
     ],
 
     comment: [
-      [/[^\/*]+/, 'comment' ],
-      [/\/\*/, 'comment', '@push' ],
-      ["\\*/", 'comment', '@pop'  ],
-      [/[\/*]/, 'comment' ]
-    ],
+      [/[^/*]+/, 'comment'],
+      [/\/\*/, 'comment', '@push'],
+      ['\\*/', 'comment', '@pop'],
+      [/[/*]/, 'comment']
+    ]
   }
 };
 

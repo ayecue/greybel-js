@@ -5,6 +5,7 @@ import {
   ASTBaseBlockWithScope,
   ASTCallExpression,
   ASTCallStatement,
+  ASTComment,
   ASTFunctionStatement,
   ASTIdentifier,
   ASTIndexExpression,
@@ -290,6 +291,16 @@ export class TypeMap {
     item: ASTFunctionStatement
   ): TypeInfoWithDefinition | null {
     const me = this;
+    let description = 'This is a custom method.';
+
+    if (this.root.lines.has(item.start.line - 1)) {
+      const previousLine = this.root.lines.get(item.start.line - 1);
+      const last = previousLine[previousLine.length - 1];
+
+      if (last instanceof ASTComment) {
+        description = last.value;
+      }
+    }
 
     return new TypeInfoWithDefinition('anonymous', ['function'], {
       arguments: item.parameters.map((arg: ASTBase) => {
@@ -308,7 +319,7 @@ export class TypeMap {
         };
       }),
       returns: ['any'],
-      description: 'This is a custom method.'
+      description
     });
   }
 

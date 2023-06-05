@@ -595,3 +595,4 @@ All notable changes to this project will be documented in this file.
 - inject map constructor namespaces in UI
 - inject list constructor namespaces in UI
 - add block comment support
+- add comment function description support
