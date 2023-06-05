@@ -454,6 +454,9 @@ export function stringifyFactory(
       _data: TransformerDataObject
     ): string => {
       return `import_code("${item.directory}")`;
+    },
+    InvalidCodeExpression: (): string => {
+      return '';
     }
   };
 }
