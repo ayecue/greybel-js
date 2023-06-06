@@ -288,12 +288,16 @@ export default async function execute(
     } catch (err: any) {
       if (err instanceof PrepareError) {
         options.onError(
-          new Error(`Prepare error: ${err.message} in ${err.relatedTarget}`)
+          new Error(
+            `Prepare error: ${err.message} at ${err.target}:${
+              err.range?.start || 0
+            }`
+          )
         );
       } else if (err instanceof RuntimeError) {
         options.onError(
           new Error(
-            `Runtime error: ${err.message} in ${err.relatedTarget}\n${err.stack}`
+            `Runtime error: ${err.message} at ${err.target}\n${err.stack}`
           )
         );
       } else {

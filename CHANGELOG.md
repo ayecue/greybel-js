@@ -596,3 +596,4 @@ All notable changes to this project will be documented in this file.
 - inject list constructor namespaces in UI
 - add block comment support
 - add comment function description support in UI
+- improve build error output
