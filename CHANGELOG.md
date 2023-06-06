@@ -580,7 +580,7 @@ All notable changes to this project will be documented in this file.
 - register control + c in user_input with anyKey enabled
 - instant exit on process termination
 
-## [1.8.8] - 02.06.2023
+## [1.8.8] - 06.06.2023
 
 - fix lastIndexOf behaviour, only works with strings now and returns -1 instead of null
 - fix return type of indexOf signature in UI
