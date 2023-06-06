@@ -75,7 +75,7 @@ export default async function repl(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
                 err.message
-              } in ${err.relatedTarget}`
+              } at ${err.target}:${err.range?.start || 0}`
             )
           );
         } else if (err instanceof RuntimeError) {
@@ -84,7 +84,7 @@ export default async function repl(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
                 err.message
-              } in ${err.relatedTarget}\n${err.stack}`
+              } at ${err.target}\n${err.stack}`
             )
           );
         } else {

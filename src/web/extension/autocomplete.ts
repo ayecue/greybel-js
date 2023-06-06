@@ -1,4 +1,9 @@
-import { ASTBase, ASTCallExpression, ASTType } from 'greyscript-core';
+import {
+  ASTBase,
+  ASTCallExpression,
+  ASTIndexExpression,
+  ASTMemberExpression
+} from 'greyscript-core';
 import {
   getDefinitions,
   SignatureDefinitionArg,
@@ -9,6 +14,7 @@ import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { getAvailableConstants } from './autocomplete/constants.js';
 import { getAvailableKeywords } from './autocomplete/keywords.js';
 import { getAvailableOperators } from './autocomplete/operators.js';
+import transformASTToString from './helper/ast-stringify.js';
 import { LookupHelper } from './helper/lookup-type.js';
 import documentParseQueue from './helper/model-manager.js';
 import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager.js';
@@ -46,7 +52,7 @@ export const getCompletionList = (
   item: ASTBase,
   range: Monaco.Range,
   kind: Monaco.languages.CompletionItemKind
-): PseudoCompletionList | null => {
+): PseudoCompletionItem[] => {
   const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
@@ -56,7 +62,7 @@ export const getCompletionList = (
     ];
 
     if (completionItems.length > 0) {
-      return new PseudoCompletionList(completionItems);
+      return completionItems;
     }
   } else if (typeInfo instanceof TypeInfo) {
     const definitions = getDefinitions(typeInfo.type);
@@ -65,11 +71,24 @@ export const getCompletionList = (
     ];
 
     if (completionItems.length > 0) {
-      return new PseudoCompletionList(completionItems);
+      return completionItems;
     }
   }
 
-  return null;
+  return [];
+};
+
+export const getDefaultCompletionList = (
+  range: Monaco.Range
+): PseudoCompletionItem[] => {
+  const defaultDefinitions = getDefinitions(['general']);
+
+  return [
+    ...getAvailableConstants(range),
+    ...getAvailableKeywords(range),
+    ...getAvailableOperators(range),
+    ...convertDefinitionsToCompletionList(defaultDefinitions, range, 1)
+  ];
 };
 
 export function activate(monaco: typeof Monaco) {
@@ -89,58 +108,91 @@ export function activate(monaco: typeof Monaco) {
         position.column
       );
 
-      const helper = new LookupHelper(document);
-      const astResult = helper.lookupAST(position);
+      if (document.getValueInRange(currentRange) === '.') {
+        const definitions = getDefinitions(['any']);
+        const completionItems: PseudoCompletionItem[] = [
+          ...convertDefinitionsToCompletionList(definitions, currentRange, 0)
+        ];
 
-      if (astResult) {
-        const { closest, outer } = astResult;
-        const previous = outer.length > 0 ? outer.at(-1) : undefined;
-
-        if (
-          previous?.type === ASTType.MemberExpression ||
-          previous?.type === ASTType.IndexExpression
-        ) {
-          const list = getCompletionList(helper, previous, currentRange, 0);
-          if (list) return list.valueOf();
-        } else if (
-          (document.getValueInRange(currentRange) === '.' &&
-            closest?.type === ASTType.MemberExpression) ||
-          closest?.type === ASTType.IndexExpression
-        ) {
-          const list = getCompletionList(helper, closest, currentRange, 0);
-          if (list) return list.valueOf();
+        if (completionItems.length > 0) {
+          return new PseudoCompletionList(completionItems).valueOf();
         }
       }
 
-      // get all default methods
-      const defaultDefinitions = getDefinitions(['general']);
-      const completionItems: PseudoCompletionItem[] = [
-        ...getAvailableConstants(currentRange),
-        ...getAvailableKeywords(currentRange),
-        ...getAvailableOperators(currentRange),
-        ...convertDefinitionsToCompletionList(
-          defaultDefinitions,
-          currentRange,
-          1
-        )
-      ];
+      const helper = new LookupHelper(document);
+      const astResult = helper.lookupAST(position);
+      const completionItems: PseudoCompletionItem[] = [];
+      let base = '';
+
+      if (astResult) {
+        const { closest, outer } = astResult;
+        const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
+
+        if (
+          previous instanceof ASTMemberExpression &&
+          closest === previous.identifier
+        ) {
+          base = transformASTToString(previous.base);
+          completionItems.push(
+            ...getCompletionList(helper, previous, currentRange, 0)
+          );
+        } else if (
+          previous instanceof ASTIndexExpression &&
+          closest === previous.index
+        ) {
+          base = transformASTToString(previous.base);
+          completionItems.push(
+            ...getCompletionList(helper, previous, currentRange, 0)
+          );
+        } else {
+          completionItems.push(...getDefaultCompletionList(currentRange));
+        }
+      } else {
+        completionItems.push(...getDefaultCompletionList(currentRange));
+      }
 
       if (!astResult) {
         return new PseudoCompletionList(completionItems).valueOf();
       }
 
+      const identifers = helper.findAllAvailableIdentifierRelatedToPosition(
+        astResult.closest
+      );
+
+      // filter for existing base
+      if (base.length > 0) {
+        const baseStart = `${base}.`;
+        const basePattern = new RegExp(`^${base}\\.`);
+
+        // get all identifer available in scope
+        completionItems.push(
+          ...identifers
+            .filter((property) => property.startsWith(baseStart))
+            .map((property: string) => {
+              const remainingValue = property.replace(basePattern, '');
+
+              return new PseudoCompletionItem({
+                label: remainingValue,
+                kind: 4,
+                insertText: remainingValue,
+                range: currentRange
+              });
+            })
+        );
+
+        return new PseudoCompletionList(completionItems).valueOf();
+      }
+
       // get all identifer available in scope
       completionItems.push(
-        ...helper
-          .findAllAvailableIdentifier(astResult.closest)
-          .map((property: string) => {
-            return new PseudoCompletionItem({
-              label: property,
-              kind: 4,
-              insertText: property,
-              range: currentRange
-            });
-          })
+        ...identifers.map((property: string) => {
+          return new PseudoCompletionItem({
+            label: property,
+            kind: 4,
+            insertText: property,
+            range: currentRange
+          });
+        })
       );
 
       return new PseudoCompletionList(completionItems).valueOf();

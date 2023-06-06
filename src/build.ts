@@ -99,7 +99,7 @@ export default async function build(
           'red',
           `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
             err.message
-          } in ${err.relatedTarget}`
+          } at ${err.target}:${err.range?.start || 0}`
         )
       );
     } else {

@@ -18,6 +18,7 @@ import {
   ASTMemberExpression,
   ASTParenthesisExpression,
   ASTReturnStatement,
+  ASTSliceExpression,
   ASTUnaryExpression,
   ASTWhileStatement
 } from 'greyscript-core';
@@ -76,6 +77,10 @@ const getScraperMap = function (
     IndexExpression: function (item: ASTIndexExpression, level: number) {
       visit(item.base, level);
       visit(item.index, level);
+    },
+    SliceExpression: function (item: ASTSliceExpression, level: number) {
+      visit(item.left, level);
+      visit(item.right, level);
     },
     ListValue: function (item: ASTListValue, level: number) {
       visit(item.value, level);
@@ -189,7 +194,8 @@ const getScraperMap = function (
       for (const bodyItem of item.body) {
         visit(bodyItem, level);
       }
-    }
+    },
+    InvalidCodeExpression: () => {}
   };
 };
 

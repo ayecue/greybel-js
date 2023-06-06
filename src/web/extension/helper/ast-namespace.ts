@@ -1,4 +1,8 @@
 import {
+  ASTFeatureImportExpression,
+  ASTFeatureIncludeExpression
+} from 'greybel-core';
+import {
   BuildMap,
   Context,
   Transformer,
@@ -12,18 +16,14 @@ import {
   ASTChunk,
   ASTComment,
   ASTElseClause,
-  ASTEvaluationExpression,
   ASTForGenericStatement,
-  ASTFunctionStatement,
   ASTIdentifier,
   ASTIfClause,
   ASTIfStatement,
   ASTImportCodeExpression,
   ASTIndexExpression,
-  ASTListConstructorExpression,
   ASTListValue,
   ASTLiteral,
-  ASTMapConstructorExpression,
   ASTMapKeyString,
   ASTMemberExpression,
   ASTParenthesisExpression,
@@ -34,8 +34,9 @@ import {
   ASTWhileStatement
 } from 'greyscript-core';
 
-export function stringifyFactory(
-  make: (item: ASTBase, _data?: TransformerDataObject) => string
+export function namespaceFactory(
+  make: (item: ASTBase, _data?: TransformerDataObject) => string,
+  _context: Context
 ): BuildMap {
   return {
     ParenthesisExpression: (
@@ -69,45 +70,11 @@ export function stringifyFactory(
 
       return [base, identifier].join(item.indexer);
     },
-    FunctionDeclaration: (
-      item: ASTFunctionStatement,
-      _data: TransformerDataObject
-    ): string => {
-      const parameters = [];
-      const body = [];
-      let parameterItem;
-      let bodyItem;
-
-      for (parameterItem of item.parameters) {
-        parameters.push(make(parameterItem));
-      }
-
-      for (bodyItem of item.body) {
-        const transformed = make(bodyItem);
-        if (transformed === '') continue;
-        body.push(transformed);
-      }
-
-      return (
-        'function(' +
-        parameters.join(',') +
-        ')\n' +
-        body.join('\n') +
-        '\nend function'
-      );
+    FunctionDeclaration: (): string => {
+      return 'function';
     },
-    MapConstructorExpression: (
-      item: ASTMapConstructorExpression,
-      _data: TransformerDataObject
-    ): string => {
-      const fields = [];
-      let fieldItem;
-
-      for (fieldItem of item.fields) {
-        fields.push(make(fieldItem));
-      }
-
-      return '{' + fields.join(',') + '}';
+    MapConstructorExpression: (): string => {
+      return 'map';
     },
     MapKeyString: (
       item: ASTMapKeyString,
@@ -128,11 +95,8 @@ export function stringifyFactory(
       const arg = item.argument ? make(item.argument) : '';
       return 'return ' + arg;
     },
-    NumericLiteral: (
-      item: ASTLiteral,
-      _data: TransformerDataObject
-    ): string => {
-      return item.value.toString();
+    NumericLiteral: (): string => {
+      return 'number';
     },
     WhileStatement: (
       item: ASTWhileStatement,
@@ -169,7 +133,7 @@ export function stringifyFactory(
       return base + '(' + args.join(',') + ')';
     },
     StringLiteral: (item: ASTLiteral, _data: TransformerDataObject): string => {
-      return item.raw.toString();
+      return item.value.toString();
     },
     SliceExpression: (
       item: ASTSliceExpression,
@@ -201,22 +165,14 @@ export function stringifyFactory(
       item: ASTUnaryExpression,
       _data: TransformerDataObject
     ): string => {
-      const arg = make(item.argument);
-
-      if (item.operator === 'new') return item.operator + ' ' + arg;
-
-      return item.operator + arg;
+      if (item.operator === 'new') return 'map';
+      return 'number';
     },
-    NegationExpression: (
-      item: ASTUnaryExpression,
-      _data: TransformerDataObject
-    ): string => {
-      const arg = make(item.argument);
-
-      return 'not ' + arg;
+    NegationExpression: (): string => {
+      return 'number';
     },
     FeatureEnvarExpression: (): string => {
-      return 'null';
+      return 'string';
     },
     IfShortcutStatement: (
       item: ASTIfStatement,
@@ -351,91 +307,44 @@ export function stringifyFactory(
     ): string => {
       return make(item.expression);
     },
-    FeatureImportExpression: (): string => {
-      return '';
-    },
-    FeatureIncludeExpression: (): string => {
-      return '';
-    },
-    FeatureDebuggerExpression: (
-      _item: ASTBase,
+    FeatureImportExpression: (
+      item: ASTFeatureImportExpression,
       _data: TransformerDataObject
     ): string => {
-      return '';
+      return '#import "' + make(item.name) + ' from ' + item.path + '";';
     },
-    ListConstructorExpression: (
-      item: ASTListConstructorExpression,
+    FeatureIncludeExpression: (
+      item: ASTFeatureIncludeExpression,
       _data: TransformerDataObject
     ): string => {
-      const fields = [];
-      let fieldItem;
-
-      for (fieldItem of item.fields) {
-        fields.push(make(fieldItem));
-      }
-
-      return '[' + fields.join(',') + ']';
+      return '#include "' + item.path + '";';
+    },
+    FeatureDebuggerExpression: (): string => {
+      return '//debugger';
+    },
+    ListConstructorExpression: (): string => {
+      return 'list';
     },
     ListValue: (item: ASTListValue, _data: TransformerDataObject): string => {
       return make(item.value);
     },
-    BooleanLiteral: (
-      item: ASTLiteral,
-      _data: TransformerDataObject
-    ): string => {
-      return item.raw.toString();
+    BooleanLiteral: (): string => {
+      return 'number';
     },
     EmptyExpression: (_item: ASTBase, _data: TransformerDataObject): string => {
       return '';
     },
-    IsaExpression: (
-      item: ASTEvaluationExpression,
-      _data: TransformerDataObject
-    ): string => {
-      const left = make(item.left);
-      const right = make(item.right);
-
-      return left + ' ' + item.operator + ' ' + right;
+    IsaExpression: (): string => {
+      return 'number';
     },
-    LogicalExpression: (
-      item: ASTEvaluationExpression,
-      _data: TransformerDataObject
-    ): string => {
-      const left = make(item.left);
-      const right = make(item.right);
-
-      return left + ' ' + item.operator + ' ' + right;
+    LogicalExpression: (): string => {
+      return 'number';
     },
-    BinaryExpression: (
-      item: ASTEvaluationExpression,
-      _data: TransformerDataObject
-    ): string => {
-      const left = make(item.left);
-      const right = make(item.right);
-      const operator = item.operator;
-      let expression = left + operator + right;
-
-      if (
-        operator === '<<' ||
-        operator === '>>' ||
-        operator === '>>>' ||
-        operator === '|' ||
-        operator === '&'
-      ) {
-        expression =
-          'bitwise(' + ['"' + operator + '"', left, right].join(',') + ')';
-      }
-
-      return expression;
+    BinaryExpression: (): string => {
+      return 'number';
     },
-    BinaryNegatedExpression: (
-      item: ASTUnaryExpression,
-      _data: TransformerDataObject
-    ): string => {
-      const arg = make(item.argument);
-      const operator = item.operator;
-
-      return operator + arg;
+    BinaryNegatedExpression: (): string => {
+      return 'number';
     },
     Chunk: (item: ASTChunk, _data: TransformerDataObject): string => {
       const body = [];
@@ -463,7 +372,7 @@ export function stringifyFactory(
 
 export default function transform(item: ASTBase): string {
   const transformer = new Transformer(
-    stringifyFactory,
+    namespaceFactory,
     <Context>(<unknown>{}),
     new Map()
   );

@@ -579,3 +579,21 @@ All notable changes to this project will be documented in this file.
 - fix hover tooltip for multiline strings in UI
 - register control + c in user_input with anyKey enabled
 - instant exit on process termination
+
+## [1.8.8] - 06.06.2023
+
+- fix lastIndexOf behaviour, only works with strings now and returns -1 instead of null
+- fix return type of indexOf signature in UI
+- fix tooltip for lastIndexOf in UI
+- remove usage of boolean type in tooltips and signatures to avoid confusion since technically booleans do not exist
+- minor improvement to index expression type analyzing in UI
+- use modified transformer to get namespace for type in UI
+- fix type resolve within slice expression in UI
+- improve type resolve for assignments using locals, globals or outer prefix in UI
+- extend namespace find method to use assignment instead of namespaces coming from parser in UI
+- fix possibly wrong start position of member, index and call expression in UI
+- inject map constructor namespaces in UI
+- inject list constructor namespaces in UI
+- add block comment support
+- add comment function description support in UI
+- improve build error output

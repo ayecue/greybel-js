@@ -1,7 +1,12 @@
-import { ASTBase, ASTIdentifier, ASTMemberExpression } from 'greyscript-core';
+import {
+  ASTBase,
+  ASTIdentifier,
+  ASTIndexExpression,
+  ASTMemberExpression
+} from 'greyscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import ASTStringify from './helper/ast-stringify.js';
+import transformASTToNamespace from './helper/ast-namespace.js';
 import { LookupHelper } from './helper/lookup-type.js';
 
 const findAllDefinitions = (
@@ -57,8 +62,18 @@ export function activate(monaco: typeof Monaco) {
       const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
       let identifer = closest.name;
 
-      if (previous && previous instanceof ASTMemberExpression) {
-        identifer = ASTStringify(previous);
+      if (previous) {
+        if (
+          previous instanceof ASTMemberExpression &&
+          previous.identifier === closest
+        ) {
+          identifer = transformASTToNamespace(previous);
+        } else if (
+          previous instanceof ASTIndexExpression &&
+          previous.index === closest
+        ) {
+          identifer = transformASTToNamespace(previous);
+        }
       }
 
       const definitions = findAllDefinitions(
