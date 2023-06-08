@@ -597,3 +597,7 @@ All notable changes to this project will be documented in this file.
 - add block comment support
 - add comment function description support in UI
 - improve build error output
+
+## [1.8.9] - 08.06.2023
+
+- add support for multiply and division on lists
