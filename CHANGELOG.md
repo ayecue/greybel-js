@@ -601,3 +601,8 @@ All notable changes to this project will be documented in this file.
 ## [1.8.9] - 08.06.2023
 
 - add support for multiply and division on lists
+
+## [1.9.0] - 10.06.2023
+
+- add support to proper command_info behavior
+- update to latest meta descriptions
