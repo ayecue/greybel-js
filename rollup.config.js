@@ -13,11 +13,14 @@ const options = {
         file: 'out/web.bundled.js',
         format: 'iife'
     },
-    external: ['react', 'react-dom'],
+    external: ['react', 'react-dom', 'prismjs', 'react-markdown', 'react-in-viewport'],
     plugins: [
         externalGlobals({
             'react': 'React',
-            'react-dom': 'ReactDOM'
+            'react-dom': 'ReactDOM',
+            'prismjs': '{"$":"prismjs","languages":{}}',
+            'react-markdown': '{"$":"react-markdown"}',
+            'react-in-viewport': '{"$":"react-in-viewport"}'
         }),
         json(),
         commonjs(),
