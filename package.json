@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "1.9.0",
+    "version": "1.9.1",
     "engines": {
         "node": ">=16.0.0"
     },
@@ -37,7 +37,7 @@
         "greybel-intrinsics": "^2.2.2",
         "greybel-transpiler": "^1.1.2",
         "greyscript-core": "^0.9.6",
-        "greyscript-meta": "^1.4.3",
+        "greyscript-meta": "^1.4.4",
         "localstoragedb": "git+https://github.com/ayecue/localStorageDB.git",
         "lru-cache": "^7.14.1",
         "mkdirp": "^1.0.4",
