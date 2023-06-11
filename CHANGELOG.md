@@ -607,3 +607,7 @@ All notable changes to this project will be documented in this file.
 - improve support for command_info behavior
 - update to latest meta descriptions
 - optimize meta package size
+
+## [1.9.1] - 11.06.2023
+
+- fix UI crash on mobile due to meta
