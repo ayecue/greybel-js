@@ -1,7 +1,6 @@
 import monacoLoader from '@monaco-editor/loader';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useEffect, useState } from 'react';
-import fetch from 'node-fetch';
 
 import { activate } from './extension.js';
 import language from './extension/grammar/language.js';
@@ -93,7 +92,7 @@ export default function (options: AppOptions) {
   };
 
   const onSave = async () => {
-    const response = await fetch('/.netlify/functions/save', {
+    const response = await fetch('/.netlify/functions/code', {
       method: 'post',
       body: JSON.stringify({
         content: editorContext.model.getValue()
