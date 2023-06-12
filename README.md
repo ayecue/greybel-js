@@ -295,7 +295,7 @@ The native `import_code` is supported as well. Through the transpiler, it is pos
 import_code("./myProject/test.src");
 ```
 
-Via the `--ingameDirectory` parameter it is possible to define the ingame directory it should be imported to. By default, the ingame directory will be `/root/`.
+Via the `--ingame-directory` parameter it is possible to define the ingame directory it should be imported to. By default, the ingame directory will be `/root/`.
 
 Through the `--installer` flag in the CLI you can bundle your files which makes it easier to copy/paste code from your file system into the ingame file system.
 
