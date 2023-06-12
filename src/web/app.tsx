@@ -1,33 +1,46 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AppExternalLink } from './app/common/external-links';
-import Root from './app/root';
+import { Root, RootWithId } from './app/root';
 
 export interface AppOptions {
-  initContent?: string;
   externalLinks: AppExternalLink[];
 }
 
 export default function (options: AppOptions) {
-  const initContent =
-    options.initContent ||
-    localStorage.getItem('ide-content') ||
-    'print("Hello world")';
+  const urlSearchParams = new URLSearchParams(location.search);
+  const getContent = () => {
+    let content = urlSearchParams.get('c') || undefined;
+
+    if (content) {
+      try {
+        const decoded = decodeURIComponent(content);
+        content = decodeURIComponent(atob(decoded));
+      } catch (err: any) {
+        content = undefined;
+        console.error(err);
+      }
+    }
+
+    if (!content) {
+      content = localStorage.getItem('ide-content') || 'print("Hello world")';
+    }
+
+    return content;
+  };
+  const id = urlSearchParams.get('id');
+
+  if (id) {
+    return (
+      <RootWithId
+        id={id}
+        initContent={getContent()}
+        externalLinks={options.externalLinks}
+      />
+    );
+  }
 
   return (
-    <Root initContent={initContent} externalLinks={options.externalLinks} />
+    <Root initContent={getContent()} externalLinks={options.externalLinks} />
   );
-  /*
-  return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="*">
-            <Route index element={<Root initContent={options.initContent} externalLinks={options.externalLinks} />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
-  ); */
 }

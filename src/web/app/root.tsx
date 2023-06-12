@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Execute from './actions/execute.js';
 import Transpile from './actions/transpile.js';
@@ -6,16 +6,14 @@ import ErrorList, { ErrorEntry } from './common/error-list.js';
 import ExternalLinks, { AppExternalLink } from './common/external-links.js';
 import EditorPopups, { DebugPopup } from './common/popups.js';
 import { EditorContext, EditorRoot } from './editor/index.js';
-import { buildClassName, guid } from './utils.js';
+import { buildClassName, guid, setQueryStringParameter } from './utils.js';
 
 export interface RootOptions {
   initContent?: string;
   externalLinks: AppExternalLink[];
 }
 
-const activeErrors: ErrorEntry[] = [];
-
-export default function (options: RootOptions) {
+export function Root(options: RootOptions) {
   const [editorContext, setEditorContext] = useState<EditorContext | null>(
     null
   );
@@ -25,6 +23,7 @@ export default function (options: RootOptions) {
   const [debug, setDebug] = useState<DebugPopup | undefined>(undefined);
   const [collapsed, setCollapsed] = useState(false);
   const [savePending, setSavePending] = useState(false);
+  const activeErrors: ErrorEntry[] = [];
 
   const removeError = (id: string) => {
     const index = activeErrors.findIndex((entry) => id === entry.id);
@@ -69,7 +68,7 @@ export default function (options: RootOptions) {
       });
       const data = await response.json();
 
-      console.log('save', data);
+      setQueryStringParameter('id', data.id);
     } catch (err) {
       console.error(err);
       showError('Cannot save code!');
@@ -166,5 +165,41 @@ export default function (options: RootOptions) {
         </div>
       </div>
     </article>
+  );
+}
+
+export interface RootWithIdOptions extends RootOptions {
+  id: string;
+}
+
+export function RootWithId(options: RootWithIdOptions) {
+  const [entity, setEntity] = useState<{ id: string; code: string }>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    fetch(`/.netlify/functions/code?id=${options.id}`)
+      .then((response) => response.json())
+      .then((data) => setEntity(data))
+      .catch((err) => {
+        console.error(err);
+        setFailed(true);
+      });
+  }, []);
+
+  if (entity === null && !failed) {
+    return <div>Loading...</div>;
+  }
+
+  if (failed) {
+    return (
+      <Root
+        initContent={options.initContent}
+        externalLinks={options.externalLinks}
+      />
+    );
+  }
+
+  return (
+    <Root initContent={entity.code} externalLinks={options.externalLinks} />
   );
 }
