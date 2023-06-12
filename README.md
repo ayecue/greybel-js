@@ -98,6 +98,10 @@ print(foovar) //prints "123"
 ```
 Interpreter CLI
 Example: greybel-execute <myscriptfile>
+
+Arguments:
+	myscriptfile			File to execute
+
 Options:
 	-p, --params			Execution parameters
 	-i, --interactive		Interactive parameter
