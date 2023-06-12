@@ -94,7 +94,19 @@ print(somevar) //prints "SOME_VALUE"
 print(foovar) //prints "123"
 ```
 
-# InterpreterFor Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
+# Interpreter
+```
+Interpreter CLI
+Example: greybel-execute <myscriptfile>
+Options:
+	-p, --params			Execution parameters
+	-i, --interactive		Interactive parameter
+	-s, --seed			Seed parameter
+	-ev, --env-files <file...>	Environment variables files
+	-vr, --env-vars <vars...>	Environment variables
+```
+
+For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
 
 ## Local environment
 
@@ -212,7 +224,14 @@ testLib.try_to_execute(@failureFn, @onError)
 testLib.try_to_execute_with_debug(@failureFn)
 ```
 
-# REPLFor Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
+# REPL
+```
+REPL CLI
+Example: greybel-repl
+```
+
+
+For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
 
 REPL also features a [local environment](#local-environment) and [greyscript API support](#greyscript-api-support)
 
@@ -290,7 +309,9 @@ print("test")
 # Importing
 
 ## import_code
-The native `import_code` is supported as well. Through the transpiler, it is possible to refer to actual files in your file system which then get transformed to ingame file paths. Additionally, the transpiler makes it possible to nest `import_code`.
+The native `import_code` is supported as well.
+
+Through the transpiler, it is possible to refer to actual files in your file system which then get transformed to ingame file paths. Additionally, the transpiler makes it possible to nest `import_code`.
 ```
 import_code("./myProject/test.src");
 ```
