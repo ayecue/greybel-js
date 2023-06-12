@@ -72,10 +72,8 @@ export const handler: Handler = withPlanetscale(async (event, context) => {
           content
         ]);
 
-        return await tx.execute('SELECT @newCodeId');
-      });
-
-      console.log(result);
+        return tx.execute('SELECT @newCodeId');
+      })
     
       return {
         headers: {

@@ -17,7 +17,7 @@ export default function ErrorList({ errors }: ErrorsOptions) {
         return (
           <ul key={id} onClick={() => onClick()}>
             {msg.split('\n').map((item, index) => {
-              return <li key={index}>{item}</li>
+              return <li key={index}>{item}</li>;
             })}
           </ul>
         );

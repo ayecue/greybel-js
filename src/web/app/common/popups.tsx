@@ -1,9 +1,7 @@
-import {
-  OperationContext
-} from 'greybel-interpreter';
+import { OperationContext } from 'greybel-interpreter';
 import React, { useEffect, useRef, useState } from 'react';
 
-import viewJSON from '../json-viewer.js';
+import viewJSON from '../../json-viewer.js';
 
 export interface DebugReplOptions {
   onExecute: (replInput: string) => void;
@@ -11,7 +9,11 @@ export interface DebugReplOptions {
   onNext: () => void;
 }
 
-export function DebugReplPopup({ onExecute, onContinue, onNext }: DebugReplOptions) {
+export function DebugReplPopup({
+  onExecute,
+  onContinue,
+  onNext
+}: DebugReplOptions) {
   const [replInput, setReplInput] = useState('');
 
   return (
@@ -109,7 +111,7 @@ export default function EditorPopups(options: EditorPopupsOptions) {
     let b64Content = '';
 
     try {
-      //prevent none latin1 signs
+      // prevent none latin1 signs
       const encoded = encodeURIComponent(content);
       b64Content = btoa(encoded);
     } catch (err: any) {

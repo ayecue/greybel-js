@@ -1,24 +1,24 @@
-import {
-  Debugger,
-  Interpreter,
-  OperationContext
-} from 'greybel-interpreter';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { Debugger, Interpreter, OperationContext } from 'greybel-interpreter';
 import React, { useEffect, useRef, useState } from 'react';
 
-import execute from '../execute.js';
-import { Stdin, Stdout } from '../std.js';
-import { DebugPopup } from './popups.js';
-import { buildClassName } from './utils.js';
+import execute from '../../execute.js';
+import { Stdin, Stdout } from '../../std.js';
+import { DebugPopup } from '../common/popups.js';
+import { buildClassName } from '../utils.js';
 
 export interface ExecuteOptions {
-  model: Monaco.editor.ITextModel;
-  showError: (msg: string, timeout?: number) => void;
-  instance: Monaco.editor.IStandaloneCodeEditor;
+  content: string;
+  onNewActiveLine: (line: number) => void;
+  onError?: (err: any) => void;
   setDebug: (debugOptions: DebugPopup | undefined) => void;
 }
 
-export default function Execute({ model, showError, instance, setDebug }: ExecuteOptions) {
+export default function Execute({
+  content,
+  onError,
+  onNewActiveLine,
+  setDebug
+}: ExecuteOptions) {
   const stdoutRef = useRef<HTMLDivElement>(null);
   const stdinRef = useRef<HTMLInputElement>(null);
   const [stdout, setStdout] = useState<Stdout | undefined>(undefined);
@@ -32,7 +32,7 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
 
     let activeInterpreter: Interpreter | null = null;
 
-    execute(model, {
+    execute(content, {
       stdin,
       stdout,
       params: parameters.split(' ').filter((v) => v !== ''),
@@ -45,7 +45,8 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
         setInterpreter(null);
       },
       onError: (err: any) => {
-        showError(err.message);
+        console.error(err);
+        onError?.(err);
         setInterpreter(null);
       },
       onInteract: (
@@ -82,8 +83,8 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
           });
 
           const line =
-            activeInterpreter?.globalContext.getLastActive()?.stackTrace[0]?.item?.start!
-              .line || -1;
+            activeInterpreter?.globalContext.getLastActive()?.stackTrace[0]
+              ?.item?.start!.line || -1;
 
           if (line !== -1) {
             lastActiveLine = Array.from(
@@ -93,7 +94,7 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
             });
 
             lastActiveLine?.classList.add('highlight');
-            instance.revealLineInCenter(line);
+            onNewActiveLine(line);
           }
         });
       }
@@ -122,19 +123,28 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
           id="execute"
           title="Execute"
           onClick={run}
-          className={buildClassName('material-icons', { shouldAdd: !!interpreter, className: 'disabled' })}
+          className={buildClassName('material-icons', {
+            shouldAdd: !!interpreter,
+            className: 'disabled'
+          })}
         ></a>
         <a
           id="pause"
           title="Pause"
           onClick={pause}
-          className={buildClassName('material-icons', { shouldAdd: !interpreter, className: 'disabled' })}
+          className={buildClassName('material-icons', {
+            shouldAdd: !interpreter,
+            className: 'disabled'
+          })}
         ></a>
-        <a 
+        <a
           id="stop"
           title="Stop"
           onClick={stop}
-          className={buildClassName('material-icons', { shouldAdd: !interpreter, className: 'disabled' })}
+          className={buildClassName('material-icons', {
+            shouldAdd: !interpreter,
+            className: 'disabled'
+          })}
         ></a>
         <a
           id="clear"
@@ -142,7 +152,7 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
           onClick={() => stdout?.clear()}
           className="material-icons"
         ></a>
-        <a 
+        <a
           className={buildClassName(
             'collapse',
             'material-icons',
@@ -154,10 +164,12 @@ export default function Execute({ model, showError, instance, setDebug }: Execut
         ></a>
       </div>
       <div className="context">
-        <ul className={buildClassName(
-          'items',
-          { shouldAdd: collapsed, className: 'hidden' }
-        )}>
+        <ul
+          className={buildClassName('items', {
+            shouldAdd: collapsed,
+            className: 'hidden'
+          })}
+        >
           <li className="item">
             <label>Execution parameter:</label>
             <input
