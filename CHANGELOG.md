@@ -611,3 +611,7 @@ All notable changes to this project will be documented in this file.
 ## [1.9.1] - 11.06.2023
 
 - fix UI crash on mobile due to meta
+
+## [1.9.2] - 12.06.2023
+
+- add save functionality to online UI

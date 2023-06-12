@@ -31,6 +31,7 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 - [REPL for GreyScript](#repl)
 - [Web UI with simplified features](#web-ui)
 	- [share code](#share-code)
+	- [save code](#save-code)
 
 # Install
 
@@ -73,7 +74,7 @@ Use the installer flag when using `import_code`.
 ```
 greybel /my/code/file.src --installer
 ```
-This will create an installer file which pretty much bundles all the files into one. Installer files exceeding the max char limit of Grey Hack will get splitted automatically.
+This will create an installer file that pretty much bundles all the files into one. Installer files exceeding the max char limit of Grey Hack will get split automatically.
 
 ## Envar
 Envar will put environment variables into your script. Just keep in mind to use the `--env-files /path/env.conf` parameter. This might be useful if you want to use different variables for different environments. You can use multiple env files `--env-file /path/default.conf --env-file /path/env.conf`.
@@ -93,26 +94,13 @@ print(somevar) //prints "SOME_VALUE"
 print(foovar) //prints "123"
 ```
 
-# Interpreter
-```
-Interpreter CLI
-Example: greybel-execute <myscriptfile>
-
-Options:
-	-p, --params			Execution parameters
-	-i, --interactive		Interactive parameter
-	-s, --seed			Seed parameter
-	-ev, --env-files <file...>	Environment variables files
-	-vr, --env-vars <vars...>	Environment variables
-```
-
-For Windows you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
+# InterpreterFor Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
 
 ## Local environment
 
-[Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics) will automatically generate a local environment. It will also generate other computers, networks, filesystems etc on the fly. Generating is by default based on a seed called `test`. The seed can be modified with the seed option. While using the same seed generated entities should stay consistent.
+[Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics) will automatically generate a local environment. It will also generate other computers, networks, filesystems etc on the fly. Generating is by default based on a seed called `test`. The seed can be modified with the seed option. While using the same seed-generated entities should stay consistent.
 
-The local computer setup is hardcoded. The admin credentials are `root:test`. You will also have `crypto.so` and `metaxploit.so` at your local computer available.
+The local computer setup is hard coded. The admin credentials are `root:test`. You will also have `crypto.so` and `metaxploit.so` on your local computer available.
 
 Examples:
 ```
@@ -124,14 +112,14 @@ myShell = get_shell("root", "test") //get local root shell
 
 ## Greyscript API support
 
-The intrinsics to support the Greyscript API are provided by [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics) and [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics). Keep in mind that not all of these functions are completly mocked. Also only API that is available in the stable build will be implemented.
+The intrinsics to support the Greyscript API are provided by [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics) and [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics). Keep in mind that not all of these functions are completely mocked. Also, only API that is available in the stable build will be implemented.
 
 Not yet supported:
-- `AptClient` - only pollyfill which "returns not yet supported"
-- `Blockchain` - only pollyfill which "returns not yet supported"
-- `Wallet` - only pollyfill which "returns not yet supported"
-- `SubWallet` - only pollyfill which "returns not yet supported"
-- `Coin` - only pollyfill which "returns not yet supported"
+- `AptClient` - only polyfill which "returns not yet supported"
+- `Blockchain` - only polyfill which "returns not yet supported"
+- `Wallet` - only polyfill which "returns not yet supported"
+- `SubWallet` - only polyfill which "returns not yet supported"
+- `Coin` - only polyfill which "returns not yet supported"
 
 ## Debugger
 Pauses execution and enables you to inspect/debug your code.
@@ -224,13 +212,7 @@ testLib.try_to_execute(@failureFn, @onError)
 testLib.try_to_execute_with_debug(@failureFn)
 ```
 
-# REPL
-```
-REPL CLI
-Example: greybel-repl
-```
-
-For Windows you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
+# REPLFor Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
 
 REPL also features a [local environment](#local-environment) and [greyscript API support](#greyscript-api-support)
 
@@ -246,9 +228,12 @@ This is a simple UI where you can [minify code](#transpiler) and [execute code](
 
 ## Share code
 
-Use the share code button to generate an URL. Currently the implementation just uses the query params so watch out for [any browser limitations](https://stackoverflow.com/a/812962).
+This functionality can be used to share code with others without saving it. Keep in mind that the URL might become very long and may even exceed the URI size accepted by the online UI. If you want to share code without this limitation use the [save code functionality](#save-code) instead.
 
-It's [planned in the future](#todo) to implement some kind of package manager.
+## Save code
+
+This functionality can be used to save and also share code with others. Every time save is pressed a new id will get generated and appended to the browser URL which enables you to just copy and paste the URL and share your code with others.
+
 
 # Syntax
 
@@ -261,7 +246,7 @@ for item in [1, 2, 3] print(item)
 test = function() return 42
 ```
 
-## No trailing comma required in maps or lists
+## No trailing comma is required in maps or lists
 ```
 myList = [
 	false,
@@ -305,14 +290,12 @@ print("test")
 # Importing
 
 ## import_code
-The native `import_code` is supported as well.
-
-Through the transpiler it is possible to refer to actual files in your file system which then get transformed to ingame file paths. Additionally the transpiler makes it possible to nest `import_code`.
+The native `import_code` is supported as well. Through the transpiler, it is possible to refer to actual files in your file system which then get transformed to ingame file paths. Additionally, the transpiler makes it possible to nest `import_code`.
 ```
 import_code("./myProject/test.src");
 ```
 
-Via the `--ingameDirectory` parameter it is possible to define the ingame directory it should be imported to. By default the ingame directory will be `/root/`.
+Via the `--ingameDirectory` parameter it is possible to define the ingame directory it should be imported to. By default, the ingame directory will be `/root/`.
 
 Through the `--installer` flag in the CLI you can bundle your files which makes it easier to copy/paste code from your file system into the ingame file system.
 
@@ -360,4 +343,4 @@ hello() //prints "Hello world!"
 
 # Contact
 
-Generally you can just create an [issue](https://github.com/ayecue/greybel-js/issues) if you find a bug or got a feature request. Alternatively you can also contact me on discord `ayecue#9086`.
+Generally, you can just create an [issue](https://github.com/ayecue/greybel-js/issues) if you find a bug or got a feature request.
