@@ -118,6 +118,11 @@ export default function EditorPopups(options: EditorPopupsOptions) {
       console.error(err);
     }
 
+    //clear all params
+    for (const key of url.searchParams.keys()) {
+      url.searchParams.delete(key);
+    }
+
     url.searchParams.set('c', b64Content);
 
     popups.push(
