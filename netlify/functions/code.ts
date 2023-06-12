@@ -1,6 +1,8 @@
 import type { Handler } from '@netlify/functions';
 import { withPlanetscale } from '@netlify/planetscale';
 
+const CONTENT_MAX_SIZE = 160000;
+
 export const handler: Handler = withPlanetscale(async (event, context) => {
   switch (event.httpMethod) {
     case 'OPTIONS': {
@@ -65,6 +67,13 @@ export const handler: Handler = withPlanetscale(async (event, context) => {
       }
     
       const { content } = JSON.parse(body);
+
+      if (content.length > CONTENT_MAX_SIZE) {
+        return {
+          statusCode: 413,
+          body: 'Payload too large',
+        };
+      }
 
       const result = await connection.transaction(async (tx) => {
         await tx.execute('SET @newCodeId = uuid();')
