@@ -144,6 +144,14 @@ body {
 	content: "\e872";
 }
 
+.editor-actions #share:before {
+	content: "\e80d";
+}
+
+.editor-actions #save:before {
+	content: "\e161";
+}
+
 .editor-actions a.collapse {
 	background: none;
 	box-shadow: none;
@@ -159,6 +167,10 @@ body {
 
 .editor-actions .collapse.closed:before {
 	content: "\e5cf";
+}
+
+.editor-actions #transpile:before {
+	content: "\ef6d";
 }
 
 .editor-actions a.disabled {
@@ -347,14 +359,6 @@ body {
 
 .line-numbers.highlight {
 	color: red!important;
-}
-
-.editor-transpile .actions #transpile:before {
-	content: "\ef6d";
-}
-
-.editor-transpile .actions #share:before {
-	content: "\e80d";
 }
 
 .editor-actions > .editor-execute {

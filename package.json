@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "1.9.1",
+    "version": "1.9.2",
     "engines": {
         "node": ">=16.0.0"
     },
@@ -26,6 +26,8 @@
         "@inquirer/core": "^1.0.1",
         "@inquirer/prompts": "^1.0.0",
         "@inquirer/type": "^1.0.0",
+        "@netlify/planetscale": "^1.0.0",
+        "@planetscale/database": "^1.7.0",
         "another-ansi": "^1.0.2",
         "ansi-escapes": "^6.2.0",
         "cli-progress": "^3.11.2",

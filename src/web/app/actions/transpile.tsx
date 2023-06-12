@@ -1,17 +1,15 @@
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useState } from 'react';
 
-import minify from '../minify.js';
-import { buildClassName } from './utils.js';
+import minify from '../../minify.js';
+import { buildClassName } from '../utils.js';
 
 export interface TranspileOptions {
-  model: Monaco.editor.ITextModel;
-  onShare: () => void;
-  showError: (msg: string, timeout?: number) => void;
+  content: string;
+  onError: (err: any) => void;
 }
 
-export default function Transpile({ showError, model, onShare }: TranspileOptions) {
-  const [content, setContent] = useState('');
+export default function Transpile({ content, onError }: TranspileOptions) {
+  const [transformResult, setTransformResult] = useState('');
   const [buildType, setBuildType] = useState('0');
   const [obfuscation, setObfuscation] = useState(false);
   const [disableLO, setDisableLO] = useState(false);
@@ -20,7 +18,7 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
   const [excludedNamespaces, setExcludedNamespaces] = useState('');
   const transpile = async () => {
     try {
-      const output = await minify(model.getValue(), {
+      const output = await minify(content, {
         uglify: buildType === '1',
         beautify: buildType === '2',
         obfuscation,
@@ -33,9 +31,10 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
           })
       });
 
-      setContent(output);
+      setTransformResult(output);
     } catch (err: any) {
-      showError(err.message);
+      console.error(err);
+      onError?.(err);
     }
   };
 
@@ -49,12 +48,6 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
           onClick={() => transpile()}
         ></a>
         <a
-          id="share"
-          className="material-icons"
-          title="Share"
-          onClick={onShare}
-        ></a>
-        <a 
           className={buildClassName(
             'collapse',
             'material-icons',
@@ -65,10 +58,12 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
           title="Collapse"
         ></a>
       </div>
-      <div className={buildClassName(
-          'editor-options',
-          { shouldAdd: collapsed, className: 'hidden' }
-        )}>
+      <div
+        className={buildClassName('editor-options', {
+          shouldAdd: collapsed,
+          className: 'hidden'
+        })}
+      >
         <ul>
           <li>
             <select
@@ -124,7 +119,7 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
         id="toutput"
         className="editor-transpiled-area"
         readOnly
-        value={content}
+        value={transformResult}
       />
     </div>
   );
