@@ -5,3 +5,9 @@ src
 web
 test.src
 test.js
+netlify
+.netlify
+rollup.config.js
+tsconfig.json
+.eslintrc
+.editorconfig
