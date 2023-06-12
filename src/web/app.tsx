@@ -1,6 +1,7 @@
 import monacoLoader from '@monaco-editor/loader';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useEffect, useState } from 'react';
+import fetch from 'node-fetch';
 
 import { activate } from './extension.js';
 import language from './extension/grammar/language.js';
@@ -91,6 +92,19 @@ export default function (options: AppOptions) {
     const timer = setTimeout(remove, timeout);
   };
 
+  const onSave = async () => {
+    const response = await fetch('/.netlify/functions/save', {
+      method: 'post',
+      body: JSON.stringify({
+        content: editorContext.model.getValue()
+      }),
+      headers: {'Content-Type': 'application/json'}
+    });
+    const data = await response.json();
+
+    console.log('save', data);
+  }
+
   if (editorContext === null) {
     return <div>Loading</div>;
   }
@@ -139,6 +153,7 @@ export default function (options: AppOptions) {
               <Transpile
                 model={editorContext.model}
                 onShare={() => setShare(true)}
+                onSave={() => onSave()}
                 showError={showError}
               />
               {editorContext.instance ? (

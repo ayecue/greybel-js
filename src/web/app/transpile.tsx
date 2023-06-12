@@ -7,10 +7,11 @@ import { buildClassName } from './utils.js';
 export interface TranspileOptions {
   model: Monaco.editor.ITextModel;
   onShare: () => void;
+  onSave: () => void;
   showError: (msg: string, timeout?: number) => void;
 }
 
-export default function Transpile({ showError, model, onShare }: TranspileOptions) {
+export default function Transpile({ showError, model, onShare, onSave }: TranspileOptions) {
   const [content, setContent] = useState('');
   const [buildType, setBuildType] = useState('0');
   const [obfuscation, setObfuscation] = useState(false);
@@ -53,6 +54,12 @@ export default function Transpile({ showError, model, onShare }: TranspileOption
           className="material-icons"
           title="Share"
           onClick={onShare}
+        ></a>
+        <a
+          id="save"
+          className="material-icons"
+          title="Save"
+          onClick={onSave}
         ></a>
         <a 
           className={buildClassName(

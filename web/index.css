@@ -357,6 +357,10 @@ body {
 	content: "\e80d";
 }
 
+.editor-transpile .actions #save:before {
+	content: "\e161";
+}
+
 .editor-actions > .editor-execute {
 	position: relative;
 	padding: 0 0 24px;
