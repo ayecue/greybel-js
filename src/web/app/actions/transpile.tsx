@@ -1,4 +1,3 @@
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useState } from 'react';
 
 import minify from '../../minify.js';
