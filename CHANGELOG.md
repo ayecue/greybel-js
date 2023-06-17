@@ -615,3 +615,7 @@ All notable changes to this project will be documented in this file.
 ## [1.9.2] - 12.06.2023
 
 - add save functionality to online UI
+
+## [1.9.3] - 17.06.2023
+
+- update meta descriptions
