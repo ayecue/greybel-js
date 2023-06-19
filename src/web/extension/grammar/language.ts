@@ -3,117 +3,79 @@ import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 const language: Monaco.languages.IMonarchLanguage = {
   // setup via https://microsoft.github.io/monaco-editor/monarch.html
-  keywords: [
-    'continue',
-    'for',
-    'new',
-    'if',
-    'self',
-    'super',
-    'break',
-    'else',
-    'return',
-    'while',
-    'true',
-    'false',
-    'not',
-    'isa',
-    'and',
-    'or',
-    'end',
-    'then',
-    'function',
-    'in',
-    'debugger'
-  ],
-  operators: [
-    '=',
-    '>',
-    '<',
-    '~',
-    ':',
-    '==',
-    '<=',
-    '>=',
-    '!=',
-    '+',
-    '-',
-    '*',
-    '/',
-    '&',
-    '|',
-    '^',
-    '%',
-    'isa',
-    'and',
-    'or',
-    '<<',
-    '>>',
-    '>>>',
-    '+=',
-    '-=',
-    '*=',
-    '/='
-  ],
-
-  symbols: /[+\-*/^@]+/,
-
   brackets: [
     { open: '{', close: '}', token: 'delimiter.curly' },
     { open: '[', close: ']', token: 'delimiter.array' },
-    { open: '(', close: ')', token: 'delimiter.parenthesis' },
-    { open: 'for', close: 'end', token: 'delimiter.bracket' }
+    { open: '(', close: ')', token: 'delimiter.parenthesis' }
   ],
 
   // The main tokenizer for our languages
   tokenizer: {
     root: [
       // identifiers and keywords
-      [
-        /[a-z_$][\w$]*/,
-        {
-          cases: {
-            'end (if|while|for|function)': {
-              token: 'keyword.decl',
-              bracket: '@close'
-            },
-            'if|while|for|function': {
-              token: 'keyword.decl',
-              bracket: '@open'
-            },
-            [[
-              ...allTypes.filter((item: string) => item !== 'general'),
-              'any',
-              'number',
-              'null'
-            ].join('|')]: 'type',
-            debugger: 'debug-token',
-            default: 'constant',
-            [Object.keys(getDefinitions(['general'])).join('|')]:
-              'variable.name',
-            '@keywords': 'keyword',
-            '@default': 'identifier'
-          }
-        }
-      ],
+      { include: '@keywords' },
+      { include: '@identifier' },
       [/[A-Z][\w$]*/, 'type.identifier'], // to show class names nicely
 
       // whitespace
       { include: '@whitespace' },
 
       // delimiters and operators
-      [/@symbols/, { cases: { '@operators': 'operator', '@default': '' } }],
+      { include: '@operator' },
 
       // strings
       [/"/, { token: 'string.quote', bracket: '@open', next: '@string' }],
 
       // numbers
-      [/\d*\.\d+([eE][-+]?\d+)?/, 'number.float'],
-      [/0[xX][0-9a-fA-F]+/, 'number.hex'],
-      [/\d+/, 'number'],
+      { include: '@number' },
 
       // delimiter and brackets
       [/[;,.]/, 'delimiter']
+    ],
+
+    keywords: [
+      [/\b(if|then|end|else|function|in|while|for|from)\b/, {
+        token: 'keyword'
+      }],
+      [/\b(return|continue|break)\b/, {
+        token: 'keyword'
+      }],
+      [/\b(and|or|not|new|isa)\b/, {
+        token: 'keyword'
+      }],
+      [/#(include|import|envar)\b/, {
+        token: 'keyword'
+      }],
+      [/(?<=end )\b(if|while|for|function)\b/, {
+        token: 'keyword.decl',
+        bracket: '@close'
+      }],
+      [/(?<!end )\b(if|while|for|function)\b/, {
+        token: 'keyword.decl',
+        bracket: '@open'
+      }]
+    ],
+
+    operator: [
+      [/([+\-*\/^<>|\&]|[<>=!]=|<<|>>>?)/, {
+        token: 'operator'
+      }]
+    ],
+
+    identifier: [
+      [/[a-z_$][\w$]*/, {
+        cases: {
+          debugger: 'debug-token',
+          default: 'constant',
+          number: 'type',
+          map: 'type',
+          list: 'type',
+          string: 'type',
+          [Object.keys(getDefinitions(['general'])).join('|')]:
+            'variable.name',
+          '@default': 'identifier'
+        }
+      }]
     ],
 
     string: [
@@ -133,6 +95,12 @@ const language: Monaco.languages.IMonarchLanguage = {
       [/\/\*/, 'comment', '@push'],
       ['\\*/', 'comment', '@pop'],
       [/[/*]/, 'comment']
+    ],
+
+    number: [
+      [/\d*\.\d+([eE][-+]?\d+)?/, 'number.float'],
+      [/0[xX][0-9a-fA-F]+/, 'number.hex'],
+      [/\d+/, 'number'],
     ]
   }
 };
