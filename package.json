@@ -39,7 +39,7 @@
         "greybel-intrinsics": "^2.2.3",
         "greybel-transpiler": "^1.1.2",
         "greyscript-core": "^0.9.6",
-        "greyscript-meta": "^1.4.6",
+        "greyscript-meta": "^1.4.7",
         "localstoragedb": "git+https://github.com/ayecue/localStorageDB.git",
         "lru-cache": "^7.14.1",
         "mkdirp": "^1.0.4",
