@@ -37,5 +37,9 @@ export function buildClassName(
 export function setQueryStringParameter(name: string, value: string) {
   const params = new URLSearchParams(location.search);
   params.set(name, value);
-  window.history.replaceState({}, "", decodeURIComponent(`${location.pathname}?${params}`));
+  window.history.replaceState(
+    {},
+    '',
+    decodeURIComponent(`${location.pathname}?${params}`)
+  );
 }
