@@ -15,7 +15,7 @@ const language: Monaco.languages.IMonarchLanguage = {
       // identifiers and keywords
       { include: '@keywords' },
       { include: '@identifier' },
-      [/[A-Z][\w$]*/, 'type.identifier'], // to show class names nicely
+      [ /[A-Z][\w$]*/, 'type.identifier'], // to show class names nicely
 
       // whitespace
       { include: '@whitespace' },
@@ -24,28 +24,20 @@ const language: Monaco.languages.IMonarchLanguage = {
       { include: '@operator' },
 
       // strings
-      [/"/, { token: 'string.quote', bracket: '@open', next: '@string' }],
+      [ /"/, { token: 'string.quote', bracket: '@open', next: '@string' }],
 
       // numbers
       { include: '@number' },
 
       // delimiter and brackets
-      [/[;,.]/, 'delimiter']
+      [ /[;,.]/, 'delimiter']
     ],
 
     keywords: [
-      [/\b(if|then|end|else|function|in|while|for|from)\b/, {
-        token: 'keyword'
-      }],
-      [/\b(return|continue|break)\b/, {
-        token: 'keyword'
-      }],
-      [/\b(and|or|not|new|isa)\b/, {
-        token: 'keyword'
-      }],
-      [/#(include|import|envar)\b/, {
-        token: 'keyword'
-      }],
+      [/\b(if|then|end|else|function|in|while|for|from)\b/, 'keyword'],
+      [/\b(return|continue|break)\b/, 'keyword'],
+      [/\b(and|or|not|new|isa)\b/, 'keyword'],
+      [/#(include|import|envar)\b/, 'keyword'],
       [/(?<=end )\b(if|while|for|function)\b/, {
         token: 'keyword.decl',
         bracket: '@close'
@@ -57,16 +49,16 @@ const language: Monaco.languages.IMonarchLanguage = {
     ],
 
     operator: [
-      [/([+\-*\/^<>|\&]|[<>=!]=|<<|>>>?)/, {
-        token: 'operator'
-      }]
+      [/([+\-*\/^<>|\&]|[<>=!]=|<<|>>>?)/, 'operator']
     ],
 
     identifier: [
       [/[a-z_$][\w$]*/, {
         cases: {
           debugger: 'debug-token',
-          default: 'constant',
+          null: 'constant',
+          false: 'constant',
+          true: 'constant',
           number: 'type',
           map: 'type',
           list: 'type',
