@@ -6,6 +6,7 @@ const terser = require('@rollup/plugin-terser').default;
 const json = require('@rollup/plugin-json');
 const nodePolyfills = require('rollup-plugin-polyfill-node');
 const externalGlobals  = require('rollup-plugin-external-globals');
+const dotenv = require('rollup-plugin-dotenv').default;
 
 const options = {
     input: 'out/web.js',
@@ -15,6 +16,7 @@ const options = {
     },
     external: ['react', 'react-dom', 'prismjs', 'react-markdown', 'react-in-viewport'],
     plugins: [
+        dotenv(),
         externalGlobals({
             'react': 'React',
             'react-dom': 'ReactDOM',

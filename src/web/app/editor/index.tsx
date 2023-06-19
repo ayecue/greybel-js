@@ -3,10 +3,11 @@ import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import React, { useEffect, useState } from 'react';
 
 import { activate } from '../../extension.js';
-import language from '../../extension/grammar/language.js';
+import { LanguageProvider } from './provider/language-provider.js';
 import documentParseQueue from '../../extension/helper/model-manager.js';
 import { buildClassName } from '../utils.js';
-import Editor from './editor';
+import Editor from './editor.js';
+import { ThemeProvider } from './provider/theme-provider.js';
 
 export interface EditorContext {
   instance?: Monaco.editor.IStandaloneCodeEditor;
@@ -33,33 +34,57 @@ export function EditorRoot({
     null
   );
 
-  useEffect(() => {
-    monacoLoader.init().then((resolvedMonaco: typeof Monaco) => {
-      resolvedMonaco.languages.register({ id: 'greyscript' });
-      resolvedMonaco.languages.setMonarchTokensProvider('greyscript', language);
+  const onLoad = async (resolvedMonaco: typeof Monaco) => {
+    resolvedMonaco.languages.register({ id: 'greyscript' });
 
-      activate(resolvedMonaco);
-
-      const model = resolvedMonaco.editor.createModel(
-        initialContent,
-        'greyscript'
-      );
-
-      model.onDidChangeContent((_event) => {
-        documentParseQueue.update(model);
-
-        try {
-          onChange?.(model.getValue());
-        } catch (err: any) {
-          onError?.(err);
-        }
-      });
-
-      setEditorContext({
-        monaco: resolvedMonaco,
-        model
-      });
+    const languageProvider = new LanguageProvider({
+      monaco: resolvedMonaco,
+      wasm: process.env.TM_WASM,
+      grammars: {
+        greyscript: {
+          scopeName: 'source.src',
+          tm: process.env.TM_LANGUAGE,
+          cfg: process.env.TM_LANGUAGE_CONFIG,
+        },
+      },
     });
+    await languageProvider.loadRegistry();
+    
+    const themeProvider = new ThemeProvider({
+      monaco: resolvedMonaco,
+      registry: languageProvider.getRegistry(),
+      themes: {
+        dracula: process.env.TM_THEME,
+      }
+    });
+
+    activate(resolvedMonaco);
+
+    const model = resolvedMonaco.editor.createModel(
+      initialContent,
+      'greyscript'
+    );
+
+    themeProvider.setTheme('dracula');
+
+    model.onDidChangeContent((_event) => {
+      documentParseQueue.update(model);
+
+      try {
+        onChange?.(model.getValue());
+      } catch (err: any) {
+        onError?.(err);
+      }
+    });
+
+    setEditorContext({
+      monaco: resolvedMonaco,
+      model
+    });
+  };
+
+  useEffect(() => {
+    monacoLoader.init().then((M) => onLoad(M));
   }, []);
 
   if (editorContext === null) {
