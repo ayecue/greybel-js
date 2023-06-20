@@ -625,3 +625,7 @@ All notable changes to this project will be documented in this file.
 - cast null to empty string when concatenation
 - update meta descriptions
 - implement textmate support for UI for better syntax
+
+## [1.9.5] - 20.06.2023
+
+- fix terser
