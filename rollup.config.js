@@ -42,7 +42,7 @@ const options = {
                 }]
             ]
         }),
-        terser()
+        //terser()
     ]
 };
 

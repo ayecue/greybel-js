@@ -54,7 +54,7 @@ export function EditorRoot({
       monaco: resolvedMonaco,
       registry: languageProvider.getRegistry(),
       themes: {
-        dracula: process.env.TM_THEME,
+        default: process.env.TM_THEME,
       }
     });
 
@@ -65,7 +65,7 @@ export function EditorRoot({
       'greyscript'
     );
 
-    themeProvider.setTheme('dracula');
+    themeProvider.setTheme('default');
 
     model.onDidChangeContent((_event) => {
       documentParseQueue.update(model);
