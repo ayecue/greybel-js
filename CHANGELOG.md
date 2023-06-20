@@ -624,3 +624,4 @@ All notable changes to this project will be documented in this file.
 
 - cast null to empty string when concatenation
 - update meta descriptions
+- implement textmate support for UI for better syntax
