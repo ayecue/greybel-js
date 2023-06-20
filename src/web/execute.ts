@@ -18,7 +18,6 @@ import {
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import process from 'process';
 import { Tag, TagRecord, transform } from 'text-mesh-transformer';
 

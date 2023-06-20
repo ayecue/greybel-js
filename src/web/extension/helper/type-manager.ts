@@ -52,17 +52,30 @@ or
 myFunction = function(a, b, c)
 \`\`\`` as const;
 
+export enum TypeInfoKind {
+  Variable = 'var',
+  Function = 'function',
+  Literal = 'literal',
+  Constant = 'constant',
+  ListConstructor = 'list',
+  MapConstructor = 'map',
+  Expression = 'expr',
+  Unknown = 'unknown'
+}
+
 export class TypeInfo {
+  kind: TypeInfoKind;
   label: string;
   type: string[];
 
-  constructor(label: string, type: string[]) {
+  constructor(kind: TypeInfoKind, label: string, type: string[]) {
+    this.kind = kind;
     this.label = label;
     this.type = type;
   }
 
   copy() {
-    return new TypeInfo(this.label, this.type);
+    return new TypeInfo(this.kind, this.label, this.type);
   }
 }
 
@@ -70,7 +83,7 @@ export class TypeInfoWithDefinition extends TypeInfo {
   definition: SignatureDefinition;
 
   constructor(label: string, type: string[], definition: SignatureDefinition) {
-    super(label, type);
+    super(TypeInfoKind.Function, label, type);
     this.definition = definition;
   }
 
@@ -177,7 +190,8 @@ export class TypeMap {
           // resolve first identifier
           if (!currentMetaInfo) {
             currentMetaInfo =
-              me.resolveIdentifier(identifer) || new TypeInfo(name, ['any']);
+              me.resolveIdentifier(identifer) ||
+              new TypeInfo(TypeInfoKind.Variable, name, ['any']);
             break;
           }
 
@@ -202,7 +216,7 @@ export class TypeMap {
           }
 
           // todo add retrieval for object/lists
-          currentMetaInfo = new TypeInfo(name, ['any']);
+          currentMetaInfo = new TypeInfo(TypeInfoKind.Variable, name, ['any']);
           break;
         }
         case ASTType.IndexExpression: {
@@ -240,7 +254,7 @@ export class TypeMap {
             }
 
             // todo add better retrieval
-            currentMetaInfo = new TypeInfo(key, ['any']);
+            currentMetaInfo = new TypeInfo(TypeInfoKind.Variable, key, ['any']);
             break;
           }
 
@@ -251,7 +265,11 @@ export class TypeMap {
             return null;
           }
 
-          currentMetaInfo = new TypeInfo(indexType.type[0], ['any']);
+          currentMetaInfo = new TypeInfo(
+            TypeInfoKind.Variable,
+            indexType.type[0],
+            ['any']
+          );
           break;
         }
         default: {
@@ -274,13 +292,15 @@ export class TypeMap {
     // special behavior for global variables
     switch (name) {
       case 'params':
-        return new TypeInfo(name, ['list:string']);
+        return new TypeInfo(TypeInfoKind.Constant, name, ['list:string']);
       case 'globals':
-        return new TypeInfo(name, ['map:any']);
+        return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
       case 'locals':
-        return new TypeInfo(name, ['map:any']);
+        return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
+      case 'outer':
+        return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
       case 'self':
-        return new TypeInfo(name, ['map:any']);
+        return new TypeInfo(TypeInfoKind.Constant, name, ['map:any']);
     }
 
     // check for default namespace
@@ -297,7 +317,7 @@ export class TypeMap {
       return namespaceType;
     }
 
-    return new TypeInfo(name, ['any']);
+    return new TypeInfo(TypeInfoKind.Variable, name, ['any']);
   }
 
   private getLastASTItemOfLine(line: number): ASTBase {
@@ -407,30 +427,50 @@ export class TypeMap {
   private resolveDefault(item: ASTBase): TypeInfo | null {
     switch (item.type) {
       case ASTType.NilLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['null']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['null']
+        );
       case ASTType.StringLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['string']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['string']
+        );
       case ASTType.NumericLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['number']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['number']
+        );
       case ASTType.BooleanLiteral:
-        return new TypeInfo((item as ASTLiteral).raw.toString(), ['number']);
+        return new TypeInfo(
+          TypeInfoKind.Literal,
+          (item as ASTLiteral).raw.toString(),
+          ['number']
+        );
       case ASTType.MapConstructorExpression:
-        return new TypeInfo('{}', ['map:any']);
+        return new TypeInfo(TypeInfoKind.MapConstructor, '{}', ['map:any']);
       case ASTType.ListConstructorExpression:
-        return new TypeInfo('[]', ['list:any']);
+        return new TypeInfo(TypeInfoKind.ListConstructor, '[]', ['list:any']);
       case ASTType.BinaryExpression:
-        return new TypeInfo('Binary expression', [
+        return new TypeInfo(TypeInfoKind.Expression, 'Binary expression', [
           'number',
           'string',
           'list:any',
           'map:any'
         ]);
       case ASTType.LogicalExpression:
-        return new TypeInfo('Logical expression', ['number']);
+        return new TypeInfo(TypeInfoKind.Expression, 'Logical expression', [
+          'number'
+        ]);
       case ASTType.SliceExpression:
-        return new TypeInfo('Slice expression', ['any']);
+        return new TypeInfo(TypeInfoKind.Expression, 'Slice expression', [
+          'any'
+        ]);
       case ASTType.Unknown:
-        return new TypeInfo('Unknown', ['any']);
+        return new TypeInfo(TypeInfoKind.Unknown, 'Unknown', ['any']);
       default:
         return null;
     }
@@ -520,7 +560,7 @@ export class TypeMap {
           setReference(key, field.value);
         }
 
-        typeInfo = new TypeInfo(name, resolved.type);
+        typeInfo = new TypeInfo(TypeInfoKind.Variable, name, resolved.type);
       } else if (
         item instanceof ASTListConstructorExpression &&
         resolved instanceof TypeInfo
@@ -530,12 +570,16 @@ export class TypeMap {
           setReference(key, field.value);
         }
 
-        typeInfo = new TypeInfo(name, resolved.type);
+        typeInfo = new TypeInfo(TypeInfoKind.Variable, name, resolved.type);
       } else {
         typeInfo =
           resolved instanceof TypeInfoWithDefinition
-            ? new TypeInfo(name, resolved.definition.returns || ['any'])
-            : new TypeInfo(name, resolved.type);
+            ? new TypeInfo(
+                TypeInfoKind.Variable,
+                name,
+                resolved.definition.returns || ['any']
+              )
+            : new TypeInfo(TypeInfoKind.Variable, name, resolved.type);
       }
 
       // in case globals is used variable needs to get attached to global scope

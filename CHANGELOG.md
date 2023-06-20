@@ -619,3 +619,9 @@ All notable changes to this project will be documented in this file.
 ## [1.9.3] - 17.06.2023
 
 - update meta descriptions
+
+## [1.9.4] - 19.06.2023
+
+- cast null to empty string when concatenation
+- update meta descriptions
+- implement textmate support for UI for better syntax
