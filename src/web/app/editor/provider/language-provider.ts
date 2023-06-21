@@ -1,6 +1,16 @@
-import { INITIAL, Registry, parseRawGrammar, StackElement } from 'vscode-textmate';
-import { createOnigScanner, createOnigString, loadWASM } from 'vscode-oniguruma';
 import monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import {
+  createOnigScanner,
+  createOnigString,
+  loadWASM
+} from 'vscode-oniguruma';
+import {
+  INITIAL,
+  parseRawGrammar,
+  Registry,
+  StackElement
+} from 'vscode-textmate';
+
 import { Grammars } from './types.js';
 
 interface Cfg {
@@ -54,10 +64,12 @@ export class LanguageProvider {
     const registry = new Registry({
       onigLib: Promise.resolve({
         createOnigScanner,
-        createOnigString,
+        createOnigString
       }),
       loadGrammar: async (scopeName) => {
-        const key = Object.keys(this.grammars).find((k) => this.grammars[k].scopeName === scopeName);
+        const key = Object.keys(this.grammars).find(
+          (k) => this.grammars[k].scopeName === scopeName
+        );
         const grammar = this.grammars[key as keyof typeof this.grammars];
         if (grammar) {
           const res = await fetch(`${grammar.tm}`);
@@ -65,7 +77,7 @@ export class LanguageProvider {
           return parseRawGrammar(await res.text(), `example.${type}`);
         }
         return Promise.resolve(null);
-      },
+      }
     });
 
     this.registry = registry;
@@ -74,8 +86,10 @@ export class LanguageProvider {
   }
 
   public async registerLanguage(languageId: string) {
-    const { tokensProvider, configuration } = await this.fetchLanguageInfo(languageId);
-    
+    const { tokensProvider, configuration } = await this.fetchLanguageInfo(
+      languageId
+    );
+
     if (configuration !== null) {
       this.monaco.languages.setLanguageConfiguration(languageId, configuration);
     }
@@ -88,13 +102,15 @@ export class LanguageProvider {
   public async fetchLanguageInfo(languageId: string): Promise<LanguageInfo> {
     const [configuration, tokensProvider] = await Promise.all([
       this.getConfiguration(languageId),
-      this.getTokensProvider(languageId),
+      this.getTokensProvider(languageId)
     ]);
 
     return { configuration, tokensProvider };
   }
 
-  public async getConfiguration(languageId: string): Promise<monaco.languages.LanguageConfiguration | null> {
+  public async getConfiguration(
+    languageId: string
+  ): Promise<monaco.languages.LanguageConfiguration | null> {
     const grammar = this.grammars[languageId];
     if (grammar.cfg) {
       const res = await fetch(`${grammar.cfg}`);
@@ -103,7 +119,9 @@ export class LanguageProvider {
     return Promise.resolve(null);
   }
 
-  public async getTokensProvider(languageId: string): Promise<monaco.languages.EncodedTokensProvider | null> {
+  public async getTokensProvider(
+    languageId: string
+  ): Promise<monaco.languages.EncodedTokensProvider | null> {
     const scopeName = this.getScopeNameFromLanguageId(languageId);
     const grammar = await this.registry.loadGrammar(scopeName);
 
@@ -113,8 +131,14 @@ export class LanguageProvider {
       getInitialState() {
         return INITIAL;
       },
-      tokenizeEncoded(line: string, state: monaco.languages.IState): monaco.languages.IEncodedLineTokens {
-        const tokenizeLineResult2 = grammar.tokenizeLine2(line, state as StackElement);
+      tokenizeEncoded(
+        line: string,
+        state: monaco.languages.IState
+      ): monaco.languages.IEncodedLineTokens {
+        const tokenizeLineResult2 = grammar.tokenizeLine2(
+          line,
+          state as StackElement
+        );
         const { tokens, ruleStack: endState } = tokenizeLineResult2;
         return { tokens, endState };
       }
