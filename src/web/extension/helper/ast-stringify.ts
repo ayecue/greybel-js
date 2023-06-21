@@ -175,10 +175,11 @@ export function stringifyFactory(
       item: ASTSliceExpression,
       _data: TransformerDataObject
     ): string => {
+      const base = make(item.base);
       const left = make(item.left);
       const right = make(item.right);
 
-      return [left, right].join(':');
+      return base + '[' + [left, right].join(':') + ']';
     },
     IndexExpression: (
       item: ASTIndexExpression,

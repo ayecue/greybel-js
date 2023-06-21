@@ -79,6 +79,7 @@ const getScraperMap = function (
       visit(item.index, level);
     },
     SliceExpression: function (item: ASTSliceExpression, level: number) {
+      visit(item.base, level);
       visit(item.left, level);
       visit(item.right, level);
     },

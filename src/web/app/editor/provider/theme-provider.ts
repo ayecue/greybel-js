@@ -1,8 +1,9 @@
 import monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { Registry } from 'vscode-textmate';
+
 import { Themes } from './types.js';
 
-interface Cfg {
+interface Options {
   registry: Registry;
   monaco: typeof monaco;
   themes: Themes;
@@ -12,13 +13,13 @@ export class ThemeProvider {
   private themes = new Map<string, any>();
   private themeMeta;
   private registry: Registry;
-  private monaco: typeof monaco;;
+  private monaco: typeof monaco;
   private currentTheme = '';
 
-  constructor(cfg: Cfg) {
-    this.registry = cfg.registry;
-    this.monaco = cfg.monaco;
-    this.themeMeta = cfg.themes;
+  constructor(options: Options) {
+    this.registry = options.registry;
+    this.monaco = options.monaco;
+    this.themeMeta = options.themes;
   }
 
   public async setTheme(id?: string) {
@@ -48,10 +49,10 @@ export class ThemeProvider {
       rules: [
         {
           token: '',
-          ...theme.settings[0],
-        },
+          ...theme.settings[0]
+        }
       ],
-      colors: theme.colors,
+      colors: theme.colors
     });
     this.themes.set(id, theme);
     return theme;
@@ -62,21 +63,21 @@ export class ThemeProvider {
     const theme = await payload.json();
     const res = {
       id,
-      name,
+      name: null,
       settings: [
         ...(theme.colors
           ? [
               {
                 settings: {
                   foreground: theme.colors['editor.foreground'],
-                  background: theme.colors['editor.background'],
-                },
-              },
+                  background: theme.colors['editor.background']
+                }
+              }
             ]
           : []),
-        ...theme.tokenColors,
+        ...theme.tokenColors
       ],
-      colors: theme.colors,
+      colors: theme.colors
     };
 
     return res;
@@ -89,8 +90,12 @@ export class ThemeProvider {
   public injectCSS() {
     const cssColors = this.registry.getColorMap();
     const { Color } = window.require('vs/base/common/color');
-    const { TokenizationRegistry } = window.require('vs/editor/common/languages');
-    const { generateTokensCSSForColorMap } = window.require('vs/editor/common/languages/supports/tokenization');
+    const { TokenizationRegistry } = window.require(
+      'vs/editor/common/languages'
+    );
+    const { generateTokensCSSForColorMap } = window.require(
+      'vs/editor/common/languages/supports/tokenization'
+    );
     const colorMap = cssColors.map(Color.Format.CSS.parseHex);
     // This is needed to ensure the minimap gets the right colors.
     TokenizationRegistry.setColorMap(colorMap);
