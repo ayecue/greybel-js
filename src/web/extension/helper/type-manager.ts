@@ -74,6 +74,16 @@ export class TypeInfo {
     this.type = type;
   }
 
+  setType(type: string[]) {
+    this.type = type.includes('any') ? ['any'] : type;
+    return this;
+  }
+
+  extendType(type: string[]) {
+    const uniqItems = Array.from(new Set([...this.type, ...type]));
+    return this.setType(uniqItems);
+  }
+
   copy() {
     return new TypeInfo(this.kind, this.label, this.type);
   }
@@ -590,12 +600,7 @@ export class TypeMap {
         typeInfo.label = nameWithoutGlobalsPrefix;
 
         if (globalIdentifierTypes.has(nameWithoutGlobalsPrefix)) {
-          typeInfo.type = Array.from(
-            new Set([
-              ...typeInfo.type,
-              ...globalIdentifierTypes.get(nameWithoutGlobalsPrefix)!.type
-            ])
-          );
+          typeInfo.extendType(globalIdentifierTypes.get(nameWithoutGlobalsPrefix)!.type);
         }
 
         globalIdentifierTypes.set(nameWithoutGlobalsPrefix, typeInfo);
@@ -613,12 +618,7 @@ export class TypeMap {
         typeInfo.label = nameWithoutOuterPrefix;
 
         if (outerIdentifierTypes.has(nameWithoutOuterPrefix)) {
-          typeInfo.type = Array.from(
-            new Set([
-              ...typeInfo.type,
-              ...outerIdentifierTypes.get(nameWithoutOuterPrefix)!.type
-            ])
-          );
+          typeInfo.extendType(outerIdentifierTypes.get(nameWithoutOuterPrefix)!.type);
         }
 
         outerIdentifierTypes.set(nameWithoutOuterPrefix, typeInfo);
@@ -631,12 +631,7 @@ export class TypeMap {
         typeInfo.label = nameWithoutLocalsPrefix;
 
         if (identiferTypes.has(nameWithoutLocalsPrefix)) {
-          typeInfo.type = Array.from(
-            new Set([
-              ...typeInfo.type,
-              ...identiferTypes.get(nameWithoutLocalsPrefix)!.type
-            ])
-          );
+          typeInfo.extendType(identiferTypes.get(nameWithoutLocalsPrefix)!.type);
         }
 
         identiferTypes.set(nameWithoutLocalsPrefix, typeInfo);
@@ -644,9 +639,7 @@ export class TypeMap {
       }
 
       if (identiferTypes.has(name)) {
-        typeInfo.type = Array.from(
-          new Set([...typeInfo.type, ...identiferTypes.get(name)!.type])
-        );
+        typeInfo.extendType(identiferTypes.get(name)!.type);
       }
 
       identiferTypes.set(name, typeInfo);

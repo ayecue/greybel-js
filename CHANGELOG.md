@@ -633,3 +633,7 @@ All notable changes to this project will be documented in this file.
 ## [1.9.6] - 20.06.2023
 
 - fix function textmate syntax in UI
+
+## [1.9.7] - 22.06.2023
+
+- if any is included in types just display any within UI
