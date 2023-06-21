@@ -3,7 +3,7 @@ import { Registry } from 'vscode-textmate';
 
 import { Themes } from './types.js';
 
-interface Cfg {
+interface Options {
   registry: Registry;
   monaco: typeof monaco;
   themes: Themes;
@@ -16,10 +16,10 @@ export class ThemeProvider {
   private monaco: typeof monaco;
   private currentTheme = '';
 
-  constructor(cfg: Cfg) {
-    this.registry = cfg.registry;
-    this.monaco = cfg.monaco;
-    this.themeMeta = cfg.themes;
+  constructor(options: Options) {
+    this.registry = options.registry;
+    this.monaco = options.monaco;
+    this.themeMeta = options.themes;
   }
 
   public async setTheme(id?: string) {
@@ -63,7 +63,7 @@ export class ThemeProvider {
     const theme = await payload.json();
     const res = {
       id,
-      name,
+      name: null,
       settings: [
         ...(theme.colors
           ? [

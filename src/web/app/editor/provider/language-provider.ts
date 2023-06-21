@@ -13,7 +13,7 @@ import {
 
 import { Grammars } from './types.js';
 
-interface Cfg {
+interface Options {
   monaco: typeof monaco;
   wasm: string;
   grammars: Grammars;
@@ -33,10 +33,10 @@ export class LanguageProvider {
   private grammars: Grammars;
   private disposes: monaco.IDisposable[] = [];
 
-  constructor(cfg: Cfg) {
-    this.monaco = cfg.monaco;
-    this.wasm = cfg.wasm;
-    this.grammars = cfg.grammars;
+  constructor(options: Options) {
+    this.monaco = options.monaco;
+    this.wasm = options.wasm;
+    this.grammars = options.grammars;
   }
 
   public getRegistry() {
