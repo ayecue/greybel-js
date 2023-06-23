@@ -1,0 +1,4 @@
+import_code("library/hello-world.src")
+
+hello() //prints "Hello world!"
+helloFoo("Foo") //prints "Hello Foo!"
