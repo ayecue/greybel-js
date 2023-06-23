@@ -639,3 +639,8 @@ All notable changes to this project will be documented in this file.
 - if any is included in types just display any within UI
 - support multiline conditions
 - support slice type resolve within UI
+
+## [1.9.8] - 23.06.2023
+
+- add debugger keyword to textmate syntax for UI
+- move language + theme provider for UI
