@@ -648,3 +648,4 @@ All notable changes to this project will be documented in this file.
 ## [1.9.9] - 25.06.2023
 
 - fix textmate syntax related to strings within functions and pseudo-types in UI
+- fix argument types for to_int and insert in UI
