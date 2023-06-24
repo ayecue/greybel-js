@@ -644,3 +644,7 @@ All notable changes to this project will be documented in this file.
 
 - add debugger keyword to textmate syntax for UI
 - move language + theme provider for UI
+
+## [1.9.9] - 25.06.2023
+
+- fix textmate syntax related to strings within functions and pseudo-types in UI
