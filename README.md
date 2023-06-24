@@ -33,7 +33,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 - [Web UI](#web-ui)
 	- [Share code](#share-code)
 	- [Save code](#save-code)
-	- [Debug your code](#debugger-cli)
+	- [Debug your code](#debugger-web-ui)
 	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support-web-ui)
 
 # Install
