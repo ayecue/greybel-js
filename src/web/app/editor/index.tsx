@@ -1,13 +1,12 @@
 import monacoLoader from '@monaco-editor/loader';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { LanguageProvider, ThemeProvider } from 'monaco-textmate-provider';
 import React, { useEffect, useState } from 'react';
 
 import { activate } from '../../extension.js';
-import { LanguageProvider } from './provider/language-provider.js';
 import documentParseQueue from '../../extension/helper/model-manager.js';
 import { buildClassName } from '../utils.js';
 import Editor from './editor.js';
-import { ThemeProvider } from './provider/theme-provider.js';
 
 export interface EditorContext {
   instance?: Monaco.editor.IStandaloneCodeEditor;
@@ -39,22 +38,21 @@ export function EditorRoot({
 
     const languageProvider = new LanguageProvider({
       monaco: resolvedMonaco,
-      wasm: process.env.TM_WASM,
-      grammars: {
+      wasm: new URL(process.env.TM_WASM),
+      grammarSourceMap: {
         greyscript: {
           scopeName: 'source.src',
-          tm: process.env.TM_LANGUAGE,
-          cfg: process.env.TM_LANGUAGE_CONFIG,
+          tmLanguageFile: new URL(process.env.TM_LANGUAGE),
+          languageConfigurationFile: new URL(process.env.TM_LANGUAGE_CONFIG),
         },
       },
     });
-    await languageProvider.loadRegistry();
     
     const themeProvider = new ThemeProvider({
       monaco: resolvedMonaco,
-      registry: languageProvider.getRegistry(),
-      themes: {
-        default: process.env.TM_THEME,
+      registry: await languageProvider.getRegistry(),
+      themeSources: {
+        default: new URL(process.env.TM_THEME),
       }
     });
 

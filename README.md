@@ -1,6 +1,6 @@
 # Greybel-JS
 
-GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/)).
+CLI which provides a set of tools for working with GreyScript. GreyScript is a  scripting language used within [GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/).
 
 ## Links
 
@@ -8,30 +8,33 @@ GreyScript transpiler/interpreter ([GreyHack](https://store.steampowered.com/app
 - Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - Greybel UI Demo: [greybel-ui](https://editor.greyscript.org)
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
-- Greyscript API: [GreyScript Documentation](https://documentation.greyscript.org)
+- GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
 
 ## Features
 
-- [simplifying the process of importing your code into the game](#transpiler)
-	- [imports](#importing) (supports [nested import_code](#nested-import_code))
-	- [bundler](#when-to-use-the-installer-flag)
-	- [environment variables](#envar)
-	- [minor syntax additions](#syntax)
-	- minimizing your script, depending on the size of your project you can save up to 40%
+- [Simplify importing for small and big projects](#transpiler)
+	- [Handle dependencies between code files](#dependency-management-transpiler)
+	- [Environment variables while transpiling](#environment-variables-transpiler)
+	- [Minor syntax additions](#syntax)
+	- Minimizing your script, depending on the size of your project you can save up to 40%
 		- optimizing literals (strings, booleans, numbers)
 		- minifying namespaces
 		- removing whitespaces + tabs
 		- obfuscate your code (even though that's just a side effect of all the steps above)
-	- beautify your code (can be useful to deobfuscate code)
-- [execute/test your code outside of GreyHack](#interpreter)
-	- [local mock environment](#local-environment)
-	- [Greyscript API support](#greyscript-api-support)
-	- [debugger](#debugger)
-	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support)
+	- Beautify your code (can be useful to deobfuscate code)
+- [Execute/Test your code outside of GreyHack](#interpreter)
+	- [Handle dependencies between code files](#dependency-management-interpreter)
+	- [Local mock environment](#local-environment)
+	- [GreyScript API support](#greyscript-api-support)
+	- [Debug your code](#debugger-cli)
+	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support-cli)
+	- [Environment variables](#environment-variables-interpreter)
 - [REPL for GreyScript](#repl)
-- [Web UI with simplified features](#web-ui)
-	- [share code](#share-code)
-	- [save code](#save-code)
+- [Web UI](#web-ui)
+	- [Share code](#share-code)
+	- [Save code](#save-code)
+	- [Debug your code](#debugger-web-ui)
+	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support-web-ui)
 
 # Install
 
@@ -69,29 +72,113 @@ Options:
 greybel /my/code/file.src
 ```
 
-### When to use the installer flag
-Use the installer flag when using `import_code`. 
+## Dependency Management (Transpiler)
+
+Greybel enables you to split your code into different files which is useful to keep readability and also to make reusable code.
+
+It is recommended to use [include](#include) and [import](#import) for small or medium-sized projects.
+
+For big projects, [import_code](#import_code) should be used instead since the transpiler will bundle your files in a way that makes full use of the [import_code](#import_code) capabilities in the game to avoid exceeding the maximum character limit of **160.000**.
+
+Cyclic dependencies will be detected as well. In case there is one an error will be thrown indicating which file is causing it.
+
+### Import
+
+Used to import exported namespaces from a file. Features of this import functionality:
+- supports relative imports
+- only loads code when required
+- does not pollute global scope
+- only gets imported once regardless of how many times it got imported
+- only exports what you want
+- code will be appended to the root file which may cause exceeding the character limit of GreyHack, use [import_code](#import_code) instead if that is an issue
+
+You can take a look at the [example code](/example/import) to get a better idea of how to use this feature.
+
+### Include
+
+Used to import the content of a file. Features of this import functionality:
+- supports relative includes
+- very easy to use
+- will pollute global scope
+- will include the content of a file every time, which may cause redundant code
+- may cause exceeding the character limit of GreyHack, use [import_code](#import_code) instead if that is an issue
+
+To get a better idea you can take a look at the following [example code](/example/include).
+
+### import_code
+
+Used to import code from a file. Features of this import functionality:
+- keeps files separate in-game, which is useful to avoid the character limit
+- supports nested `import_code`
+- supports relative imports
+
+Here is some [example code](/example/import-code).
+
+By using the `--installer` flag Greybel will create one or more installer files depending on the size of your project. These installer files will essentially contain all different code files and logic to create all files in the game. So basically you just need to copy and paste the code of the installer files into the game and then compile + execute them.
+
+By using the `--ingame-directory` CLI parameter you can also define to which in-game space you want to import the files. By default `/root/` will be used.
+
+Additionally, it is important to mention that **nested** `import_code` is supported as well. This is made possible by moving all imports into the entry file depending on their usage throughout the project. It is recommended to only use `import_code` at the head of the file since the import locations of nested files cannot be guaranteed.
+
+## Environment Variables (Transpiler)
+
+Greybel supports the injection of environment variables while transpiling. There are two ways of environment variables.
+
+1. Use the `--env-files` CLI parameter to [define environment variables configuration files](/example/environment-variables/env.conf).
+2. Use the `--env-vars TEST="hello world"` CLI parameter to define variables on the fly.
+
+Here is an [example](/example/environment-variables) of environment variable injection.
+
+## Syntax
+
+Keep in mind that the following syntax is not valid in GreyScript. The transpiler can be used to transform code into valid GreyScript.
+
+### While, For and Function - shorthand
 ```
-greybel /my/code/file.src --installer
+while(true) print("hello world")
+for item in [1, 2, 3] print(item)
+test = function() return 42
 ```
-This will create an installer file that pretty much bundles all the files into one. Installer files exceeding the max char limit of Grey Hack will get split automatically.
 
-## Envar
-Envar will put environment variables into your script. Just keep in mind to use the `--env-files /path/env.conf` parameter. This might be useful if you want to use different variables for different environments. You can use multiple env files `--env-file /path/default.conf --env-file /path/env.conf`.
-
-You can also define the envars via this parameter. `--env-vars random=SOME_VALUE --env-vars foo=123`
+### No trailing comma is required in maps or lists
 ```
-//File path: env.conf
-# MY COMMENT
-random=SOME_VALUE
-foo=123
+myList = [
+	false,
+	null
+]
 
-//File path: example.src
-somevar = #envar random;
-foovar = #envar foo;
+myMap = {
+	"test": {
+		"level2": {
+			"bar": true
+		}
+	}
+}
+```
 
-print(somevar) //prints "SOME_VALUE"
-print(foovar) //prints "123"
+### Math - shorthand
+```
+a /= b
+a *= b
+a -= b
+a += b
+```
+
+### Bitwise - shorthand
+```
+a = b << c
+a = b >> c
+a = b >>> c
+a = b | c
+a = b & c
+```
+
+### Block comment
+```
+/*
+	My block comment
+*/
+print("test")
 ```
 
 # Interpreter
@@ -111,6 +198,19 @@ Options:
 ```
 
 For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
+
+## Dependency Management (Interpreter)
+
+Dependencies will be dynamically loaded into the execution without any limitations. Cyclic dependencies are supported as well.
+
+## Environment Variables (Interpreter)
+
+Greybel supports the injection of environment variables for the interpreter as well. The way CLI parameters are used is identical to the ones of transpiling.
+
+1. Use the `--env-files` CLI parameter to [define environment variables configuration files](/example/environment-variables/env.conf).
+2. Use the `--env-vars TEST="hello world"` CLI parameter to define variables on the fly.
+
+Here is an [example](/example/environment-variables) of environment variable injection.
 
 ## Local environment
 
@@ -137,8 +237,8 @@ Not yet supported:
 - `SubWallet` - only polyfill which "returns not yet supported"
 - `Coin` - only polyfill which "returns not yet supported"
 
-## Debugger
-Pauses execution and enables you to inspect/debug your code.
+## Debugger (CLI)
+Pauses execution and enables you to inspect/debug your code. Additionally, you'll be able to inject code.
 ```
 index = 1
 print("Hello world!")
@@ -146,12 +246,9 @@ debugger
 print("Another string!")
 ```
 
-![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
-
-## TextMesh Pro Rich Text support
+## TextMesh Pro Rich Text support (CLI)
 [TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
-### CLI
 <details>
 <summary>Supports</summary>
 
@@ -163,28 +260,6 @@ print("Another string!")
 * strikethrough
 * lowercase
 * uppercase
-</details>
-
-### UI
-<details>
-<summary>Supports</summary>
-
-* color
-* mark
-* underline
-* italic
-* bold
-* strikethrough
-* lowercase
-* uppercase
-* align
-* cspace
-* lineheight
-* margin
-* nobr
-* pos
-* size
-* voffset
 </details>
 
 ## TestLib
@@ -234,10 +309,9 @@ REPL CLI
 Example: greybel-repl
 ```
 
+For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended any more due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
 
-For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended anymore due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
-
-REPL also features a [local environment](#local-environment) and [greyscript API support](#greyscript-api-support)
+REPL also features a [local environment](#local-environment) and [GreyScript API support](#greyscript-api-support)
 
 # Web-UI
 ```
@@ -245,7 +319,7 @@ Web UI CLI
 Example: greybel-ui
 ```
 
-This is a simple UI where you can [minify code](#transpiler) and [execute code](#interpreter). There is also a VSCode extension. It features a lot of neat features. Like for example a debugger with breakpoints etc.
+Simple UI which can be used for [minifying](#transpiler) and [executing](#interpreter) code. There is also a [VSCode extension](https://github.com/ayecue/greybel-vs) which includes a lot of neat features. Like for example a debugger with breakpoints etc.
 
 ![Web UI](/assets/emulator-ui-preview.png?raw=true "Web UI")
 
@@ -257,110 +331,33 @@ This functionality can be used to share code with others without saving it. Keep
 
 This functionality can be used to save and also share code with others. Every time save is pressed a new id will get generated and appended to the browser URL which enables you to just copy and paste the URL and share your code with others.
 
+## Debugger (Web-UI)
 
-# Syntax
+![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
 
-Keep in mind that the following syntax is not valid in GreyScript. The transpiler can be used to transform code into valid GreyScript.
+## TextMesh Pro Rich Text support (Web-UI)
+[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
-## While, For and Function - shorthand
-```
-while(true) print("hello world")
-for item in [1, 2, 3] print(item)
-test = function() return 42
-```
+<details>
+<summary>Supports</summary>
 
-## No trailing comma is required in maps or lists
-```
-myList = [
-	false,
-	null
-]
-
-myMap = {
-	"test": {
-		"level2": {
-			"bar": true
-		}
-	}
-}
-```
-
-## Math - shorthand
-```
-a /= b
-a *= b
-a -= b
-a += b
-```
-
-## Bitwise - shorthand
-```
-a = b << c
-a = b >> c
-a = b >>> c
-a = b | c
-a = b & c
-```
-
-## Block comment
-```
-/*
-	My block comment
-*/
-print("test")
-```
-
-# Importing
-
-## import_code
-The native `import_code` is supported as well.
-
-Through the transpiler, it is possible to refer to actual files in your file system which then get transformed to ingame file paths. Additionally, the transpiler makes it possible to nest `import_code`.
-```
-import_code("./myProject/test.src");
-```
-
-Via the `--ingame-directory` parameter it is possible to define the ingame directory it should be imported to. By default, the ingame directory will be `/root/`.
-
-Through the `--installer` flag in the CLI you can bundle your files which makes it easier to copy/paste code from your file system into the ingame file system.
-
-### Nested import_code
-Nested `import_code` is supported now as well. Each nested `import_code` will be moved to the entry file when transpiling.
-
-## Import
-Import will use the relative path from the file it imports to.
-```
-//File path: library/hello-world.src
-module.exports = function()
-	print("Hello world!")
-end function
-
-//File path: library/hello-name.src
-module.exports = function(name)
-	print("Hello " + name + "!")
-end function
-
-//File path: example.src
-#import HelloWord from library/hello-world;
-#import HelloName from library/hello-name;
-
-HelloWord() //prints "Hello world!"
-HelloName("Joe") //prints "Hello Joe!"
-```
-
-## Include
-Include will use the relative path from the file it imports to. This will just purely put the content of a file into your script.
-```
-//File path: library/hello-world.src
-hello = function()
-	print("Hello world!")
-end function
-
-//File path: example.src
-#include library/hello-world;
-
-hello() //prints "Hello world!"
-```
+* color
+* mark
+* underline
+* italic
+* bold
+* strikethrough
+* lowercase
+* uppercase
+* align
+* cspace
+* lineheight
+* margin
+* nobr
+* pos
+* size
+* voffset
+</details>
 
 # Todo
 

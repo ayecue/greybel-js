@@ -1,0 +1,3 @@
+helloFoo = function(value = "test")
+	print("Hello " + value + "!")
+end function

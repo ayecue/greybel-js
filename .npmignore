@@ -11,3 +11,4 @@ rollup.config.js
 tsconfig.json
 .eslintrc
 .editorconfig
+example

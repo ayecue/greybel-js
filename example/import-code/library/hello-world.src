@@ -1,0 +1,5 @@
+import_code("hello-foo.src");
+
+hello = function()
+	print("Hello world!")
+end function
