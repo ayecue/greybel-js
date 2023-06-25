@@ -656,3 +656,4 @@ All notable changes to this project will be documented in this file.
 - fix syntax exception in case call expression without paren was in last line
 - fix various binary operations on number, list and map operations
 - use ordinal comparison on greater and less than operations for strings
+- support division on strings
