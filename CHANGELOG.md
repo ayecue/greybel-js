@@ -658,4 +658,4 @@ All notable changes to this project will be documented in this file.
 - use ordinal comparison on greater and less than operations for strings
 - support division on strings
 - add modulo operator to textmate syntax in UI
-- fix order to operator syntax in UI
+- fix order in operator textmate syntax in UI
