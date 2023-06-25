@@ -644,3 +644,18 @@ All notable changes to this project will be documented in this file.
 
 - add debugger keyword to textmate syntax for UI
 - move language + theme provider for UI
+
+## [1.9.9] - 25.06.2023
+
+- fix textmate syntax related to strings within functions and pseudo-types in UI
+- fix argument types for to_int and insert in UI
+- fix super behavior in regards of accessessing direct __isa
+- add launch call stack limit
+- support minus operator for strings
+- fix binary expression order on same precedence
+- fix syntax exception in case call expression without paren was in last line
+- fix various binary operations on number, list and map operations
+- use ordinal comparison on greater and less than operations for strings
+- support division on strings
+- add modulo operator to textmate syntax in UI
+- fix order in operator textmate syntax in UI
