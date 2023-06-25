@@ -657,3 +657,5 @@ All notable changes to this project will be documented in this file.
 - fix various binary operations on number, list and map operations
 - use ordinal comparison on greater and less than operations for strings
 - support division on strings
+- add modulo operator to textmate syntax in UI
+- fix order to operator syntax in UI
