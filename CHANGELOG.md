@@ -652,3 +652,7 @@ All notable changes to this project will be documented in this file.
 - fix super behavior in regards of accessessing direct __isa
 - add launch call stack limit
 - support minus operator for strings
+- fix binary expression order on same precedence
+- fix syntax exception in case call expression without paren was in last line
+- fix various binary operations on number, list and map operations
+- use ordinal comparison on greater and less than operations for strings
