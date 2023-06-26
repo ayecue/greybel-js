@@ -659,3 +659,7 @@ All notable changes to this project will be documented in this file.
 - support division on strings
 - add modulo operator to textmate syntax in UI
 - fix order in operator textmate syntax in UI
+
+## [1.9.10] - 26.06.2023
+
+- use rnd function factory
