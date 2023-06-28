@@ -663,3 +663,7 @@ All notable changes to this project will be documented in this file.
 ## [1.9.10] - 26.06.2023
 
 - use rnd function factory
+
+## [1.9.11] - 29.06.2023
+
+- fix various evaluation expression output values

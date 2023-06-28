@@ -82,6 +82,8 @@ For big projects, [import_code](#import_code) should be used instead since the t
 
 Cyclic dependencies will be detected as well. In case there is one an error will be thrown indicating which file is causing it.
 
+A step by step guide is available [here](https://main.greyscript.org/manuals/useful-tools-for-greyscript.html#manage-your-dependencies) as well.
+
 ### Import
 
 Used to import exported namespaces from a file. Features of this import functionality:
