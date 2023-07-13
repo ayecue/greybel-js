@@ -183,9 +183,7 @@ export default async function execute(
       message: string
     ): Promise<string> {
       return new Promise((resolve, reject) => {
-        this.print(ctx, message, {
-          appendNewLine: false
-        });
+        this.print(ctx, message);
 
         stdin.enable();
         stdin.focus();
