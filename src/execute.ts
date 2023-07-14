@@ -15,7 +15,7 @@ import {
 import { init as initIntrinsics } from 'greybel-intrinsics';
 
 import EnvMapper from './build/env-mapper.js';
-import GrebyelPseudoDebugger from './execute/debugger.js';
+import GreybelPseudoDebugger from './execute/debugger.js';
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 
 export interface ExecuteOptions {
@@ -53,7 +53,7 @@ export default async function execute(
     environmentVariables: new Map(Object.entries(envMapper.map))
   });
 
-  interpreter.setDebugger(new GrebyelPseudoDebugger(interpreter));
+  interpreter.setDebugger(new GreybelPseudoDebugger(interpreter));
 
   try {
     console.time('Execution');

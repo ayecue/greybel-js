@@ -149,14 +149,15 @@ export class Stdout {
 
   updateLast(value: string) {
     const me = this;
+    let index = me.textNodes.length - 1;
 
-    for (
-      let index = me.textNodes.length - 1;
-      index >= me.previousIndex;
-      index--
-    ) {
+    for (; index >= me.previousIndex; index--) {
       const node = me.textNodes.pop();
       me.target.removeChild(node);
+    }
+
+    if (index >= 0) {
+      me.textNodes[index].innerHTML = '';
     }
 
     me.write(value);

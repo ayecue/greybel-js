@@ -667,3 +667,7 @@ All notable changes to this project will be documented in this file.
 ## [1.9.11] - 29.06.2023
 
 - fix various evaluation expression output values
+
+## [1.9.12] - 14.07.2023
+
+- fix replaceText behavior of print in UI
