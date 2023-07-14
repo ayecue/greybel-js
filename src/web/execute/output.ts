@@ -42,6 +42,8 @@ function wrapWithTag(openTag: TagRecord, content: string): string {
       return `<span style="font-size:${openTag.value};">${content}</span>`;
     case Tag.VOffset:
       return `<span style="margin-top:${openTag.value};">${content}</span>`;
+    case Tag.Indent:
+      return `<span style="margin-left:${openTag.value};">${content}</span>`;
   }
 
   if (openTag.value) {
