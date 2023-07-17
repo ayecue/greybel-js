@@ -65,8 +65,8 @@ Options:
 	-mc, --maxChars				Amount of characters allowed in one file before splitting when creating installer
 	-dno, --disable-namespaces-optimization	Disable namespace optimization
 	-dlo, --disable-literals-optimization	Disable literals optimization
-	-ci, --create-ingame 	Create files automatically in-game
-	-cim, --create-ingame-mode 	Creation mode: "local", "public" or "nightly"
+	-ci, --create-ingame 			Create files automatically in-game
+	-cim, --create-ingame-mode 		Creation mode: "local", "public" or "nightly"
 ```
 
 ## Examples:
