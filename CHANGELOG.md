@@ -671,3 +671,8 @@ All notable changes to this project will be documented in this file.
 ## [1.9.12] - 14.07.2023
 
 - fix replaceText behavior of print in UI
+
+## [2.0.0] - 18.07.2023
+
+- add support for indent tag in UI
+- add c2 agent to support remote file creation in-game
