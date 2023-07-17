@@ -12,3 +12,5 @@ tsconfig.json
 .eslintrc
 .editorconfig
 example
+*.original.ts
+*.original.js

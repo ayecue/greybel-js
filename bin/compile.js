@@ -74,7 +74,9 @@ if (!semver.satisfies(process.version, engineVersion)) {
     .option(
       '-mc, --maxChars <number>',
       'Amount of characters allowed in one file before splitting when creating installer'
-    );
+    )
+    .option('-ci, --create-ingame', 'Create files automatically in-game')
+    .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local", "public" or "nightly"');
 
   program.parse(process.argv);
 
@@ -92,7 +94,9 @@ if (!semver.satisfies(process.version, engineVersion)) {
     name: options.name,
     installer: options.installer,
     maxChars: options.maxChars,
-    ingameDirectory: options.ingameDirectory
+    ingameDirectory: options.ingameDirectory,
+    createIngame: options.createIngame,
+    createIngameMode: options.createIngameMode
   });
 
   if (!success) {

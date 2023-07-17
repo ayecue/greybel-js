@@ -7,6 +7,7 @@ import path from 'path';
 import { createBasePath } from './build/create-base-path.js';
 import { createParseResult } from './build/create-parse-result.js';
 import EnvMapper from './build/env-mapper.js';
+import { createImporter } from './build/importer.js';
 import { createInstaller } from './build/installer.js';
 import { ansiProvider, useColor } from './execute/output.js';
 
@@ -22,6 +23,8 @@ export interface BuildOptions {
   envVars: string[];
   maxChars: number;
   ingameDirectory: string;
+  createIngame: boolean;
+  createIngameMode: string;
 }
 
 export default async function build(
@@ -42,7 +45,9 @@ export default async function build(
     maxChars: options.maxChars || 155000,
     envFiles: options.envFiles || [],
     envVars: options.envVars || [],
-    ingameDirectory: options.ingameDirectory || '/root/'
+    ingameDirectory: options.ingameDirectory || '/root/',
+    createIngame: options.createIngame || false,
+    createIngameMode: options.createIngameMode || 'local'
   };
   let buildType = BuildType.DEFAULT;
 
@@ -88,6 +93,15 @@ export default async function build(
         buildPath,
         result,
         maxChars: buildOptions.maxChars
+      });
+    }
+
+    if (buildOptions.createIngame) {
+      await createImporter({
+        target,
+        ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
+        result,
+        mode: buildOptions.createIngameMode
       });
     }
 

@@ -5,3 +5,5 @@ test.src
 test.js
 # Local Netlify folder
 .netlify
+*.original.ts
+*.original.js
