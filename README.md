@@ -13,7 +13,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 ## Features
 
 - [Simplify importing for small and big projects](#transpiler)
-	- [Import your files into the game without copy + paste](#auto-files-create-in-game)
+	- [Import your files into the game without copy + paste](#auto-create-files-in-game)
 	- [Handle dependencies between code files](#dependency-management-transpiler)
 	- [Environment variables while transpiling](#environment-variables-transpiler)
 	- [Minor syntax additions](#syntax)

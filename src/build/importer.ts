@@ -62,7 +62,7 @@ class Importer {
     });
 
     for (const item of this.importList) {
-      await agent.tryToCreateFile(
+      await agent.createFile(
         this.ingameDirectory + path.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
         item.content

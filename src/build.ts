@@ -87,6 +87,7 @@ export default async function build(
     await createParseResult(target, buildPath, result);
 
     if (buildOptions.installer) {
+      console.log('Creating installer.');
       await createInstaller({
         target,
         ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
@@ -97,6 +98,7 @@ export default async function build(
     }
 
     if (buildOptions.createIngame) {
+      console.log('Importing files ingame.');
       await createImporter({
         target,
         ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
