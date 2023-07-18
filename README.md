@@ -81,7 +81,7 @@ Since `2.0.0` it is possible to automatically create transpiled files in the gam
 
 By default `local` is selected. Keep in mind that the game needs to have a single player session running for `local` to work. For `public` and `nightly` there is no need to have the game client running.
 
-A minor caveat is that a Steam account and password need to be provided.
+A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continues providing of credentials is required.
 
 ## Dependency Management (Transpiler)
 

@@ -676,4 +676,5 @@ All notable changes to this project will be documented in this file.
 
 - add support for indent tag in UI
 - add c2 agent to support remote file creation in-game
+- add support to cache refreshToken for ingame file creation
 - update meta involving create_folder signature fix
