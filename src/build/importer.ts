@@ -1,5 +1,6 @@
 import GreybelC2AgentPkg from 'greybel-c2-agent';
 import { TranspilerParseResult } from 'greybel-transpiler';
+import storage from 'node-persist';
 import path from 'path';
 
 import { createBasePath } from './create-base-path.js';
@@ -57,8 +58,13 @@ class Importer {
       throw new Error('Unknown import mode.');
     }
 
+    await storage.init();
+
     const agent = new GreybelC2Agent({
-      connectionType: IMPORTER_MODE_MAP[this.mode]
+      connectionType: IMPORTER_MODE_MAP[this.mode],
+      refreshToken: await storage.getItem('greybel.steam.refreshToken'),
+      onSteamRefreshToken: (code) =>
+        storage.setItem('greybel.steam.refreshToken', code)
     });
 
     for (const item of this.importList) {
