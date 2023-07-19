@@ -1,4 +1,4 @@
-import GreybelC2AgentPkg from 'greybel-c2-agent';
+import GreybelC2AgentPkg from 'greybel-broker';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import storage from 'node-persist';
 import path from 'path';
