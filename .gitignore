@@ -3,5 +3,6 @@ node_modules
 out
 test.src
 test.js
+.node-persist
 # Local Netlify folder
 .netlify

@@ -27,6 +27,7 @@ class Installer {
 
   private segments: string[];
   private buffer: string;
+  private createdFiles: string[];
 
   constructor(options: InstallerOptions) {
     this.target = options.target;
@@ -36,6 +37,11 @@ class Installer {
     this.segments = [];
     this.importList = this.createImportList(options.target, options.result);
     this.buffer = this.createContentHeader();
+    this.createdFiles = [];
+  }
+
+  public getCreatedFiles(): string[] {
+    return this.createdFiles;
   }
 
   private createContentHeader(): string {
@@ -147,6 +153,8 @@ class Installer {
       'installer' + this.segments.length + '.src'
     );
 
+    this.createdFiles.push(target);
+
     await fs.writeFile(target, this.buffer, { encoding: 'utf-8' });
   }
 
@@ -220,7 +228,8 @@ class Installer {
 
 export const createInstaller = async (
   options: InstallerOptions
-): Promise<void> => {
+): Promise<string[]> => {
   const installer = new Installer(options);
   await installer.build();
+  return installer.getCreatedFiles();
 };
