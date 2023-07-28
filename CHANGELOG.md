@@ -678,3 +678,9 @@ All notable changes to this project will be documented in this file.
 - add c2 agent to support remote file creation in-game
 - add support to cache refreshToken for ingame file creation
 - update meta involving create_folder signature fix
+
+## [2.0.1] - 28.07.2023
+
+- add support for funcRef in syntax highlight and code execution
+- add funcRef, list, number, string, params, globals, locals, outer and self to autocomplete constants
+- update meta
