@@ -688,3 +688,4 @@ All notable changes to this project will be documented in this file.
 ## [2.0.2] - 29.07.2023
 
 - add support to be able to modify idx variables within for iterations
+- fix: set computers list at rshell service install
