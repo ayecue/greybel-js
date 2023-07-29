@@ -689,3 +689,5 @@ All notable changes to this project will be documented in this file.
 
 - add support to be able to modify idx variables within for iterations
 - fix: set computers list at rshell service install
+- support color shorthand in text-mesh
+- support quotes in text-mesh tags
