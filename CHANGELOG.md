@@ -684,3 +684,7 @@ All notable changes to this project will be documented in this file.
 - add support for funcRef in syntax highlight and code execution
 - add funcRef, list, number, string, params, globals, locals, outer and self to autocomplete constants
 - update meta
+
+## [2.0.2] - 29.07.2023
+
+- add support to be able to modify idx variables within for iterations
