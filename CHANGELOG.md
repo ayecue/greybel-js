@@ -695,3 +695,5 @@ All notable changes to this project will be documented in this file.
 ## [2.0.3] - 30.07.2023
 
 - fix get_router intrinsic when providing lan ip
+- allow non literals in function declaration params
+- fix issue with call statement without parens
