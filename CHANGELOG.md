@@ -697,3 +697,4 @@ All notable changes to this project will be documented in this file.
 - fix get_router intrinsic when providing lan ip
 - allow non literals in function declaration params
 - fix issue with call statement without parens
+- remove "from" keywords
