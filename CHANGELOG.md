@@ -701,4 +701,4 @@ All notable changes to this project will be documented in this file.
 
 ## [2.0.4] - 30.07.2023
 
-- use setImmediate/setTimeout instead of nextTick
+- use setImmediate/setTimeout instead of nextTick to fix stdout issue within iterations
