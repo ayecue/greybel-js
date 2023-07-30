@@ -698,3 +698,7 @@ All notable changes to this project will be documented in this file.
 - allow non literals in function declaration params
 - fix issue with call statement without parens
 - remove "from" keywords
+
+## [2.0.4] - 30.07.2023
+
+- use setImmediate/setTimeout instead of nextTick
