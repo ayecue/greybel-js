@@ -241,6 +241,7 @@ body {
 
 .editor-console-stdout .line {
 	display: block;
+	position: relative;
 }
 
 .debugger-popup-bg {

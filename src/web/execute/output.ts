@@ -10,6 +10,8 @@ import { Stdin, Stdout } from '../std.js';
 
 function wrapWithTag(openTag: TagRecordOpen, content: string): string {
   switch (openTag.type) {
+    case Tag.MSpace:
+      return `<span style="letter-spacing:${openTag.attributes.value}px;">${content}</span>`;
     case Tag.Color:
       return `<span style="color:${openTag.attributes.value};">${content}</span>`;
     case Tag.Underline:
@@ -36,12 +38,14 @@ function wrapWithTag(openTag: TagRecordOpen, content: string): string {
       return `<span style="margin:0 ${openTag.attributes.value};">${content}</span>`;
     case Tag.NoBR:
       return `<nobr>${content}</nobr>`;
+    case Tag.Sprite:
+      return `<span style="color:${openTag.attributes.color};">&#9608</span>`;
     case Tag.Pos:
-      return `<span style="position:absolute;top:${openTag.attributes.value};">${content}</span>`;
+      return `<span style="position:relative;left:${openTag.attributes.value}px;">${content}</span>`;
     case Tag.Size:
       return `<span style="font-size:${openTag.attributes.value};">${content}</span>`;
     case Tag.VOffset:
-      return `<span style="margin-top:${openTag.attributes.value};">${content}</span>`;
+      return `<span style="position:relative;bottom:${openTag.attributes.value}px;display:block;height:0px;">${content}</span>`;
     case Tag.Indent:
       return `<span style="margin-left:${openTag.attributes.value};">${content}</span>`;
   }

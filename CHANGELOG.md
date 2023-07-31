@@ -707,3 +707,4 @@ All notable changes to this project will be documented in this file.
 
 - fix issue within import_code dependency management which could cause an invalid order, order should be more accurate now
 - improve text mesh transform approach to use queueing instead of recursion preventing exceeding maximum call stack
+- adjustments in UI to enable simple drawings via text-mesh
