@@ -9,7 +9,7 @@ import {
   PrintOptions
 } from 'greybel-interpreter';
 import readline from 'readline';
-import { Tag, TagRecord, transform } from 'text-mesh-transformer';
+import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
 import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
 import { customInput as input, customPassword as password } from './prompts.js';
@@ -43,10 +43,10 @@ export function useBgColor(color: string | undefined, content: string): string {
   return ansiProvider.bgColorWithHex(color, content);
 }
 
-export function wrapWithTag(openTag: TagRecord, content: string): string {
-  switch (openTag.tag) {
+export function wrapWithTag(openTag: TagRecordOpen, content: string): string {
+  switch (openTag.type) {
     case Tag.Color:
-      return useColor(openTag.value, content);
+      return useColor(openTag.attributes.value, content);
     case Tag.Underline:
       return ansiProvider.modify(ModifierType.Underline, content);
     case Tag.Italic:
@@ -56,18 +56,18 @@ export function wrapWithTag(openTag: TagRecord, content: string): string {
     case Tag.Strikethrough:
       return ansiProvider.modify(ModifierType.Strikethrough, content);
     case Tag.Mark:
-      return useBgColor(openTag.value, content);
+      return useBgColor(openTag.attributes.value, content);
     case Tag.Lowercase:
       return content.toLowerCase();
     case Tag.Uppercase:
       return content.toLowerCase();
   }
 
-  if (openTag.value) {
-    return `<${openTag.tag}=${openTag.value}>${content}</${openTag.tag}>`;
+  if (openTag.attributes.value) {
+    return `<${openTag.type}=${openTag.attributes.value}>${content}</${openTag.type}>`;
   }
 
-  return `<${openTag.tag}>${content}</${openTag.tag}>`;
+  return `<${openTag.type}>${content}</${openTag.type}>`;
 }
 
 export default class CLIOutputHandler extends OutputHandler {
@@ -85,7 +85,7 @@ export default class CLIOutputHandler extends OutputHandler {
   ) {
     const transformed = transform(
       message,
-      (openTag: TagRecord, content: string): string => {
+      (openTag: TagRecordOpen, content: string): string => {
         return wrapWithTag(openTag, content);
       }
     ).replace(/\\n/g, '\n');
@@ -156,7 +156,7 @@ export default class CLIOutputHandler extends OutputHandler {
     return new Promise((resolve, reject) => {
       const transformed = transform(
         message,
-        (openTag: TagRecord, content: string): string => {
+        (openTag: TagRecordOpen, content: string): string => {
           return wrapWithTag(openTag, content);
         }
       ).replace(/\\n/g, '\n');
