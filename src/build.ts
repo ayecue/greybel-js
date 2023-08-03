@@ -107,7 +107,11 @@ export default async function build(
       });
     }
 
-    console.log(`Build done. Available in ./build`);
+    try {
+      const isInsideContainer = await fs.access('/.dockerenv').then(() => true).catch(() => false);
+      const outputPath = isInsideContainer ? './build' : buildPath;
+      console.log(`Build done. Available in ${outputPath}.`);
+    } catch (err) {}
   } catch (err: any) {
     if (err instanceof BuildError) {
       console.error(
