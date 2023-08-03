@@ -712,3 +712,4 @@ All notable changes to this project will be documented in this file.
 ## [2.0.6] - 03.08.2023
 
 - raise node version requirement to latest lts - related to [#97](https://github.com/ayecue/greybel-js/issues/97#issue-1833994634) - thanks for reporting to [@Crater44](https://github.com/Crater44)
+- use static isa objects for grey hack specific intrinsics to enable usage of isa on those types
