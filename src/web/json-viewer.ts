@@ -1,7 +1,6 @@
 import {
   CustomBoolean,
   CustomFunction,
-  CustomInterface,
   CustomList,
   CustomMap,
   CustomNil,
@@ -29,8 +28,6 @@ export default function view(scope: any): HTMLElement {
         return item.value;
       } else if (item instanceof CustomNil) {
         return null;
-      } else if (item instanceof CustomInterface) {
-        return item.getCustomType();
       }
 
       return item;

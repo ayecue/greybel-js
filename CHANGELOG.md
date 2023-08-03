@@ -708,3 +708,8 @@ All notable changes to this project will be documented in this file.
 - fix issue within import_code dependency management which could cause an invalid order, order should be more accurate now
 - improve text mesh transform approach to use queueing instead of recursion preventing exceeding maximum call stack
 - adjustments in UI to enable simple drawings via text-mesh
+
+## [2.0.6] - 03.08.2023
+
+- raise node version requirement to latest lts - related to [#97](https://github.com/ayecue/greybel-js/issues/97#issue-1833994634) - thanks for reporting to [@Crater44](https://github.com/Crater44)
+- use static isa objects for grey hack specific intrinsics to enable usage of isa on those types
