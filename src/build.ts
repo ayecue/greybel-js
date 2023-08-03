@@ -107,7 +107,7 @@ export default async function build(
       });
     }
 
-    console.log(`Build done. Available in ${buildPath}.`);
+    console.log(`Build done. Available in ./build`);
   } catch (err: any) {
     if (err instanceof BuildError) {
       console.error(
