@@ -43,7 +43,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 npm i -g greybel-js
 ```
 
-# Alternative setup with Docker
+# Alternative setup via Docker
 
 Execute the following commands to build the image:
 ```bash
