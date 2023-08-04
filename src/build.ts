@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import { BuildError, BuildType, Transpiler } from 'greybel-transpiler';
 import mkdirp from 'mkdirp';
 import path from 'path';
+import isInsideContainer from 'is-inside-container';
 
 import { createBasePath } from './build/create-base-path.js';
 import { createParseResult } from './build/create-parse-result.js';
@@ -107,11 +108,8 @@ export default async function build(
       });
     }
 
-    try {
-      const isInsideContainer = await fs.access('/.dockerenv').then(() => true).catch(() => false);
-      const outputPath = isInsideContainer ? './build' : buildPath;
-      console.log(`Build done. Available in ${outputPath}.`);
-    } catch (err) {}
+    const outputPath = isInsideContainer() ? './build' : buildPath;
+    console.log(`Build done. Available in ${outputPath}.`);
   } catch (err: any) {
     if (err instanceof BuildError) {
       console.error(
