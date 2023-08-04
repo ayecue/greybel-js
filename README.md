@@ -43,6 +43,32 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 npm i -g greybel-js
 ```
 
+# Alternative setup with Docker
+
+Execute this commands to build the image:
+
+```
+docker pull crater44/greybel-cli
+docker tag crater44/greybel-cli:latest greybel-cli
+```
+Now we can use greybel from docker like this:
+```
+docker run -v "$(pwd):/app" greybel-cli \<your greybel command>
+```
+It creates a volume on the fly to execute the command and create the build folder it it's necesary. \
+It will work isolated from the rest of your system as containers are ment to.
+
+To update the package rebuild the image.
+
+NOTE: you can create an alias to use greybel almost as you are used to like:
+```
+alias greybel-cli="docker run -v "$(pwd):/app" greybel-cli"
+```
+so you can use it like this: 
+```
+greybel-cli greybel-execute path/file.src
+```
+
 # Transpiler
 ```
 Transpiler CLI
