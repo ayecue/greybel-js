@@ -45,15 +45,11 @@ npm i -g greybel-js
 
 # Alternative setup with Docker
 
-Execute this command to build the image from a string directly in the command line:
+Execute this commands to build the image:
 
 ```
-docker build -t greybel-cli - <<EOF \
-    FROM node:20-alpine \
-    WORKDIR "/app" \
-    RUN npm i -g greybel-js \
-    RUN find /usr/local/lib/node_modules/greybel-js/bin -type f -exec sed -i 's^#!/usr/bin/env node --no-warnings^#!/usr/local/bin/node --no-warnings^g' {} + \
-EOF
+docker pull crater44/greybel-cli
+docker tag crater44/greybel-cli:latest greybel-cli
 ```
 Now we can use greybel from docker like this:
 ```
@@ -62,10 +58,7 @@ docker run -v "$(pwd):/app" greybel-cli \<your greybel command>
 It creates a volume on the fly to execute the command and create the build folder it it's necesary. \
 It will work isolated from the rest of your system as containers are ment to.
 
-To update the package run:
-```
-docker run greybel-cli npm update -g greybel-js; find /usr/local/lib/node_modules/greybel-js/bin -type f -exec sed -i 's^#!/usr/bin/env node --no-warnings^#!/usr/local/bin/node --no-warnings^g' {} +
-```
+To update the package rebuild the image.
 
 NOTE: you can create an alias to use greybel almost as you are used to like:
 ```
