@@ -713,3 +713,8 @@ All notable changes to this project will be documented in this file.
 
 - raise node version requirement to latest lts - related to [#97](https://github.com/ayecue/greybel-js/issues/97#issue-1833994634) - thanks for reporting to [@Crater44](https://github.com/Crater44)
 - use static isa objects for grey hack specific intrinsics to enable usage of isa on those types
+
+## [2.0.7] - 04.08.2023
+
+- introduce alternative install via docker by [@Crater44](https://github.com/Crater44) - related PR [#99](https://github.com/ayecue/greybel-js/pull/99)
+- check if inside docker when sharing output path by [@Crater44](https://github.com/Crater44)
