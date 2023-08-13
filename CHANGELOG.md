@@ -711,10 +711,15 @@ All notable changes to this project will be documented in this file.
 
 ## [2.0.6] - 03.08.2023
 
-- raise node version requirement to latest lts - related to [#97](https://github.com/ayecue/greybel-js/issues/97#issue-1833994634) - thanks for reporting to [@Crater44](https://github.com/Crater44)
+- raise node version requirement to latest lts - related to [#97](https://github.com/ayecue/greybel-js/issues/97) - thanks for reporting to [@Crater44](https://github.com/Crater44)
 - use static isa objects for grey hack specific intrinsics to enable usage of isa on those types
 
 ## [2.0.7] - 04.08.2023
 
 - introduce alternative install via docker by [@Crater44](https://github.com/Crater44) - related PR [#99](https://github.com/ayecue/greybel-js/pull/99)
 - check if inside docker when sharing output path by [@Crater44](https://github.com/Crater44)
+
+## [2.0.8] - 13.08.2023
+
+- improve installer logic of generated installer file
+- fix issue if line is longer than maxChars allowed in installer - related to [#102](https://github.com/ayecue/greybel-js/issues/102)

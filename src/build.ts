@@ -1,9 +1,9 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
 import { BuildError, BuildType, Transpiler } from 'greybel-transpiler';
+import isInsideContainer from 'is-inside-container';
 import mkdirp from 'mkdirp';
 import path from 'path';
-import isInsideContainer from 'is-inside-container';
 
 import { createBasePath } from './build/create-base-path.js';
 import { createParseResult } from './build/create-parse-result.js';
