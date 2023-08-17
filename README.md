@@ -58,7 +58,8 @@ It'll create a volume on the fly in which the command gets executed and create t
 
 To update the package you'll need to rebuild the image.
 
-Hint: You can also create an alias to use greybel-js but create a function since a regular alias would cache the pwd command's value on the first execution:
+Hint: You can also create an alias to use greybel-js but it should be created as a function instead of a regular alias since the latter would cache the pwd command's value on the first execution:
+
 ```
 greybel-cli() {
     docker run -i -v $(pwd):/app greybel-cli $@
