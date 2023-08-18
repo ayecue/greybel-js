@@ -17,6 +17,7 @@ export interface BuildOptions {
   beautify: boolean;
   obfuscation: boolean;
   installer: boolean;
+  autoCompile: boolean;
   excludedNamespaces: string[];
   disableLiteralsOptimization: boolean;
   disableNamespacesOptimization: boolean;
@@ -39,6 +40,7 @@ export default async function build(
     beautify: options.beautify || false,
     obfuscation: options.obfuscation || false,
     installer: options.installer || false,
+    autoCompile: options.autoCompile || false,
     excludedNamespaces: options.excludedNamespaces || [],
     disableLiteralsOptimization: options.disableLiteralsOptimization || false,
     disableNamespacesOptimization:
@@ -91,6 +93,7 @@ export default async function build(
       console.log('Creating installer.');
       await createInstaller({
         target,
+        autoCompile: buildOptions.autoCompile,
         ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
         buildPath,
         result,

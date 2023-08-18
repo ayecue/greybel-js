@@ -72,7 +72,11 @@ if (!semver.satisfies(process.version, engineVersion)) {
       'Create installer for GreyScript (Should be used if you use import_code)'
     )
     .option(
-      '-mc, --maxChars <number>',
+      '-ac, --auto-compile',
+      'Enable autocompile within the installer (Should only be used with the installer flag)'
+    )
+    .option(
+      '-mc, --max-chars <number>',
       'Amount of characters allowed in one file before splitting when creating installer'
     )
     .option('-ci, --create-ingame', 'Create files automatically in-game')
@@ -93,6 +97,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
     excludedNamespaces: options.excludeNamespaces,
     name: options.name,
     installer: options.installer,
+    autoCompile: options.autoCompile,
     maxChars: options.maxChars,
     ingameDirectory: options.ingameDirectory,
     createIngame: options.createIngame,
