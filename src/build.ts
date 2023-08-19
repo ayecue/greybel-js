@@ -45,7 +45,7 @@ export default async function build(
     disableLiteralsOptimization: options.disableLiteralsOptimization || false,
     disableNamespacesOptimization:
       options.disableNamespacesOptimization || false,
-    maxChars: options.maxChars || 155000,
+    maxChars: options.maxChars || 160000,
     envFiles: options.envFiles || [],
     envVars: options.envVars || [],
     ingameDirectory: options.ingameDirectory || '/root/',
