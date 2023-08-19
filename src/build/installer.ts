@@ -11,6 +11,7 @@ type ImportItem = {
 };
 
 interface InstallerFileOptions {
+  contentHeader: string;
   maxChars: number;
   previous?: InstallerFile;
 }
@@ -24,46 +25,20 @@ class InstallerFile {
 
   constructor(options: InstallerFileOptions) {
     this.maxChars = options.maxChars;
-    this.buffer = this.createContentHeader();
+    this.buffer = options.contentHeader;
     this.items = [];
     this.previous = options.previous ?? null;
   }
 
-  private createContentHeader(): string {
-    return [
-      's=get_shell',
-      'c=s.host_computer',
-      'p=@push',
-      'm=function(t,z,r)',
-      'x=t.split("/")[1:]',
-      'e=x.pop',
-      'for y in x',
-      'if (__y_idx==0) then continue',
-      'c.create_folder("/"+x[:__y_idx].join("/"),y)',
-      'end for',
-      'c.touch("/"+x.join("/"),e)',
-      'j=c.File(t)',
-      'if r then',
-      'j.set_content(z)',
-      'print("New file """+t+""" got created.")',
-      'else',
-      'j.set_content(j.get_content+z)',
-      'print("Content got appended to """+t+""".")',
-      'end if',
-      'end function',
-      ''
-    ].join(';');
-  }
-
   insert(item: ImportItem): boolean {
     const isNew = !this.previous?.items.includes(item);
-    const remaining = this.maxChars - this.buffer.length;
+    const remaining = this.getRemainingSpace();
     let line = `m("${item.ingameFilepath}","${item.content}",${
       isNew ? '1' : '0'
-    });`;
+    });d`;
 
     if (remaining > line.length) {
-      this.buffer += line;
+      this.buffer += line.slice(0, -1);
       this.items.push(item);
       item.content = '';
       return true;
@@ -82,16 +57,31 @@ class InstallerFile {
       content = item.content.slice(0, --diff);
     }
 
-    line = `m("${item.ingameFilepath}","${content}",${isNew ? '1' : '0'});`;
+    line = `m("${item.ingameFilepath}","${content}",${isNew ? '1' : '0'});d`;
     this.buffer += line;
     this.items.push(item);
-
     item.content = item.content.slice(diff);
+
+    return false;
+  }
+
+  appendCode(content: string) {
+    const remaining = this.getRemainingSpace();
+
+    if (remaining > content.length) {
+      this.buffer += content;
+      return true;
+    }
+
     return false;
   }
 
   getCode(): string {
     return this.buffer;
+  }
+
+  getRemainingSpace(): number {
+    return this.maxChars - this.buffer.length;
   }
 }
 
@@ -101,6 +91,7 @@ export interface InstallerOptions {
   buildPath: string;
   result: TranspilerParseResult;
   maxChars: number;
+  autoCompile: boolean;
 }
 
 class Installer {
@@ -109,6 +100,7 @@ class Installer {
   private ingameDirectory: string;
   private buildPath: string;
   private maxChars: number;
+  private autoCompile: boolean;
 
   private files: InstallerFile[];
   private createdFiles: string[];
@@ -118,6 +110,7 @@ class Installer {
     this.buildPath = options.buildPath;
     this.ingameDirectory = options.ingameDirectory;
     this.maxChars = options.maxChars;
+    this.autoCompile = options.autoCompile;
     this.files = [];
     this.importList = this.createImportList(options.target, options.result);
     this.createdFiles = [];
@@ -165,8 +158,61 @@ class Installer {
     return imports;
   }
 
+  createContentHeader(): string {
+    return [
+      's=get_shell',
+      'c=s.host_computer',
+      'm=function(t,z,r)',
+      'x=t.split("/")[1:]',
+      'e=x.pop',
+      'for y in x',
+      'if (__y_idx==0) then continue',
+      'c.create_folder("/"+x[:__y_idx].join("/"),y)',
+      'end for',
+      'c.touch("/"+x.join("/"),e)',
+      'j=c.File(t)',
+      'if r then',
+      'j.set_content(z)',
+      'print("New file """+t+""" got created.")',
+      'else',
+      'j.set_content(j.get_content+z)',
+      'print("Content got appended to """+t+""".")',
+      'end if',
+      'end function',
+      'd=function',
+      'c.File(program_path).delete',
+      'end function',
+      ''
+    ].join(';');
+  }
+
+  createContentFooterAutoCompile(): string[] {
+    if (this.autoCompile) {
+      const entryFile = this.importList.find(
+        (item) => item.filepath === this.target
+      );
+
+      return [
+        `i=s.build("${entryFile.ingameFilepath}","${path.posix.dirname(
+          entryFile.ingameFilepath
+        )}")`,
+        'if i!="" then exit("Error when building!")',
+        ...this.importList.map(
+          (item) => `c.File("${item.ingameFilepath}").delete`
+        )
+      ];
+    }
+
+    return [];
+  }
+
+  createContentFooter(): string {
+    return ['d', ...this.createContentFooterAutoCompile(), ''].join(';');
+  }
+
   async build() {
     let file = new InstallerFile({
+      contentHeader: this.createContentHeader(),
       maxChars: this.maxChars
     });
     this.files.push(file);
@@ -179,12 +225,24 @@ class Installer {
 
         if (!done) {
           file = new InstallerFile({
+            contentHeader: this.createContentHeader(),
             maxChars: this.maxChars,
             previous: file
           });
           this.files.push(file);
         }
       }
+    }
+
+    const contentFooter = this.createContentFooter();
+
+    if (!file.appendCode(contentFooter)) {
+      file = new InstallerFile({
+        contentHeader: contentFooter,
+        maxChars: this.maxChars,
+        previous: file
+      });
+      this.files.push(file);
     }
 
     await this.createInstallerFiles();

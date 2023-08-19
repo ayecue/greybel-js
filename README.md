@@ -89,7 +89,8 @@ Options:
 	-b, --beautify				Beautify your code
 	-h, --help				Display help for command
 	-i, --installer				Create installer for GreyScript (Should be used if you use import_code)
-	-mc, --maxChars				Amount of characters allowed in one file before splitting when creating installer
+	-i, --auto-compile			Enable autocompile within the installer (Should only be used with the installer flag)
+	-mc, --max-chars			Amount of characters allowed in one file before splitting when creating installer
 	-dno, --disable-namespaces-optimization	Disable namespace optimization
 	-dlo, --disable-literals-optimization	Disable literals optimization
 	-ci, --create-ingame 			Create files automatically in-game
@@ -154,7 +155,7 @@ Used to import code from a file. Features of this import functionality:
 
 Here is some [example code](/example/import-code).
 
-By using the `--installer` flag Greybel will create one or more installer files depending on the size of your project. These installer files will essentially contain all different code files and logic to create all files in the game. So basically you just need to copy and paste the code of the installer files into the game and then compile + execute them.
+By using the `--installer` flag Greybel will create one or more installer files depending on the size of your project. These installer files will essentially contain all different code files and logic to create all files in the game. So basically you just need to copy and paste the code of the installer files into the game and then compile + execute them. By using the `--auto-compile` flag additional logic will be appended that will automatically compile the project and remove all source files.
 
 By using the `--ingame-directory` CLI parameter you can also define to which in-game space you want to import the files. By default `/root/` will be used.
 

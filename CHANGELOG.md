@@ -723,3 +723,7 @@ All notable changes to this project will be documented in this file.
 
 - improve installer logic of generated installer file
 - fix issue if line is longer than maxChars allowed in installer - related to [#102](https://github.com/ayecue/greybel-js/issues/102)
+
+## [2.0.9] - 19.08.2023
+
+- implement autocompile feature for installer - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar) - related to [#106](https://github.com/ayecue/greybel-js/issues/106)
