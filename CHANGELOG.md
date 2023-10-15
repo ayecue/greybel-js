@@ -732,3 +732,7 @@ All notable changes to this project will be documented in this file.
 
 - fix object value delete (fixes remove intrinsic)
 - fix globals lookup - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#108](https://github.com/ayecue/greybel-js/issues/108)
+
+## [2.0.11] - 15.10.2023
+
+- update remove intrinsic to properly work with object value delete
