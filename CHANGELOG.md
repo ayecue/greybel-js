@@ -727,3 +727,8 @@ All notable changes to this project will be documented in this file.
 ## [2.0.9] - 19.08.2023
 
 - implement autocompile feature for installer - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar) - related to [#106](https://github.com/ayecue/greybel-js/issues/106)
+
+## [2.0.10] - 15.10.2023
+
+- fix object value delete (fixes remove intrinsic)
+- fix globals lookup - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#108](https://github.com/ayecue/greybel-js/issues/108)
