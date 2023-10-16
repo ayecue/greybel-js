@@ -736,3 +736,7 @@ All notable changes to this project will be documented in this file.
 ## [2.0.11] - 15.10.2023
 
 - update remove intrinsic to properly work with object value delete
+
+## [2.0.12] - 16.10.2023
+
+- allow // as an alternative to # for import and include statement - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#85](https://github.com/ayecue/greybel-vs/issues/85)
