@@ -748,3 +748,8 @@ All notable changes to this project will be documented in this file.
 - fix async function argument builder
 - fix execution continueing in path resolve even though interpreter is in exit state - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#91](https://github.com/ayecue/greybel-vs/issues/91)
 - fix isa not working when assigning __isa manually + when merging two maps - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#92](https://github.com/ayecue/greybel-vs/issues/92)
+
+## [2.0.14] - 17.10.2023
+
+- add IS_GREYBEL property to globals - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#93](https://github.com/ayecue/greybel-vs/issues/93)
+- add access to stacktrace via test lib - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#93](https://github.com/ayecue/greybel-vs/issues/93)
