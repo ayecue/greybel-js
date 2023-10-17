@@ -744,3 +744,5 @@ All notable changes to this project will be documented in this file.
 ## [2.0.13] - 17.10.2023
 
 - fix multiply and divide string which mistakenly was using list as a default value when the factor was zero - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#88](https://github.com/ayecue/greybel-vs/issues/88)
+- more proper to string for function - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#89](https://github.com/ayecue/greybel-vs/issues/89)
+- fix async function argument builder
