@@ -755,3 +755,7 @@ All notable changes to this project will be documented in this file.
 - add access to stacktrace via test lib - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#93](https://github.com/ayecue/greybel-vs/issues/93)
 - fix stacktrace reset in testlib when using try_to_execute
 - fix breakpoint reset in testlib when using try_to_execute_with_debug
+
+## [2.0.15] - 17.10.2023
+
+- fix errors related to path resolve when stoping script execution via debugger
