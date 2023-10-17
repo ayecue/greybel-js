@@ -740,3 +740,7 @@ All notable changes to this project will be documented in this file.
 ## [2.0.12] - 16.10.2023
 
 - allow // as an alternative to # for import and include statement - thanks to [@Olipro](https://github.com/Olipro) for the suggestion - related to [#85](https://github.com/ayecue/greybel-vs/issues/85)
+
+## [2.0.13] - 17.10.2023
+
+- fix multiply and divide string which mistakenly was using list as a default value when the factor was zero - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#88](https://github.com/ayecue/greybel-vs/issues/88)
