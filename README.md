@@ -342,6 +342,13 @@ testLib.try_to_execute(@failureFn, @onError)
 
 // can be used for debugging purposes, will create a breakpoint and go into debug mode on failure
 testLib.try_to_execute_with_debug(@failureFn)
+
+// can be used for debugging purposes, will return current stack trace
+test = function
+	print(testLib.get_stack_trace)
+end function
+
+test
 ```
 
 # REPL
