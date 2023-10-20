@@ -763,3 +763,14 @@ All notable changes to this project will be documented in this file.
 ## [2.0.16] - 18.10.2023
 
 - fix incorrect scope resolution order - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#97](https://github.com/ayecue/greybel-vs/issues/97)
+
+## [2.1.0] - 20.10.2023
+
+- fix lookup to only include locals, outer and globals to properly replicate MiniScript behavior - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#100](https://github.com/ayecue/greybel-vs/issues/100)
+- fix self, locals, globals, outer not being implicit in order to properly replicate MiniScript behavior - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#100](https://github.com/ayecue/greybel-vs/issues/100)
+- minor optimization when looking up self, locals, globals, outer
+- add error when trying to lookup unknown path on number or string
+- add error when calling function with too many arguments
+- add new line in scan_address intrinsic to properly replicate GreyScript behavior - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#101](https://github.com/ayecue/greybel-vs/issues/101)
+- fix scp intrinsic groups lookup
+- add more permissions to generated myprogram file - thanks to [@Olipro](https://github.com/Olipro) for the suggestion
