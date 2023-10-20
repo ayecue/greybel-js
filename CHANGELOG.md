@@ -774,3 +774,4 @@ All notable changes to this project will be documented in this file.
 - add new line in scan_address intrinsic to properly replicate GreyScript behavior - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#101](https://github.com/ayecue/greybel-vs/issues/101)
 - fix scp intrinsic groups lookup
 - add more permissions to generated myprogram file - thanks to [@Olipro](https://github.com/Olipro) for the suggestion
+- create object for get_custom_object on each env creation - thanks for reporting to [@Olipro](https://github.com/Olipro)
