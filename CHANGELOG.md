@@ -779,3 +779,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.1] - 21.10.2023
 
 - fix lookup prebuild for locals, outer, globals and self - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#100](https://github.com/ayecue/greybel-vs/issues/100)
+
+## [2.1.2] - 21.10.2023
+
+- fix error on passing non-empty lists on non parenthese call expressions - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#104](https://github.com/ayecue/greybel-vs/issues/104)
