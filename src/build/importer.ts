@@ -68,14 +68,20 @@ class Importer {
     });
 
     for (const item of this.importList) {
-      await agent.createFile(
+      const isCreated = await agent.tryToCreateFile(
         this.ingameDirectory + path.posix.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
         item.content
       );
+
+      if (isCreated) {
+        console.log(`Imported ${item.ingameFilepath} successul`);
+      } else {
+        console.log(`Importing of ${item.ingameFilepath} failed`);
+      }
     }
 
-    agent.dispose();
+    await agent.dispose();
   }
 }
 
