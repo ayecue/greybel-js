@@ -3,6 +3,7 @@ import { AnotherAnsiProvider, ColorType } from 'another-ansi';
 import { program } from 'commander';
 import pacote from 'pacote';
 import semver from 'semver';
+import wtf from 'wtfnode';
 
 import build from '../out/build.js';
 import packageJSON from '../package.json' assert { type: 'json' };
@@ -86,7 +87,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
 
   options = Object.assign(options, program.opts());
 
-  const success = build(options.filepath, options.output, {
+  const success = await build(options.filepath, options.output, {
     envFiles: options.envFiles,
     envVars: options.envVars,
     uglify: options.uglify,
@@ -107,4 +108,6 @@ if (!semver.satisfies(process.version, engineVersion)) {
   if (!success) {
     process.exit(1);
   }
+
+  process.exit(0);
 })();

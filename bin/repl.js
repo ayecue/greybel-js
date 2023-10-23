@@ -40,4 +40,5 @@ if (!semver.satisfies(process.version, engineVersion)) {
   program.parse(process.argv);
 
   await repl();
+  process.exit(0);
 })();

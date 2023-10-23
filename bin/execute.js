@@ -75,4 +75,6 @@ if (!semver.satisfies(process.version, engineVersion)) {
   if (!success) {
     process.exit(1);
   }
+
+  process.exit(0);
 })();

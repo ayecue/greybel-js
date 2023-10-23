@@ -41,5 +41,6 @@ if (!semver.satisfies(process.version, engineVersion)) {
 
   const indexFile = new URL('../out/index.html', import.meta.url);
 
-  open(indexFile.toString());
+  await open(indexFile.toString());
+  process.exit(0);
 })();
