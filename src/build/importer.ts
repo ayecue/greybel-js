@@ -8,8 +8,7 @@ const { GreybelC2Agent } = GreybelC2AgentPkg;
 
 const IMPORTER_MODE_MAP = {
   local: 2,
-  public: 0,
-  nightly: 1
+  public: 0
 };
 
 type ImportItem = {

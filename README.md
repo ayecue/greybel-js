@@ -94,7 +94,7 @@ Options:
 	-dno, --disable-namespaces-optimization	Disable namespace optimization
 	-dlo, --disable-literals-optimization	Disable literals optimization
 	-ci, --create-ingame 			Create files automatically in-game
-	-cim, --create-ingame-mode 		Creation mode: "local", "public" or "nightly"
+	-cim, --create-ingame-mode 		Creation mode: "local" or "public"
 ```
 
 ## Examples:
@@ -105,9 +105,9 @@ greybel /my/code/file.src
 
 ## Auto create files in-game
 
-Since `2.0.0` it is possible to automatically create transpiled files in the game. This can be activated by using the `--create-ingame` flag. Additionally, you can choose between three different modes `local`, `public` and `nightly`.
+Since `2.0.0` it is possible to automatically create transpiled files in the game. This can be activated by using the `--create-ingame` flag. Additionally, you can choose between two different modes `local` and `public`.
 
-By default `local` is selected. Keep in mind that the game needs to have a single player session running for `local` to work. For `public` and `nightly` there is no need to have the game client running.
+By default `local` is selected. Keep in mind that the game needs to have a single player session running for `local` to work. For `public` there is no need to have the game client running.
 
 A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continues providing of credentials is required.
 

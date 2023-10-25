@@ -80,7 +80,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
       'Amount of characters allowed in one file before splitting when creating installer'
     )
     .option('-ci, --create-ingame', 'Create files automatically in-game')
-    .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local", "public" or "nightly"');
+    .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local" or "public"');
 
   program.parse(process.argv);
 
