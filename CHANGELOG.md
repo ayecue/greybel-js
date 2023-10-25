@@ -802,6 +802,8 @@ All notable changes to this project will be documented in this file.
 - add intrinsics related to regular expressions - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#117](https://github.com/ayecue/greybel-vs/issues/117)
 - add maxCount argument to map/list replace intrinsic
 - update greybel-proxy to support nighly
-- update to latest meta which includes signatures and descriptions related to new regex intrinsics
+- update to latest meta which includes signatures and descriptions related to new regex intrinsics, netsession and ctfevent
 - update textmate syntax to include new regex intrinsics
 - revert iteration performance improvement
+- add new netsession intrinsics
+- add get_ctf, will always return null for now
