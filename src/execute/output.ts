@@ -92,9 +92,10 @@ export default class CLIOutputHandler extends OutputHandler {
 
     if (replace) {
       process.stdout.write(ansiEscapes.eraseLines(this.previousLinesCount));
+      this.previousLinesCount = 0;
     }
 
-    this.previousLinesCount = transformed.split('\n').length;
+    this.previousLinesCount += transformed.split('\n').length;
 
     if (appendNewLine) {
       process.stdout.write(transformed + '\n');

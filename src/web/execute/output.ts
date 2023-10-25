@@ -80,7 +80,7 @@ export class WebOutputHandler extends OutputHandler {
     ).replace(/\\n/g, '\n');
 
     if (replace) {
-      this.stdout.updateLast(transformed + '\n');
+      this.stdout.replace(transformed + '\n');
     } else if (appendNewLine) {
       this.stdout.write(transformed + '\n');
     } else {
