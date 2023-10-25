@@ -796,3 +796,18 @@ All notable changes to this project will be documented in this file.
 - fix hasIndex looking up __isa entries - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#114](https://github.com/ayecue/greybel-vs/issues/114)
 - support same behavior related to anonymous functions and outer scope - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#115](https://github.com/ayecue/greybel-vs/issues/115)
 - improve iteration performance by batching async iterations
+
+## [2.1.5] - 25.10.2023
+
+- add intrinsics related to regular expressions - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#117](https://github.com/ayecue/greybel-vs/issues/117)
+- add maxCount argument to map/list replace intrinsic
+- update greybel-proxy to support new release
+- update to latest meta which includes signatures and descriptions related to new regex intrinsics, netsession, computer and ctfevent
+- update textmate syntax to include new regex intrinsics
+- revert iteration performance improvement
+- add new netsession intrinsics
+- add get_ctf, will always return null for now
+- add computer get_name intrinsic
+- add markov generator for more accurate usernames, passwords etc.
+- erase all previous lines on print replaceText
+- fix return value on enter key press - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#121](https://github.com/ayecue/greybel-vs/issues/121)

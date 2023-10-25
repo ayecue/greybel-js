@@ -3,7 +3,6 @@ import { AnotherAnsiProvider, ColorType } from 'another-ansi';
 import { program } from 'commander';
 import pacote from 'pacote';
 import semver from 'semver';
-import wtf from 'wtfnode';
 
 import build from '../out/build.js';
 import packageJSON from '../package.json' assert { type: 'json' };
@@ -81,7 +80,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
       'Amount of characters allowed in one file before splitting when creating installer'
     )
     .option('-ci, --create-ingame', 'Create files automatically in-game')
-    .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local", "public" or "nightly"');
+    .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local" or "public"');
 
   program.parse(process.argv);
 
