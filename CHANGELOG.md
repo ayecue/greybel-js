@@ -804,3 +804,4 @@ All notable changes to this project will be documented in this file.
 - update greybel-proxy to support nighly
 - update to latest meta which includes signatures and descriptions related to new regex intrinsics
 - update textmate syntax to include new regex intrinsics
+- revert iteration performance improvement
