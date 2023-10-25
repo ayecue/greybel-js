@@ -796,3 +796,7 @@ All notable changes to this project will be documented in this file.
 - fix hasIndex looking up __isa entries - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#114](https://github.com/ayecue/greybel-vs/issues/114)
 - support same behavior related to anonymous functions and outer scope - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#115](https://github.com/ayecue/greybel-vs/issues/115)
 - improve iteration performance by batching async iterations
+
+## [2.1.5] - 25.10.2023
+
+- add intrinsics related to regular expressions - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#117](https://github.com/ayecue/greybel-vs/issues/117)
