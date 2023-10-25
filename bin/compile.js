@@ -3,7 +3,6 @@ import { AnotherAnsiProvider, ColorType } from 'another-ansi';
 import { program } from 'commander';
 import pacote from 'pacote';
 import semver from 'semver';
-import wtf from 'wtfnode';
 
 import build from '../out/build.js';
 import packageJSON from '../package.json' assert { type: 'json' };
