@@ -827,3 +827,7 @@ All notable changes to this project will be documented in this file.
 - only pass target from context in launch when file contains original script
 - fix overflow password exploit condition - thanks for the contribution to [@Olipro](https://github.com/Olipro)
 - fix process state not getting reset in script executed by shell launch intrinsic - thanks for reporting to [@Olipro](https://github.com/Olipro)
+
+## [2.1.8] - 26.10.2023
+
+- override process state into function scope
