@@ -815,3 +815,4 @@ All notable changes to this project will be documented in this file.
 ## [2.1.6] - 26.10.2023
 
 - use globals if outer is not available
+- expose trim, lastIndexOf, replace and reverse intrinsic to global scope
