@@ -816,3 +816,5 @@ All notable changes to this project will be documented in this file.
 
 - use globals if outer is not available
 - expose trim, lastIndexOf, replace and reverse intrinsic to global scope
+- add trim, lastIndexOf, replace and reverse to generic signatures
+- add ascending argument to sort intrinsic
