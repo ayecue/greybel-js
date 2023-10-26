@@ -811,3 +811,7 @@ All notable changes to this project will be documented in this file.
 - add markov generator for more accurate usernames, passwords etc.
 - erase all previous lines on print replaceText
 - fix return value on enter key press - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#121](https://github.com/ayecue/greybel-vs/issues/121)
+
+## [2.1.6] - 26.10.2023
+
+- use globals if outer is not available
