@@ -818,3 +818,4 @@ All notable changes to this project will be documented in this file.
 - expose trim, lastIndexOf, replace and reverse intrinsic to global scope
 - add trim, lastIndexOf, replace and reverse to generic signatures
 - add ascending argument to sort intrinsic
+- improve function stringify
