@@ -831,3 +831,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.8] - 26.10.2023
 
 - override process state into function scope
+
+## [2.1.9] - 27.10.2023
+
+- bump proxy version due to latest GreyHack update
