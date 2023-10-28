@@ -839,3 +839,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.10] - 28.10.2023
 
 - bump proxy version due to latest GreyHack update
+
+## [2.1.11] - 28.10.2023
+
+- remove lower case transform on key press - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#130](https://github.com/ayecue/greybel-vs/issues/130)
