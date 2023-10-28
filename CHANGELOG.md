@@ -835,3 +835,7 @@ All notable changes to this project will be documented in this file.
 ## [2.1.9] - 27.10.2023
 
 - bump proxy version due to latest GreyHack update
+
+## [2.1.10] - 28.10.2023
+
+- bump proxy version due to latest GreyHack update
