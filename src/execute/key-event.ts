@@ -79,32 +79,32 @@ export function nodeJSKeyEventToKeyEvent(
     case NodeJSKey.Delete:
       return create(46, 'Delete');
     case NodeJSKey.F1:
-      return create(112, 'F1');
+      return create(-1, 'F1');
     case NodeJSKey.F2:
-      return create(113, 'F2');
+      return create(-2, 'F2');
     case NodeJSKey.F3:
-      return create(114, 'F3');
+      return create(-3, 'F3');
     case NodeJSKey.F4:
-      return create(115, 'F4');
+      return create(-4, 'F4');
     case NodeJSKey.F5:
-      return create(116, 'F5');
+      return create(-5, 'F5');
     case NodeJSKey.F6:
-      return create(117, 'F6');
+      return create(-6, 'F6');
     case NodeJSKey.F7:
-      return create(118, 'F7');
+      return create(-7, 'F7');
     case NodeJSKey.F8:
-      return create(119, 'F8');
+      return create(-8, 'F8');
     case NodeJSKey.F9:
-      return create(120, 'F9');
+      return create(-9, 'F9');
     case NodeJSKey.F10:
-      return create(121, 'F10');
+      return create(-10, 'F10');
     case NodeJSKey.F11:
-      return create(122, 'F11');
+      return create(-11, 'F11');
     case NodeJSKey.F12:
-      return create(123, 'F12');
+      return create(-12, 'F12');
     default: {
       const char = nodeJSKeyEvent.sequence;
-      const keyCode = char.toUpperCase().charCodeAt(0);
+      const keyCode = char.charCodeAt(0);
       const code = nodeJSKeyEvent.name || char;
       return create(keyCode, code);
     }
