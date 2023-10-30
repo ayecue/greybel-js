@@ -4,6 +4,7 @@ import {
   OutputHandler,
   PrintOptions
 } from 'greybel-interpreter';
+import { KeyCode } from 'greybel-gh-mock-intrinsics';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
 import { Stdin, Stdout } from '../std.js';
@@ -166,8 +167,15 @@ export class WebOutputHandler extends OutputHandler {
       return this.stdin
         .waitForKeyPress(ctx)
         .then((keyEvent) => {
+          if (KeyCode[keyEvent.keyCode]) {
+            return resolve({
+              keyCode: keyEvent.keyCode,
+              code: keyEvent.code
+            });
+          }
+
           return resolve({
-            keyCode: keyEvent.keyCode,
+            charCode: keyEvent.code.charCodeAt(0),
             code: keyEvent.code
           });
         })
