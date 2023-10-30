@@ -1,3 +1,4 @@
+import { KeyCode } from 'greybel-gh-mock-intrinsics';
 import { KeyEvent } from 'greybel-interpreter';
 
 export interface NodeJSKeyEvent {
@@ -49,64 +50,64 @@ export function nodeJSKeyEventToKeyEvent(
 
   switch (nodeJSKeyEvent.name) {
     case NodeJSKey.Return:
-      return create(13, 'Enter');
+      return create(KeyCode.Enter, 'Enter');
     case NodeJSKey.Escape:
-      return create(27, 'Escape');
+      return create(KeyCode.Escape, 'Escape');
     case NodeJSKey.Space:
-      return create(32, 'Space');
+      return create(KeyCode.Space, 'Space');
     case NodeJSKey.Tab:
-      return create(9, 'Tab');
+      return create(KeyCode.Tab, 'Tab');
     case NodeJSKey.Left:
-      return create(37, 'ArrowLeft');
+      return create(KeyCode.LeftArrow, 'ArrowLeft');
     case NodeJSKey.Up:
-      return create(38, 'ArrowUp');
+      return create(KeyCode.UpArrow, 'ArrowUp');
     case NodeJSKey.Right:
-      return create(39, 'ArrowRight');
+      return create(KeyCode.RightArrow, 'ArrowRight');
     case NodeJSKey.Down:
-      return create(40, 'ArrowDown');
+      return create(KeyCode.DownArrow, 'ArrowDown');
     case NodeJSKey.Backspace:
-      return create(8, 'Backspace');
+      return create(KeyCode.Backspace, 'Backspace');
     case NodeJSKey.Insert:
-      return create(45, 'Insert');
+      return create(KeyCode.Insert, 'Insert');
     case NodeJSKey.Home:
-      return create(36, 'Home');
+      return create(KeyCode.Home, 'Home');
     case NodeJSKey.End:
-      return create(35, 'End');
+      return create(KeyCode.End, 'End');
     case NodeJSKey.PageDown:
-      return create(34, 'PageDown');
+      return create(KeyCode.PageDown, 'PageDown');
     case NodeJSKey.PageUp:
-      return create(33, 'PageUp');
+      return create(KeyCode.PageUp, 'PageUp');
     case NodeJSKey.Delete:
-      return create(46, 'Delete');
+      return create(KeyCode.Delete, 'Delete');
     case NodeJSKey.F1:
-      return create(-1, 'F1');
+      return create(KeyCode.F1, 'F1');
     case NodeJSKey.F2:
-      return create(-2, 'F2');
+      return create(KeyCode.F2, 'F2');
     case NodeJSKey.F3:
-      return create(-3, 'F3');
+      return create(KeyCode.F3, 'F3');
     case NodeJSKey.F4:
-      return create(-4, 'F4');
+      return create(KeyCode.F4, 'F4');
     case NodeJSKey.F5:
-      return create(-5, 'F5');
+      return create(KeyCode.F5, 'F5');
     case NodeJSKey.F6:
-      return create(-6, 'F6');
+      return create(KeyCode.F6, 'F6');
     case NodeJSKey.F7:
-      return create(-7, 'F7');
+      return create(KeyCode.F7, 'F7');
     case NodeJSKey.F8:
-      return create(-8, 'F8');
+      return create(KeyCode.F8, 'F8');
     case NodeJSKey.F9:
-      return create(-9, 'F9');
+      return create(KeyCode.F9, 'F9');
     case NodeJSKey.F10:
-      return create(-10, 'F10');
+      return create(KeyCode.F10, 'F10');
     case NodeJSKey.F11:
-      return create(-11, 'F11');
+      return create(KeyCode.F11, 'F11');
     case NodeJSKey.F12:
-      return create(-12, 'F12');
+      return create(KeyCode.F12, 'F12');
     default: {
       const char = nodeJSKeyEvent.sequence;
-      const keyCode = char.charCodeAt(0);
+      const charCode = char.charCodeAt(0);
       const code = nodeJSKeyEvent.name || char;
-      return create(keyCode, code);
+      return { charCode, code };
     }
   }
 }
