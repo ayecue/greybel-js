@@ -175,7 +175,7 @@ export class WebOutputHandler extends OutputHandler {
           }
 
           return resolve({
-            charCode: keyEvent.code.charCodeAt(0),
+            charCode: keyEvent.key.charCodeAt(0),
             code: keyEvent.code
           });
         })
