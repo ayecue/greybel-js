@@ -851,3 +851,8 @@ All notable changes to this project will be documented in this file.
 ## [2.1.13] - 30.10.2023
 
 - fix for user_input, changed switch statement to differentiate between specific chars and other input - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#134](https://github.com/ayecue/greybel-vs/issues/134)
+
+## [2.1.14] - 31.10.2023
+
+- bump proxy version due to latest GreyHack update
+- bind context of owning map to super instead of the call context - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#136](https://github.com/ayecue/greybel-vs/issues/136)
