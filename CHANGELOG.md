@@ -856,3 +856,8 @@ All notable changes to this project will be documented in this file.
 
 - bump proxy version due to latest GreyHack update
 - bind context of owning map to super instead of the call context - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#136](https://github.com/ayecue/greybel-vs/issues/136)
+
+## [2.2.0] - 03.11.2023
+
+- expose all GreyHack intrinsics in global scope and also add signatures to meta - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#142](https://github.com/ayecue/greybel-vs/issues/142)
+- add aptclient and blockhain vulnerability generation in mock env - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#141](https://github.com/ayecue/greybel-vs/issues/141)
