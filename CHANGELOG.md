@@ -867,3 +867,4 @@ All notable changes to this project will be documented in this file.
 - fix super behavior in certain edge cases
 - change approach on exposing map, list, number, string and funcRef objects
 - bump proxy version due to latest GreyHack update
+- pass stacktrace to child interpreter via launch in order to enable to receive the correct stacktrace
