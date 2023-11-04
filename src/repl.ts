@@ -67,7 +67,9 @@ export default async function repl(
       console.group(outputGroupLabel);
 
       try {
-        await interpreter.run(code);
+        await interpreter.run({
+          customCode: code
+        });
       } catch (err: any) {
         if (err instanceof PrepareError) {
           console.error(

@@ -861,3 +861,10 @@ All notable changes to this project will be documented in this file.
 
 - expose all GreyHack intrinsics in global scope and also add signatures to meta - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#142](https://github.com/ayecue/greybel-vs/issues/142)
 - add aptclient and blockhain vulnerability generation in mock env - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#141](https://github.com/ayecue/greybel-vs/issues/141)
+
+## [2.2.1] - 04.11.2023
+
+- fix super behavior in certain edge cases
+- change approach on exposing map, list, number, string and funcRef objects
+- bump proxy version due to latest GreyHack update
+- pass stacktrace to child interpreter via launch in order to enable to receive the correct stacktrace

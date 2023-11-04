@@ -51,8 +51,6 @@ export default async function execute(
     await activeInterpreter.exit();
   }
 
-  Interpreter.clearAllIntrinsics();
-
   const resourceHandler = new PseudoResourceHandler(code);
   const interpreter = new Interpreter({
     target: 'default',
