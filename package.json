@@ -37,7 +37,7 @@
         "greybel-gh-mock-intrinsics": "~2.11.0",
         "greybel-interpreter": "~2.8.0",
         "greybel-intrinsics": "~2.9.0",
-        "greybel-proxy": "~2.1.10",
+        "greybel-proxy": "~2.1.11",
         "greybel-transpiler": "~1.2.0",
         "greyscript-core": "~0.10.0",
         "greyscript-meta": "~1.5.0",
