@@ -868,3 +868,7 @@ All notable changes to this project will be documented in this file.
 - change approach on exposing map, list, number, string and funcRef objects
 - bump proxy version due to latest GreyHack update
 - pass stacktrace to child interpreter via launch in order to enable to receive the correct stacktrace
+
+## [2.2.2] - 05.11.2023
+
+- fix exit on call arguments and if statement - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#145](https://github.com/ayecue/greybel-vs/issues/145)
