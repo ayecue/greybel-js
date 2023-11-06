@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --no-warnings
 
 import { AnotherAnsiProvider, ColorType } from 'another-ansi';
 import { program } from 'commander';
