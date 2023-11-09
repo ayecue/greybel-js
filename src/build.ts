@@ -103,12 +103,29 @@ export default async function build(
 
     if (buildOptions.createIngame) {
       console.log('Importing files ingame.');
-      await createImporter({
+
+      const importResults = await createImporter({
         target,
         ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
         result,
         mode: buildOptions.createIngameMode
       });
+      const successfulItems = importResults.filter((item) => item.success);
+      const failedItems = importResults.filter((item) => !item.success);
+
+      if (successfulItems.length === 0) {
+        console.log(
+          'No files could get imported! This might be due to a new Grey Hack version or other reasons.'
+        );
+      } else if (failedItems.length > 0) {
+        console.log(
+          `Import was only partially successful. Only ${successfulItems.length} files got imported to ${buildOptions.ingameDirectory}!`
+        );
+      } else {
+        console.log(
+          `${successfulItems.length} files got imported to ${buildOptions.ingameDirectory}!`
+        );
+      }
     }
 
     const outputPath = isInsideContainer() ? './build' : buildPath;
