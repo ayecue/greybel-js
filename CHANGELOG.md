@@ -876,3 +876,8 @@ All notable changes to this project will be documented in this file.
 ## [2.2.3] - 06.11.2023
 
 - fix shebangs - thanks for the [contribution](https://github.com/ayecue/greybel-js/pull/135) to [@DaniD3v](https://github.com/DaniD3v)
+
+## [2.2.4] - 09.11.2023
+
+- bump proxy version due to latest GreyHack update
+- improve file importer feedback when files couldn't be imported
