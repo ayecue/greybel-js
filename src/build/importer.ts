@@ -16,6 +16,11 @@ type ImportItem = {
   content: string;
 };
 
+type ImportResult = {
+  path: string;
+  success: boolean;
+};
+
 export interface ImporterOptions {
   target: string;
   ingameDirectory: string;
@@ -52,7 +57,7 @@ class Importer {
     return imports;
   }
 
-  async import() {
+  async import(): Promise<ImportResult[]> {
     if (!Object.prototype.hasOwnProperty.call(IMPORTER_MODE_MAP, this.mode)) {
       throw new Error('Unknown import mode.');
     }
@@ -65,6 +70,7 @@ class Importer {
       onSteamRefreshToken: (code) =>
         storage.setItem('greybel.steam.refreshToken', code)
     });
+    const results: ImportResult[] = [];
 
     for (const item of this.importList) {
       const isCreated = await agent.tryToCreateFile(
@@ -75,18 +81,22 @@ class Importer {
 
       if (isCreated) {
         console.log(`Imported ${item.ingameFilepath} successul`);
+        results.push({ path: item.ingameFilepath, success: true });
       } else {
         console.log(`Importing of ${item.ingameFilepath} failed`);
+        results.push({ path: item.ingameFilepath, success: false });
       }
     }
 
     await agent.dispose();
+
+    return results;
   }
 }
 
 export const createImporter = async (
   options: ImporterOptions
-): Promise<void> => {
+): Promise<ImportResult[]> => {
   const installer = new Importer(options);
-  await installer.import();
+  return await installer.import();
 };

@@ -1,10 +1,10 @@
+import { KeyCode } from 'greybel-gh-mock-intrinsics';
 import {
   KeyEvent,
   OperationContext,
   OutputHandler,
   PrintOptions
 } from 'greybel-interpreter';
-import { KeyCode } from 'greybel-gh-mock-intrinsics';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
 import { Stdin, Stdout } from '../std.js';
