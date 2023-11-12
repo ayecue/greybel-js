@@ -1,3 +1,4 @@
+import { Operator as GreybelOperators } from 'greybel-core/dist/types/operators.js';
 import { Operator } from 'miniscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
@@ -20,11 +21,11 @@ export const AVAILABLE_OPERATORS = [
   Operator.SubtractShorthand,
   Operator.MultiplyShorthand,
   Operator.DivideShorthand,
-  Operator.BitwiseAnd,
-  Operator.BitwiseOr,
-  Operator.LeftShift,
-  Operator.RightShift,
-  Operator.UnsignedRightShift,
+  GreybelOperators.BitwiseAnd,
+  GreybelOperators.BitwiseOr,
+  GreybelOperators.LeftShift,
+  GreybelOperators.RightShift,
+  GreybelOperators.UnsignedRightShift,
   Operator.Assign,
   Operator.Reference
 ] as const;
