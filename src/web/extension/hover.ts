@@ -1,4 +1,4 @@
-import { SignatureDefinitionArg } from 'greyscript-meta/dist/meta.js';
+import { SignatureDefinitionArg } from 'meta-utils';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';

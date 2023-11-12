@@ -3,12 +3,12 @@ import { ModifierType } from 'another-ansi';
 import {
   Debugger,
   DefaultType,
-  Interpreter,
   OperationContext,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
-import { ASTBase } from 'greyscript-core';
+import { Interpreter } from 'greyscript-interpreter';
+import { ASTBase } from 'miniscript-core';
 
 import { ansiProvider, useColor } from './output.js';
 

@@ -1,4 +1,4 @@
-import { Operator } from 'greyscript-core';
+import { Operator } from 'miniscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { PseudoCompletionItem } from '../helper/vs.js';

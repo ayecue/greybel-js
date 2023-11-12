@@ -3,7 +3,7 @@ import {
   ASTIdentifier,
   ASTIndexExpression,
   ASTMemberExpression
-} from 'greyscript-core';
+} from 'miniscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import transformASTToNamespace from './helper/ast-namespace.js';

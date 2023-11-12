@@ -1,6 +1,8 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
-import { BuildError, BuildType, Transpiler } from 'greybel-transpiler';
+import { BuildError, BuildType } from 'greybel-transpiler';
+import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
+import { Transpiler } from 'greyscript-transpiler';
 import isInsideContainer from 'is-inside-container';
 import mkdirp from 'mkdirp';
 import path from 'path';
@@ -68,7 +70,12 @@ export default async function build(
       target,
       buildType,
       obfuscation: buildOptions.obfuscation,
-      excludedNamespaces: buildOptions.excludedNamespaces,
+      excludedNamespaces: [
+        ...buildOptions.excludedNamespaces,
+        ...Array.from(
+          Object.keys(greyscriptMeta.getSignaturesByType('general'))
+        )
+      ],
       disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
       disableNamespacesOptimization: buildOptions.disableNamespacesOptimization,
       environmentVariables: new Map(Object.entries(envMapper.map)),

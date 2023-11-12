@@ -1,14 +1,14 @@
+import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
+import {
+  SignatureDefinitionArg,
+  SignatureDefinitionContainer
+} from 'meta-utils';
 import {
   ASTBase,
   ASTCallExpression,
   ASTIndexExpression,
   ASTMemberExpression
-} from 'greyscript-core';
-import {
-  getDefinitions,
-  SignatureDefinitionArg,
-  SignatureDefinitionContainer
-} from 'greyscript-meta/dist/meta.js';
+} from 'miniscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { getAvailableConstants } from './autocomplete/constants.js';
@@ -56,7 +56,9 @@ export const getCompletionList = (
   const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
-    const definitions = getDefinitions(typeInfo.definition.returns);
+    const definitions = greyscriptMeta.getDefinitions(
+      typeInfo.definition.returns
+    );
     const completionItems: PseudoCompletionItem[] = [
       ...convertDefinitionsToCompletionList(definitions, range, kind)
     ];
@@ -65,7 +67,7 @@ export const getCompletionList = (
       return completionItems;
     }
   } else if (typeInfo instanceof TypeInfo) {
-    const definitions = getDefinitions(typeInfo.type);
+    const definitions = greyscriptMeta.getDefinitions(typeInfo.type);
     const completionItems: PseudoCompletionItem[] = [
       ...convertDefinitionsToCompletionList(definitions, range, kind)
     ];
@@ -81,7 +83,7 @@ export const getCompletionList = (
 export const getDefaultCompletionList = (
   range: Monaco.Range
 ): PseudoCompletionItem[] => {
-  const defaultDefinitions = getDefinitions(['general']);
+  const defaultDefinitions = greyscriptMeta.getDefinitions(['general']);
 
   return [
     ...getAvailableConstants(range),
@@ -109,7 +111,7 @@ export function activate(monaco: typeof Monaco) {
       );
 
       if (document.getValueInRange(currentRange) === '.') {
-        const definitions = getDefinitions(['any']);
+        const definitions = greyscriptMeta.getDefinitions(['any']);
         const completionItems: PseudoCompletionItem[] = [
           ...convertDefinitionsToCompletionList(definitions, currentRange, 0)
         ];

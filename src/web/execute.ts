@@ -5,13 +5,13 @@ import {
 import {
   Debugger,
   HandlerContainer,
-  Interpreter,
   ObjectValue,
   OperationContext,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
+import { Interpreter } from 'greyscript-interpreter';
 import process from 'process';
 
 import { GrebyelDebugger } from './execute/debugger.js';

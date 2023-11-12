@@ -7,7 +7,6 @@ import {
   CustomValue,
   DefaultType,
   HandlerContainer,
-  Interpreter,
   ObjectValue,
   ObjectValue as ObjectValueType,
   OperationContext,
@@ -15,6 +14,7 @@ import {
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
+import { Interpreter } from 'greyscript-interpreter';
 
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 import GrebyelPseudoDebugger from './repl/debugger.js';
