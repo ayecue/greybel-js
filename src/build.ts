@@ -1,8 +1,8 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
-import { BuildError, BuildType } from 'greybel-transpiler';
+import { BuildError } from 'greybel-transpiler';
 import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
-import { Transpiler } from 'greyscript-transpiler';
+import { BuildType, Transpiler } from 'greyscript-transpiler';
 import isInsideContainer from 'is-inside-container';
 import mkdirp from 'mkdirp';
 import path from 'path';
