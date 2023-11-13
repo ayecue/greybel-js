@@ -10,7 +10,7 @@ export const AVAILABLE_OPERATORS = [
   Operator.Minus,
   Operator.Slash,
   Operator.Power,
-  Operator.PercentSign,
+  Operator.Modulo,
   Operator.LessThan,
   Operator.GreaterThan,
   Operator.LessThanOrEqual,
