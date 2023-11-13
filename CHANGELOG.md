@@ -888,3 +888,4 @@ All notable changes to this project will be documented in this file.
 - add %= and ^= operators
 - support else after return in single-line if
 - support multiline comparisons
+- fix issue with call statement without parentheses and first negative arg
