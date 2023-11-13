@@ -885,3 +885,6 @@ All notable changes to this project will be documented in this file.
 ## [3.0.0] - 12.11.2023
 
 - update dependencies to next major version
+- add %= and ^= operators
+- support else after return in single-line if
+- support multiline comparisons
