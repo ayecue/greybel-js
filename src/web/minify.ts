@@ -1,4 +1,6 @@
-import { BuildType, DirectTranspiler } from 'greybel-transpiler';
+import { BuildType } from 'greybel-transpiler';
+import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
+import { DirectTranspiler } from 'greyscript-transpiler';
 
 export interface MinifyOptions {
   uglify?: boolean;
@@ -39,7 +41,10 @@ export default function build(
     code,
     buildType,
     obfuscation: buildOptions.obfuscation,
-    excludedNamespaces: buildOptions.excludedNamespaces,
+    excludedNamespaces: [
+      ...buildOptions.excludedNamespaces,
+      ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
+    ],
     disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
     disableNamespacesOptimization: buildOptions.disableNamespacesOptimization
   }).parse();

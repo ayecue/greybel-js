@@ -2,7 +2,7 @@ import {
   ASTAssignmentStatement,
   ASTBaseBlockWithScope,
   ASTChunk
-} from 'greyscript-core';
+} from 'miniscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import transformASTToString from './helper/ast-stringify.js';

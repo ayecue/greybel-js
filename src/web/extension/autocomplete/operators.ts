@@ -1,4 +1,5 @@
-import { Operator } from 'greyscript-core';
+import { Operator as GreybelOperators } from 'greybel-core/dist/types/operators.js';
+import { Operator } from 'miniscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { PseudoCompletionItem } from '../helper/vs.js';
@@ -9,7 +10,7 @@ export const AVAILABLE_OPERATORS = [
   Operator.Minus,
   Operator.Slash,
   Operator.Power,
-  Operator.PercentSign,
+  Operator.Modulo,
   Operator.LessThan,
   Operator.GreaterThan,
   Operator.LessThanOrEqual,
@@ -20,11 +21,11 @@ export const AVAILABLE_OPERATORS = [
   Operator.SubtractShorthand,
   Operator.MultiplyShorthand,
   Operator.DivideShorthand,
-  Operator.BitwiseAnd,
-  Operator.BitwiseOr,
-  Operator.LeftShift,
-  Operator.RightShift,
-  Operator.UnsignedRightShift,
+  GreybelOperators.BitwiseAnd,
+  GreybelOperators.BitwiseOr,
+  GreybelOperators.LeftShift,
+  GreybelOperators.RightShift,
+  GreybelOperators.UnsignedRightShift,
   Operator.Assign,
   Operator.Reference
 ] as const;

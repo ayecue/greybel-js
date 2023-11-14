@@ -7,12 +7,12 @@ import {
   CustomFunction,
   DefaultResourceHandler,
   HandlerContainer,
-  Interpreter,
   ObjectValue,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
+import { Interpreter } from 'greyscript-interpreter';
 
 import EnvMapper from './build/env-mapper.js';
 import GreybelPseudoDebugger from './execute/debugger.js';

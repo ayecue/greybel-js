@@ -1,5 +1,6 @@
 import { GreybelKeyword } from 'greybel-core';
-import { Keyword as CoreKeyword } from 'greyscript-core';
+import { GreyScriptKeyword } from 'greyscript-core';
+import { Keyword as CoreKeyword } from 'miniscript-core';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { PseudoCompletionItem } from '../helper/vs.js';
@@ -21,7 +22,7 @@ export const AVAILABLE_KEYWORDS = [
   CoreKeyword.Return,
   CoreKeyword.Function,
   CoreKeyword.Continue,
-  CoreKeyword.ImportCode,
+  GreyScriptKeyword.ImportCode,
   GreybelKeyword.Envar,
   GreybelKeyword.Import,
   GreybelKeyword.Include,

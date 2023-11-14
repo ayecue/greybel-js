@@ -1,9 +1,10 @@
+import { Context } from 'greybel-transpiler';
+import { ASTImportCodeExpression } from 'greyscript-core';
 import {
   BuildMap,
-  Context,
   Transformer,
   TransformerDataObject
-} from 'greybel-transpiler';
+} from 'greyscript-transpiler';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -18,7 +19,6 @@ import {
   ASTIdentifier,
   ASTIfClause,
   ASTIfStatement,
-  ASTImportCodeExpression,
   ASTIndexExpression,
   ASTListConstructorExpression,
   ASTListValue,
@@ -32,7 +32,7 @@ import {
   ASTType,
   ASTUnaryExpression,
   ASTWhileStatement
-} from 'greyscript-core';
+} from 'miniscript-core';
 
 export function stringifyFactory(
   make: (item: ASTBase, _data?: TransformerDataObject) => string

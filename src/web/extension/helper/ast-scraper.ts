@@ -21,7 +21,7 @@ import {
   ASTSliceExpression,
   ASTUnaryExpression,
   ASTWhileStatement
-} from 'greyscript-core';
+} from 'miniscript-core';
 
 export interface ScraperMap {
   [key: string]: (item: any, level: number) => void;

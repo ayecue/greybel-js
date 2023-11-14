@@ -2,12 +2,13 @@ import {
   ASTFeatureImportExpression,
   ASTFeatureIncludeExpression
 } from 'greybel-core';
+import { Context } from 'greybel-transpiler';
+import { ASTImportCodeExpression } from 'greyscript-core';
 import {
   BuildMap,
-  Context,
   Transformer,
   TransformerDataObject
-} from 'greybel-transpiler';
+} from 'greyscript-transpiler';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -20,7 +21,6 @@ import {
   ASTIdentifier,
   ASTIfClause,
   ASTIfStatement,
-  ASTImportCodeExpression,
   ASTIndexExpression,
   ASTListValue,
   ASTLiteral,
@@ -32,7 +32,7 @@ import {
   ASTType,
   ASTUnaryExpression,
   ASTWhileStatement
-} from 'greyscript-core';
+} from 'miniscript-core';
 
 export function namespaceFactory(
   make: (item: ASTBase, _data?: TransformerDataObject) => string,

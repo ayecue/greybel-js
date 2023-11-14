@@ -9,7 +9,7 @@ import {
   ASTIndexExpression,
   ASTMemberExpression,
   ASTType
-} from 'greyscript-core';
+} from 'miniscript-core';
 import { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import transformASTToNamespace from './ast-namespace.js';
