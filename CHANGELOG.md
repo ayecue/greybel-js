@@ -882,7 +882,7 @@ All notable changes to this project will be documented in this file.
 - bump proxy version due to latest GreyHack update
 - improve file importer feedback when files couldn't be imported
 
-## [3.0.0] - 12.11.2023
+## [3.0.0] - 15.11.2023
 
 - update dependencies to next major version
 - add %= and ^= operators
