@@ -889,3 +889,4 @@ All notable changes to this project will be documented in this file.
 - support else after return in single-line if
 - support multiline comparisons
 - fix issue with call statement without parentheses and first negative arg
+- add missing pull instrinsic from meta info of map
