@@ -897,3 +897,5 @@ All notable changes to this project will be documented in this file.
 - fix failing cases for round (test suite)
 - fix failing cases for pop (test suite)
 - fix failing cases for sort (test suite)
+- change hashing and deep equal approach
+- fix failing cases for replace (test suite)
