@@ -1,7 +1,7 @@
 import { KeyCode } from 'greybel-gh-mock-intrinsics';
 import {
   KeyEvent,
-  OperationContext,
+  VM,
   OutputHandler,
   PrintOptions
 } from 'greybel-interpreter';
@@ -69,7 +69,7 @@ export class WebOutputHandler extends OutputHandler {
   }
 
   print(
-    _ctx: OperationContext,
+    _vm: VM,
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
@@ -93,7 +93,7 @@ export class WebOutputHandler extends OutputHandler {
     this.stdout.clear();
   }
 
-  progress(ctx: OperationContext, timeout: number): Promise<void> {
+  progress(vm: VM, timeout: number): Promise<void> {
     const startTime = Date.now();
     const max = 20;
     this.stdout.write(`[${'-'.repeat(max)}]`);
@@ -110,7 +110,7 @@ export class WebOutputHandler extends OutputHandler {
         if (elapsed > timeout) {
           this.stdout.updateLast(`[${'#'.repeat(max)}]`);
           this.stdout.write('\n');
-          ctx.processState.removeListener('exit', onExit);
+          vm.getSignal().removeListener('exit', onExit);
           clearInterval(interval);
           resolve();
           return;
@@ -123,24 +123,24 @@ export class WebOutputHandler extends OutputHandler {
         this.stdout.updateLast(`[${'#'.repeat(progress)}${'-'.repeat(right)}]`);
       });
 
-      ctx.processState.once('exit', onExit);
+      vm.getSignal().once('exit', onExit);
     });
   }
 
   waitForInput(
-    ctx: OperationContext,
+    vm: VM,
     isPassword: boolean,
     message: string
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.print(ctx, message);
+      this.print(vm, message);
 
       this.stdin.enable();
       this.stdin.focus();
       this.stdin.setType(isPassword ? 'password' : 'text');
 
       return this.stdin
-        .waitForInput(ctx)
+        .waitForInput(vm)
         .then(() => {
           const value = this.stdin.getValue();
 
@@ -155,9 +155,9 @@ export class WebOutputHandler extends OutputHandler {
     });
   }
 
-  waitForKeyPress(ctx: OperationContext, message: string): Promise<KeyEvent> {
+  waitForKeyPress(vm: VM, message: string): Promise<KeyEvent> {
     return new Promise((resolve, reject) => {
-      this.print(ctx, message, {
+      this.print(vm, message, {
         appendNewLine: false
       });
 
@@ -165,7 +165,7 @@ export class WebOutputHandler extends OutputHandler {
       this.stdin.focus();
 
       return this.stdin
-        .waitForKeyPress(ctx)
+        .waitForKeyPress(vm)
         .then((keyEvent) => {
           if (KeyCode[keyEvent.keyCode]) {
             return resolve({

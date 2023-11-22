@@ -24,6 +24,7 @@ export interface ExecuteOptions {
   seed: string;
   envFiles: string[];
   envVars: string[];
+  debugMode: boolean;
 }
 
 export default async function execute(
@@ -50,7 +51,8 @@ export default async function execute(
         })
       )
     ),
-    environmentVariables: new Map(Object.entries(envMapper.map))
+    environmentVariables: new Map(Object.entries(envMapper.map)),
+    debugMode: options.debugMode
   });
 
   interpreter.setDebugger(new GreybelPseudoDebugger(interpreter));

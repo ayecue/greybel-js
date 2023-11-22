@@ -9,7 +9,7 @@ import {
   HandlerContainer,
   ObjectValue,
   ObjectValue as ObjectValueType,
-  OperationContext,
+  VM,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
@@ -34,11 +34,11 @@ export default async function repl(
     CustomFunction.createExternal(
       'exit',
       (
-        ctx: OperationContext,
+        vm: VM,
         _self: CustomValue,
         args: Map<string, CustomValue>
       ): Promise<CustomValue> => {
-        ctx.handler.outputHandler.print(ctx, args.get('value')!.toString());
+        vm.handler.outputHandler.print(vm, args.get('value')!.toString());
         active = false;
         return Promise.resolve(DefaultType.Void);
       }

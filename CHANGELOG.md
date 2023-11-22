@@ -908,3 +908,8 @@ All notable changes to this project will be documented in this file.
 ## [3.0.2] - 16.11.2023
 
 - fix failure when sortKey was not existing
+
+## [3.1.0] - 22.11.2023
+
+- replacing recursive interpreter with bytecode generator + vm to improve performance
+- due to the new interpreter the stacktrace should be more accurate - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#109](https://github.com/ayecue/greybel-vs/issues/109)

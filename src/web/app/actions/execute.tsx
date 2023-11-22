@@ -1,4 +1,4 @@
-import { Debugger, Interpreter, OperationContext } from 'greybel-interpreter';
+import { Debugger, Interpreter, VM } from 'greybel-interpreter';
 import React, { useEffect, useRef, useState } from 'react';
 
 import execute from '../../execute.js';
@@ -51,13 +51,13 @@ export default function Execute({
       },
       onInteract: (
         dbgr: Debugger,
-        context: OperationContext
+        vm: VM
       ): Promise<void> => {
         let lastActiveLine: Element | undefined;
 
         return new Promise((resolve, _reject) => {
           setDebug({
-            context,
+            vm,
             onContinue: () => {
               dbgr.setBreakpoint(false);
               setDebug(undefined);
@@ -82,9 +82,7 @@ export default function Execute({
             }
           });
 
-          const line =
-            activeInterpreter?.globalContext.getLastActive()?.stackTrace[0]
-              ?.item?.start!.line || -1;
+          const line = vm.getFrame().getCurrentInstruction().source.start.line || -1;
 
           if (line !== -1) {
             lastActiveLine = Array.from(

@@ -1,4 +1,4 @@
-import { OperationContext } from 'greybel-interpreter';
+import { VM } from 'greybel-interpreter';
 import { v4 } from 'uuid';
 
 export class Stdin {
@@ -40,7 +40,7 @@ export class Stdin {
     me.target.type = type;
   }
 
-  waitForInput(ctx: OperationContext): Promise<void> {
+  waitForInput(vm: VM): Promise<void> {
     const me = this;
     const target = me.target;
     const id = v4();
@@ -60,19 +60,19 @@ export class Stdin {
           if (id === currentId) {
             evt.stopImmediatePropagation();
             me.queue.shift();
-            ctx.processState.removeListener('exit', onExit);
+            vm.getSignal().removeListener('exit', onExit);
             target.removeEventListener('keydown', handler);
             resolve();
           }
         }
       };
 
-      ctx.processState.once('exit', onExit);
+      vm.getSignal().once('exit', onExit);
       target.addEventListener('keydown', handler);
     });
   }
 
-  waitForKeyPress(ctx: OperationContext): Promise<KeyboardEvent> {
+  waitForKeyPress(vm: VM): Promise<KeyboardEvent> {
     const me = this;
     const target = me.target;
 
@@ -82,12 +82,12 @@ export class Stdin {
         resolve(null);
       };
       const handler = (evt: KeyboardEvent) => {
-        ctx.processState.removeListener('exit', onExit);
+        vm.getSignal().removeListener('exit', onExit);
         target.removeEventListener('keydown', handler);
         resolve(evt);
       };
 
-      ctx.processState.once('exit', onExit);
+      vm.getSignal().once('exit', onExit);
       target.addEventListener('keydown', handler);
     });
   }

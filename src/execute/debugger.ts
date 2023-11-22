@@ -3,12 +3,11 @@ import { ModifierType } from 'another-ansi';
 import {
   Debugger,
   DefaultType,
-  OperationContext,
+  VM,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
 import { Interpreter } from 'greyscript-interpreter';
-import { ASTBase } from 'miniscript-core';
 
 import { ansiProvider, useColor } from './output.js';
 
@@ -24,7 +23,9 @@ export default class GrebyelPseudoDebugger extends Debugger {
     return DefaultType.Void;
   }
 
-  async interact(operationContext: OperationContext, stackAst: ASTBase) {
+  async interact(vm: VM) {
+    const op = vm.getFrame().getCurrentInstruction();
+
     console.log(
       useColor('cyan', ansiProvider.modify(ModifierType.Bold, `REPL - Console`))
     );
@@ -46,7 +47,7 @@ export default class GrebyelPseudoDebugger extends Debugger {
           'cyan',
           `${ansiProvider.modify(
             ModifierType.Bold,
-            `[${operationContext.target}:${stackAst?.start?.line}]`
+            `[${op.source.path}:${op.source?.start?.line}]`
           )} >`
         )
       });
@@ -65,7 +66,7 @@ export default class GrebyelPseudoDebugger extends Debugger {
         console.log(
           useColor(
             'green',
-            `Execution on ${operationContext.target}:${stackAst?.start?.line} was successful.`
+            `Execution on ${op.source.path}:${op.source?.start?.line} was successful.`
           )
         );
       } catch (err: any) {
