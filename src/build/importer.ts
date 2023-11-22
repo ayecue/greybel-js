@@ -80,7 +80,7 @@ class Importer {
       );
 
       if (isCreated) {
-        console.log(`Imported ${item.ingameFilepath} successul`);
+        console.log(`Imported ${item.ingameFilepath} successful`);
         results.push({ path: item.ingameFilepath, success: true });
       } else {
         console.log(`Importing of ${item.ingameFilepath} failed`);

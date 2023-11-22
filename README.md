@@ -232,6 +232,7 @@ Arguments:
 
 Options:
 	-p, --params			Execution parameters
+	-d, --debug				Debug mode
 	-i, --interactive		Interactive parameter
 	-s, --seed			Seed parameter
 	-ev, --env-files <file...>	Environment variables files

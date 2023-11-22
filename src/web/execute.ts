@@ -6,7 +6,7 @@ import {
   Debugger,
   HandlerContainer,
   ObjectValue,
-  OperationContext,
+  VM,
   PrepareError,
   RuntimeError
 } from 'greybel-interpreter';
@@ -28,10 +28,11 @@ export interface ExecuteOptions {
   api?: ObjectValue;
   params: string[];
   seed?: string;
+  debugMode?: boolean;
   onStart: (interpreter: Interpreter) => void;
   onError: (err: any) => void;
   onEnd: (interpreter: Interpreter) => void;
-  onInteract: (dbgr: Debugger, context: OperationContext) => Promise<void>;
+  onInteract: (dbgr: Debugger, vm: VM) => Promise<void>;
 }
 
 export default async function execute(
@@ -67,7 +68,8 @@ export default async function execute(
           myProgramContent: await resourceHandler.get('default')
         })
       )
-    )
+    ),
+    //debugMode: options.debugMode
   });
 
   activeInterpreter = interpreter;

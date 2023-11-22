@@ -1,4 +1,4 @@
-import { OperationContext } from 'greybel-interpreter';
+import { VM } from 'greybel-interpreter';
 import React, { useEffect, useRef, useState } from 'react';
 
 import viewJSON from '../../json-viewer.js';
@@ -62,14 +62,14 @@ export function DebugReplPopup({
 }
 
 export function DebugScopePopup({
-  operationContext
+  vm
 }: {
-  operationContext: OperationContext;
+  vm: VM;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const scopes = operationContext
+    const scopes = vm.getFrame()
       .lookupAllScopes()
       .map((scope) => scope.locals.scope.value);
 
@@ -84,7 +84,7 @@ export function DebugScopePopup({
 }
 
 export interface DebugPopup {
-  context: OperationContext;
+  vm: VM;
   onExecute: (input: string) => void;
   onContinue: () => void;
   onNext: () => void;
@@ -139,7 +139,7 @@ export default function EditorPopups(options: EditorPopupsOptions) {
   }
 
   if (options.debug) {
-    const { context, onExecute, onContinue, onNext } = options.debug;
+    const { vm, onExecute, onContinue, onNext } = options.debug;
 
     popups.push(
       <div key="debugger-popup-bg" className="debugger-popup-bg"></div>,
@@ -149,7 +149,7 @@ export default function EditorPopups(options: EditorPopupsOptions) {
         onContinue={onContinue}
         onNext={onNext}
       />,
-      <DebugScopePopup key="debugger-scope-popup" operationContext={context} />
+      <DebugScopePopup key="debugger-scope-popup" vm={vm} />
     );
   }
 

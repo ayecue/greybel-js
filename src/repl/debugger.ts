@@ -1,13 +1,13 @@
-import { Debugger, DefaultType, OperationContext } from 'greybel-interpreter';
+import { Debugger, DefaultType, VM } from 'greybel-interpreter';
 
 export default class GrebyelPseudoDebugger extends Debugger {
   debug() {
     return DefaultType.Void;
   }
 
-  getBreakpoint(_operationContext: OperationContext): boolean {
+  getBreakpoint(_vm: VM): boolean {
     return false;
   }
 
-  interact(_operationContext: OperationContext) {}
+  interact(_vm: VM) {}
 }

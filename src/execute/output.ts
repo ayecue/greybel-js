@@ -4,9 +4,9 @@ import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
 import {
   KeyEvent,
-  OperationContext,
   OutputHandler,
-  PrintOptions
+  PrintOptions,
+  VM
 } from 'greybel-interpreter';
 import readline from 'readline';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
@@ -79,7 +79,7 @@ export default class CLIOutputHandler extends OutputHandler {
   }
 
   print(
-    _ctx: OperationContext,
+    _vm: VM,
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
@@ -105,11 +105,11 @@ export default class CLIOutputHandler extends OutputHandler {
     }
   }
 
-  clear(_ctx: OperationContext) {
+  clear(_vm: VM) {
     console.clear();
   }
 
-  progress(ctx: OperationContext, timeout: number): Promise<void> {
+  progress(vm: VM, timeout: number): Promise<void> {
     const startTime = Date.now();
     const loadingBar = new cliProgress.SingleBar(
       {},
@@ -135,7 +135,7 @@ export default class CLIOutputHandler extends OutputHandler {
 
         if (elapsed > timeout) {
           loadingBar.update(timeout);
-          ctx.processState.removeListener('exit', onExit);
+          vm.getSignal().removeListener('exit', onExit);
           clearInterval(interval);
           loadingBar.stop();
           resolve();
@@ -145,12 +145,12 @@ export default class CLIOutputHandler extends OutputHandler {
         loadingBar.update(elapsed);
       });
 
-      ctx.processState.once('exit', onExit);
+      vm.getSignal().once('exit', onExit);
     });
   }
 
   waitForInput(
-    _ctx: OperationContext,
+    _vm: VM,
     isPassword: boolean,
     message: string
   ): Promise<string> {
@@ -178,9 +178,9 @@ export default class CLIOutputHandler extends OutputHandler {
     });
   }
 
-  waitForKeyPress(ctx: OperationContext, message: string): Promise<KeyEvent> {
+  waitForKeyPress(vm: VM, message: string): Promise<KeyEvent> {
     return new Promise((resolve, _reject) => {
-      this.print(ctx, message, {
+      this.print(vm, message, {
         appendNewLine: false
       });
 
@@ -200,7 +200,7 @@ export default class CLIOutputHandler extends OutputHandler {
         'keypress',
         (_character: string, key: NodeJSKeyEvent) => {
           if (key.ctrl && key.name === 'c') {
-            ctx.exit();
+            vm.exit();
           }
 
           process.stdin.pause();

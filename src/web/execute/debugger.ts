@@ -2,14 +2,14 @@ import {
   CustomValue,
   Debugger,
   DefaultType,
-  OperationContext
+  VM
 } from 'greybel-interpreter';
 
 export class GrebyelDebugger extends Debugger {
-  onInteract: (dbgr: Debugger, context: OperationContext) => Promise<void>;
+  onInteract: (dbgr: Debugger, vm: VM) => Promise<void>;
 
   constructor(
-    onInteract: (dbgr: Debugger, context: OperationContext) => Promise<void>
+    onInteract: (dbgr: Debugger, vm: VM) => Promise<void>
   ) {
     super();
     this.onInteract = onInteract;
@@ -19,7 +19,7 @@ export class GrebyelDebugger extends Debugger {
     return DefaultType.Void;
   }
 
-  interact(operationContext: OperationContext): Promise<void> {
-    return this.onInteract(this, operationContext);
+  interact(vm: VM): Promise<void> {
+    return this.onInteract(this, vm);
   }
 }

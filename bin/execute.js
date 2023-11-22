@@ -49,6 +49,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
     })
     .option('-p, --params <params...>', 'Execution parameters')
     .option('-i, --interactive', 'Interactive parameters')
+    .option('-d, --debug', 'Debug mode')
     .option('-s, --seed <seed>', 'Seed parameter')
     .option('-ev, --env-files <file...>', 'Environment variables files')
     .option('-vr, --env-vars <var...>', 'Environment variables');
@@ -67,6 +68,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
   }
 
   const success = await execute(options.filepath, {
+    debugMode: options.debugMode,
     params: options.params,
     seed: options.seed,
     envFiles: options.envFiles,
