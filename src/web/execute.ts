@@ -69,7 +69,7 @@ export default async function execute(
         })
       )
     ),
-    //debugMode: options.debugMode
+    debugMode: true
   });
 
   activeInterpreter = interpreter;
