@@ -39,7 +39,7 @@ function wrapWithTag(openTag: TagRecordOpen, content: string): string {
     case Tag.Pos:
       return `<span style="position:relative;left:${openTag.attributes.value}px;">${content}</span>`;
     case Tag.Size:
-      return `<span style="font-size:${openTag.attributes.value};">${content}</span>`;
+      return `<span style="font-size:${openTag.attributes.value}px;">${content}</span>`;
     case Tag.VOffset:
       return `<span style="position:relative;bottom:${openTag.attributes.value}px;display:block;height:0px;">${content}</span>`;
     case Tag.Indent:

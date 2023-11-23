@@ -917,3 +917,8 @@ All notable changes to this project will be documented in this file.
 ## [3.1.1] - 23.11.2023
 
 - fix scope browser in ui, displaying hashmaps in the output format now
+
+## [3.1.2] - 23.11.2023
+
+- add support for text mesh tags to close on newline
+- fix print output in UI if string is empty

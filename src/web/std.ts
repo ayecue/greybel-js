@@ -130,7 +130,7 @@ export class Stdout {
       }
     }
 
-    while ((item = lines.shift())) {
+    while ((item = lines.shift()) !== undefined) {
       const node = me.addLine(item);
       subMessages.push(node);
     }
