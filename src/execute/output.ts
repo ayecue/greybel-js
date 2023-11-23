@@ -2,12 +2,7 @@ import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
-import {
-  KeyEvent,
-  OutputHandler,
-  PrintOptions,
-  VM
-} from 'greybel-interpreter';
+import { KeyEvent, OutputHandler, PrintOptions, VM } from 'greybel-interpreter';
 import readline from 'readline';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
@@ -149,11 +144,7 @@ export default class CLIOutputHandler extends OutputHandler {
     });
   }
 
-  waitForInput(
-    _vm: VM,
-    isPassword: boolean,
-    message: string
-  ): Promise<string> {
+  waitForInput(_vm: VM, isPassword: boolean, message: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const transformed = transform(
         message,

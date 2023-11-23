@@ -3,9 +3,9 @@ import { ModifierType } from 'another-ansi';
 import {
   Debugger,
   DefaultType,
-  VM,
   PrepareError,
-  RuntimeError
+  RuntimeError,
+  VM
 } from 'greybel-interpreter';
 import { Interpreter } from 'greyscript-interpreter';
 

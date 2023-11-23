@@ -913,3 +913,7 @@ All notable changes to this project will be documented in this file.
 
 - replacing recursive interpreter with bytecode generator + vm to improve performance
 - due to the new interpreter the stacktrace should be more accurate - thanks for reporting to [@Olipro](https://github.com/Olipro) - related to [#109](https://github.com/ayecue/greybel-vs/issues/109)
+
+## [3.1.1] - 23.11.2023
+
+- fix scope browser in ui, displaying hashmaps in the output format now
