@@ -1,10 +1,5 @@
 import { KeyCode } from 'greybel-gh-mock-intrinsics';
-import {
-  KeyEvent,
-  VM,
-  OutputHandler,
-  PrintOptions
-} from 'greybel-interpreter';
+import { KeyEvent, OutputHandler, PrintOptions, VM } from 'greybel-interpreter';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
 import { Stdin, Stdout } from '../std.js';
@@ -127,11 +122,7 @@ export class WebOutputHandler extends OutputHandler {
     });
   }
 
-  waitForInput(
-    vm: VM,
-    isPassword: boolean,
-    message: string
-  ): Promise<string> {
+  waitForInput(vm: VM, isPassword: boolean, message: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this.print(vm, message);
 

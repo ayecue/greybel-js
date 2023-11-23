@@ -9,9 +9,9 @@ import {
   HandlerContainer,
   ObjectValue,
   ObjectValue as ObjectValueType,
-  VM,
   PrepareError,
-  RuntimeError
+  RuntimeError,
+  VM
 } from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';

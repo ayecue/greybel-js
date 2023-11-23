@@ -71,7 +71,7 @@ export function DebugScopePopup({
   useEffect(() => {
     const scopes = vm.getFrame()
       .lookupAllScopes()
-      .map((scope) => new Map(scope.locals.scope.value.entries()));
+      .map((scope) => scope.locals.scope.value);
 
     containerRef.current!.appendChild(viewJSON(scopes));
   }, []);
