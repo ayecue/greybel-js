@@ -927,3 +927,4 @@ All notable changes to this project will be documented in this file.
 
 - fix prepare error on execute not showing line
 - update grey hack output in UI
+- do not allow frame pop on global frame
