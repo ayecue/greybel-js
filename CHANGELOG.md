@@ -926,3 +926,4 @@ All notable changes to this project will be documented in this file.
 ## [3.1.3] - 24.11.2023
 
 - fix prepare error on execute not showing line
+- update grey hack output in UI
