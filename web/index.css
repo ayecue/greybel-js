@@ -244,6 +244,70 @@ body {
 	position: relative;
 }
 
+.editor-console-stdout .line span {
+	display: inline-block;
+}
+
+.editor-console-stdout .line .msspace {
+	font-family: monoscpace;
+}
+
+.editor-console-stdout .line .underline {
+	text-decoration: underline;
+}
+
+.editor-console-stdout .line .strikethrough {
+	text-decoration: line-through;
+}
+
+.editor-console-stdout .line .italic {
+	font-style:italic;
+}
+
+.editor-console-stdout .line .bold {
+	font-weight:bold;
+}
+
+.editor-console-stdout .line .lowercase {
+	text-transform: lowercase;
+}
+
+.editor-console-stdout .line .uppercase {
+	text-transform: uppercase;
+}
+
+.editor-console-stdout .line .align {
+	display:block;
+}
+
+.editor-console-stdout .line .sprite {
+	display: inline-block;
+	color: transparent;
+}
+
+.editor-console-stdout .line .voffset {
+	transform-origin: left top;
+	display: block;
+}
+
+.editor-console-stdout .line .color, .editor-console-stdout .line .underline, .editor-console-stdout .line .uppercase, .editor-console-stdout .line .lowercase, .editor-console-stdout .line .strikethrough, .editor-console-stdout .line .size {
+	display: inline;
+}
+
+.editor-console-stdout .line .scale {
+	transform-origin: left 0;
+	display: block;
+}
+
+.editor-console-stdout .line .pos {
+	transform-origin: left 0;
+	display: inline;
+}
+
+.editor-console-stdout .line .rotate {
+	display: inline-block;
+}
+
 .debugger-popup-bg {
 	background-color: #333;
 	opacity: 0.5;

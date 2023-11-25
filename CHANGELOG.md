@@ -922,3 +922,9 @@ All notable changes to this project will be documented in this file.
 
 - add support for text mesh tags to close on newline
 - fix print output in UI if string is empty
+
+## [3.1.3] - 24.11.2023
+
+- fix prepare error on execute not showing line
+- update grey hack output in UI
+- do not allow frame pop on global frame
