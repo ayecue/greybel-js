@@ -288,25 +288,24 @@ body {
 .editor-console-stdout .line .voffset {
 	transform-origin: left top;
 	display: block;
-	clear: left;
 }
 
-.editor-console-stdout .line .color {
+.editor-console-stdout .line .color, .editor-console-stdout .line .underline, .editor-console-stdout .line .uppercase, .editor-console-stdout .line .lowercase, .editor-console-stdout .line .strikethrough, .editor-console-stdout .line .size {
 	display: inline;
 }
 
 .editor-console-stdout .line .scale {
-	transform-origin: left top;
+	transform-origin: left 0;
 	display: block;
 }
 
 .editor-console-stdout .line .pos {
-	transform-origin: left top;
-	display: block;
+	transform-origin: left 0;
+	display: inline;
 }
 
-.editor-console-stdout .line .size {
-	display: inline;
+.editor-console-stdout .line .rotate {
+	display: inline-block;
 }
 
 .debugger-popup-bg {
