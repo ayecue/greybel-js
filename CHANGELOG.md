@@ -932,3 +932,7 @@ All notable changes to this project will be documented in this file.
 ## [3.1.4] - 26.11.2023
 
 - fix for iterations combined with returns causing the iterator stack not to pop
+
+## [3.1.5] - 30.11.2023
+
+- fix self not being reassignable within frame
