@@ -942,3 +942,7 @@ All notable changes to this project will be documented in this file.
 
 - bump proxy version due to latest GreyHack update
 - update meta for minor editor ui fixes
+
+## [3.1.7] - 19.12.2023
+
+- bump proxy version due to latest GreyHack update
