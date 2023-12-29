@@ -951,3 +951,4 @@ All notable changes to this project will be documented in this file.
 
 - minor fixes to meta descriptions
 - fix missing fallback value for allow import for file entities in mock environment
+- update steam client
