@@ -1,5 +1,11 @@
 import { KeyCode } from 'greybel-gh-mock-intrinsics';
-import { KeyEvent, OutputHandler, PrintOptions, VM } from 'greybel-interpreter';
+import {
+  KeyEvent,
+  OutputHandler,
+  PrintOptions,
+  UpdateOptions,
+  VM
+} from 'greybel-interpreter';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
 import { Stdin, Stdout } from '../std.js';
@@ -8,11 +14,19 @@ type Style = {
   label: string;
   value: string;
 };
-type StyleValueProviderRenderCallback = (value :string, unit: string) => Style;
+type StyleValueProviderRenderCallback = (value: string, unit: string) => Style;
 type StyleValueFactory = (input: string) => Style;
 
-function styleValueProvider(render: StyleValueProviderRenderCallback, units: string[], defaultUnit: string = '', defaultValue: string = ''): StyleValueFactory {
-  const item = new RegExp(`^([+-]?\\d+(?:\\.\\d+)?)(${units.join('|')})?$`, 'i');
+function styleValueProvider(
+  render: StyleValueProviderRenderCallback,
+  units: string[],
+  defaultUnit: string = '',
+  defaultValue: string = ''
+): StyleValueFactory {
+  const item = new RegExp(
+    `^([+-]?\\d+(?:\\.\\d+)?)(${units.join('|')})?$`,
+    'i'
+  );
 
   return (input: string) => {
     const result = item.exec(input);
@@ -28,33 +42,48 @@ function styleValueProvider(render: StyleValueProviderRenderCallback, units: str
     }
 
     return render(value, unit);
-  }
+  };
 }
 
 const styleMap: Partial<Record<Tag, Record<string, StyleValueFactory>>> = {
   [Tag.Space]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'margin-left',
-        value: `${value}${unit}`
-      };
-    }, ['px', 'em', '%'], 'px', '0')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'margin-left',
+          value: `${value}${unit}`
+        };
+      },
+      ['px', 'em', '%'],
+      'px',
+      '0'
+    )
   },
   [Tag.MSpace]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'word-spacing',
-        value: `${value}${unit}`
-      };
-    }, ['px', 'em', '%'], 'px', '5')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'word-spacing',
+          value: `${value}${unit}`
+        };
+      },
+      ['px', 'em', '%'],
+      'px',
+      '5'
+    )
   },
   [Tag.Scale]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'transform',
-        value: `scale(${value}${unit})`
-      };
-    }, ['px', 'em', '%', 'vw'], 'vw', '1')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'transform',
+          value: `scale(${value}${unit})`
+        };
+      },
+      ['px', 'em', '%', 'vw'],
+      'vw',
+      '1'
+    )
   },
   [Tag.Color]: {
     value: (input: string) => {
@@ -89,68 +118,108 @@ const styleMap: Partial<Record<Tag, Record<string, StyleValueFactory>>> = {
     }
   },
   [Tag.CSpace]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'letter-spacing',
-        value: `${value}${unit}`
-      };
-    }, ['px', 'em', '%'], 'px', '5')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'letter-spacing',
+          value: `${value}${unit}`
+        };
+      },
+      ['px', 'em', '%'],
+      'px',
+      '5'
+    )
   },
   [Tag.LineHeight]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'line-height',
-        value: `${value}${unit}`
-      };
-    }, ['px', 'em', '%'], 'px', '12')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'line-height',
+          value: `${value}${unit}`
+        };
+      },
+      ['px', 'em', '%'],
+      'px',
+      '12'
+    )
   },
   [Tag.Margin]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'margin',
-        value: `0 ${value}${unit}`
-      };
-    }, ['px', 'em', '%'], 'px', '0')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'margin',
+          value: `0 ${value}${unit}`
+        };
+      },
+      ['px', 'em', '%'],
+      'px',
+      '0'
+    )
   },
   [Tag.Pos]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'transform',
-        value: `translateX(${value}${unit})`
-      };
-    }, ['px', 'em', '%'], '%', '0')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'transform',
+          value: `translateX(${value}${unit})`
+        };
+      },
+      ['px', 'em', '%'],
+      '%',
+      '0'
+    )
   },
   [Tag.Size]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'font-size',
-        value: `${value}${unit}`
-      };
-    }, ['px', 'em', '%'], 'px', '1')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'font-size',
+          value: `${value}${unit}`
+        };
+      },
+      ['px', 'em', '%'],
+      'px',
+      '1'
+    )
   },
   [Tag.VOffset]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'vertical-align',
-        value: `${value}${unit}`
-      };
-    }, ['px', 'em', '%', 'vw'], 'px', '0')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'vertical-align',
+          value: `${value}${unit}`
+        };
+      },
+      ['px', 'em', '%', 'vw'],
+      'px',
+      '0'
+    )
   },
   [Tag.Indent]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'margin-left',
-        value: `${value}${unit}`
-      };
-    }, ['px', 'em', '%'], 'px', '0')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'margin-left',
+          value: `${value}${unit}`
+        };
+      },
+      ['px', 'em', '%'],
+      'px',
+      '0'
+    )
   },
   [Tag.Rotate]: {
-    value: styleValueProvider((value, unit) => {
-      return {
-        label: 'rotate',
-        value: `${value}${unit}`
-      };
-    }, ['deg'], 'deg', '0')
+    value: styleValueProvider(
+      (value, unit) => {
+        return {
+          label: 'rotate',
+          value: `${value}${unit}`
+        };
+      },
+      ['deg'],
+      'deg',
+      '0'
+    )
   }
 };
 
@@ -183,11 +252,17 @@ function getStyle(tag: TagRecordOpen) {
 function wrapWithTag(openTag, content) {
   switch (openTag.type) {
     case Tag.Space:
-      return `<span class="space" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="space" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.MSpace:
-      return `<span class="msspace" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="msspace" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.Color:
-      return `<span class="color" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="color" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.Underline:
       return `<span class="underline">${content}</span>`;
     case Tag.Italic:
@@ -197,19 +272,29 @@ function wrapWithTag(openTag, content) {
     case Tag.Strikethrough:
       return `<span class="strikethrough">${content}</span>`;
     case Tag.Mark:
-      return `<span class="mark" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="mark" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.Lowercase:
       return `<span class="lowercase">${content}</span>`;
     case Tag.Uppercase:
       return `<span class="uppercase">${content}</span>`;
     case Tag.Align:
-      return `<span class="align" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="align" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.CSpace:
-      return `<span class="cspace" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="cspace" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.LineHeight:
-      return `<span class="lineheight" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="lineheight" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.Margin:
-      return `<span class="margin" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="margin" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.NoBR:
       return `<nobr>${content}</nobr>`;
     case Tag.Sprite:
@@ -217,15 +302,25 @@ function wrapWithTag(openTag, content) {
     case Tag.Pos:
       return `<span class="pos" style="${getStyle(openTag)}">${content}</span>`;
     case Tag.Size:
-      return `<span class="size" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="size" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.Scale:
-      return `<span class="scale" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="scale" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.VOffset:
-      return `<span class="voffset" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="voffset" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.Indent:
-      return `<span class="indent" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="indent" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
     case Tag.Rotate:
-      return `<span class="rotate" style="${getStyle(openTag)}">${content}</span>`;
+      return `<span class="rotate" style="${getStyle(
+        openTag
+      )}">${content}</span>`;
   }
 
   if (openTag.attributes.value) {
@@ -245,17 +340,21 @@ export class WebOutputHandler extends OutputHandler {
     this.stdout = stdout;
   }
 
+  private processLine(text: string): string {
+    return transform(
+      text,
+      (openTag: TagRecordOpen, content: string): string => {
+        return wrapWithTag(openTag, content);
+      }
+    ).replace(/\\n/g, '\n');
+  }
+
   print(
     _vm: VM,
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
-    const transformed = transform(
-      message,
-      (openTag: TagRecordOpen, content: string): string => {
-        return wrapWithTag(openTag, content);
-      }
-    ).replace(/\\n/g, '\n');
+    const transformed = this.processLine(message);
 
     if (replace) {
       this.stdout.replace(transformed + '\n');
@@ -263,6 +362,20 @@ export class WebOutputHandler extends OutputHandler {
       this.stdout.write(transformed + '\n');
     } else {
       this.stdout.write(transformed);
+    }
+  }
+
+  update(
+    _vm: VM,
+    message: string,
+    { appendNewLine = false, replace = false }: Partial<UpdateOptions> = {}
+  ) {
+    const transformed = this.processLine(message);
+
+    if (replace) {
+      this.stdout.updateLast(transformed + (appendNewLine ? '\n' : ''));
+    } else {
+      this.stdout.write(transformed + (appendNewLine ? '\n' : ''));
     }
   }
 
