@@ -959,3 +959,4 @@ All notable changes to this project will be documented in this file.
 - fix connect_ethernet intrinsic ip check
 - fix airmon intrinsic stop option
 - fix missing boot folder in generated computers
+- minor changes to output
