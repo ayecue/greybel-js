@@ -2,7 +2,13 @@ import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import cliProgress from 'cli-progress';
 import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
-import { KeyEvent, OutputHandler, PrintOptions, VM } from 'greybel-interpreter';
+import {
+  KeyEvent,
+  OutputHandler,
+  PrintOptions,
+  UpdateOptions,
+  VM
+} from 'greybel-interpreter';
 import readline from 'readline';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
@@ -73,17 +79,21 @@ export default class CLIOutputHandler extends OutputHandler {
     this.previousLinesCount = 0;
   }
 
+  private processLine(text: string): string {
+    return transform(
+      text,
+      (openTag: TagRecordOpen, content: string): string => {
+        return wrapWithTag(openTag, content);
+      }
+    ).replace(/\\n/g, '\n');
+  }
+
   print(
     _vm: VM,
     message: string,
     { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
   ) {
-    const transformed = transform(
-      message,
-      (openTag: TagRecordOpen, content: string): string => {
-        return wrapWithTag(openTag, content);
-      }
-    ).replace(/\\n/g, '\n');
+    const transformed = this.processLine(message);
 
     if (replace) {
       process.stdout.write(ansiEscapes.eraseLines(this.previousLinesCount));
@@ -91,6 +101,27 @@ export default class CLIOutputHandler extends OutputHandler {
     }
 
     this.previousLinesCount += transformed.split('\n').length;
+
+    if (appendNewLine) {
+      process.stdout.write(transformed + '\n');
+      this.previousLinesCount++;
+    } else {
+      process.stdout.write(transformed);
+    }
+  }
+
+  update(
+    _vm: VM,
+    message: string,
+    { appendNewLine = false, replace = false }: Partial<UpdateOptions> = {}
+  ) {
+    const transformed = this.processLine(message);
+
+    if (replace) {
+      process.stdout.write(ansiEscapes.eraseLines(1));
+    }
+
+    this.previousLinesCount += transformed.split('\n').length - 1;
 
     if (appendNewLine) {
       process.stdout.write(transformed + '\n');

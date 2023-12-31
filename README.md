@@ -289,7 +289,7 @@ print("Another string!")
 ```
 
 ## TextMesh Pro Rich Text support (CLI)
-[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
+[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported. Since it is impossible to transform TextMesh Pro Rich-Text tags into HTML or ANSI-Codes without losing formatting maybe check out [the preview output feature from the VSCode extension](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#preview-output).
 
 <details>
 <summary>Supports</summary>
@@ -385,7 +385,7 @@ This functionality can be used to save and also share code with others. Every ti
 ![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
 
 ## TextMesh Pro Rich Text support (Web-UI)
-[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
+[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported. Since it is impossible to transform TextMesh Pro Rich-Text tags into HTML or ANSI-Codes without losing formatting maybe check out [the preview output feature from the VSCode extension](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#preview-output).
 
 <details>
 <summary>Supports</summary>
