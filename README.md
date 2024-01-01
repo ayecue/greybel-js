@@ -105,9 +105,9 @@ greybel /my/code/file.src
 
 ## Auto create files in-game
 
-Since `2.0.0` it is possible to automatically create transpiled files in the game. This can be activated by using the `--create-ingame` flag. Additionally, you can choose between two different modes `local` and `public`.
+It is possible to automatically create transpiled files in the game. This can be activated by using the `--create-ingame` flag. Additionally, you can choose between two different modes `local` and `public`.
 
-By default `local` is selected. Keep in mind that the game needs to have a single player session running for `local` to work. For `public` there is no need to have the game client running.
+By default `local` is selected. Keep in mind that the game needs to have a singleplayer session running for `local` to work. For `public` there is no need to have the game client running.
 
 A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continues providing of credentials is required.
 
@@ -172,7 +172,7 @@ Here is an [example](/example/environment-variables) of environment variable inj
 
 ## Syntax
 
-Keep in mind that the following syntax is not valid in GreyScript. The transpiler can be used to transform code into valid GreyScript.
+Any valid MiniScript or GreyScript syntax is supported. Additionally, some minor syntax sugar is added to those languages. If you use those keep in mind to transpile your code first. Using these is completely optional though.
 
 ### While, For and Function - shorthand
 ```
@@ -289,7 +289,7 @@ print("Another string!")
 ```
 
 ## TextMesh Pro Rich Text support (CLI)
-[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported. Since it is impossible to transform TextMesh Pro Rich-Text tags into HTML or ANSI-Codes without losing formatting maybe check out [the preview output feature from the VSCode extension](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#preview-output).
+[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
 <details>
 <summary>Supports</summary>
@@ -303,6 +303,8 @@ print("Another string!")
 * lowercase
 * uppercase
 </details>
+
+Note: For the CLI feature Greybel will try to transform TextMesh Pro Rich-Text tags into ANSI-Codes. Due to the nature of TextMesh Pro Rich-Text tags some formatting will get lost. If you are looking for a proper preview of your output in Grey Hack please check out [the preview output feature from the VSCode extension](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#preview-output).
 
 ## TestLib
 Adds testing methods for setting up envs and debugging. Keep in mind that this library is not available in the actual game.
@@ -327,22 +329,6 @@ shell = testLib.get_shell_for_file(computer.File("/lib"))
 
 // can be used to receive computer with root access of certain file
 computer = testLib.get_computer_for_file(computer.File("/lib"))
-
-// can be used for debugging purposes, will call onError callback in case function fails
-// onError gets called with an error message and information on where the error happened
-failureFn = function
-  get_shell(null, null)
-end function
-
-onError = function(errMessage, trace)
-  print("An error appeared " + errMessage)
-  print(trace)
-end function
-
-testLib.try_to_execute(@failureFn, @onError)
-
-// can be used for debugging purposes, will create a breakpoint and go into debug mode on failure
-testLib.try_to_execute_with_debug(@failureFn)
 
 // can be used for debugging purposes, will return current stack trace
 test = function
@@ -385,7 +371,7 @@ This functionality can be used to save and also share code with others. Every ti
 ![Debugger UI](/assets/debugger-ui-preview.png?raw=true "Debugger UI")
 
 ## TextMesh Pro Rich Text support (Web-UI)
-[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported. Since it is impossible to transform TextMesh Pro Rich-Text tags into HTML or ANSI-Codes without losing formatting maybe check out [the preview output feature from the VSCode extension](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#preview-output).
+[TextMesh Pro Rich Text](http://digitalnativestudios.com/textmeshpro/docs/rich-text/) is partially supported.
 
 <details>
 <summary>Supports</summary>
@@ -408,6 +394,8 @@ This functionality can be used to save and also share code with others. Every ti
 * voffset
 * indent
 </details>
+
+Note: For the UI feature Greybel will try to transform TextMesh Pro Rich-Text tags into HTML. But due to the nature of TextMesh Pro Rich-Text tags some formatting will get lost. If you are looking for a proper preview of your output in Grey Hack please check out [the preview output feature from the VSCode extension](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#preview-output).
 
 # Todo
 

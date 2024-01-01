@@ -960,3 +960,7 @@ All notable changes to this project will be documented in this file.
 - fix airmon intrinsic stop option
 - fix missing boot folder in generated computers
 - minor changes to output
+
+## [3.1.10] - 01.01.2024
+
+- add pointer for current active instruction for stacktrace
