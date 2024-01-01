@@ -172,7 +172,7 @@ Here is an [example](/example/environment-variables) of environment variable inj
 
 ## Syntax
 
-Keep in mind that the following syntax is not valid in GreyScript. The transpiler can be used to transform code into valid GreyScript.
+Any valid MiniScript or GreyScript syntax is supported. Additionally, some minor syntax sugar is added to those languages. If you use those keep in mind to transpile your code first. Using these is completely optional though.
 
 ### While, For and Function - shorthand
 ```
