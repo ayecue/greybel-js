@@ -328,22 +328,6 @@ shell = testLib.get_shell_for_file(computer.File("/lib"))
 // can be used to receive computer with root access of certain file
 computer = testLib.get_computer_for_file(computer.File("/lib"))
 
-// can be used for debugging purposes, will call onError callback in case function fails
-// onError gets called with an error message and information on where the error happened
-failureFn = function
-  get_shell(null, null)
-end function
-
-onError = function(errMessage, trace)
-  print("An error appeared " + errMessage)
-  print(trace)
-end function
-
-testLib.try_to_execute(@failureFn, @onError)
-
-// can be used for debugging purposes, will create a breakpoint and go into debug mode on failure
-testLib.try_to_execute_with_debug(@failureFn)
-
 // can be used for debugging purposes, will return current stack trace
 test = function
 	print(testLib.get_stack_trace)
