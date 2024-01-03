@@ -964,3 +964,7 @@ All notable changes to this project will be documented in this file.
 ## [3.1.10] - 01.01.2024
 
 - add pointer for current active instruction for stacktrace
+
+## [3.1.11] - 03.01.2024
+
+- bump proxy version due to latest GreyHack update

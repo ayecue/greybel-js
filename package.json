@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "3.1.10",
+    "version": "3.1.11",
     "engines": {
         "node": ">=18.17.0"
     },
@@ -36,7 +36,7 @@
         "greybel-gh-mock-intrinsics": "~4.2.1",
         "greyscript-interpreter": "~1.2.3",
         "greybel-intrinsics": "~4.2.3",
-        "greybel-proxy": "~2.2.0",
+        "greybel-proxy": "~2.2.1",
         "greyscript-transpiler": "~0.5.2",
         "greyscript-core": "~1.4.2",
         "greyscript-meta": "~2.3.2",
