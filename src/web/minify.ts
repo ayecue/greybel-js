@@ -42,6 +42,7 @@ export default function build(
     buildType,
     obfuscation: buildOptions.obfuscation,
     excludedNamespaces: [
+      'params',
       ...buildOptions.excludedNamespaces,
       ...Array.from(Object.keys(greyscriptMeta.getSignaturesByType('general')))
     ],
