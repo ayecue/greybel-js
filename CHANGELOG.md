@@ -968,3 +968,7 @@ All notable changes to this project will be documented in this file.
 ## [3.1.11] - 03.01.2024
 
 - bump proxy version due to latest GreyHack update
+
+## [3.1.12] - 04.01.2024
+
+- exclude params from optimization in transpiler
