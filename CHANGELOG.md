@@ -972,3 +972,7 @@ All notable changes to this project will be documented in this file.
 ## [3.1.12] - 04.01.2024
 
 - exclude params from optimization in transpiler
+
+## [3.1.13] - 05.01.2024
+
+- add myprogram as process when script is getting executed
