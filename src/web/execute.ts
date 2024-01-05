@@ -60,17 +60,20 @@ export default async function execute(
       resourceHandler,
       outputHandler: new WebOutputHandler(stdin, stdout)
     }),
-    api: initIntrinsics(
+    debugMode: true
+  });
+
+  interpreter.setApi(
+    initIntrinsics(
       initGHIntrinsics(
         vsAPI,
-        createGHMockEnv({
+        createGHMockEnv(interpreter, {
           seed: options.seed,
           myProgramContent: await resourceHandler.get('default')
         })
       )
-    ),
-    debugMode: true
-  });
+    )
+  );
 
   activeInterpreter = interpreter;
 

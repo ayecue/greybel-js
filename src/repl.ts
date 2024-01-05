@@ -1,6 +1,9 @@
 import { editor } from '@inquirer/prompts';
 import { ModifierType } from 'another-ansi';
-import { init as initGHIntrinsics } from 'greybel-gh-mock-intrinsics';
+import {
+  createGHMockEnv,
+  init as initGHIntrinsics
+} from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
   CustomString,
@@ -49,9 +52,14 @@ export default async function repl(
     debugger: new GrebyelPseudoDebugger(),
     handler: new HandlerContainer({
       outputHandler: new CLIOutputHandler()
-    }),
-    api: initIntrinsics(initGHIntrinsics(vsAPI))
+    })
   });
+
+  interpreter.setApi(
+    initIntrinsics(
+      initGHIntrinsics(new ObjectValue(), createGHMockEnv(interpreter))
+    )
+  );
 
   try {
     /* eslint-disable-next-line no-unmodified-loop-condition */
