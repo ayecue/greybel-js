@@ -63,16 +63,18 @@ export default async function execute(
     debugMode: true
   });
 
-  interpreter.setApi(initIntrinsics(
-    initGHIntrinsics(
-      vsAPI,
-      createGHMockEnv(interpreter, {
-        seed: options.seed,
-        myProgramContent: await resourceHandler.get('default')
-      })
+  interpreter.setApi(
+    initIntrinsics(
+      initGHIntrinsics(
+        vsAPI,
+        createGHMockEnv(interpreter, {
+          seed: options.seed,
+          myProgramContent: await resourceHandler.get('default')
+        })
+      )
     )
-  ));
-  
+  );
+
   activeInterpreter = interpreter;
 
   process.nextTick(async () => {
