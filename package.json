@@ -37,7 +37,7 @@
         "greyscript-interpreter": "~1.2.3",
         "greybel-intrinsics": "~4.2.3",
         "greybel-proxy": "~2.2.1",
-        "greyscript-transpiler": "~0.5.2",
+        "greyscript-transpiler": "~0.5.3",
         "greyscript-core": "~1.4.2",
         "greyscript-meta": "~2.3.2",
         "is-inside-container": "^1.0.0",
