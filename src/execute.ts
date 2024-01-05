@@ -42,18 +42,19 @@ export default async function execute(
       outputHandler: new CLIOutputHandler(),
       resourceHandler
     }),
-    api: initIntrinsics(
-      initGHIntrinsics(
-        new ObjectValue(),
-        createGHMockEnv({
-          seed: options.seed,
-          myProgramContent: await resourceHandler.get(target)
-        })
-      )
-    ),
     environmentVariables: new Map(Object.entries(envMapper.map)),
     debugMode: options.debugMode
   });
+  
+  interpreter.setApi(initIntrinsics(
+    initGHIntrinsics(
+      new ObjectValue(),
+      createGHMockEnv(interpreter, {
+        seed: options.seed,
+        myProgramContent: await resourceHandler.get(target)
+      })
+    )
+  ));
 
   interpreter.setDebugger(new GreybelPseudoDebugger(interpreter));
 
