@@ -9,6 +9,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 - Greybel UI Demo: [greybel-ui](https://editor.greyscript.org)
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
 - GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
+- Grey Hack Image Transformer: [gh-image-transformer](https://github.com/ayecue/gh-image-transformer)
 
 ## Features
 
