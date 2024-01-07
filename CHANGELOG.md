@@ -977,3 +977,7 @@ All notable changes to this project will be documented in this file.
 
 - add myprogram as process when script is getting executed
 - while minimizing check if hasIndex value exists in namespaces otherwise falls back to not otimized value
+
+## [3.1.14] - 07.01.2024
+
+- bump proxy version due to server change
