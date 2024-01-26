@@ -981,3 +981,9 @@ All notable changes to this project will be documented in this file.
 ## [3.1.14] - 07.01.2024
 
 - bump proxy version due to server change
+
+## [3.2.0] - 27.01.2024
+
+- fix index expression to replicate [#89](https://github.com/JoeStrout/miniscript/issues/89) behavior of MiniScript
+- add frame limit to interpreter to prevent crashing VSCode due to infinite recursion caused by script - related to [#172](https://github.com/ayecue/greybel-vs/issues/172)
+- register VM exiting while waiting for user input
