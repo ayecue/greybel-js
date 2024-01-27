@@ -126,6 +126,7 @@ The message-hook agent will essentially send messages to the game server through
 
 - Install [BepInEx version 6.0.0-pre.1](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) for more details about the installation you can take a look [here](https://docs.bepinex.dev/master/articles/user_guide/installation/index.html)
 - With [BepInEx](https://github.com/BepInEx/BepInEx) in place, you just need to download the [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/70c515653148a7e738356b54fe0c3ae47ccede58/GreyHackMessageHook.dll) and put it into the plugins folder
+- Modify Steam launch path to `/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
 
 With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.
 
@@ -426,4 +427,4 @@ Note: For the UI feature Greybel will try to transform TextMesh Pro Rich-Text ta
 
 # Contact
 
-If you have any questions or need help feel free to join the dedicated Greybel discord https://discord.gg/q8tR8F8u2M
+If you have any questions, feature requests or need help feel free to join the [dedicated Greybel discord](https://discord.gg/q8tR8F8u2M).
