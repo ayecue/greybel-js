@@ -81,6 +81,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
       'Amount of characters allowed in one file before splitting when creating installer'
     )
     .option('-ci, --create-ingame', 'Create files automatically in-game')
+    .option('-cia, --create-ingame-agent-type <agent-type>', 'Creation agent type: "headless" or "message-hook"')
     .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local" or "public"');
 
   program.parse(process.argv);
@@ -102,7 +103,8 @@ if (!semver.satisfies(process.version, engineVersion)) {
     maxChars: options.maxChars,
     ingameDirectory: options.ingameDirectory,
     createIngame: options.createIngame,
-    createIngameMode: options.createIngameMode
+    createIngameAgentType: options.createIngameAgentType,
+    createIngameMode: options.createIngameMode,
   });
 
   if (!success) {

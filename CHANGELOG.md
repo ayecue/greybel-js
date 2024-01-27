@@ -987,3 +987,4 @@ All notable changes to this project will be documented in this file.
 - fix index expression to replicate [#89](https://github.com/JoeStrout/miniscript/issues/89) behavior of MiniScript
 - add frame limit to interpreter to prevent crashing VSCode due to infinite recursion caused by script - related to [#172](https://github.com/ayecue/greybel-vs/issues/172)
 - register VM exiting while waiting for user input
+- add message-hook agent to enable a smoother workflow when importing files in-game

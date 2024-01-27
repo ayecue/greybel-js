@@ -10,26 +10,14 @@ import path from 'path';
 import { createBasePath } from './build/create-base-path.js';
 import { createParseResult } from './build/create-parse-result.js';
 import EnvMapper from './build/env-mapper.js';
-import { createImporter } from './build/importer.js';
+import {
+  createImporter,
+  parseImporterAgentType,
+  parseImporterMode
+} from './build/importer.js';
 import { createInstaller } from './build/installer.js';
+import { BuildOptions, parseBuildOptions } from './build/options.js';
 import { ansiProvider, useColor } from './execute/output.js';
-
-export interface BuildOptions {
-  uglify: boolean;
-  beautify: boolean;
-  obfuscation: boolean;
-  installer: boolean;
-  autoCompile: boolean;
-  excludedNamespaces: string[];
-  disableLiteralsOptimization: boolean;
-  disableNamespacesOptimization: boolean;
-  envFiles: string[];
-  envVars: string[];
-  maxChars: number;
-  ingameDirectory: string;
-  createIngame: boolean;
-  createIngameMode: string;
-}
 
 export default async function build(
   filepath: string,
@@ -37,23 +25,7 @@ export default async function build(
   options: Partial<BuildOptions> = {}
 ): Promise<boolean> {
   const envMapper = new EnvMapper();
-  const buildOptions: BuildOptions = {
-    uglify: options.uglify || false,
-    beautify: options.beautify || false,
-    obfuscation: options.obfuscation || false,
-    installer: options.installer || false,
-    autoCompile: options.autoCompile || false,
-    excludedNamespaces: options.excludedNamespaces || [],
-    disableLiteralsOptimization: options.disableLiteralsOptimization || false,
-    disableNamespacesOptimization:
-      options.disableNamespacesOptimization || false,
-    maxChars: options.maxChars || 160000,
-    envFiles: options.envFiles || [],
-    envVars: options.envVars || [],
-    ingameDirectory: options.ingameDirectory || '/root/',
-    createIngame: options.createIngame || false,
-    createIngameMode: options.createIngameMode || 'local'
-  };
+  const buildOptions: BuildOptions = parseBuildOptions(options);
   let buildType = BuildType.DEFAULT;
 
   envMapper.load(buildOptions.envFiles, buildOptions.envVars);
@@ -116,7 +88,8 @@ export default async function build(
         target,
         ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
         result,
-        mode: buildOptions.createIngameMode
+        mode: parseImporterMode(buildOptions.createIngameMode),
+        agentType: parseImporterAgentType(buildOptions.createIngameAgentType)
       });
       const successfulItems = importResults.filter((item) => item.success);
       const failedItems = importResults.filter((item) => !item.success);
