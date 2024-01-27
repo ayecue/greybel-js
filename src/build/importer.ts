@@ -4,7 +4,7 @@ import storage from 'node-persist';
 import path from 'path';
 
 import { createBasePath } from './create-base-path.js';
-const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg;
+const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
 
 export enum AgentType {
   C2 = 'headless',
