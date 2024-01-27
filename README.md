@@ -81,21 +81,23 @@ Arguments:
 	output                      Output directory
 
 Options:
-	-V, --version				Output the version number
-	-id, --ingame-directory <dir>	        Ingame directory to where the files should be imported to
-	-ev, --env-files <file...>		Environment variables files
-	-vr, --env-vars <vars...>		Environment variables
-	-en, --exclude-namespaces <vars...>	Exclude namespaces from optimization
-	-u, --uglify				Uglify your code
-	-b, --beautify				Beautify your code
-	-h, --help				Display help for command
-	-i, --installer				Create installer for GreyScript (Should be used if you use import_code)
-	-i, --auto-compile			Enable autocompile within the installer (Should only be used with the installer flag)
-	-mc, --max-chars			Amount of characters allowed in one file before splitting when creating installer
-	-dno, --disable-namespaces-optimization	Disable namespace optimization
-	-dlo, --disable-literals-optimization	Disable literals optimization
-	-ci, --create-ingame 			Create files automatically in-game
-	-cim, --create-ingame-mode 		Creation mode: "local" or "public"
+  -V, --version                                  output the version number
+  -id, --ingame-directory <ingameDirectory>      Ingame directory to where the files should be imported to
+  -ev, --env-files <file...>                     Environment variables files
+  -vr, --env-vars <var...>                       Environment variables
+  -en, --exclude-namespaces <namespace...>       Exclude namespaces from optimization
+  -dlo, --disable-literals-optimization          Disable literals optimization
+  -dno, --disable-namespaces-optimization        Disable namespace optimization
+  -u, --uglify                                   Uglify your code
+  -b, --beautify                                 Beautify your code
+  -o, --obfuscation                              Enable obfuscation
+  -i, --installer                                Create installer for GreyScript (Should be used if you use import_code)
+  -ac, --auto-compile                            Enable autocompile within the installer (Should only be used with the installer flag)
+  -mc, --max-chars <number>                      Amount of characters allowed in one file before splitting when creating installer
+  -ci, --create-ingame                           Create files automatically in-game
+  -cia, --create-ingame-agent-type <agent-type>  Creation agent type: "headless" or "message-hook"
+  -cim, --create-ingame-mode <mode>              Creation mode: "local" or "public"
+  -h, --help                                     display help for command
 ```
 
 ## Examples:
@@ -106,11 +108,30 @@ greybel /my/code/file.src
 
 ## Auto create files in-game
 
-It is possible to automatically create transpiled files in the game. This can be activated by using the `--create-ingame` flag. Additionally, you can choose between two different modes `local` and `public`.
+It is possible to automatically create transpiled files in the game. This can be activated by using the `--create-ingame` flag. Additionally, you can choose between two agents by using `--create-ingame-agent-type`. Depending on the agent there are certain prerequisites to fulfill or behaviors to watch out for.
 
-By default `local` is selected. Keep in mind that the game needs to have a singleplayer session running for `local` to work. For `public` there is no need to have the game client running.
+### Headless
 
-A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continues providing of credentials is required.
+When you are using headless you are essentially connecting to the game without using the actual native game client. Depending on which mode you selected, either `local` or `public` the agent will import the files into either singleplayer or multiplayer.
+
+By default `local` is selected. Keep in mind that the game needs to have a single-player session running for `local` to work. For `public` there is no need to have the game client running.
+
+A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continued providing of credentials is required.
+
+**Note**: This agent will potentially log you out of Grey Hack since Grey Hack only allows one active game session.
+
+### Message Hook
+
+The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. Here are the prerequisites:
+
+- Install [BepInEx version 6.0.0-pre.1](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) for more details about the installation you can take a look [here](https://docs.bepinex.dev/master/articles/user_guide/installation/index.html)
+- With [BepInEx](https://github.com/BepInEx/BepInEx) in place, you just need to download the [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ef886ba9b87f701bc46d877df98f47c9299cab33/GreyHackMessageHook.dll) and put it into the plugins folder
+
+With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.
+
+Additionally, you won't need to provide any Steam credentials nor do you need to select a mode.
+
+**Note**: For this agent to work you **have to have Grey Hack running**.
 
 ## Dependency Management (Transpiler)
 

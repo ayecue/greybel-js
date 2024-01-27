@@ -1,4 +1,4 @@
-import { AgentType, ImporterMode } from './importer';
+import { AgentType, ImporterMode } from './importer.js';
 
 export interface BuildOptions {
   uglify: boolean;
