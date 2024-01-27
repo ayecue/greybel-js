@@ -421,8 +421,9 @@ Note: For the UI feature Greybel will try to transform TextMesh Pro Rich-Text ta
 
 # Todo
 
-* implement package manager
+* implement missing intrinsics
+* improve mock environment
 
 # Contact
 
-Generally, you can just create an [issue](https://github.com/ayecue/greybel-js/issues) if you find a bug or got a feature request.
+If you have any questions or need help feel free to join the dedicated Greybel discord https://discord.gg/q8tR8F8u2M
