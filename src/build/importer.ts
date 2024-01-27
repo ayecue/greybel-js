@@ -1,14 +1,24 @@
-import GreybelC2AgentPkg from 'greybel-proxy';
+import GreybelAgentPkg from 'greybel-agent';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import storage from 'node-persist';
 import path from 'path';
 
 import { createBasePath } from './create-base-path.js';
-const { GreybelC2Agent } = GreybelC2AgentPkg;
+const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
+
+export enum AgentType {
+  C2 = 'headless',
+  C2Light = 'message-hook'
+}
+
+export enum ImporterMode {
+  Local = 'local',
+  Public = 'public'
+}
 
 const IMPORTER_MODE_MAP = {
-  local: 2,
-  public: 0
+  [ImporterMode.Local]: 2,
+  [ImporterMode.Public]: 0
 };
 
 type ImportItem = {
@@ -23,21 +33,24 @@ type ImportResult = {
 
 export interface ImporterOptions {
   target: string;
+  mode: ImporterMode;
   ingameDirectory: string;
+  agentType: AgentType;
   result: TranspilerParseResult;
-  mode: string;
 }
 
 class Importer {
   private importList: ImportItem[];
+  private agentType: AgentType;
   private target: string;
   private ingameDirectory: string;
-  private mode: string;
+  private mode: ImporterMode;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory;
     this.importList = this.createImportList(options.target, options.result);
+    this.agentType = options.agentType;
     this.mode = options.mode;
   }
 
@@ -57,19 +70,30 @@ class Importer {
     return imports;
   }
 
+  async createAgent(): Promise<any> {
+    switch (this.agentType) {
+      case AgentType.C2: {
+        await storage.init();
+
+        return new GreybelC2Agent({
+          connectionType: IMPORTER_MODE_MAP[this.mode],
+          refreshToken: await storage.getItem('greybel.steam.refreshToken'),
+          onSteamRefreshToken: (code) =>
+            storage.setItem('greybel.steam.refreshToken', code)
+        });
+      }
+      case AgentType.C2Light: {
+        return new GreybelC2LightAgent();
+      }
+    }
+  }
+
   async import(): Promise<ImportResult[]> {
     if (!Object.prototype.hasOwnProperty.call(IMPORTER_MODE_MAP, this.mode)) {
       throw new Error('Unknown import mode.');
     }
 
-    await storage.init();
-
-    const agent = new GreybelC2Agent({
-      connectionType: IMPORTER_MODE_MAP[this.mode],
-      refreshToken: await storage.getItem('greybel.steam.refreshToken'),
-      onSteamRefreshToken: (code) =>
-        storage.setItem('greybel.steam.refreshToken', code)
-    });
+    const agent = await this.createAgent();
     const results: ImportResult[] = [];
 
     for (const item of this.importList) {
@@ -93,6 +117,24 @@ class Importer {
     return results;
   }
 }
+
+export const parseImporterAgentType = (agentType: string): AgentType => {
+  switch (agentType) {
+    case AgentType.C2Light:
+      return AgentType.C2Light;
+    default:
+      return AgentType.C2;
+  }
+};
+
+export const parseImporterMode = (mode: string): ImporterMode => {
+  switch (mode) {
+    case ImporterMode.Public:
+      return ImporterMode.Public;
+    default:
+      return ImporterMode.Local;
+  }
+};
 
 export const createImporter = async (
   options: ImporterOptions
