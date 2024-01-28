@@ -988,3 +988,7 @@ All notable changes to this project will be documented in this file.
 - add frame limit to interpreter to prevent crashes due to infinite recursion caused by a script - related to [#172](https://github.com/ayecue/greybel-vs/issues/172)
 - register VM exiting while waiting for user input
 - add message-hook agent to enable a smoother workflow when importing files in-game
+
+## [3.2.1] - 28.01.2024
+
+- update GreyHackMessageHook.dll version to 0.2 adding an auto close
