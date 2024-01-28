@@ -21,6 +21,7 @@ import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager.js';
 import {
   PseudoCompletionItem,
   PseudoCompletionList,
+  PseudoMarkdownString,
   PseudoSignatureHelp,
   PseudoSignatureInformation
 } from './helper/vs.js';
@@ -262,6 +263,7 @@ export function activate(monaco: typeof Monaco) {
       signatureHelp.signatures = [];
       signatureHelp.activeSignature = 0;
 
+      // Signature args
       const definition = item.definition;
       const args = definition.arguments || [];
       const returnValues = definition.returns.join(' or ') || 'null';
@@ -279,9 +281,21 @@ export function activate(monaco: typeof Monaco) {
         }
       );
 
+      // Signature docs
+      const documentation = new PseudoMarkdownString('');
+      const example = definition.example || [];
+      const output = [definition.description];
+
+      if (example.length > 0) {
+        output.push(...['#### Examples:', '```', ...example, '```']);
+      }
+
+      documentation.appendMarkdown(output.join('\n'));
+
       const signatureInfo = new PseudoSignatureInformation(
         `(${item.type}) ${item.label} (${argValues}): ${returnValues}`,
-        params
+        params,
+        documentation
       );
 
       signatureHelp.add(signatureInfo);
