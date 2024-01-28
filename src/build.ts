@@ -89,7 +89,8 @@ export default async function build(
         ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
         result,
         mode: parseImporterMode(buildOptions.createIngameMode),
-        agentType: parseImporterAgentType(buildOptions.createIngameAgentType)
+        agentType: parseImporterAgentType(buildOptions.createIngameAgentType),
+        autoCompile: buildOptions.autoCompile
       });
       const successfulItems = importResults.filter((item) => item.success);
       const failedItems = importResults.filter((item) => !item.success);

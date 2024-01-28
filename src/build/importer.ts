@@ -37,37 +37,43 @@ export interface ImporterOptions {
   ingameDirectory: string;
   agentType: AgentType;
   result: TranspilerParseResult;
+  autoCompile: boolean;
 }
 
 class Importer {
-  private importList: ImportItem[];
+  private importRefs: Map<string, ImportItem>;
   private agentType: AgentType;
   private target: string;
   private ingameDirectory: string;
   private mode: ImporterMode;
+  private autoCompile: boolean;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory;
-    this.importList = this.createImportList(options.target, options.result);
+    this.importRefs = this.createImportList(options.target, options.result);
     this.agentType = options.agentType;
     this.mode = options.mode;
+    this.autoCompile = options.autoCompile;
   }
 
   private createImportList(
     rootTarget: string,
     parseResult: TranspilerParseResult
-  ): ImportItem[] {
-    const imports = Object.entries(parseResult).map(([target, code]) => {
-      const ingameFilepath = createBasePath(rootTarget, target, '');
+  ): Map<string, ImportItem> {
+    return Object.entries(parseResult).reduce<Map<string, ImportItem>>(
+      (result, [target, code]) => {
+        const ingameFilepath = createBasePath(rootTarget, target, '');
 
-      return {
-        ingameFilepath,
-        content: code
-      };
-    });
+        result.set(target, {
+          ingameFilepath,
+          content: code
+        });
 
-    return imports;
+        return result;
+      },
+      new Map()
+    );
   }
 
   async createAgent(): Promise<any> {
@@ -96,7 +102,7 @@ class Importer {
     const agent = await this.createAgent();
     const results: ImportResult[] = [];
 
-    for (const item of this.importList) {
+    for (const item of this.importRefs.values()) {
       const isCreated = await agent.tryToCreateFile(
         this.ingameDirectory + path.posix.dirname(item.ingameFilepath),
         path.basename(item.ingameFilepath),
@@ -109,6 +115,30 @@ class Importer {
       } else {
         console.log(`Importing of ${item.ingameFilepath} failed`);
         results.push({ path: item.ingameFilepath, success: false });
+      }
+    }
+
+    if (this.autoCompile) {
+      const rootRef = this.importRefs.get(this.target);
+      const binaryFileName = path
+        .basename(rootRef.ingameFilepath)
+        .replace(/\.[^.]+$/, '');
+      const builtDone = agent.tryToBuild(
+        this.ingameDirectory + path.posix.dirname(rootRef.ingameFilepath),
+        binaryFileName,
+        rootRef.content
+      );
+
+      if (builtDone) {
+        console.log(`Build done`);
+
+        for (const item of this.importRefs.values()) {
+          await agent.tryToRemoveFile(
+            this.ingameDirectory + item.ingameFilepath
+          );
+        }
+      } else {
+        console.log(`Build failed`);
       }
     }
 

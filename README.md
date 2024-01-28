@@ -92,7 +92,7 @@ Options:
   -b, --beautify                                 Beautify your code
   -o, --obfuscation                              Enable obfuscation
   -i, --installer                                Create installer for GreyScript (Should be used if you use import_code)
-  -ac, --auto-compile                            Enable autocompile within the installer (Should only be used with the installer flag)
+  -ac, --auto-compile                            Enables autocompile within the installer or create-ingame feature
   -mc, --max-chars <number>                      Amount of characters allowed in one file before splitting when creating installer
   -ci, --create-ingame                           Create files automatically in-game
   -cia, --create-ingame-agent-type <agent-type>  Creation agent type: "headless" or "message-hook"
