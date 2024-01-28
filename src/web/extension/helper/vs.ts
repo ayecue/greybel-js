@@ -78,19 +78,23 @@ export class PseudoCompletionList {
 export class PseudoSignatureInformation {
   label: string;
   parameters: Monaco.languages.ParameterInformation[];
+  documentation: string | Monaco.IMarkdownString;
 
   constructor(
     label: string,
-    parameters: Monaco.languages.ParameterInformation[]
+    parameters: Monaco.languages.ParameterInformation[],
+    documentation: string | Monaco.IMarkdownString
   ) {
     this.label = label;
     this.parameters = parameters;
+    this.documentation = documentation;
   }
 
   valueOf(): Monaco.languages.SignatureInformation {
     return {
       label: this.label,
-      parameters: this.parameters
+      parameters: this.parameters,
+      documentation: this.documentation
     };
   }
 }

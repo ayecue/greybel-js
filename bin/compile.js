@@ -74,7 +74,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
     )
     .option(
       '-ac, --auto-compile',
-      'Enable autocompile within the installer (Should only be used with the installer flag)'
+      'Enables autocompile within the installer or create-ingame feature'
     )
     .option(
       '-mc, --max-chars <number>',

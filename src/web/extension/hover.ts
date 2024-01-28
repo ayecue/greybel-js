@@ -40,15 +40,14 @@ export function activate(monaco: typeof Monaco) {
       const hoverText = new PseudoMarkdownString('');
 
       if (typeInfo instanceof TypeInfoWithDefinition) {
-        const defintion = typeInfo.definition;
+        const definition = typeInfo.definition;
         let args: SignatureDefinitionArg[] = [];
 
         try {
-          args = defintion.arguments || [];
+          args = definition.arguments || [];
         } catch (err: any) {}
 
-        const example = defintion.example || [];
-        const returnValues = formatTypes(defintion.returns) || 'null';
+        const returnValues = formatTypes(definition.returns) || 'null';
         let headline;
 
         if (args.length === 0) {
@@ -66,7 +65,8 @@ export function activate(monaco: typeof Monaco) {
           headline = `(${typeInfo.kind}) ${typeInfo.label} (${argValues}): ${returnValues}`;
         }
 
-        const output = ['```', headline, '```', '***', defintion.description];
+        const output = ['```', headline, '```', '***', definition.description];
+        const example = definition.example || [];
 
         if (example.length > 0) {
           output.push(...['#### Examples:', '```', ...example, '```']);
