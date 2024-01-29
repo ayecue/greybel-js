@@ -994,3 +994,7 @@ All notable changes to this project will be documented in this file.
 - update GreyHackMessageHook.dll version to 0.3 adding an auto close - thanks to [@stevenklar](https://github.com/stevenklar) - related to [#159](https://github.com/ayecue/greybel-js/issues/159)
 - add auto compile option for create in-game feature - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar) - related to [#160](https://github.com/ayecue/greybel-js/issues/160)
 - add function definition to signature helper - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar)
+
+## [3.2.2] - 29.01.2024
+
+- decrease cooldown between agent messages to speed up building process
