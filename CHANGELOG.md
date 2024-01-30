@@ -998,3 +998,7 @@ All notable changes to this project will be documented in this file.
 ## [3.2.2] - 29.01.2024
 
 - decrease cooldown between agent messages to speed up building process
+
+## [3.2.3] - 30.01.2024
+
+- add jsdoc syntax parser to comment to modify signatures that are shown - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar)

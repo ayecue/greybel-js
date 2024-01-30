@@ -1,7 +1,7 @@
-import { SignatureDefinitionArg } from 'meta-utils';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';
+import { createHover } from './helper/tooltip.js';
 import { TypeInfoWithDefinition } from './helper/type-manager.js';
 import { PseudoHover, PseudoMarkdownString } from './helper/vs.js';
 
@@ -40,41 +40,7 @@ export function activate(monaco: typeof Monaco) {
       const hoverText = new PseudoMarkdownString('');
 
       if (typeInfo instanceof TypeInfoWithDefinition) {
-        const definition = typeInfo.definition;
-        let args: SignatureDefinitionArg[] = [];
-
-        try {
-          args = definition.arguments || [];
-        } catch (err: any) {}
-
-        const returnValues = formatTypes(definition.returns) || 'null';
-        let headline;
-
-        if (args.length === 0) {
-          headline = `(${typeInfo.kind}) ${typeInfo.label} (): ${returnValues}`;
-        } else {
-          const argValues = args
-            .map(
-              (item: SignatureDefinitionArg) =>
-                `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}${
-                  item.default ? ` = ${item.default}` : ''
-                }`
-            )
-            .join(', ');
-
-          headline = `(${typeInfo.kind}) ${typeInfo.label} (${argValues}): ${returnValues}`;
-        }
-
-        const output = ['```', headline, '```', '***', definition.description];
-        const example = definition.example || [];
-
-        if (example.length > 0) {
-          output.push(...['#### Examples:', '```', ...example, '```']);
-        }
-
-        hoverText.appendMarkdown(output.join('\n'));
-
-        return new PseudoHover(hoverText).valueOf();
+        return createHover(typeInfo).valueOf();
       }
 
       hoverText.appendCodeblock(

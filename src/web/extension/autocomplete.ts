@@ -1,8 +1,5 @@
 import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
-import {
-  SignatureDefinitionArg,
-  SignatureDefinitionContainer
-} from 'meta-utils';
+import { SignatureDefinitionContainer } from 'meta-utils';
 import {
   ASTBase,
   ASTCallExpression,
@@ -17,13 +14,12 @@ import { getAvailableOperators } from './autocomplete/operators.js';
 import transformASTToString from './helper/ast-stringify.js';
 import { LookupHelper } from './helper/lookup-type.js';
 import documentParseQueue from './helper/model-manager.js';
+import { createSignatureInfo } from './helper/tooltip.js';
 import { TypeInfo, TypeInfoWithDefinition } from './helper/type-manager.js';
 import {
   PseudoCompletionItem,
   PseudoCompletionList,
-  PseudoMarkdownString,
-  PseudoSignatureHelp,
-  PseudoSignatureInformation
+  PseudoSignatureHelp
 } from './helper/vs.js';
 
 export const convertDefinitionsToCompletionList = (
@@ -263,42 +259,7 @@ export function activate(monaco: typeof Monaco) {
       signatureHelp.signatures = [];
       signatureHelp.activeSignature = 0;
 
-      // Signature args
-      const definition = item.definition;
-      const args = definition.arguments || [];
-      const returnValues = definition.returns.join(' or ') || 'null';
-      const argValues = args
-        .map(
-          (item: SignatureDefinitionArg) =>
-            `${item.label}${item.opt ? '?' : ''}: ${item.type}`
-        )
-        .join(', ');
-      const params: Monaco.languages.ParameterInformation[] = args.map(
-        (argItem: SignatureDefinitionArg) => {
-          return {
-            label: `${argItem.label}${argItem.opt ? '?' : ''}: ${argItem.type}`
-          };
-        }
-      );
-
-      // Signature docs
-      const documentation = new PseudoMarkdownString('');
-      const example = definition.example || [];
-      const output = [definition.description];
-
-      if (example.length > 0) {
-        output.push(...['#### Examples:', '```', ...example, '```']);
-      }
-
-      documentation.appendMarkdown(output.join('\n'));
-
-      const signatureInfo = new PseudoSignatureInformation(
-        `(${item.type}) ${item.label} (${argValues}): ${returnValues}`,
-        params,
-        documentation
-      );
-
-      signatureHelp.add(signatureInfo);
+      signatureHelp.add(createSignatureInfo(item));
 
       return signatureHelp.valueOf();
     }
