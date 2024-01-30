@@ -370,7 +370,20 @@ export class TypeMap {
     const currentItem = me.findASTItemInLine(item.start.line, ASTType.Comment);
 
     if (previousItem instanceof ASTComment) {
-      return previousItem.value;
+      const lines = [previousItem.value];
+      let index = item.start.line - 2;
+
+      while (index >= 0) {
+        const item = me.getLastASTItemOfLine(index--);
+
+        if (item instanceof ASTComment) {
+          lines.unshift(item.value);
+        } else {
+          break;
+        }
+      }
+
+      return lines.join('\n\n');
     } else if (currentItem instanceof ASTComment) {
       return currentItem.value;
     }
