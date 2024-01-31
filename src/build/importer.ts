@@ -131,7 +131,7 @@ class Importer {
       const binaryFileName = path
         .basename(rootRef.ingameFilepath)
         .replace(/\.[^.]+$/, '');
-      const response = agent.tryToBuild(
+      const response = await agent.tryToBuild(
         this.ingameDirectory + path.posix.dirname(rootRef.ingameFilepath),
         binaryFileName,
         rootRef.content
