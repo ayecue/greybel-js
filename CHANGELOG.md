@@ -1006,3 +1006,7 @@ All notable changes to this project will be documented in this file.
 ## [3.2.4] - 31.01.2024
 
 - fix bytecode generator passing noInvoke flag to sub nodes causing issues when using addressOf on expression with more than two members
+
+## [3.2.5] - 01.02.2024
+
+- improve error logs for user when in-game import feature fails to import
