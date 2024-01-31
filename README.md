@@ -125,7 +125,7 @@ A minor caveat is that a Steam account and password need to be provided. The ref
 The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. Here are the prerequisites:
 
 - Install [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) for more details about the installation you can take a look [here](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html)
-- With [BepInEx](https://github.com/BepInEx/BepInEx) in place, you just need to download the [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/1fcfa51ab924434b6ae2288eb1fff7bab960c38f/GreyHackMessageHook.dll) and put it into the plugins folder
+- With [BepInEx](https://github.com/BepInEx/BepInEx) in place, you just need to download the [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/7e8459630679d52f3e0275c13a2908ee5eff0d51/GreyHackMessageHook.dll) and put it into the plugins folder
 - You may need to modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` unless you are using Windows
 
 With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.

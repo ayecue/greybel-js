@@ -1010,3 +1010,4 @@ All notable changes to this project will be documented in this file.
 ## [3.2.5] - 01.02.2024
 
 - improve error logs for user when in-game import feature fails to import
+- update GreyHackMessageHook.dll version to 0.4 to use unity thread for closing terminal
