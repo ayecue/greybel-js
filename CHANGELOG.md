@@ -1002,3 +1002,7 @@ All notable changes to this project will be documented in this file.
 ## [3.2.3] - 30.01.2024
 
 - add jsdoc syntax parser to comment to modify signatures that are shown - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar)
+
+## [3.2.4] - 31.01.2024
+
+- fix bytecode generator passing noInvoke flag to sub nodes causing issues when using addressOf on expression with more than two members
