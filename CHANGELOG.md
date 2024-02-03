@@ -1011,3 +1011,9 @@ All notable changes to this project will be documented in this file.
 
 - improve error logs for user when in-game import feature fails to import
 - update GreyHackMessageHook.dll version to 0.4 to use unity thread for closing terminal
+
+## [3.2.6] - 03.01.2024
+
+- fix message handling in headless agent causing connection to get dropped under certain conditions - thanks for reporting [SkidMall](https://github.com/cantemizyurek)
+- fix general sort description
+- fix list sort signature
