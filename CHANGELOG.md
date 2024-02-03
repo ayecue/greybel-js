@@ -1017,3 +1017,7 @@ All notable changes to this project will be documented in this file.
 - fix message handling in headless agent causing connection to get dropped under certain conditions - thanks for reporting [SkidMall](https://github.com/cantemizyurek)
 - fix general sort description
 - fix list sort signature
+
+## [3.2.7] - 03.01.2024
+
+- change window handle for agents to prevent partial import error - thanks for reporting [@gatekeeper258](https://github.com/gatekeeper258)
