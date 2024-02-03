@@ -5,6 +5,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 ## Links
 
 - Latest changes: [Changelog](/CHANGELOG.md)
+- Projects using Greybel: [viper-3.0](https://github.com/cantemizyurek/viper-3.0)
 - Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - Greybel UI Demo: [greybel-ui](https://editor.greyscript.org)
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
