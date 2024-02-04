@@ -89,12 +89,15 @@ class Importer {
       case AgentType.C2: {
         await storage.init();
 
-        return new GreybelC2Agent({
-          connectionType: IMPORTER_MODE_MAP[this.mode],
-          refreshToken: await storage.getItem('greybel.steam.refreshToken'),
-          onSteamRefreshToken: (code) =>
-            storage.setItem('greybel.steam.refreshToken', code)
-        }, [125, 150]);
+        return new GreybelC2Agent(
+          {
+            connectionType: IMPORTER_MODE_MAP[this.mode],
+            refreshToken: await storage.getItem('greybel.steam.refreshToken'),
+            onSteamRefreshToken: (code) =>
+              storage.setItem('greybel.steam.refreshToken', code)
+          },
+          [125, 150]
+        );
       }
       case AgentType.C2Light: {
         return new GreybelC2LightAgent([125, 150]);
@@ -121,8 +124,14 @@ class Importer {
         console.log(`Imported ${item.ingameFilepath} successful`);
         results.push({ path: item.ingameFilepath, success: true });
       } else {
-        console.log(`Importing of ${item.ingameFilepath} failed due to ${response.message}`);
-        results.push({ path: item.ingameFilepath, success: false, reason: response.message });
+        console.log(
+          `Importing of ${item.ingameFilepath} failed due to ${response.message}`
+        );
+        results.push({
+          path: item.ingameFilepath,
+          success: false,
+          reason: response.message
+        });
       }
     }
 
@@ -139,12 +148,15 @@ class Importer {
 
       if (response.success) {
         console.log(`Build done`);
+        const queries = [];
 
         for (const item of this.importRefs.values()) {
-          await agent.tryToRemoveFile(
-            this.ingameDirectory + item.ingameFilepath
+          queries.push(
+            agent.tryToRemoveFile(this.ingameDirectory + item.ingameFilepath)
           );
         }
+
+        await Promise.all(queries);
       } else {
         console.log(`Build failed due to ${response.message}`);
       }
