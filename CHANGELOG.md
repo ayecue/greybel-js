@@ -1021,3 +1021,7 @@ All notable changes to this project will be documented in this file.
 ## [3.2.7] - 03.01.2024
 
 - change window handle for agents to prevent partial import error - thanks for reporting [@gatekeeper258](https://github.com/gatekeeper258)
+
+## [3.2.8] - 04.01.2024
+
+- improve file removal step on auto-compile to instant
