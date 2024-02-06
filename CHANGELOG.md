@@ -1025,3 +1025,9 @@ All notable changes to this project will be documented in this file.
 ## [3.2.8] - 04.01.2024
 
 - improve file removal step on auto-compile to instant
+
+## [3.2.9] - 07.01.2024
+
+- allow super being reassigned
+- fix super not using proper origin when calling a function of parent - thanks for reporting apparatusdeus
+- set super to null if there is no parent class
