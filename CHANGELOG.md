@@ -1034,4 +1034,4 @@ All notable changes to this project will be documented in this file.
 
 ## [3.2.10] - 10.01.2024
 
-- fix shell.launch layer counter to decrease on nested script end
+- fix shell.launch layer counter to decrease on nested script end - thanks for reporting [@stevenklar](https://github.com/stevenklar)
