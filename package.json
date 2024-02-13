@@ -39,7 +39,7 @@
         "greybel-intrinsics": "~4.4.0",
         "greyscript-core": "~1.4.2",
         "greyscript-interpreter": "~1.4.0",
-        "greyscript-meta": "~2.3.3",
+        "greyscript-meta": "~2.4.0",
         "greyscript-transpiler": "~0.5.3",
         "is-inside-container": "^1.0.0",
         "lru-cache": "^7.14.1",
