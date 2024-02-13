@@ -1041,3 +1041,4 @@ All notable changes to this project will be documented in this file.
 - add highlighting, signature and description for new reset_password_coin and reset_ctf_password
 - add missing descriptions for reverse, lastIndexOf and trim in general
 - add placeholders for new intrinsics
+- update headless agent to work with latest version
