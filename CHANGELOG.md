@@ -1035,3 +1035,10 @@ All notable changes to this project will be documented in this file.
 ## [3.2.10] - 10.01.2024
 
 - fix shell.launch layer counter to decrease on nested script end - thanks for reporting [@stevenklar](https://github.com/stevenklar)
+
+## [3.2.11] - 13.01.2024
+
+- add highlighting, signature and description for new reset_password_coin and reset_ctf_password
+- add missing descriptions for reverse, lastIndexOf and trim in general
+- add placeholders for new intrinsics
+- update headless agent to work with latest version
