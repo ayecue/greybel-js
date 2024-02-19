@@ -1042,3 +1042,8 @@ All notable changes to this project will be documented in this file.
 - add missing descriptions for reverse, lastIndexOf and trim in general
 - add placeholders for new intrinsics
 - update headless agent to work with latest version
+
+## [3.2.12] - 19.01.2024
+
+- improve parser recovery from invalid syntax
+- use backpatching to enable similar MiniScript parsing of blocks
