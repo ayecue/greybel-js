@@ -11,6 +11,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
 - GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
 - Grey Hack Image Transformer: [gh-image-transformer](https://github.com/ayecue/gh-image-transformer)
+- Discord: [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M)
 
 ## Features
 
@@ -428,4 +429,4 @@ Note: For the UI feature Greybel will try to transform TextMesh Pro Rich-Text ta
 
 # Contact
 
-If you have any questions, feature requests or need help feel free to join the [dedicated Greybel discord](https://discord.gg/q8tR8F8u2M).
+If you have any questions, feature requests or need help feel free to join the [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M).
