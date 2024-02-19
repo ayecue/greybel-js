@@ -1046,4 +1046,4 @@ All notable changes to this project will be documented in this file.
 ## [3.2.12] - 19.01.2024
 
 - improve parser recovery from invalid syntax
-- use backpatching to enable similar MiniScript parsing of blocks
+- use backpatching to enable similar MiniScript parsing of blocks, this may cause previous valid greybel syntax to be invalid especially when it comes to function blocks
