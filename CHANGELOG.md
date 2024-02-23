@@ -1050,4 +1050,4 @@ All notable changes to this project will be documented in this file.
 
 ## [3.2.13] - 23.01.2024
 
-- use proper parser package for UI to prevent possible errors which are related to MiniScript but not to GreyScript
+- use proper parser package for UI to prevent possible syntax errors which are related to MiniScript but not to GreyScript
