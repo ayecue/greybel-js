@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { ASTChunkAdvanced, Parser } from 'greybel-core';
+import { ASTChunkGreyScript, Parser } from 'greyscript-core';
 import LRU from 'lru-cache';
 import { ASTBase } from 'miniscript-core';
 import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
@@ -74,8 +74,8 @@ export class DocumentParseQueue extends EventEmitter {
     });
     const chunk = parser.parseChunk();
 
-    if ((chunk as ASTChunkAdvanced).body?.length > 0) {
-      typeManager.analyze(document, chunk as ASTChunkAdvanced);
+    if ((chunk as ASTChunkGreyScript).body?.length > 0) {
+      typeManager.analyze(document, chunk as ASTChunkGreyScript);
 
       return {
         content,
@@ -89,7 +89,7 @@ export class DocumentParseQueue extends EventEmitter {
       const strictParser = new Parser(document.getValue());
       const strictChunk = strictParser.parseChunk();
 
-      typeManager.analyze(document, strictChunk as ASTChunkAdvanced);
+      typeManager.analyze(document, strictChunk as ASTChunkGreyScript);
 
       return {
         content,
