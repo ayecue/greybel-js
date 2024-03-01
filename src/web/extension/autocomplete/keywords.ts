@@ -26,7 +26,9 @@ export const AVAILABLE_KEYWORDS = [
   GreybelKeyword.Envar,
   GreybelKeyword.Import,
   GreybelKeyword.Include,
-  GreybelKeyword.Debugger
+  GreybelKeyword.Debugger,
+  GreybelKeyword.Line,
+  GreybelKeyword.File,
 ] as const;
 
 export const getAvailableKeywords = (

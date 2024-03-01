@@ -1051,3 +1051,8 @@ All notable changes to this project will be documented in this file.
 ## [3.2.13] - 23.01.2024
 
 - use proper parser package for UI to prevent possible syntax errors which are related to MiniScript but not to GreyScript
+
+## [3.2.14] - 01.03.2024
+
+- introduce #line and #filename keyword for debugging
+- fix import_code behaviour in interpreter so it's content is only executed once
