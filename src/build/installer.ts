@@ -37,7 +37,7 @@ class InstallerFile {
   insert(item: ImportItem): boolean {
     const isNew = !this.previous?.items.includes(item);
     const remaining = this.getRemainingSpace();
-    const filePath = `${this.rootDirectory}/${item.ingameFilepath}`;
+    const filePath = `${this.rootDirectory}${item.ingameFilepath}`;
     let line = `m("${filePath}","${item.content}",${isNew ? '1' : '0'});d`;
 
     if (remaining > line.length) {
