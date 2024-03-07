@@ -71,10 +71,11 @@ export default async function build(
 
     if (buildOptions.installer) {
       console.log('Creating installer.');
+
       await createInstaller({
         target,
         autoCompile: buildOptions.autoCompile,
-        ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
+        ingameDirectory: buildOptions.ingameDirectory,
         buildPath,
         result,
         maxChars: buildOptions.maxChars
@@ -86,7 +87,7 @@ export default async function build(
 
       const importResults = await createImporter({
         target,
-        ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
+        ingameDirectory: buildOptions.ingameDirectory,
         result,
         mode: parseImporterMode(buildOptions.createIngameMode),
         agentType: parseImporterAgentType(buildOptions.createIngameAgentType),

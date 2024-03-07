@@ -3,6 +3,7 @@ import { TranspilerParseResult } from 'greybel-transpiler';
 import storage from 'node-persist';
 import path from 'path';
 
+import { generateAutoCompileCode } from './auto-compile-helper.js';
 import { createBasePath } from './create-base-path.js';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
 
@@ -58,7 +59,7 @@ class Importer {
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
-    this.ingameDirectory = options.ingameDirectory;
+    this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.target, options.result);
     this.agentType = options.agentType;
     this.mode = options.mode;
@@ -139,55 +140,11 @@ class Importer {
       const rootRef = this.importRefs.get(this.target);
 
       await agent.tryToEvaluate(
-        `
-        rootDirectory = "${this.ingameDirectory}"
-        rootFilePath = "${rootRef.ingameFilepath}"
-        filePaths = [${Array.from(this.importRefs.values())
-          .map((item) => `"${item.ingameFilepath}"`)
-          .join(',')}]
-        myShell = get_shell
-        myComputer = host_computer(myShell)
-
-        build(myShell, rootDirectory + rootFilePath, rootDirectory)
-        print("Build done in " + rootDirectory)
-
-        remainingFolderMap = {}
-
-        for filePath in filePaths
-          absPath = rootDirectory + filePath
-          entity = File(myComputer, absPath)
-
-          if not entity then
-            print("Couldn't find " + absPath)
-            continue
-          end if
-
-          parentFolder = parent(entity)
-          remainingFolderMap[path(parentFolder)] = 1
-
-          delete(entity)
-          print("Deleted " + entity.path)
-        end for
-
-        remainingFolderPaths = indexes(remainingFolderMap)
-        currentFolderPath = pop(remainingFolderPaths)
-
-        while currentFolderPath != null
-          if currentFolderPath == rootDirectory then
-            currentFolderPath = pop(remainingFolderPaths)
-            continue
-          end if
-
-          folder = File(myComputer, currentFolderPath)
-          if folder and folder.get_files.len == 0 and folder.get_folders.len == 0 then
-            push(remainingFolderPaths, path(parent(folder)))
-            delete(folder)
-            print("Deleted " + folder.path)
-          end if
-
-          currentFolderPath = pop(remainingFolderPaths)
-        end while
-      `,
+        generateAutoCompileCode(
+          this.ingameDirectory,
+          rootRef.ingameFilepath,
+          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath)
+        ),
         ({ output }) => console.log(output)
       );
     }
