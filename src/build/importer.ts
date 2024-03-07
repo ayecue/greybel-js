@@ -137,29 +137,59 @@ class Importer {
 
     if (this.autoCompile) {
       const rootRef = this.importRefs.get(this.target);
-      const binaryFileName = path
-        .basename(rootRef.ingameFilepath)
-        .replace(/\.[^.]+$/, '');
-      const response = await agent.tryToBuild(
-        this.ingameDirectory + path.posix.dirname(rootRef.ingameFilepath),
-        binaryFileName,
-        rootRef.content
+
+      await agent.tryToEvaluate(
+        `
+        rootDirectory = "${this.ingameDirectory}"
+        rootFilePath = "${rootRef.ingameFilepath}"
+        filePaths = [${Array.from(this.importRefs.values())
+          .map((item) => `"${item.ingameFilepath}"`)
+          .join(',')}]
+        myShell = get_shell
+        myComputer = host_computer(myShell)
+
+        build(myShell, rootDirectory + rootFilePath, rootDirectory)
+        print("Build done in " + rootDirectory)
+
+        remainingFolderMap = {}
+
+        for filePath in filePaths
+          absPath = rootDirectory + filePath
+          entity = File(myComputer, absPath)
+
+          if not entity then
+            print("Couldn't find " + absPath)
+            continue
+          end if
+
+          parentFolder = parent(entity)
+          remainingFolderMap[path(parentFolder)] = 1
+
+          delete(entity)
+          print("Deleted " + entity.path)
+        end for
+
+        remainingFolderPaths = indexes(remainingFolderMap)
+        currentFolderPath = pop(remainingFolderPaths)
+
+        while currentFolderPath != null
+          if currentFolderPath == rootDirectory then
+            currentFolderPath = pop(remainingFolderPaths)
+            continue
+          end if
+
+          folder = File(myComputer, currentFolderPath)
+          if folder and folder.get_files.len == 0 and folder.get_folders.len == 0 then
+            push(remainingFolderPaths, path(parent(folder)))
+            delete(folder)
+            print("Deleted " + folder.path)
+          end if
+
+          currentFolderPath = pop(remainingFolderPaths)
+        end while
+      `,
+        ({ output }) => console.log(output)
       );
-
-      if (response.success) {
-        console.log(`Build done`);
-        const queries = [];
-
-        for (const item of this.importRefs.values()) {
-          queries.push(
-            agent.tryToRemoveFile(this.ingameDirectory + item.ingameFilepath)
-          );
-        }
-
-        await Promise.all(queries);
-      } else {
-        console.log(`Build failed due to ${response.message}`);
-      }
     }
 
     await agent.dispose();

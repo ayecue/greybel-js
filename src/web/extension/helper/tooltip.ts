@@ -1,4 +1,4 @@
-import { Spec, parse } from 'comment-parser';
+import { parse, Spec } from 'comment-parser';
 import { SignatureDefinitionArg } from 'meta-utils';
 import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
@@ -20,7 +20,6 @@ const formatType = (type: string): string => {
 const formatTypes = (types: string[] = []): string => {
   return types.map(formatType).join(' or ');
 };
-
 
 const convertSpecToString = (it: Spec): string => {
   return [it.name, it.description].filter((it) => it !== undefined).join(' ');
