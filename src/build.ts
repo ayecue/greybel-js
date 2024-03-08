@@ -58,18 +58,20 @@ export default async function build(
       }
     }).parse();
 
-    const buildPath = buildOptions.disableBuildFolder
-      ? output
-      : path.resolve(output, './build');
+    let outputPath = output;
 
-    try {
-      await fs.rm(buildPath, {
-        recursive: true
-      });
-    } catch (err) {}
+    if (!buildOptions.disableBuildFolder) {
+      outputPath = path.resolve(output, './build');
 
-    await mkdirp(buildPath);
-    await createParseResult(target, buildPath, result);
+      try {
+        await fs.rm(outputPath, {
+          recursive: true
+        });
+      } catch (err) {}
+    }
+
+    await mkdirp(outputPath);
+    await createParseResult(target, outputPath, result);
 
     if (buildOptions.installer) {
       console.log('Creating installer.');
@@ -78,7 +80,7 @@ export default async function build(
         target,
         autoCompile: buildOptions.autoCompile,
         ingameDirectory: buildOptions.ingameDirectory,
-        buildPath,
+        buildPath: outputPath,
         result,
         maxChars: buildOptions.maxChars
       });
@@ -113,10 +115,8 @@ export default async function build(
       }
     }
 
-    const outputPath = buildPath;
-
     if (isInsideContainer()) {
-      output = options.disableBuildFolder ? './' : './build';
+      outputPath = options.disableBuildFolder ? './' : './build';
     }
 
     console.log(`Build done. Available in ${outputPath}.`);
