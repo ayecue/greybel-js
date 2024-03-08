@@ -84,21 +84,27 @@ Arguments:
 
 Options:
   -V, --version                                  output the version number
-  -id, --ingame-directory <ingameDirectory>      Ingame directory to where the files should be imported to
-  -ev, --env-files <file...>                     Environment variables files
-  -vr, --env-vars <var...>                       Environment variables
-  -en, --exclude-namespaces <namespace...>       Exclude namespaces from optimization
-  -dlo, --disable-literals-optimization          Disable literals optimization
-  -dno, --disable-namespaces-optimization        Disable namespace optimization
-  -u, --uglify                                   Uglify your code
-  -b, --beautify                                 Beautify your code
-  -o, --obfuscation                              Enable obfuscation
-  -i, --installer                                Create installer for GreyScript (Should be used if you use import_code)
-  -ac, --auto-compile                            Enables autocompile within the installer or create-ingame feature
-  -mc, --max-chars <number>                      Amount of characters allowed in one file before splitting when creating installer
-  -ci, --create-ingame                           Create files automatically in-game
-  -cia, --create-ingame-agent-type <agent-type>  Creation agent type: "headless" or "message-hook"
-  -cim, --create-ingame-mode <mode>              Creation mode: "local" or "public"
+  -nbf, --no-build-folder                        Disable the default behaviour of putting the output into a build folder. It will instead just
+                                                 put it wherever you set the output destination to.
+  -ev, --env-files <file...>                     Specifiy environment variables file.
+  -vr, --env-vars <var...>                       Specifiy environment variable definition.
+  -en, --exclude-namespaces <namespace...>       Exclude namespaces from optimization. This option is only used in combination with uglifying.
+  -dlo, --disable-literals-optimization          Disable literals optimization. This option is only used in combination with uglifying.
+  -dno, --disable-namespaces-optimization        Disable namespace optimization. This option is only used in combination with uglifying.
+  -u, --uglify                                   Minify your code.
+  -b, --beautify                                 Beautify your code.
+  -o, --obfuscation                              Allows the namespace optimization to use a wider range of characters in order to safe more
+                                                 space.
+  -id, --ingame-directory <ingameDirectory>      In-game directory target path.
+  -i, --installer                                Create installer for GreyScript. Only use this option when there is at least one import_code
+                                                 in place.
+  -ac, --auto-compile                            Enables auto-compile within the installer or create-ingame feature. This option will also
+                                                 delete all files in-game after building.
+  -mc, --max-chars <number>                      Max amount of characters allowed per file. Installer files will be split depending on the
+                                                 amount defined in this option. By default the maximum is 160k chars.
+  -ci, --create-ingame                           Enable transfer of your code files into Grey Hack.
+  -cia, --create-ingame-agent-type <agent-type>  Agent type used for in-game transfer. You can choose between "headless" or "message-hook".
+  -cim, --create-ingame-mode <mode>              Mode used for in-game transfer. You can choose between "local" or "public".
   -h, --help                                     display help for command
 ```
 
@@ -256,12 +262,12 @@ Arguments:
 	myscriptfile			File to execute
 
 Options:
-	-p, --params			Execution parameters
-	-d, --debug			Debug mode
-	-i, --interactive		Interactive parameter
-	-s, --seed			Seed parameter
-	-ev, --env-files <file...>	Environment variables files
-	-vr, --env-vars <vars...>	Environment variables
+	-p, --params <params...>    Defines params used in script execution.
+  -i, --interactive           Enter params in interactive mode instead of arguments.
+  -d, --debug                 Enable debug mode which will cause to stop at debugger statements.
+  -s, --seed <seed>           Define seed value which is used to generate entities.
+  -ev, --env-files <file...>  Specifiy environment variables file.
+  -vr, --env-vars <var...>    Specifiy environment variable definition.
 ```
 
 For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
