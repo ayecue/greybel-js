@@ -84,9 +84,9 @@ if (!semver.satisfies(process.version, engineVersion)) {
       '-mc, --max-chars <number>',
       'Max amount of characters allowed per file. Installer files will be split depending on the amount defined in this option. By default the maximum is 160k chars.'
     )
-    .option('-ci, --create-ingame', 'Transfer your code files into Grey Hack.')
-    .option('-cia, --create-ingame-agent-type <agent-type>', 'Creation agent type: "headless" or "message-hook"')
-    .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local" or "public"');
+    .option('-ci, --create-ingame', 'Enable transfer of your code files into Grey Hack.')
+    .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
+    .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".');
 
   program.parse(process.argv);
 
