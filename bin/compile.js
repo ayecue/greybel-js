@@ -43,8 +43,8 @@ if (!semver.satisfies(process.version, engineVersion)) {
     .arguments('<filepath>')
     .arguments('[output]')
     .description('Compiler for Greyscript.', {
-      filepath: 'File to compile',
-      output: 'Output directory'
+      filepath: 'File to compile.',
+      output: 'Output directory.'
     })
     .action(function (filepath, output) {
       options.filepath = filepath;
