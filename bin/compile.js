@@ -50,8 +50,6 @@ if (!semver.satisfies(process.version, engineVersion)) {
       options.filepath = filepath;
       options.output = output || '.';
     })
-    // output
-    .option('-nbf, --no-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
     // transformer
     .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
     .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.')
@@ -86,7 +84,9 @@ if (!semver.satisfies(process.version, engineVersion)) {
     )
     .option('-ci, --create-ingame', 'Enable transfer of your code files into Grey Hack.')
     .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
-    .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".');
+    .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".')
+    // output
+    .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.');
 
   program.parse(process.argv);
 
@@ -94,7 +94,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
 
   const success = await build(options.filepath, options.output, {
     // output
-    noBuildFolder: options.noBuildFolder,
+    disableBuildFolder: options.disableBuildFolder,
     // transformer
     envFiles: options.envFiles,
     envVars: options.envVars,

@@ -84,8 +84,6 @@ Arguments:
 
 Options:
   -V, --version                                  output the version number
-  -nbf, --no-build-folder                        Disable the default behaviour of putting the output into a build folder. It will instead just
-                                                 put it wherever you set the output destination to.
   -ev, --env-files <file...>                     Specifiy environment variables file.
   -vr, --env-vars <var...>                       Specifiy environment variable definition.
   -en, --exclude-namespaces <namespace...>       Exclude namespaces from optimization. This option is only used in combination with uglifying.
@@ -105,6 +103,8 @@ Options:
   -ci, --create-ingame                           Enable transfer of your code files into Grey Hack.
   -cia, --create-ingame-agent-type <agent-type>  Agent type used for in-game transfer. You can choose between "headless" or "message-hook".
   -cim, --create-ingame-mode <mode>              Mode used for in-game transfer. You can choose between "local" or "public".
+  -dbf, --disable-build-folder                   Disable the default behaviour of putting the output into a build folder. It will instead just
+                                                 put it wherever you set the output destination to.
   -h, --help                                     display help for command
 ```
 

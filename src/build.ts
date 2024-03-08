@@ -58,7 +58,7 @@ export default async function build(
       }
     }).parse();
 
-    const buildPath = buildOptions.noBuildFolder
+    const buildPath = buildOptions.disableBuildFolder
       ? output
       : path.resolve(output, './build');
 
@@ -116,7 +116,7 @@ export default async function build(
     const outputPath = buildPath;
 
     if (isInsideContainer()) {
-      output = options.noBuildFolder ? './' : './build';
+      output = options.disableBuildFolder ? './' : './build';
     }
 
     console.log(`Build done. Available in ${outputPath}.`);

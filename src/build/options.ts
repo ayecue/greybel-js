@@ -1,7 +1,7 @@
 import { AgentType, ImporterMode } from './importer.js';
 
 export interface BuildOptions {
-  noBuildFolder: boolean;
+  disableBuildFolder: boolean;
   // transformer
   uglify: boolean;
   beautify: boolean;
@@ -22,7 +22,7 @@ export interface BuildOptions {
 }
 
 const defaultOptions: BuildOptions = {
-  noBuildFolder: false,
+  disableBuildFolder: false,
   uglify: false,
   beautify: false,
   obfuscation: false,
@@ -42,7 +42,8 @@ const defaultOptions: BuildOptions = {
 
 export const parseBuildOptions = (options: Partial<BuildOptions>) => {
   return {
-    noBuildFolder: options.noBuildFolder ?? defaultOptions.noBuildFolder,
+    disableBuildFolder:
+      options.disableBuildFolder ?? defaultOptions.disableBuildFolder,
     uglify: options.uglify ?? defaultOptions.uglify,
     beautify: options.beautify ?? defaultOptions.beautify,
     obfuscation: options.obfuscation ?? defaultOptions.obfuscation,
