@@ -58,7 +58,7 @@ export default async function build(
       }
     }).parse();
 
-    let outputPath = output;
+    let outputPath = path.resolve(output);
 
     if (!buildOptions.disableBuildFolder) {
       outputPath = path.resolve(output, './build');
