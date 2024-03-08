@@ -50,37 +50,41 @@ if (!semver.satisfies(process.version, engineVersion)) {
       options.filepath = filepath;
       options.output = output || '.';
     })
-    .option('-id, --ingame-directory <ingameDirectory>', 'Ingame directory to where the files should be imported to')
-    .option('-ev, --env-files <file...>', 'Environment variables files')
-    .option('-vr, --env-vars <var...>', 'Environment variables')
+    // output
+    .option('-nbf, --no-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
+    // transformer
+    .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
+    .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.')
     .option(
       '-en, --exclude-namespaces <namespace...>',
-      'Exclude namespaces from optimization'
+      'Exclude namespaces from optimization. This option is only used in combination with uglifying.'
     )
     .option(
       '-dlo, --disable-literals-optimization',
-      'Disable literals optimization'
+      'Disable literals optimization. This option is only used in combination with uglifying.'
     )
     .option(
       '-dno, --disable-namespaces-optimization',
-      'Disable namespace optimization'
+      'Disable namespace optimization. This option is only used in combination with uglifying.'
     )
-    .option('-u, --uglify', 'Uglify your code')
-    .option('-b, --beautify', 'Beautify your code')
-    .option('-o, --obfuscation', 'Enable obfuscation')
+    .option('-u, --uglify', 'Minify your code.')
+    .option('-b, --beautify', 'Beautify your code.')
+    .option('-o, --obfuscation', 'Allows the namespace optimization to use a wider range of characters in order to safe more space.')
+    // installer + in-game importer
+    .option('-id, --ingame-directory <ingameDirectory>', 'In-game directory target path.')
     .option(
       '-i, --installer',
-      'Create installer for GreyScript (Should be used if you use import_code)'
+      'Create installer for GreyScript. Only use this option when there is at least one import_code in place.'
     )
     .option(
       '-ac, --auto-compile',
-      'Enables autocompile within the installer or create-ingame feature'
+      'Enables auto-compile within the installer or create-ingame feature. This option will also delete all files in-game after building.'
     )
     .option(
       '-mc, --max-chars <number>',
-      'Amount of characters allowed in one file before splitting when creating installer'
+      'Max amount of characters allowed per file. Installer files will be split depending on the amount defined in this option. By default the maximum is 160k chars.'
     )
-    .option('-ci, --create-ingame', 'Create files automatically in-game')
+    .option('-ci, --create-ingame', 'Transfer your code files into Grey Hack.')
     .option('-cia, --create-ingame-agent-type <agent-type>', 'Creation agent type: "headless" or "message-hook"')
     .option('-cim, --create-ingame-mode <mode>', 'Creation mode: "local" or "public"');
 
@@ -89,6 +93,9 @@ if (!semver.satisfies(process.version, engineVersion)) {
   options = Object.assign(options, program.opts());
 
   const success = await build(options.filepath, options.output, {
+    // output
+    noBuildFolder: options.noBuildFolder,
+    // transformer
     envFiles: options.envFiles,
     envVars: options.envVars,
     uglify: options.uglify,
@@ -97,7 +104,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
     disableLiteralsOptimization: options.disableLiteralsOptimization,
     disableNamespacesOptimization: options.disableNamespacesOptimization,
     excludedNamespaces: options.excludeNamespaces,
-    name: options.name,
+    // installer + in-game importer
     installer: options.installer,
     autoCompile: options.autoCompile,
     maxChars: options.maxChars,

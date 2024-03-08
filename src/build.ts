@@ -58,7 +58,9 @@ export default async function build(
       }
     }).parse();
 
-    const buildPath = path.resolve(output, './build');
+    const buildPath = buildOptions.noBuildFolder
+      ? output
+      : path.resolve(output, './build');
 
     try {
       await fs.rm(buildPath, {
@@ -111,7 +113,12 @@ export default async function build(
       }
     }
 
-    const outputPath = isInsideContainer() ? './build' : buildPath;
+    const outputPath = buildPath;
+
+    if (isInsideContainer()) {
+      output = options.noBuildFolder ? './' : './build';
+    }
+
     console.log(`Build done. Available in ${outputPath}.`);
   } catch (err: any) {
     if (err instanceof BuildError) {
