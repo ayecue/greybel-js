@@ -1064,5 +1064,5 @@ All notable changes to this project will be documented in this file.
 
 ## [3.2.16] - 08.03.2024
 
-- add --no-build-folder option to build command
+- add --disable-build-folder option to build command
 - add logic to automatically clean up after auto-compile (including folders)
