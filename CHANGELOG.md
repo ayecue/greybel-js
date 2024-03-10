@@ -1066,3 +1066,4 @@ All notable changes to this project will be documented in this file.
 
 - add --disable-build-folder option to build command
 - add logic to automatically clean up after auto-compile (including folders)
+- remove planetscale integration due to contract changes, using a custom app now instead
