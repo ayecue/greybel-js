@@ -59,7 +59,7 @@ export function Root(options: RootOptions) {
     setSavePending(true);
 
     try {
-      const response = await fetch('/.netlify/functions/code', {
+      const response = await fetch(`${process.env.EDITOR_SERVICE_URL}/code`, {
         method: 'post',
         body: JSON.stringify({
           content
@@ -173,11 +173,11 @@ export interface RootWithIdOptions extends RootOptions {
 }
 
 export function RootWithId(options: RootWithIdOptions) {
-  const [entity, setEntity] = useState<{ id: string; code: string }>(null);
+  const [entity, setEntity] = useState<{ id: string; content: string }>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    fetch(`/.netlify/functions/code?id=${options.id}`)
+    fetch(`${process.env.EDITOR_SERVICE_URL}/code/${options.id}`)
       .then((response) => response.json())
       .then((data) => setEntity(data))
       .catch((err) => {
@@ -200,6 +200,6 @@ export function RootWithId(options: RootWithIdOptions) {
   }
 
   return (
-    <Root initContent={entity.code} externalLinks={options.externalLinks} />
+    <Root initContent={entity.content} externalLinks={options.externalLinks} />
   );
 }
