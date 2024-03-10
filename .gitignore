@@ -6,3 +6,5 @@ test.js
 .node-persist
 # Local Netlify folder
 .netlify
+# Ignore certain files/folders on my local copy (Arc8ne)
+Arc8ne

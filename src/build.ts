@@ -82,7 +82,8 @@ export default async function build(
         ingameDirectory: buildOptions.ingameDirectory,
         buildPath: outputPath,
         result,
-        maxChars: buildOptions.maxChars
+        maxChars: buildOptions.maxChars,
+        autoCompilePurge: buildOptions.autoCompilePurge
       });
     }
 
@@ -95,7 +96,8 @@ export default async function build(
         result,
         mode: parseImporterMode(buildOptions.createIngameMode),
         agentType: parseImporterAgentType(buildOptions.createIngameAgentType),
-        autoCompile: buildOptions.autoCompile
+        autoCompile: buildOptions.autoCompile,
+        autoCompilePurge: buildOptions.autoCompilePurge
       });
       const successfulItems = importResults.filter((item) => item.success);
       const failedItems = importResults.filter((item) => !item.success);

@@ -86,8 +86,12 @@ if (!semver.satisfies(process.version, engineVersion)) {
     .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
     .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".')
     // output
-    .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.');
-
+    .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
+    .option(
+      "-acp, --auto-compile-purge",
+      "Specify this option if you would like all of the imported folders to be deleted after the auto-compilation process is completed."
+    );
+  
   program.parse(process.argv);
 
   options = Object.assign(options, program.opts());
@@ -112,6 +116,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
     createIngame: options.createIngame,
     createIngameAgentType: options.createIngameAgentType,
     createIngameMode: options.createIngameMode,
+    autoCompilePurge: options.autoCompilePurge
   });
 
   if (!success) {
