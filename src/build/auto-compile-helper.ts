@@ -53,7 +53,7 @@ export const generateAutoCompileCode = (
 
         folder = File(myComputer, currentFolderPath)
 
-        if folder and ((folder.get_files.len == 0 and folder.get_folders.len == 0) or purge == true) then
+        if folder and ((folder.get_files.len == 0 and folder.get_folders.len == 0) or purge) then
           push(remainingFolderPaths, path(parent(folder)))
           delete(folder)
           print("Deleted " + folder.path)
