@@ -95,6 +95,10 @@ export interface InstallerOptions {
   result: TranspilerParseResult;
   maxChars: number;
   autoCompile: boolean;
+  /**
+   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
+  */
+  autoCompilePurge: boolean;
 }
 
 class Installer {
@@ -108,6 +112,11 @@ class Installer {
   private files: InstallerFile[];
   private createdFiles: string[];
 
+  /**
+   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
+  */
+  private autoCompilePurge : boolean;
+
   constructor(options: InstallerOptions) {
     this.target = options.target;
     this.buildPath = options.buildPath;
@@ -117,6 +126,7 @@ class Installer {
     this.files = [];
     this.importList = this.createImportList(options.target, options.result);
     this.createdFiles = [];
+    this.autoCompilePurge = options.autoCompilePurge;
   }
 
   public getCreatedFiles(): string[] {
@@ -194,7 +204,8 @@ class Installer {
       return generateAutoCompileCode(
         this.ingameDirectory,
         rootRef.ingameFilepath,
-        this.importList.map((it) => it.ingameFilepath)
+        this.importList.map((it) => it.ingameFilepath),
+        this.autoCompilePurge
       ).split(';');
     }
 

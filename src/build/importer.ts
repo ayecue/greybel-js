@@ -47,6 +47,10 @@ export interface ImporterOptions {
   agentType: AgentType;
   result: TranspilerParseResult;
   autoCompile: boolean;
+  /**
+   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
+  */
+  autoCompilePurge: boolean;
 }
 
 class Importer {
@@ -56,6 +60,10 @@ class Importer {
   private ingameDirectory: string;
   private mode: ImporterMode;
   private autoCompile: boolean;
+  /**
+   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
+  */
+  private autoCompilePurge : boolean;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
@@ -64,6 +72,7 @@ class Importer {
     this.agentType = options.agentType;
     this.mode = options.mode;
     this.autoCompile = options.autoCompile;
+    this.autoCompilePurge = options.autoCompilePurge;
   }
 
   private createImportList(
@@ -143,7 +152,8 @@ class Importer {
         generateAutoCompileCode(
           this.ingameDirectory,
           rootRef.ingameFilepath,
-          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath)
+          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath),
+          this.autoCompilePurge
         ),
         ({ output }) => console.log(output)
       );
