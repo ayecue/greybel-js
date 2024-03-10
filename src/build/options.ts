@@ -19,7 +19,7 @@ export interface BuildOptions {
   createIngame: boolean;
   createIngameAgentType: string;
   createIngameMode: string;
-  autoCompilePurge : boolean;
+  autoCompilePurge: boolean;
 }
 
 const defaultOptions: BuildOptions = {

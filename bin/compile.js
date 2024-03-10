@@ -75,22 +75,22 @@ if (!semver.satisfies(process.version, engineVersion)) {
       'Create installer for GreyScript. Only use this option when there is at least one import_code in place.'
     )
     .option(
+      '-mc, --max-chars <number>',
+      'Max amount of characters allowed per file. Installer files will be split depending on the amount defined in this option. By default the maximum is 160k chars.'
+    )
+    .option(
       '-ac, --auto-compile',
       'Enables auto-compile within the installer or create-ingame feature. This option will also delete all files in-game after building.'
     )
     .option(
-      '-mc, --max-chars <number>',
-      'Max amount of characters allowed per file. Installer files will be split depending on the amount defined in this option. By default the maximum is 160k chars.'
+      '-acp, --auto-compile-purge',
+      'Specify this option if you would like all of the imported folders to be deleted after the auto-compilation process is completed regardless of any files may remaining in those folders.'
     )
     .option('-ci, --create-ingame', 'Enable transfer of your code files into Grey Hack.')
     .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
     .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".')
     // output
-    .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
-    .option(
-      "-acp, --auto-compile-purge",
-      "Specify this option if you would like all of the imported folders to be deleted after the auto-compilation process is completed."
-    );
+    .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.');
   
   program.parse(process.argv);
 

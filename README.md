@@ -96,10 +96,12 @@ Options:
   -id, --ingame-directory <ingameDirectory>      In-game directory target path.
   -i, --installer                                Create installer for GreyScript. Only use this option when there is at least one import_code
                                                  in place.
-  -ac, --auto-compile                            Enables auto-compile within the installer or create-ingame feature. This option will also
-                                                 delete all files in-game after building.
   -mc, --max-chars <number>                      Max amount of characters allowed per file. Installer files will be split depending on the
                                                  amount defined in this option. By default the maximum is 160k chars.
+  -ac, --auto-compile                            Enables auto-compile within the installer or create-ingame feature. This option will also
+                                                 delete all files in-game after building.
+  -acp, --auto-compile-purge                     Specify this option if you would like all of the imported folders to be deleted after the
+                                                 auto-compilation process is completed regardless of any files may remaining in those folders.
   -ci, --create-ingame                           Enable transfer of your code files into Grey Hack.
   -cia, --create-ingame-agent-type <agent-type>  Agent type used for in-game transfer. You can choose between "headless" or "message-hook".
   -cim, --create-ingame-mode <mode>              Mode used for in-game transfer. You can choose between "local" or "public".

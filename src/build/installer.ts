@@ -97,7 +97,7 @@ export interface InstallerOptions {
   autoCompile: boolean;
   /**
    * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
-  */
+   */
   autoCompilePurge: boolean;
 }
 
@@ -107,15 +107,12 @@ class Installer {
   private ingameDirectory: string;
   private buildPath: string;
   private maxChars: number;
-  private autoCompile: boolean;
 
   private files: InstallerFile[];
   private createdFiles: string[];
 
-  /**
-   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
-  */
-  private autoCompilePurge : boolean;
+  private autoCompile: boolean;
+  private autoCompilePurge: boolean;
 
   constructor(options: InstallerOptions) {
     this.target = options.target;

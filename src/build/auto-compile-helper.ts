@@ -1,16 +1,16 @@
 /**
- * 
- * @param rootDirectory 
- * @param rootFilePath 
- * @param importPaths 
+ *
+ * @param rootDirectory
+ * @param rootFilePath
+ * @param importPaths
  * @param autoCompilePurge This parameter should be set to true if all of the imported folders should be deleted after the auto-compilation process is completed, otherwise it should be set to false.
- * @returns 
+ * @returns
  */
 export const generateAutoCompileCode = (
   rootDirectory: string,
   rootFilePath: string,
   importPaths: string[],
-  autoCompilePurge : boolean
+  purge: boolean
 ): string => {
   return `
       rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
@@ -18,7 +18,7 @@ export const generateAutoCompileCode = (
       filePaths = [${importPaths.map((it) => `"${it}"`).join(',')}]
       myShell = get_shell
       myComputer = host_computer(myShell)
-      deleteAllImportedFoldersAfterAutoCompilation = ${autoCompilePurge}
+      purge = ${+purge}
 
       result = build(myShell, rootDirectory + rootFilePath, rootDirectory)
       if result != "" then exit("Error when building!")
@@ -53,7 +53,7 @@ export const generateAutoCompileCode = (
 
         folder = File(myComputer, currentFolderPath)
 
-        if folder and ((folder.get_files.len == 0 and folder.get_folders.len == 0) or deleteAllImportedFoldersAfterAutoCompilation == true) then
+        if folder and ((folder.get_files.len == 0 and folder.get_folders.len == 0) or purge == true) then
           push(remainingFolderPaths, path(parent(folder)))
           delete(folder)
           print("Deleted " + folder.path)

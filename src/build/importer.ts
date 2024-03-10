@@ -49,7 +49,7 @@ export interface ImporterOptions {
   autoCompile: boolean;
   /**
    * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
-  */
+   */
   autoCompilePurge: boolean;
 }
 
@@ -60,10 +60,7 @@ class Importer {
   private ingameDirectory: string;
   private mode: ImporterMode;
   private autoCompile: boolean;
-  /**
-   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
-  */
-  private autoCompilePurge : boolean;
+  private autoCompilePurge: boolean;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
