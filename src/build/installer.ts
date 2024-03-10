@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
 
+import { generateAutoCompileCode } from './auto-compile-helper.js';
 import { createBasePath } from './create-base-path.js';
 
 type ImportItem = {
@@ -11,6 +12,7 @@ type ImportItem = {
 };
 
 interface InstallerFileOptions {
+  rootDirectory: string;
   contentHeader: string;
   maxChars: number;
   previous?: InstallerFile;
@@ -19,11 +21,13 @@ interface InstallerFileOptions {
 class InstallerFile {
   readonly maxChars: number;
 
+  private rootDirectory: string;
   private items: ImportItem[];
   private buffer: string;
   private previous: InstallerFile | null;
 
   constructor(options: InstallerFileOptions) {
+    this.rootDirectory = options.rootDirectory;
     this.maxChars = options.maxChars;
     this.buffer = options.contentHeader;
     this.items = [];
@@ -33,9 +37,8 @@ class InstallerFile {
   insert(item: ImportItem): boolean {
     const isNew = !this.previous?.items.includes(item);
     const remaining = this.getRemainingSpace();
-    let line = `m("${item.ingameFilepath}","${item.content}",${
-      isNew ? '1' : '0'
-    });d`;
+    const filePath = `${this.rootDirectory}${item.ingameFilepath}`;
+    let line = `m("${filePath}","${item.content}",${isNew ? '1' : '0'});d`;
 
     if (remaining > line.length) {
       this.buffer += line.slice(0, -1);
@@ -57,7 +60,7 @@ class InstallerFile {
       content = item.content.slice(0, --diff);
     }
 
-    line = `m("${item.ingameFilepath}","${content}",${isNew ? '1' : '0'});d`;
+    line = `m("${filePath}","${content}",${isNew ? '1' : '0'});d`;
     this.buffer += line;
     this.items.push(item);
     item.content = item.content.slice(diff);
@@ -92,6 +95,10 @@ export interface InstallerOptions {
   result: TranspilerParseResult;
   maxChars: number;
   autoCompile: boolean;
+  /**
+   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
+   */
+  autoCompilePurge: boolean;
 }
 
 class Installer {
@@ -100,20 +107,23 @@ class Installer {
   private ingameDirectory: string;
   private buildPath: string;
   private maxChars: number;
-  private autoCompile: boolean;
 
   private files: InstallerFile[];
   private createdFiles: string[];
 
+  private autoCompile: boolean;
+  private autoCompilePurge: boolean;
+
   constructor(options: InstallerOptions) {
     this.target = options.target;
     this.buildPath = options.buildPath;
-    this.ingameDirectory = options.ingameDirectory;
+    this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.maxChars = options.maxChars;
     this.autoCompile = options.autoCompile;
     this.files = [];
     this.importList = this.createImportList(options.target, options.result);
     this.createdFiles = [];
+    this.autoCompilePurge = options.autoCompilePurge;
   }
 
   public getCreatedFiles(): string[] {
@@ -140,11 +150,7 @@ class Installer {
     parseResult: TranspilerParseResult
   ): ImportItem[] {
     const imports = Object.entries(parseResult).map(([target, code]) => {
-      const ingameFilepath = `${this.ingameDirectory}${createBasePath(
-        rootTarget,
-        target,
-        ''
-      )}`;
+      const ingameFilepath = createBasePath(rootTarget, target, '');
 
       return {
         filepath: target,
@@ -188,19 +194,16 @@ class Installer {
 
   createContentFooterAutoCompile(): string[] {
     if (this.autoCompile) {
-      const entryFile = this.importList.find(
+      const rootRef = this.importList.find(
         (item) => item.filepath === this.target
       );
 
-      return [
-        `i=s.build("${entryFile.ingameFilepath}","${path.posix.dirname(
-          entryFile.ingameFilepath
-        )}")`,
-        'if i!="" then exit("Error when building!")',
-        ...this.importList.map(
-          (item) => `c.File("${item.ingameFilepath}").delete`
-        )
-      ];
+      return generateAutoCompileCode(
+        this.ingameDirectory,
+        rootRef.ingameFilepath,
+        this.importList.map((it) => it.ingameFilepath),
+        this.autoCompilePurge
+      ).split(';');
     }
 
     return [];
@@ -212,6 +215,7 @@ class Installer {
 
   async build() {
     let file = new InstallerFile({
+      rootDirectory: this.ingameDirectory,
       contentHeader: this.createContentHeader(),
       maxChars: this.maxChars
     });
@@ -225,6 +229,7 @@ class Installer {
 
         if (!done) {
           file = new InstallerFile({
+            rootDirectory: this.ingameDirectory,
             contentHeader: this.createContentHeader(),
             maxChars: this.maxChars,
             previous: file
@@ -238,6 +243,7 @@ class Installer {
 
     if (!file.appendCode(contentFooter)) {
       file = new InstallerFile({
+        rootDirectory: this.ingameDirectory,
         contentHeader: contentFooter,
         maxChars: this.maxChars,
         previous: file

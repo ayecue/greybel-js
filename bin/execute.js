@@ -42,17 +42,17 @@ if (!semver.satisfies(process.version, engineVersion)) {
   program
     .arguments('<filepath>')
     .description('Interpreter for Greyscript.', {
-      filepath: 'File to run'
+      filepath: 'File to run.'
     })
     .action(function (filepath, _output) {
       options.filepath = filepath;
     })
-    .option('-p, --params <params...>', 'Execution parameters')
-    .option('-i, --interactive', 'Interactive parameters')
-    .option('-d, --debug', 'Debug mode')
-    .option('-s, --seed <seed>', 'Seed parameter')
-    .option('-ev, --env-files <file...>', 'Environment variables files')
-    .option('-vr, --env-vars <var...>', 'Environment variables');
+    .option('-p, --params <params...>', 'Defines params used in script execution.')
+    .option('-i, --interactive', 'Enter params in interactive mode instead of arguments.')
+    .option('-d, --debug', 'Enable debug mode which will cause to stop at debugger statements.')
+    .option('-s, --seed <seed>', 'Define seed value which is used to generate entities.')
+    .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
+    .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.');
 
   program.parse(process.argv);
 

@@ -1,6 +1,6 @@
 {
     "name": "greybel-js",
-    "version": "3.2.15",
+    "version": "3.2.16",
     "engines": {
         "node": ">=18.17.0"
     },
@@ -26,15 +26,13 @@
         "@inquirer/core": "^1.0.1",
         "@inquirer/prompts": "^1.0.0",
         "@inquirer/type": "^1.0.0",
-        "@netlify/planetscale": "^1.0.0",
-        "@planetscale/database": "^1.7.0",
         "another-ansi": "^1.0.2",
         "ansi-escapes": "^6.2.0",
         "cli-progress": "^3.11.2",
         "commander": "^7.2.0",
         "comment-parser": "^1.4.1",
         "css-color-names": "^1.0.1",
-        "greybel-agent": "~1.5.0",
+        "greybel-agent": "~1.6.0",
         "greybel-gh-mock-intrinsics": "~4.7.1",
         "greybel-intrinsics": "~4.6.0",
         "greyscript-core": "~1.5.8",

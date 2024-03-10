@@ -58,26 +58,32 @@ export default async function build(
       }
     }).parse();
 
-    const buildPath = path.resolve(output, './build');
+    let outputPath = path.resolve(output);
 
-    try {
-      await fs.rm(buildPath, {
-        recursive: true
-      });
-    } catch (err) {}
+    if (!buildOptions.disableBuildFolder) {
+      outputPath = path.resolve(output, './build');
 
-    await mkdirp(buildPath);
-    await createParseResult(target, buildPath, result);
+      try {
+        await fs.rm(outputPath, {
+          recursive: true
+        });
+      } catch (err) {}
+    }
+
+    await mkdirp(outputPath);
+    await createParseResult(target, outputPath, result);
 
     if (buildOptions.installer) {
       console.log('Creating installer.');
+
       await createInstaller({
         target,
         autoCompile: buildOptions.autoCompile,
-        ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
-        buildPath,
+        ingameDirectory: buildOptions.ingameDirectory,
+        buildPath: outputPath,
         result,
-        maxChars: buildOptions.maxChars
+        maxChars: buildOptions.maxChars,
+        autoCompilePurge: buildOptions.autoCompilePurge
       });
     }
 
@@ -86,11 +92,12 @@ export default async function build(
 
       const importResults = await createImporter({
         target,
-        ingameDirectory: buildOptions.ingameDirectory.replace(/\/$/i, ''),
+        ingameDirectory: buildOptions.ingameDirectory,
         result,
         mode: parseImporterMode(buildOptions.createIngameMode),
         agentType: parseImporterAgentType(buildOptions.createIngameAgentType),
-        autoCompile: buildOptions.autoCompile
+        autoCompile: buildOptions.autoCompile,
+        autoCompilePurge: buildOptions.autoCompilePurge
       });
       const successfulItems = importResults.filter((item) => item.success);
       const failedItems = importResults.filter((item) => !item.success);
@@ -110,7 +117,10 @@ export default async function build(
       }
     }
 
-    const outputPath = isInsideContainer() ? './build' : buildPath;
+    if (isInsideContainer()) {
+      outputPath = options.disableBuildFolder ? './' : './build';
+    }
+
     console.log(`Build done. Available in ${outputPath}.`);
   } catch (err: any) {
     if (err instanceof BuildError) {
