@@ -19,6 +19,7 @@ export interface BuildOptions {
   createIngame: boolean;
   createIngameAgentType: string;
   createIngameMode: string;
+  autoCompilePurge : boolean;
 }
 
 const defaultOptions: BuildOptions = {
@@ -37,7 +38,8 @@ const defaultOptions: BuildOptions = {
   ingameDirectory: '/root/',
   createIngame: false,
   createIngameAgentType: AgentType.C2,
-  createIngameMode: ImporterMode.Local
+  createIngameMode: ImporterMode.Local,
+  autoCompilePurge: false
 };
 
 export const parseBuildOptions = (options: Partial<BuildOptions>) => {
@@ -65,6 +67,8 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     createIngameAgentType:
       options.createIngameAgentType ?? defaultOptions.createIngameAgentType,
     createIngameMode:
-      options.createIngameMode ?? defaultOptions.createIngameMode
+      options.createIngameMode ?? defaultOptions.createIngameMode,
+    autoCompilePurge:
+      options.autoCompilePurge ?? defaultOptions.autoCompilePurge
   };
 };
