@@ -1062,9 +1062,9 @@ All notable changes to this project will be documented in this file.
 - add @description and @example tag to comment docs
 - fix an issue with scp where the function would try to get the groups via the wrong property potentially causing a crash - thanks for reporting [@stevenklar](https://github.com/stevenklar)
 
-## [3.2.16] - 08.03.2024
+## [3.2.16] - 10.03.2024
 
 - add --disable-build-folder option to build command
 - add logic to automatically clean up after auto-compile (including folders)
 - add --auto-compile-purge option to build command - thanks for the contribution [@Arc8ne](https://github.com/Arc8ne)
-- remove planetscale integration due to contract changes, using a custom app now instead
+- remove planetscale integration due to contract changes, using a custom app now instead - any scripts saved in the web editor within the past 24h may got lost during migration
