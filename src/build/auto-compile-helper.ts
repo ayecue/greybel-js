@@ -52,14 +52,11 @@ export const generateAutoCompileCode = (
         end if
 
         folder = File(myComputer, currentFolderPath)
-        if folder and folder.get_files.len == 0 and folder.get_folders.len == 0 then
+
+        if folder and ((folder.get_files.len == 0 and folder.get_folders.len == 0) or deleteAllImportedFoldersAfterAutoCompilation == true) then
           push(remainingFolderPaths, path(parent(folder)))
-          
-          if deleteAllImportedFoldersAfterAutoCompilation == true then
-            delete(folder)
-            
-            print("Deleted " + folder.path)
-          end if
+          delete(folder)
+          print("Deleted " + folder.path)
         end if
 
         currentFolderPath = pop(remainingFolderPaths)
