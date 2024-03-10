@@ -1,10 +1,10 @@
 /**
  *
- * @param rootDirectory
- * @param rootFilePath
- * @param importPaths
- * @param autoCompilePurge This parameter should be set to true if all of the imported folders should be deleted after the auto-compilation process is completed, otherwise it should be set to false.
- * @returns
+ * @param rootDirectory Target root directory.
+ * @param rootFilePath Path of file that should be build.
+ * @param importPaths Contains all file paths which are related to build.
+ * @param purage This parameter should be set to true if all of the imported folders should be deleted after the auto-compilation process is completed, otherwise it should be set to false.
+ * @returns String containig GreyScript which is building and cleaning up.
  */
 export const generateAutoCompileCode = (
   rootDirectory: string,
