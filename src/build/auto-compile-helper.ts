@@ -1,28 +1,35 @@
-/**
- *
- * @param rootDirectory Target root directory.
- * @param rootFilePath Path of file that should be build.
- * @param importPaths Contains all file paths which are related to build.
- * @param purage This parameter should be set to true if all of the imported folders should be deleted after the auto-compilation process is completed, otherwise it should be set to false.
- * @returns String containig GreyScript which is building and cleaning up.
- */
-export const generateAutoCompileCode = (
-  rootDirectory: string,
-  rootFilePath: string,
-  importPaths: string[],
-  purge: boolean
-): string => {
+export interface GenerateAutoCompileCodeOptions {
+  rootDirectory: string;
+  rootFilePath: string;
+  importPaths: string[];
+  purge: boolean;
+  binaryName: string | null;
+}
+
+export const generateAutoCompileCode = ({
+  rootDirectory,
+  rootFilePath,
+  importPaths,
+  purge,
+  binaryName
+}: GenerateAutoCompileCodeOptions): string => {
   return `
       rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
       rootFilePath = "${rootFilePath}"
       filePaths = [${importPaths.map((it) => `"${it}"`).join(',')}]
+      binaryName = ${binaryName !== null ? `"${binaryName}"` : 'null'};
       myShell = get_shell
       myComputer = host_computer(myShell)
       purge = ${+purge}
 
       result = build(myShell, rootDirectory + rootFilePath, rootDirectory)
-      if result != "" then exit("Error when building!")
+      if result != "" then exit("Error when building! Reason: " + result)
       print("Build done in " + rootDirectory)
+
+      if binaryName then
+        result = rename(myComputer.File((rootDirectory + rootFilePath).replace("\\.[^.]*?$","")), binaryName)
+        if result != "" then print("Renaming failed! Reason: " + result) else print("Renaming to " + binaryName + " done!")
+      end if
 
       remainingFolderMap = {}
 

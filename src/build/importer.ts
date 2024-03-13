@@ -46,11 +46,11 @@ export interface ImporterOptions {
   ingameDirectory: string;
   agentType: AgentType;
   result: TranspilerParseResult;
-  autoCompile: boolean;
-  /**
-   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
-   */
-  autoCompilePurge: boolean;
+  autoCompile: {
+    enabled: boolean;
+    purge: boolean;
+    binaryName: string | null;
+  };
 }
 
 class Importer {
@@ -59,8 +59,11 @@ class Importer {
   private target: string;
   private ingameDirectory: string;
   private mode: ImporterMode;
-  private autoCompile: boolean;
-  private autoCompilePurge: boolean;
+  private autoCompile: {
+    enabled: boolean;
+    purge: boolean;
+    binaryName: string | null;
+  };
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
@@ -69,7 +72,6 @@ class Importer {
     this.agentType = options.agentType;
     this.mode = options.mode;
     this.autoCompile = options.autoCompile;
-    this.autoCompilePurge = options.autoCompilePurge;
   }
 
   private createImportList(
@@ -142,16 +144,19 @@ class Importer {
       }
     }
 
-    if (this.autoCompile) {
+    if (this.autoCompile.enabled) {
       const rootRef = this.importRefs.get(this.target);
 
       await agent.tryToEvaluate(
-        generateAutoCompileCode(
-          this.ingameDirectory,
-          rootRef.ingameFilepath,
-          Array.from(this.importRefs.values()).map((it) => it.ingameFilepath),
-          this.autoCompilePurge
-        ),
+        generateAutoCompileCode({
+          rootDirectory: this.ingameDirectory,
+          rootFilePath: rootRef.ingameFilepath,
+          importPaths: Array.from(this.importRefs.values()).map(
+            (it) => it.ingameFilepath
+          ),
+          purge: this.autoCompile.purge,
+          binaryName: this.autoCompile.binaryName
+        }),
         ({ output }) => console.log(output)
       );
     }

@@ -94,11 +94,11 @@ export interface InstallerOptions {
   buildPath: string;
   result: TranspilerParseResult;
   maxChars: number;
-  autoCompile: boolean;
-  /**
-   * This field indicates if all of the imported folders should be deleted after the auto-compilation process is completed.
-   */
-  autoCompilePurge: boolean;
+  autoCompile: {
+    enabled: boolean;
+    purge: boolean;
+    binaryName: string | null;
+  };
 }
 
 class Installer {
@@ -111,8 +111,11 @@ class Installer {
   private files: InstallerFile[];
   private createdFiles: string[];
 
-  private autoCompile: boolean;
-  private autoCompilePurge: boolean;
+  private autoCompile: {
+    enabled: boolean;
+    purge: boolean;
+    binaryName: string | null;
+  };
 
   constructor(options: InstallerOptions) {
     this.target = options.target;
@@ -123,7 +126,7 @@ class Installer {
     this.files = [];
     this.importList = this.createImportList(options.target, options.result);
     this.createdFiles = [];
-    this.autoCompilePurge = options.autoCompilePurge;
+    this.autoCompile = options.autoCompile;
   }
 
   public getCreatedFiles(): string[] {
@@ -193,17 +196,18 @@ class Installer {
   }
 
   createContentFooterAutoCompile(): string[] {
-    if (this.autoCompile) {
+    if (this.autoCompile.enabled) {
       const rootRef = this.importList.find(
         (item) => item.filepath === this.target
       );
 
-      return generateAutoCompileCode(
-        this.ingameDirectory,
-        rootRef.ingameFilepath,
-        this.importList.map((it) => it.ingameFilepath),
-        this.autoCompilePurge
-      ).split(';');
+      return generateAutoCompileCode({
+        rootDirectory: this.ingameDirectory,
+        rootFilePath: rootRef.ingameFilepath,
+        importPaths: this.importList.map((it) => it.ingameFilepath),
+        purge: this.autoCompile.purge,
+        binaryName: this.autoCompile.binaryName
+      }).split(';');
     }
 
     return [];
