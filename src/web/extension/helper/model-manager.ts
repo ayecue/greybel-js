@@ -19,7 +19,7 @@ export interface QueueItem {
 }
 
 export const DOCUMENT_PARSE_QUEUE_INTERVAL = 1000;
-export const DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT = 5000;
+export const DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT = 2000;
 
 export class DocumentParseQueue extends EventEmitter {
   results: LRU<string, ParseResult>;
