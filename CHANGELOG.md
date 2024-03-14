@@ -1068,3 +1068,11 @@ All notable changes to this project will be documented in this file.
 - add logic to automatically clean up after auto-compile (including folders)
 - add --auto-compile-purge option to build command - thanks for the contribution [@Arc8ne](https://github.com/Arc8ne)
 - remove planetscale integration due to contract changes, using a custom app now instead - any scripts saved in the web editor within the past 24h may got lost during migration
+
+## [3.2.17] - 13.03.2024
+
+- add --auto-compile-name option to build command - thanks for the suggestion [@Arc8ne](https://github.com/Arc8ne)
+- update monaco-textmate-provider package which fixes potential issue with textmate in web UI
+- update meta package which contains fix for rename description regarding return value on failure
+- fix issue with headless agent when refreshToken was expired causing the follow up queries to timeout
+- update steam client

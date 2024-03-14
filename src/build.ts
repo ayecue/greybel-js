@@ -78,12 +78,15 @@ export default async function build(
 
       await createInstaller({
         target,
-        autoCompile: buildOptions.autoCompile,
+        autoCompile: {
+          enabled: buildOptions.autoCompile,
+          purge: buildOptions.autoCompilePurge,
+          binaryName: buildOptions.autoCompileName
+        },
         ingameDirectory: buildOptions.ingameDirectory,
         buildPath: outputPath,
         result,
-        maxChars: buildOptions.maxChars,
-        autoCompilePurge: buildOptions.autoCompilePurge
+        maxChars: buildOptions.maxChars
       });
     }
 
@@ -96,8 +99,11 @@ export default async function build(
         result,
         mode: parseImporterMode(buildOptions.createIngameMode),
         agentType: parseImporterAgentType(buildOptions.createIngameAgentType),
-        autoCompile: buildOptions.autoCompile,
-        autoCompilePurge: buildOptions.autoCompilePurge
+        autoCompile: {
+          enabled: buildOptions.autoCompile,
+          purge: buildOptions.autoCompilePurge,
+          binaryName: buildOptions.autoCompileName
+        }
       });
       const successfulItems = importResults.filter((item) => item.success);
       const failedItems = importResults.filter((item) => !item.success);
