@@ -1074,3 +1074,5 @@ All notable changes to this project will be documented in this file.
 - add --auto-compile-name option to build command - thanks for the suggestion [@Arc8ne](https://github.com/Arc8ne)
 - update monaco-textmate-provider package which fixes potential issue with textmate in web UI
 - update meta package which contains fix for rename description regarding return value on failure
+- fix issue with headless agent when refreshToken was expired causing the follow up queries to timeout
+- update steam client
