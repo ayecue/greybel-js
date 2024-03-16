@@ -1076,3 +1076,7 @@ All notable changes to this project will be documented in this file.
 - update meta package which contains fix for rename description regarding return value on failure
 - fix issue with headless agent when refreshToken was expired causing the follow up queries to timeout
 - update steam client
+
+## [3.2.18] - 16.03.2024
+
+- fix certain cases of open blocks causing errors in unsafe parsing mode
