@@ -24,19 +24,23 @@ export const generateAutoCompileCode = ({
 
       result = build(myShell, rootDirectory + rootFilePath, rootDirectory)
       if result != "" then exit("Error when building! Reason: " + result)
-      print("Build done in " + rootDirectory)
+      binary = File(myComputer, (rootDirectory + rootFilePath).replace("\\.[^.]*?$", ""))
+      print("Build done. Output file: " + binary.path)
 
       if binaryName then
-        binary = File(myComputer, (rootDirectory + rootFilePath).replace("\\.[^.]*?$", ""))
-        preExistingFile = File(myComputer, binary.path.replace("[^/]*?$", "") + binaryName)
+        if (binaryName != binary.name) then
+          preExistingFile = File(myComputer, binary.path.replace("[^/]*?$", "") + binaryName)
 
-        if preExistingFile then
-          result = delete(preExistingFile)
-          if result != "" then print("Deletion of pre-existing file failed! Reason: " + result) else print("Delete pre-existing " + binaryName + " done!")
+          if preExistingFile then
+            result = delete(preExistingFile)
+            if result != "" then print("Deletion of pre-existing file failed! Reason: " + result) else print("Delete pre-existing " + binaryName + " done!")
+          end if
+
+          result = rename(binary, binaryName)
+          if result != "" then print("Renaming failed! Reason: " + result) else print("Renaming to " + binaryName + " done!")
+        else
+          print("Skipping rename to " + binaryName)
         end if
-
-        result = rename(binary, binaryName)
-        if result != "" then print("Renaming failed! Reason: " + result) else print("Renaming to " + binaryName + " done!")
       end if
 
       remainingFolderMap = {}

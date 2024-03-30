@@ -1088,3 +1088,4 @@ All notable changes to this project will be documented in this file.
 - fix permissions when assigned them via chmod intrinsic
 - fix typeof intrinsic to not check for parent classID
 - fix matches regexp intrinsic causing infinite loop
+- fix binary getting deleted if default build output name has the same value as auto compile name
