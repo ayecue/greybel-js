@@ -1089,3 +1089,8 @@ All notable changes to this project will be documented in this file.
 - fix typeof intrinsic to not check for parent classID
 - fix matches regexp intrinsic causing infinite loop
 - fix binary getting deleted if default build output name has the same value as auto compile name
+
+## [3.2.20] - 02.04.2024
+
+- add NaN check for numeric literal scan in order to show syntax errors on invalid numbers - thanks for reporting c1ph3r
+- add diagnostics to web editor

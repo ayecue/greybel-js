@@ -75,6 +75,8 @@ export function EditorRoot({
       }
     });
 
+    documentParseQueue.update(model);
+
     setEditorContext({
       monaco: resolvedMonaco,
       model
