@@ -1092,5 +1092,5 @@ All notable changes to this project will be documented in this file.
 
 ## [3.2.20] - 02.04.2024
 
-- add NaN check for numeric literal scan in order to show syntax errors on invalid numbers
+- add NaN check for numeric literal scan in order to show syntax errors on invalid numbers - thanks for reporting c1ph3r
 - add diagnostics to web editor
