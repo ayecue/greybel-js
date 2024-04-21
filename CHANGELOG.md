@@ -1104,4 +1104,4 @@ All notable changes to this project will be documented in this file.
 - still execute method which is called in return statement within global scope
 - major improvement of interpreter in regards of performance by rewriting and optimizing parts of the bytecode-generator, internal hash-map, hashing and more
 - fix parsing of add sub expression while being a command
-- fix connect_service intrinsic
+- fix connect_service intrinsic - thanks for reporting to Zicore
