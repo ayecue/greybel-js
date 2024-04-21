@@ -33,7 +33,7 @@
         "comment-parser": "^1.4.1",
         "css-color-names": "^1.0.1",
         "greybel-agent": "~1.7.0",
-        "greybel-gh-mock-intrinsics": "~4.8.2",
+        "greybel-gh-mock-intrinsics": "~4.8.3",
         "greybel-intrinsics": "~4.7.1",
         "greyscript-core": "~1.6.0",
         "greyscript-interpreter": "~1.7.1",
