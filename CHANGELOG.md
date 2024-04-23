@@ -1105,3 +1105,7 @@ All notable changes to this project will be documented in this file.
 - major improvement of interpreter in regards of performance by rewriting and optimizing parts of the bytecode-generator, internal hash-map, hashing and more
 - fix parsing of add sub expression while being a command
 - fix connect_service intrinsic - thanks for reporting to Zicore
+
+## [3.3.1] - 23.04.2024
+
+- when reading files automatically transform CRLF to LF - thanks for reporting to Zicore and Stiffi136
