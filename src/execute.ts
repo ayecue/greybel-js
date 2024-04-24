@@ -17,6 +17,7 @@ import { Interpreter } from 'greyscript-interpreter';
 import EnvMapper from './build/env-mapper.js';
 import GreybelPseudoDebugger from './execute/debugger.js';
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
+import { InterpreterResourceProvider } from './execute/resource.js';
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;
@@ -35,7 +36,7 @@ export default async function execute(
 
   envMapper.load(options.envFiles, options.envVars);
 
-  const resourceHandler = new DefaultResourceHandler();
+  const resourceHandler = new InterpreterResourceProvider();
   const interpreter = new Interpreter({
     target: await resourceHandler.resolve(target),
     handler: new HandlerContainer({

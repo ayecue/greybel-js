@@ -17,6 +17,7 @@ import {
 } from './build/importer.js';
 import { createInstaller } from './build/installer.js';
 import { BuildOptions, parseBuildOptions } from './build/options.js';
+import { TranspilerResourceProvider } from './build/resource.js';
 import { ansiProvider, useColor } from './execute/output.js';
 
 export default async function build(
@@ -39,6 +40,7 @@ export default async function build(
   try {
     const target = path.resolve(filepath);
     const result = await new Transpiler({
+      resourceHandler: new TranspilerResourceProvider().getHandler(),
       target,
       buildType,
       obfuscation: buildOptions.obfuscation,

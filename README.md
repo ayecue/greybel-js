@@ -11,6 +11,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
 - GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
 - Grey Hack Image Transformer: [gh-image-transformer](https://github.com/ayecue/gh-image-transformer)
+- Grey Hack Website Image Generator: [gh-website-image-generator](https://github.com/ayecue/gh-website-image-generator)
 - Discord: [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M)
 
 ## Features
