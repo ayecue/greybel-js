@@ -1108,4 +1108,5 @@ All notable changes to this project will be documented in this file.
 
 ## [3.3.1] - 23.04.2024
 
-- when reading files automatically transform CRLF to LF - thanks for reporting to Zicore and Stiffi136
+- when reading files automatically transform CRLF to LF - thanks for reporting to Zicore and [@Stiffi136](https://github.com/Stiffi136)
+- fix bytecode generator source assignment which caused the interpreter to show the wrong file when using imports - thanks for reporting to [@Stiffi136](https://github.com/Stiffi136)
