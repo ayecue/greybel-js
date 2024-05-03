@@ -1114,3 +1114,4 @@ All notable changes to this project will be documented in this file.
 ## [3.3.2] - 03.05.2024
 
 - update headless client due to latest Grey Hack update
+- improve tcp client stability
