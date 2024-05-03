@@ -1110,3 +1110,8 @@ All notable changes to this project will be documented in this file.
 
 - when building files automatically transform CRLF to LF - thanks for reporting to Zicore and [@Stiffi136](https://github.com/Stiffi136)
 - fix bytecode generator source assignment which caused the interpreter to show the wrong file when using imports - thanks for reporting to [@Stiffi136](https://github.com/Stiffi136)
+
+## [3.3.2] - 03.05.2024
+
+- update headless client due to latest Grey Hack update
+- improve tcp client stability
