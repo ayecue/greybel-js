@@ -139,7 +139,7 @@ The message-hook agent will essentially send messages to the game server through
 #### BepInEx 5.x.x
 - Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.1) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
 - Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ada96de7fae26d6aca85b1e6aba6873799cd37e6/GreyHackMessageHook5.dll)
-- Put GreyHackMessageHook.dll into the plugins folder of BepInEx
+- Put GreyHackMessageHook5.dll into the plugins folder of BepInEx
 - modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command% (**ONLY FOR NONE WINDOWS USERS**)
 
 #### BepInEx 6.x.x
