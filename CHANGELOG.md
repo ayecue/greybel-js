@@ -1115,3 +1115,8 @@ All notable changes to this project will be documented in this file.
 
 - update headless client due to latest Grey Hack update
 - improve tcp client stability
+
+## [3.3.3] - 11.05.2024
+
+- add link to BepInEx 5.x.x plugin
+- updated description for BepInEx

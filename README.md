@@ -134,13 +134,23 @@ A minor caveat is that a Steam account and password need to be provided. The ref
 
 ### Message Hook
 
-The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. Here are the prerequisites:
+The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. You can find a description for both versions of BepInEx below.
 
-- Install [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) for more details about the installation you can take a look [here](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html)
-- With [BepInEx](https://github.com/BepInEx/BepInEx) in place, you just need to download the [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/7e8459630679d52f3e0275c13a2908ee5eff0d51/GreyHackMessageHook.dll) and put it into the plugins folder
-- You may need to modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` unless you are using Windows
+#### BepInEx 5.x.x
+- Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.1) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
+- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ada96de7fae26d6aca85b1e6aba6873799cd37e6/GreyHackMessageHook5.dll)
+- Put GreyHackMessageHook5.dll into the plugins folder of BepInEx
+- modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command% (**ONLY FOR NONE WINDOWS USERS**)
+
+#### BepInEx 6.x.x
+- Download + Install [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) ([Installation guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html))
+- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ada96de7fae26d6aca85b1e6aba6873799cd37e6/GreyHackMessageHook.dll)
+- Put GreyHackMessageHook.dll into the plugins folder of BepInEx
+- modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command% (**ONLY FOR NONE WINDOWS USERS**)
 
 With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.
+
+Also, keep in mind that if you use BepInEx 6.x.x you'll use bleeding edge meaning that it won't be as stable as BepInEx 5.x.x leading to potential crashes. If you suffer too many crashes with 6.x.x may try out version 5.x.x!
 
 Additionally, you won't need to provide any Steam credentials nor do you need to select a mode.
 
