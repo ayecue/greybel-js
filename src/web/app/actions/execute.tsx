@@ -2,9 +2,91 @@ import { Debugger, Interpreter, VM } from 'greybel-interpreter';
 import React, { useEffect, useRef, useState } from 'react';
 
 import execute from '../../execute.js';
-import { Stdin, Stdout } from '../../std.js';
+import { Stdin } from '../../std/stdin.js';
+import { StdoutCanvas, StdoutText } from '../../std/stdout.js';
 import { DebugPopup } from '../common/popups.js';
 import { buildClassName } from '../utils.js';
+
+interface ExecuteOutputOptions {
+  onLoadCanvas: (std: StdoutCanvas) => void;
+  onLoadText: (std: StdoutText) => void;
+  [key: string]: any;
+}
+
+function ExecuteOutput(props: ExecuteOutputOptions) {
+  const [stdoutCanvas, setStdoutCanvas] = useState<StdoutCanvas | null>(null);
+  const [stdoutText, setStdoutText] = useState<StdoutText | null>(null);
+  const textRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const idPrefix = props.id ?? 'default';
+
+  useEffect(() => {
+    if (stdoutCanvas === null) return;
+    props.onLoadCanvas(stdoutCanvas);
+  }, [stdoutCanvas]);
+
+  useEffect(() => {
+    if (stdoutText === null) return;
+    props.onLoadText(stdoutText);
+  }, [stdoutText]);
+
+  useEffect(() => {
+    if (canvasRef.current === null) return;
+
+    globalThis.createUnityInstance(canvasRef.current, {
+      dataUrl: `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.data`,
+      frameworkUrl: `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.framework.js`,
+      codeUrl: `${process.env.GREYBEL_TERMINAL_URL}/assets/preview.wasm`,
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "None",
+      productName: "TerminalPreview",
+      productVersion: "1.0",
+      matchWebGLToCanvasSize: true, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+      devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays,
+    }).then((instance) => {
+      globalThis.onUnityInstanceLoad(instance);
+      globalThis.postMessage({
+        type: 'set-capture-all-keyboard-input',
+        capture: false
+      });
+      setStdoutCanvas(new StdoutCanvas());
+    }).catch((err) => console.error('failed loading unity canvas', err.message));
+  }, [canvasRef]);
+
+  useEffect(() => {
+    if (textRef.current === null) return;
+    setStdoutText(new StdoutText(textRef.current));
+  }, [textRef]);
+
+  return (
+    <>
+      <div
+        { ...props }
+        id={`${idPrefix}-text`}
+        ref={textRef}
+        style={{
+          display: stdoutCanvas !== null ? 'none' : 'block'
+        }}
+      ></div>
+      <canvas
+        { ...props }
+        id={`${idPrefix}-canvas`}
+        hidden={stdoutCanvas === null}
+        tabIndex={-1}
+        ref={canvasRef}
+        width="100%"
+        height="100%"
+        style={{
+          width: '100%',
+          height: '200px',
+          background: '#231F20',
+          display: stdoutCanvas === null ? 'none' : 'block'
+        }}
+      >  
+      </canvas>
+    </>
+  )
+}
 
 export interface ExecuteOptions {
   content: string;
@@ -19,10 +101,10 @@ export default function Execute({
   onNewActiveLine,
   setDebug
 }: ExecuteOptions) {
-  const stdoutRef = useRef<HTMLDivElement>(null);
   const stdinRef = useRef<HTMLInputElement>(null);
-  const [stdout, setStdout] = useState<Stdout | undefined>(undefined);
-  const [stdin, setStdin] = useState<Stdin | undefined>(undefined);
+  const [stdoutCanvas, setStdoutCanvas] = useState<StdoutCanvas | null>(null);
+  const [stdoutText, setStdoutText] = useState<StdoutText | null>(null);
+  const [stdin, setStdin] = useState<Stdin | null>(null);
   const [parameters, setParameters] = useState('');
   const [seed, setSeed] = useState('test');
   const [collapsed, setCollapsed] = useState(true);
@@ -34,7 +116,8 @@ export default function Execute({
 
     execute(content, {
       stdin,
-      stdout,
+      stdoutText,
+      stdoutCanvas,
       params: parameters.split(' ').filter((v) => v !== ''),
       seed,
       onStart: (interpreter: Interpreter) => {
@@ -110,7 +193,6 @@ export default function Execute({
   };
 
   useEffect(() => {
-    setStdout(new Stdout(stdoutRef.current));
     setStdin(new Stdin(stdinRef.current));
   }, []);
 
@@ -147,7 +229,10 @@ export default function Execute({
         <a
           id="clear"
           title="Clear"
-          onClick={() => stdout?.clear()}
+          onClick={() => {
+            stdoutText?.clear();
+            stdoutCanvas?.clear();
+          }}
           className="material-icons"
         ></a>
         <a
@@ -188,12 +273,13 @@ export default function Execute({
         </ul>
       </div>
       <label>Execution output:</label>
-      <div
+      <ExecuteOutput
         id="stdout"
         className="editor-console-stdout"
-        ref={stdoutRef}
+        onLoadCanvas={(stdout) => setStdoutCanvas(stdout)}
+        onLoadText={(stdout) => setStdoutText(stdout)}
         onClick={() => stdinRef.current?.focus()}
-      ></div>
+      ></ExecuteOutput>
       <input
         id="stdin"
         className="editor-console-stdin"
