@@ -1124,3 +1124,4 @@ All notable changes to this project will be documented in this file.
 ## [3.3.4] - 21.05.2024
 
 - fix is_valid_ip description example - thanks for the contribution to [@Wombynator](https://github.com/Wombynator)
+- add unity terminal to web view
