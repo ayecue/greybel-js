@@ -59,7 +59,7 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
   }, [textRef]);
 
   return (
-    <div>
+    <div className="editor-console-stdout-wrapper">
       <label>Execution output:</label>
       <div
         { ...props }
@@ -69,22 +69,28 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
           display: stdoutCanvas !== null ? 'none' : 'block'
         }}
       ></div>
-      <canvas
-        { ...props }
-        id={`${idPrefix}-canvas`}
-        hidden={stdoutCanvas === null}
-        tabIndex={-1}
-        ref={canvasRef}
-        width="100%"
-        height="100%"
+      <div
+        className="editor-console-stdout-canvas-wrapper"
         style={{
-          width: '100%',
-          height: '200px',
-          background: '#231F20',
           display: stdoutCanvas === null ? 'none' : 'block'
         }}
-      >  
-      </canvas>
+      >
+        <canvas
+          { ...props }
+          id={`${idPrefix}-canvas`}
+          hidden={stdoutCanvas === null}
+          tabIndex={-1}
+          ref={canvasRef}
+          width="100%"
+          height="100%"
+          style={{
+            width: '100%',
+            height: '200px',
+            background: '#231F20'
+          }}
+        >
+        </canvas>
+      </div>
     </div>
   )
 }
