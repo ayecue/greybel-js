@@ -27,12 +27,16 @@ body {
 }
 
 .editor-control {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  gap: 10px;
 }
 
-.editor-control > .collapse {
+.editor-side-panel > .collapse {
   position: absolute;
   top: 5px;
   color: #FFF;
@@ -40,36 +44,39 @@ body {
   background: #000;
   cursor: pointer;
   border: 1px solid #fff;
+  z-index: 999;
 }
 
-.editor-control > .collapse.open {
+.editor-side-panel > .collapse.open {
   right: 30.5%;
 }
 
-.editor-control > .collapse.closed {
+.editor-side-panel > .collapse.closed {
   right: 5px;
 }
 
-.editor-control > .collapse.open:before {
+.editor-side-panel > .collapse.open:before {
   content: "\e409";
 }
 
-.editor-control > .collapse.closed:before {
+.editor-side-panel > .collapse.closed:before {
   content: "\e5cb";
 }
 
 /* IDE */
-.editor-ide {
-  position: absolute;
+.editor-root {
+  height: 100%;
   width: 68.5%;
-  top: 1px;
-  bottom: 0px;
   border: 1px solid #000;
   background-color: #000;
 }
 
-.editor-ide.fullscreen {
+.editor-root.fullscreen {
   width: 100%;
+}
+
+.editor-ide {
+  height: 100%;
 }
 
 .editor-ide #container {
@@ -80,7 +87,6 @@ body {
 
 /* Editor Side Panel */
 .editor-side-panel {
-  position: fixed;
   height: 100%;
   width: 30%;
   right: 0;
@@ -89,6 +95,11 @@ body {
 }
 
 .editor-side-panel.hidden {
+  width: 0%;
+  overflow: visible;
+}
+
+.editor-side-panel.hidden > div {
   display: none;
 }
 
