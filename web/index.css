@@ -249,13 +249,13 @@ body {
 }
 
 canvas.editor-console-stdout {
-  height: 200px;
+  height: 275px;
 }
 
 div.editor-console-stdout {
   border: 1px solid #FFF;
   background: #000;
-  height: 200px;
+  height: 275px;
   color: green;
   overflow: auto;
   position: relative;
