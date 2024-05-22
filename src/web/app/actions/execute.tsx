@@ -59,7 +59,8 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
   }, [textRef]);
 
   return (
-    <>
+    <div>
+      <label>Execution output:</label>
       <div
         { ...props }
         id={`${idPrefix}-text`}
@@ -84,7 +85,7 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
         }}
       >  
       </canvas>
-    </>
+    </div>
   )
 }
 
@@ -272,21 +273,22 @@ export default function Execute({
           </li>
         </ul>
       </div>
-      <label>Execution output:</label>
-      <ExecuteOutput
-        id="stdout"
-        className="editor-console-stdout"
-        onLoadCanvas={(stdout) => setStdoutCanvas(stdout)}
-        onLoadText={(stdout) => setStdoutText(stdout)}
-        onClick={() => stdinRef.current?.focus()}
-      ></ExecuteOutput>
-      <input
-        id="stdin"
-        className="editor-console-stdin"
-        type="text"
-        disabled
-        ref={stdinRef}
-      />
+      <div className="std">
+        <ExecuteOutput
+          id="stdout"
+          className="editor-console-stdout"
+          onLoadCanvas={(stdout) => setStdoutCanvas(stdout)}
+          onLoadText={(stdout) => setStdoutText(stdout)}
+          onClick={() => stdinRef.current?.focus()}
+        ></ExecuteOutput>
+        <input
+          id="stdin"
+          className="editor-console-stdin"
+          type="text"
+          disabled
+          ref={stdinRef}
+        />
+      </div>
     </div>
   );
 }

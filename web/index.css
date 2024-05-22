@@ -184,6 +184,7 @@ body {
 }
 
 .editor-actions textarea {
+  resize: none;
 	background: #000;
 	color: green;
 	padding: 0;
@@ -221,6 +222,12 @@ body {
 	list-style: none;
 	margin: 5px 0;
 	padding: 0;
+}
+
+.editor-transpile .output label {
+  display: block;
+  color: #CCC;
+  margin: 5px 0;
 }
 
 .editor-transpiled-area {
@@ -433,13 +440,8 @@ body {
 .editor-execute .editor-console-stdin {
 	background: #000;
 	color: green;
-	border-radius: 5px;
 	border: 1px solid #FFF;
 	padding: 5px;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
 	width: -moz-available;
 }
 
@@ -450,6 +452,7 @@ body {
 .editor-execute label {
 	display: block;
 	color: #CCC;
+  margin: 5px 0;
 }
 
 .editor-execute .actions {
@@ -485,6 +488,11 @@ body {
 	padding: 0;
 	list-style: none;
 	display: block;
+}
+
+.editor-execute .std {
+  display: flex;
+  flex-direction: column;
 }
 
 #excludedNamespaces {
