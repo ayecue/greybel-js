@@ -1125,3 +1125,5 @@ All notable changes to this project will be documented in this file.
 
 - fix is_valid_ip description example - thanks for the contribution to [@Wombynator](https://github.com/Wombynator)
 - add unity terminal to web view
+- update rnd method to only return the first generated value of a seed and not continuously generate new values of one seed to properly resemble the original MiniScript behaviour
+- fix matches logic which caused skipping of results
