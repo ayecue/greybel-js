@@ -486,7 +486,6 @@ div.editor-console-stdout {
 .editor-execute .context input {
   background: #000;
   color: green;
-  border-radius: 5px;
   border: 1px solid #FFF;
   width: 60%;
   height: 28px;
