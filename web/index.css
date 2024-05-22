@@ -83,6 +83,10 @@ body {
   height: 100%;
   width: 40%;
   position: relative;
+}
+
+.editor-side-panel > div {
+  height: 100%;
   overflow: auto;
 }
 
