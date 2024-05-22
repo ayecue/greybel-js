@@ -85,7 +85,7 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
           height="100%"
           style={{
             width: '100%',
-            height: '200px',
+            height: '275px',
             background: '#231F20'
           }}
         >
