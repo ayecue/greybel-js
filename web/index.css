@@ -1,623 +1,648 @@
 body {
-	font-family: monospace;
-	background-color: #333;
-	margin: 0;
+  font-family: monospace;
+  background-color: #333;
+  margin: 0;
 }
 
 #editor-errors {
-	position: absolute;
-	top: 0;
-	right: 0;
-	left: 0;
-	z-index: 100;
-	max-height: 500px;
-	overflow: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  max-height: 500px;
+  overflow: auto;
 }
 
 #editor-errors ul {
-	background: red;
-	margin: 20px 40px;
-	padding: 5px 10px;
-	border-radius: 10px;
-	cursor: pointer;
+  background: red;
+  margin: 20px 40px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 #editor-errors li {
-	list-style: none;
+  list-style: none;
 }
 
 .editor-control {
-	position: absolute;
-	width: 100%;
-	height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  gap: 10px;
 }
 
-.editor-control > .collapse {
-	position: absolute;
-	top: 5px;
-	color: #FFF;
-	font-size: 20px;
-	background: #000;
-	cursor: pointer;
-	border: 1px solid #fff;
+.editor-side-panel > .collapse {
+  position: absolute;
+  top: 5px;
+  left: -25px;
+  color: #FFF;
+  font-size: 20px;
+  background: #000;
+  cursor: pointer;
+  border: 1px solid #fff;
+  z-index: 999;
 }
 
-.editor-control > .collapse.open {
-	right: 30.5%;
+.editor-side-panel > .collapse.open:before {
+  content: "\e409";
 }
 
-.editor-control > .collapse.closed {
-	right: 5px;
-}
-
-.editor-control > .collapse.open:before {
-	content: "\e409";
-}
-
-.editor-control > .collapse.closed:before {
-	content: "\e5cb";
+.editor-side-panel > .collapse.closed:before {
+  content: "\e5cb";
 }
 
 /* IDE */
-.editor-ide {
-	position: absolute;
-	width: 68.5%;
-	top: 1px;
-	bottom: 0px;
-	border: 1px solid #000;
-	background-color: #000;
+.editor-root {
+  height: 100%;
+  width: 60%;
+  border: 1px solid #000;
+  background-color: #000;
 }
 
-.editor-ide.fullscreen {
-	width: 100%;
+.editor-root.fullscreen {
+  width: 100%;
+}
+
+.editor-ide {
+  height: 100%;
 }
 
 .editor-ide #container {
-	position: relative;
-	width: 100%;
-	height: 100%;
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 /* Editor Side Panel */
 .editor-side-panel {
-	position: fixed;
-	height: 100%;
-	width: 30%;
-	right: 0;
-	top: 0;
-	overflow: auto;
+  height: 100%;
+  width: 40%;
+  position: relative;
+}
+
+.editor-side-panel > div {
+  height: 100%;
+  overflow: auto;
 }
 
 .editor-side-panel.hidden {
-	display: none;
+  width: 0%;
+  overflow: visible;
+}
+
+.editor-side-panel.hidden > div {
+  display: none;
 }
 
 .editor-actions > div > label {
-	display: block;
-	color: #CCC;
-	margin: 5px 0;
+  display: block;
+  color: #CCC;
+  margin: 5px 0;
 }
 
 .editor-actions > div {
-	margin: 10px 5px 0 0;
+  margin: 10px 5px 0 0;
 }
 
 .editor-actions a {
-	display: inline-block;
-	padding: 5px;
-	margin: 0 5px 0 0;
-	border-radius: 0.15em;
-	box-sizing: border-box;
-	text-decoration: none;
-	text-transform: uppercase;
-	font-weight: 400;
-	color: #ffffff;
-	background-color: #03b140;
-	box-shadow: inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
-	text-align: center;
-	position: relative;
-	cursor: pointer;
-	border: 1px solid transparent;
+  display: inline-block;
+  padding: 5px;
+  margin: 0 5px 0 0;
+  border-radius: 0.15em;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: #ffffff;
+  background-color: #03b140;
+  box-shadow: inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .editor-actions #execute:before {
-	content: "\eb8e";
+  content: "\eb8e";
 }
 
 .editor-actions #pause {
-	background-color: #f2de04;
+  background-color: #f2de04;
 }
 
 .editor-actions #pause:before {
-	content: "\e034";
+  content: "\e034";
 }
 
 .editor-actions #stop {
-	background-color: #f23004;
+  background-color: #f23004;
 }
 
 .editor-actions #stop:before {
-	content: "\e047";
+  content: "\e047";
 }
 
 .editor-actions #clear:before {
-	content: "\e872";
+  content: "\e872";
 }
 
 .editor-actions #share:before {
-	content: "\e80d";
+  content: "\e80d";
 }
 
 .editor-actions #save:before {
-	content: "\e161";
+  content: "\e161";
 }
 
 .editor-actions a.collapse {
-	background: none;
-	box-shadow: none;
+  background: none;
+  box-shadow: none;
 }
 
 .editor-actions a.collapse:active {
-	border: none;
+  border: none;
 }
 
 .editor-actions .collapse.open:before {
-	content: "\e5ce";
+  content: "\e5ce";
 }
 
 .editor-actions .collapse.closed:before {
-	content: "\e5cf";
+  content: "\e5cf";
 }
 
 .editor-actions #transpile:before {
-	content: "\ef6d";
+  content: "\ef6d";
 }
 
 .editor-actions a.disabled {
-	background-color: rgb(26, 26, 26)!important;
-	color: rgb(136, 136, 136)!important;
-	cursor: default;
+  background-color: rgb(26, 26, 26)!important;
+  color: rgb(136, 136, 136)!important;
+  cursor: default;
 }
 
 .editor-actions a:active {
-	border: 1px solid #000;
+  border: 1px solid #000;
 }
 
 .editor-actions textarea {
-	background: #000;
-	color: green;
-	padding: 0;
+  resize: none;
+  background: #000;
+  color: green;
+  padding: 0;
 }
 
 .editor-options {
-	border: 1px solid #AAA;
-	padding: 5px;
-	margin: 10px 0;
+  border: 1px solid #AAA;
+  padding: 5px;
+  margin: 10px 0;
 }
 
 .editor-options.hidden {
-	display: none;
+  display: none;
 }
 
 .editor-options label {
-	color: #CCC;
+  color: #CCC;
 }
 
 .editor-options select {
-	margin: 0 5px 0 0;
+  margin: 0 5px 0 0;
 }
 
 .editor-options input[type=checkbox] {
-	margin: 0 5px 0 0;
+  margin: 0 5px 0 0;
 }
 
 .editor-options ul {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .editor-options ul > li {
-	display: block;
-	list-style: none;
-	margin: 5px 0;
-	padding: 0;
+  display: block;
+  list-style: none;
+  margin: 5px 0;
+  padding: 0;
+}
+
+.editor-transpile .output label {
+  display: block;
+  color: #CCC;
+  margin: 5px 0;
 }
 
 .editor-transpiled-area {
-	width: 100%;
-	height: 200px;
+  width: 100%;
+  height: 200px;
 }
 
-.editor-console-stdout {
-	height: 200px;
-	background: #000;
-	color: green;
-	padding: 5px;
-	overflow: auto;
-	border: 1px solid #FFF;
-	position: relative;
-	white-space: pre;
+.editor-console-stdout-canvas-wrapper {
+  border: 1px solid #FFF;
+  background: #000;
+  border-bottom: 0px;
+}
+
+canvas.editor-console-stdout {
+  height: 275px;
+}
+
+div.editor-console-stdout {
+  border: 1px solid #FFF;
+  background: #000;
+  height: 275px;
+  color: green;
+  overflow: auto;
+  position: relative;
+  white-space: pre;
+  border-bottom: 0px;
 }
 
 .editor-console-stdout .line {
-	display: block;
-	position: relative;
+  display: block;
+  position: relative;
 }
 
 .editor-console-stdout .line span {
-	display: inline-block;
+  display: inline-block;
 }
 
 .editor-console-stdout .line .msspace {
-	font-family: monoscpace;
+  font-family: monoscpace;
 }
 
 .editor-console-stdout .line .underline {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 .editor-console-stdout .line .strikethrough {
-	text-decoration: line-through;
+  text-decoration: line-through;
 }
 
 .editor-console-stdout .line .italic {
-	font-style:italic;
+  font-style:italic;
 }
 
 .editor-console-stdout .line .bold {
-	font-weight:bold;
+  font-weight:bold;
 }
 
 .editor-console-stdout .line .lowercase {
-	text-transform: lowercase;
+  text-transform: lowercase;
 }
 
 .editor-console-stdout .line .uppercase {
-	text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .editor-console-stdout .line .align {
-	display:block;
+  display:block;
 }
 
 .editor-console-stdout .line .sprite {
-	display: inline-block;
-	color: transparent;
+  display: inline-block;
+  color: transparent;
 }
 
 .editor-console-stdout .line .voffset {
-	transform-origin: left top;
-	display: block;
+  transform-origin: left top;
+  display: block;
 }
 
 .editor-console-stdout .line .color, .editor-console-stdout .line .underline, .editor-console-stdout .line .uppercase, .editor-console-stdout .line .lowercase, .editor-console-stdout .line .strikethrough, .editor-console-stdout .line .size {
-	display: inline;
+  display: inline;
 }
 
 .editor-console-stdout .line .scale {
-	transform-origin: left 0;
-	display: block;
+  transform-origin: left 0;
+  display: block;
 }
 
 .editor-console-stdout .line .pos {
-	transform-origin: left 0;
-	display: inline;
+  transform-origin: left 0;
+  display: inline;
 }
 
 .editor-console-stdout .line .rotate {
-	display: inline-block;
+  display: inline-block;
 }
 
 .debugger-popup-bg {
-	background-color: #333;
-	opacity: 0.5;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	z-index: 997;
+  background-color: #333;
+  opacity: 0.5;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 997;
 }
 
 .debugger-popup-scope {
-	position: fixed;
-	max-width: 350px;
-	top: 10px;
-	right: 10px;
-	background-color: #333;
-	padding: 10px;
-	box-shadow: 5px 5px 5px black;
-	border-radius: 5px;
-	z-index: 998;
+  position: fixed;
+  max-width: 350px;
+  top: 10px;
+  right: 10px;
+  background-color: #333;
+  padding: 10px;
+  box-shadow: 5px 5px 5px black;
+  border-radius: 5px;
+  z-index: 998;
 }
 
 .debugger-popup-scope > div {
-	overflow: auto;
-	max-height: 400px;
+  overflow: auto;
+  max-height: 400px;
 }
 
 .debugger-popup-scope > div > .json-formatter-row {
-	height: 300px;
-	width: 340px;
-	overflow: auto;
-	border: 1px solid #000;
-	padding: 5px;
-	background: #582626;
+  height: 300px;
+  width: 340px;
+  overflow: auto;
+  border: 1px solid #000;
+  padding: 5px;
+  background: #582626;
 }
 
 .debugger-popup-navigation {
-	position: fixed;
-    max-width: 400px;
-	top: 10px;
-    left: 50%;
-	transform: translate(-50%);
-    background-color: #333;
-    padding: 10px;
-	box-shadow: 5px 5px 5px black;
-    border-radius: 5px;
-	z-index: 999;
+  position: fixed;
+  max-width: 400px;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #333;
+  padding: 10px;
+  box-shadow: 5px 5px 5px black;
+  border-radius: 5px;
+  z-index: 999;
 }
 
 .debugger-actions {
-	position: relative;
-	display: block;
+  position: relative;
+  display: block;
 }
 
 .debugger-actions .debugger-continue {
-	background-color: #4CAF50;
-	border: none;
-	color: white;
-	padding: 8px 16px;
-	text-decoration: none;
-	margin: 5px 0 0;
-	cursor: pointer;
-	width: 48%;
-	float: left;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  margin: 5px 0 0;
+  cursor: pointer;
+  width: 48%;
+  float: left;
 }
 
 .debugger-actions .debugger-next {
-	background-color: #4CAF50;
-	border: none;
-	color: white;
-	padding: 8px 16px;
-	text-decoration: none;
-	margin: 5px 0 0;
-	cursor: pointer;
-	width: 48%;
-	float: right;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  margin: 5px 0 0;
+  cursor: pointer;
+  width: 48%;
+  float: right;
 }
 
 .debugger-repl-wrapper {
-	margin: 0;
-	position: relative;
-	display: block;
-	clear: both;
+  margin: 0;
+  position: relative;
+  display: block;
+  clear: both;
 }
 
 .debugger-repl-wrapper label {
-	display: block;
-	clear: both;
+  display: block;
+  clear: both;
 }
 
 .debugger-repl {
-	background: #000;
-	color: green;
-	border-radius: 5px;
-	border: 1px solid #FFF;
-	width: 230px;
-	height: 28px;
-	float: left;
-	margin: 5px 0;
+  background: #000;
+  color: green;
+  border-radius: 5px;
+  border: 1px solid #FFF;
+  width: 230px;
+  height: 28px;
+  float: left;
+  margin: 5px 0;
 }
 
 .debugger-repl-execute {
-	width: 90px;
-	background-color: #4CAF50;
-	border: none;
-	color: white;
-	padding: 8px 16px;
-	text-decoration: none;
-	margin: 5px 0 0 5px;
-	cursor: pointer;
-	float: right;
+  width: 90px;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  margin: 5px 0 0 5px;
+  cursor: pointer;
+  float: right;
 }
 
 .line-numbers.highlight {
-	color: red!important;
+  color: red!important;
 }
 
 .editor-actions > .editor-execute {
-	position: relative;
-	padding: 0 0 24px;
+  position: relative;
+  padding: 0 0 24px;
 }
 
 .editor-execute .editor-console-stdin {
-	background: #000;
-	color: green;
-	border-radius: 5px;
-	border: 1px solid #FFF;
-	padding: 5px;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	width: -moz-available;
+  background: #000;
+  color: green;
+  border: 1px solid #FFF;
+  padding: 5px;
+  width: -moz-available;
+  border-top: 0px;
 }
 
 .editor-execute .editor-console-stdin:focus {
-	outline: 2px groove orange;
+  outline: 2px groove orange;
 }
 
 .editor-execute label {
-	display: block;
-	color: #CCC;
+  display: block;
+  color: #CCC;
+  margin: 5px 0;
 }
 
 .editor-execute .actions {
-	clear: both;
+  clear: both;
 }
 
 .editor-execute .context {
-	display: block;
-	position: relative;
+  display: block;
+  position: relative;
 }
 
 .editor-execute .context input {
-	background: #000;
-	color: green;
-	border-radius: 5px;
-	border: 1px solid #FFF;
-	width: 60%;
-	height: 28px;
-	margin: 5px 0;
+  background: #000;
+  color: green;
+  border: 1px solid #FFF;
+  width: 60%;
+  height: 28px;
+  margin: 5px 0;
 }
 
 .editor-execute .context ul {
-	margin: 5px 0 0;
-	padding: 0;
+  margin: 5px 0 0;
+  padding: 0;
 }
 
 .editor-execute .context ul.hidden {
-	display: none;
+  display: none;
 }
 
 .editor-execute .context li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: block;
+}
+
+.editor-execute .std {
+  display: flex;
+  flex-direction: column;
 }
 
 #excludedNamespaces {
-	background: #000;
-	color: green;
-	border-radius: 5px;
-	border: 1px solid #FFF;
-	width: 60%;
-	height: 28px;
-	margin: 5px 0;
+  background: #000;
+  color: green;
+  border-radius: 5px;
+  border: 1px solid #FFF;
+  width: 60%;
+  height: 28px;
+  margin: 5px 0;
 }
 
 /* Help */
 .editor-help code {
-	background: #1e1e1e;
-    display: block;
-    margin: 5px 0 0;
-    padding: 5px;
-	color: #CCC;
+  background: #1e1e1e;
+  display: block;
+  margin: 5px 0 0;
+  padding: 5px;
+  color: #CCC;
 }
 
 .editor-help code .identifier {
-	color:yellow;
+  color:yellow;
 }
 
 .editor-help code .string {
-	color:orange;
+  color:orange;
 }
 
 .editor-help code .comment {
-	color:lightgreen;
+  color:lightgreen;
 }
 
 /* Share code */
 .share-popup-bg {
-	background-color: #333;
-	opacity: 0.5;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	z-index: 999;
+  background-color: #333;
+  opacity: 0.5;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 999;
 }
 
 .share-popup {
-	position: fixed;
-    max-width: 800px;
-    position: absolute;
-	top: 200px;
-    left: 50%;
-    transform: translate(-50%, 0);
-	z-index: 999;
+  position: fixed;
+  max-width: 800px;
+  position: absolute;
+  top: 200px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 999;
 }
 
 .share-popup textarea {
-	background: #000;
-	color: green;
-	padding: 0;
-	margin: 0;
-	height: 200px;
-	width: 400px;
-	box-shadow: 2px 2px 2px black;
-	border: 0;
+  background: #000;
+  color: green;
+  padding: 0;
+  margin: 0;
+  height: 200px;
+  width: 400px;
+  box-shadow: 2px 2px 2px black;
+  border: 0;
 }
 
 .share-popup a {
-	position: absolute;
-	right: 0;
-	top: 0;
-	width: 24px;
-	height: 24px;
-	opacity: 0.3;
-	cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  opacity: 0.3;
+  cursor: pointer;
 }
 .share-popup a:hover {
-	opacity: 1;
+  opacity: 1;
 }
 .share-popup a:before, .share-popup a:after {
-	position: absolute;
-	left: 12px;
-	content: ' ';
-	height: 25px;
-	width: 2px;
-	background-color: #AAA;
+  position: absolute;
+  left: 12px;
+  content: ' ';
+  height: 25px;
+  width: 2px;
+  background-color: #AAA;
 }
 .share-popup a:before {
-	transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 .share-popup a:after {
-	transform: rotate(-45deg);
+  transform: rotate(-45deg);
 }
 
 .readme ul {
-	margin: 0;
-	padding: 0;
-	left: 5px;
-	bottom: 5px;
-	position: fixed;
-	z-index: 999;
-	background: #333;
-	opacity: 0.7;
+  margin: 0;
+  padding: 0;
+  left: 5px;
+  bottom: 5px;
+  position: fixed;
+  z-index: 999;
+  background: #333;
+  opacity: 0.7;
 }
 
 .readme li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	display: inline-block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: inline-block;
 }
 
 .readme ul .collapse {
-	cursor: pointer;
-	padding: 0.7em 1.4em;
-	color: #CCC;
+  cursor: pointer;
+  padding: 0.7em 1.4em;
+  color: #CCC;
 }
 
 .readme .external-links a {
-	display: inline-block;
-	padding: 0.7em 1.4em;
-	margin: 0 0 0 0.3em;
-	border-radius: 0.15em;
-	box-sizing: border-box;
-	text-decoration: none;
-	text-transform: uppercase;
-	font-weight: bold;
-	color: #fff;
-	text-align: center;
-	position: relative;
-	cursor: pointer;
+  display: inline-block;
+  padding: 0.7em 1.4em;
+  margin: 0 0 0 0.3em;
+  border-radius: 0.15em;
+  box-sizing: border-box;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
 }
 
 .readme .external-links a:active {
-	border: 1px solid #000;
+  border: 1px solid #000;
 }

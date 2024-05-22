@@ -17,14 +17,16 @@ import process from 'process';
 import { GrebyelDebugger } from './execute/debugger.js';
 import { WebOutputHandler } from './execute/output.js';
 import { PseudoResourceHandler } from './execute/resource.js';
-import { Stdin, Stdout } from './std.js';
+import { Stdin } from './std/stdin.js';
+import { StdoutCanvas, StdoutText } from './std/stdout.js';
 
 let activeInterpreter: Interpreter | null;
 let isReady = true;
 
 export interface ExecuteOptions {
   stdin?: Stdin;
-  stdout?: Stdout;
+  stdoutText?: StdoutText;
+  stdoutCanvas?: StdoutCanvas;
   api?: ObjectValue;
   params: string[];
   seed?: string;
@@ -46,7 +48,8 @@ export default async function execute(
   isReady = false;
   const vsAPI: ObjectValue = options.api || new ObjectValue();
   const stdin = options.stdin || new Stdin(new Element());
-  const stdout = options.stdout || new Stdout(new Element());
+  const stdoutText = options.stdoutText || new StdoutText(new Element());
+  const stdoutCanvas = options.stdoutCanvas || new StdoutCanvas();
 
   if (activeInterpreter) {
     await activeInterpreter.exit();
@@ -58,7 +61,11 @@ export default async function execute(
     debugger: new GrebyelDebugger(options.onInteract),
     handler: new HandlerContainer({
       resourceHandler,
-      outputHandler: new WebOutputHandler(stdin, stdout)
+      outputHandler: new WebOutputHandler({
+        stdin,
+        stdoutCanvas,
+        stdoutText
+      })
     }),
     debugMode: true
   });

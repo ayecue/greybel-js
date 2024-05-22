@@ -1120,3 +1120,10 @@ All notable changes to this project will be documented in this file.
 
 - add link to BepInEx 5.x.x plugin
 - updated description for BepInEx
+
+## [3.3.4] - 21.05.2024
+
+- fix is_valid_ip description example - thanks for the contribution to [@Wombynator](https://github.com/Wombynator)
+- add unity terminal to web view
+- update rnd method to only return the first generated value of a seed and not continuously generate new values of one seed to properly resemble the original MiniScript behaviour
+- fix matches logic which caused skipping of results

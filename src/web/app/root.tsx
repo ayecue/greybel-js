@@ -78,17 +78,17 @@ export function Root(options: RootOptions) {
   };
 
   return (
-    <article>
+    <div>
+      <ErrorList errors={errorEntries} />
+      <EditorPopups
+        share={{
+          active: share,
+          content,
+          onClose: () => setShare(false)
+        }}
+        debug={debug}
+      />
       <div className="editor-control">
-        <ErrorList errors={errorEntries} />
-        <EditorPopups
-          share={{
-            active: share,
-            content,
-            onClose: () => setShare(false)
-          }}
-          debug={debug}
-        />
         <EditorRoot
           initialContent={options.initContent}
           onChange={(newContent) => {
@@ -99,22 +99,22 @@ export function Root(options: RootOptions) {
           onCreate={(context) => setEditorContext(context)}
           collapsed={collapsed}
         />
-        <a
-          className={buildClassName(
-            'collapse',
-            'material-icons',
-            { shouldAdd: collapsed, className: 'closed' },
-            { shouldAdd: !collapsed, className: 'open' }
-          )}
-          onClick={() => setCollapsed(!collapsed)}
-          title="Collapse"
-        ></a>
         <div
           className={buildClassName('editor-side-panel', {
             shouldAdd: collapsed,
             className: 'hidden'
           })}
         >
+          <a
+            className={buildClassName(
+              'collapse',
+              'material-icons',
+              { shouldAdd: collapsed, className: 'closed' },
+              { shouldAdd: !collapsed, className: 'open' }
+            )}
+            onClick={() => setCollapsed(!collapsed)}
+            title="Collapse"
+          ></a>
           <div>
             <div className="editor-actions">
               <div className="editor-main">
@@ -160,11 +160,11 @@ export function Root(options: RootOptions) {
             </div>
           </div>
         </div>
-        <div className="readme">
+      </div>
+      <div className="readme">
           <ExternalLinks externalLinks={options.externalLinks} />
         </div>
-      </div>
-    </article>
+    </div>
   );
 }
 

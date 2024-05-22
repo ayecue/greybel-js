@@ -92,7 +92,12 @@ export function EditorRoot({
   }
 
   return (
-    <div className="editor-root">
+    <div
+      className={buildClassName('editor-root', {
+        shouldAdd: collapsed,
+        className: 'fullscreen'
+      })}
+    >
       <Editor
         model={editorContext.model}
         monaco={editorContext.monaco}
@@ -105,10 +110,6 @@ export function EditorRoot({
           setEditorContext(newContext);
           onCreate?.(newContext);
         }}
-        className={buildClassName({
-          shouldAdd: collapsed,
-          className: 'fullscreen'
-        })}
       />
     </div>
   );

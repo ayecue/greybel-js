@@ -114,13 +114,15 @@ export default function Transpile({ content, onError }: TranspileOptions) {
           </li>
         </ul>
       </div>
-      <label>Transpiler output:</label>
-      <textarea
-        id="toutput"
-        className="editor-transpiled-area"
-        readOnly
-        value={transformResult}
-      />
+      <div className="output">
+        <label>Transpiler output:</label>
+        <textarea
+          id="toutput"
+          className="editor-transpiled-area"
+          readOnly
+          value={transformResult}
+        />
+      </div>
     </div>
   );
 }
