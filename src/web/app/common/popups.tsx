@@ -1,4 +1,4 @@
-import { VM } from 'greybel-interpreter';
+import { VM, ObjectValue } from 'greybel-interpreter';
 import React, { useEffect, useRef, useState } from 'react';
 
 import viewJSON from '../../json-viewer.js';
@@ -69,9 +69,13 @@ export function DebugScopePopup({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const scopes = vm.getFrame()
-      .lookupAllScopes()
-      .map((scope) => scope.locals.scope.value);
+    let scope = vm.getFrame();
+    const scopes: ObjectValue[] = [];
+
+    while (scope != null) {
+      scopes.push(scope.locals.scope.value);
+      scope = scope.outer;
+    }
 
     containerRef.current!.appendChild(viewJSON(scopes));
   }, []);

@@ -45,7 +45,7 @@ body {
   background: #000;
   cursor: pointer;
   border: 1px solid #fff;
-  z-index: 999;
+  z-index: 996;
 }
 
 .editor-side-panel > .collapse.open:before {
