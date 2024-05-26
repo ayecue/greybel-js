@@ -1127,3 +1127,10 @@ All notable changes to this project will be documented in this file.
 - add unity terminal to web view
 - update rnd method to only return the first generated value of a seed and not continuously generate new values of one seed to properly resemble the original MiniScript behaviour
 - fix matches logic which caused skipping of results
+
+## [3.3.5] - 26.05.2024
+
+- fix z-index of collapse related to debug overlay
+- show proper scopes in debug view, rather than all scope of all previous frames
+- fix behaviour of to_int intrinsic, only parses integers instead of floating numbers
+- fix behaviour of val intrinsic, properly parse strings which have commas prior to dot
