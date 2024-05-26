@@ -1132,3 +1132,5 @@ All notable changes to this project will be documented in this file.
 
 - fix z-index of collapse related to debug overlay
 - show proper scopes in debug view, rather than all scope of all previous frames
+- fix behaviour of to_int intrinsic, only parses integers instead of numbers
+- fix behaviour of val intrinsic, properly parse strings which have commas prior to dot
