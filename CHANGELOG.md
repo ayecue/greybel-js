@@ -1134,3 +1134,7 @@ All notable changes to this project will be documented in this file.
 - show proper scopes in debug view, rather than all scope of all previous frames
 - fix behaviour of to_int intrinsic, only parses integers instead of floating numbers
 - fix behaviour of val intrinsic, properly parse strings which have commas prior to dot
+
+## [3.3.6] - 27.05.2024
+
+- fix lexer which could for certain character under certain conditions cause inifinite loops
