@@ -1138,3 +1138,7 @@ All notable changes to this project will be documented in this file.
 ## [3.3.6] - 27.05.2024
 
 - fix lexer which could for certain character under certain conditions cause inifinite loops
+
+## [3.3.7] - 30.05.2024
+
+- improve beautifier formatting - related to [#176](https://github.com/ayecue/greybel-vs/issues/176)
