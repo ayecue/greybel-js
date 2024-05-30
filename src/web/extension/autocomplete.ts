@@ -53,9 +53,7 @@ export const getCompletionList = (
   const typeInfo = helper.lookupBasePath(item);
 
   if (typeInfo instanceof TypeInfoWithDefinition) {
-    const definitions = greyscriptMeta.getDefinitions(
-      typeInfo.definition.returns
-    );
+    const definitions = greyscriptMeta.getDefinitions(typeInfo.returns);
     const completionItems: PseudoCompletionItem[] = [
       ...convertDefinitionsToCompletionList(definitions, range, kind)
     ];
