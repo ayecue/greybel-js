@@ -1,4 +1,4 @@
-import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
+import { greyscriptMeta } from 'greyscript-meta';
 import { SignatureDefinitionContainer } from 'meta-utils';
 import {
   ASTBase,

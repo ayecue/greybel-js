@@ -1,5 +1,5 @@
 import { BuildType } from 'greybel-transpiler';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
+import { greyscriptMeta } from 'greyscript-meta';
 import { DirectTranspiler } from 'greyscript-transpiler';
 
 export interface MinifyOptions {

@@ -1,7 +1,7 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
 import { BuildError } from 'greybel-transpiler';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
+import { greyscriptMeta } from 'greyscript-meta';
 import { BuildType, Transpiler } from 'greyscript-transpiler';
 import isInsideContainer from 'is-inside-container';
 import mkdirp from 'mkdirp';
@@ -69,7 +69,7 @@ export default async function build(
         await fs.rm(outputPath, {
           recursive: true
         });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     await mkdirp(outputPath);
@@ -135,8 +135,7 @@ export default async function build(
       console.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
@@ -144,8 +143,7 @@ export default async function build(
       console.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
           }\n${err.stack}`
         )
       );
