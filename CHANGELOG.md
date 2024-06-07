@@ -1144,3 +1144,4 @@ All notable changes to this project will be documented in this file.
 - improve beautifier formatting - related to [#176](https://github.com/ayecue/greybel-vs/issues/176)
 - separate webview from greyscript-meta
 - fix behavior of val intrinsic on leading comma
+- support funcRef intrinsic
