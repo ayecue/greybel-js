@@ -19,6 +19,7 @@ import {
   ASTParenthesisExpression,
   ASTReturnStatement,
   ASTSliceExpression,
+  ASTType,
   ASTUnaryExpression,
   ASTWhileStatement
 } from 'miniscript-core';
@@ -196,7 +197,7 @@ const getScraperMap = function (
         visit(bodyItem, level);
       }
     },
-    InvalidCodeExpression: () => {}
+    InvalidCodeExpression: () => { }
   };
 };
 
@@ -244,67 +245,10 @@ class ScraperWalker {
   }
 }
 
-type ScraperNext = (item: any, level: number) => void;
-type ScraperValidate = (item: any, level: number) => boolean;
 type ScraperValidateEx = (
   item: any,
   level: number
 ) => { valid?: boolean; skip?: boolean; exit?: boolean } | void;
-
-export function forEach(next: ScraperNext, rootItem: ASTBase): ASTBase | null {
-  const result = null;
-  const walker = new ScraperWalker((item: ASTBase, level: number) => {
-    next(item, level);
-    return {
-      exit: false
-    };
-  });
-
-  walker.visit(rootItem);
-  return result;
-}
-
-export function find(
-  validate: ScraperValidate,
-  rootItem: ASTBase
-): ASTBase | null {
-  let result: ASTBase | null = null;
-  const walker = new ScraperWalker((item: ASTBase, level: number) => {
-    if (validate(item, level)) {
-      result = item;
-
-      return {
-        exit: true
-      };
-    }
-
-    return {
-      exit: false
-    };
-  });
-
-  walker.visit(rootItem);
-  return result;
-}
-
-export function findAll(
-  validate: ScraperValidate,
-  rootItem: ASTBase
-): ASTBase[] {
-  const result: ASTBase[] = [];
-  const walker = new ScraperWalker((item: ASTBase, level: number) => {
-    if (validate(item, level)) {
-      result.push(item);
-    }
-
-    return {
-      exit: false
-    };
-  });
-
-  walker.visit(rootItem);
-  return result;
-}
 
 export function findEx(
   validate: ScraperValidateEx,
@@ -314,57 +258,13 @@ export function findEx(
   const walker = new ScraperWalker((item: ASTBase, level: number) => {
     const state = validate(item, level) || {};
 
-    if (state.valid) {
+    if (state.valid && item.type !== ASTType.InvalidCodeExpression) {
       result.push(item);
     }
 
     return {
       exit: !!state.exit,
       skip: !!state.skip
-    };
-  });
-
-  walker.visit(rootItem);
-  return result;
-}
-
-export function findAllByType(
-  validate: ScraperValidate,
-  rootItem: ASTBase
-): { [type: string]: ASTBase[] } {
-  const result: { [type: string]: ASTBase[] } = {};
-  const walker = new ScraperWalker((item: ASTBase, level: number) => {
-    const typeResult = result[item.type] || [];
-
-    if (validate(item, level)) {
-      typeResult.push(item);
-      result[item.type] = typeResult;
-    }
-
-    return {
-      exit: false
-    };
-  });
-
-  walker.visit(rootItem);
-  return result;
-}
-
-export function findAllByLine(
-  validate: ScraperValidate,
-  rootItem: ASTBase
-): { [type: number]: ASTBase[] } {
-  const result: { [type: number]: ASTBase[] } = {};
-  const walker = new ScraperWalker((item: ASTBase, level: number) => {
-    const typeResult = result[item.start!.line] || [];
-
-    if (validate(item, level)) {
-      typeResult.push(item);
-      result[item.start!.line] = typeResult;
-    }
-
-    return {
-      exit: false
     };
   });
 

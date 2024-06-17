@@ -1,54 +1,42 @@
-import {
-  ASTAssignmentStatement,
-  ASTBaseBlockWithScope,
-  ASTChunk
-} from 'miniscript-core';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { ASTAssignmentStatement } from 'miniscript-core';
+import { createExpressionId } from 'miniscript-type-analyzer';
+import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import transformASTToString from './helper/ast-stringify.js';
 import documentParseQueue from './helper/model-manager.js';
-import { removeContextPrefixInNamespace } from './helper/utils.js';
+import { TextDocument, getTextDocument } from './helper/vs.js';
+import typeManager from './helper/type-manager.js';
+import { getSymbolItemKind } from './helper/kind.js';
 
 const findAllAssignments = (
   monaco: typeof Monaco,
-  root: ASTChunk,
-  document: Monaco.editor.ITextModel,
-  isValid: (c: string) => boolean = () => true
+  document: TextDocument,
+  query: string
 ): Monaco.languages.DocumentSymbol[] => {
-  const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
+  const typeDoc = typeManager.get(document);
+  const assignments = typeDoc.resolveAllAssignmentsWithQuery(query);
   const result: Monaco.languages.DocumentSymbol[] = [];
 
-  for (const item of scopes) {
-    for (const assignmentItem of item.assignments) {
-      const assignment = assignmentItem as ASTAssignmentStatement;
-      const current = removeContextPrefixInNamespace(
-        transformASTToString(assignment.variable)
-      );
+  for (const assignmentItem of assignments) {
+    const assignment = assignmentItem as ASTAssignmentStatement;
+    const entity = typeDoc.resolveNamespace(assignment.variable, true);
+    const label = entity?.label ?? createExpressionId(assignmentItem.variable);
+    const kind = entity?.kind ? getSymbolItemKind(entity.kind) : monaco.languages.SymbolKind.Variable;
 
-      if (!isValid(current)) {
-        continue;
-      }
+    const range = new monaco.Range(
+      assignment.variable.start.line,
+      assignment.variable.start.character,
+      assignment.variable.end.line,
+      assignment.variable.end.character
+    );
 
-      if (!assignment.variable.start || !assignment.variable.end) {
-        continue;
-      }
-
-      const range = new monaco.Range(
-        assignment.variable.start.line,
-        assignment.variable.start.character,
-        assignment.variable.end.line,
-        assignment.variable.end.character
-      );
-
-      result.push({
-        name: current,
-        detail: current,
-        kind: monaco.languages.SymbolKind.Variable,
-        range,
-        tags: [],
-        selectionRange: range
-      });
-    }
+    result.push({
+      name: label,
+      detail: label,
+      kind,
+      range,
+      tags: [],
+      selectionRange: range
+    });
   }
 
   return result;
@@ -68,8 +56,8 @@ export function activate(monaco: typeof Monaco) {
 
       return findAllAssignments(
         monaco,
-        parseResult.document as ASTChunk,
-        document
+        getTextDocument(document),
+        ''
       );
     }
   });

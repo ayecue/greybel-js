@@ -2,9 +2,10 @@ import EventEmitter from 'events';
 import { ASTChunkGreyScript, Parser } from 'greyscript-core';
 import LRU from 'lru-cache';
 import { ASTBase } from 'miniscript-core';
-import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import type { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import typeManager from './type-manager.js';
+import { TextDocument, getTextDocument } from './vs.js';
 
 export interface ParseResult {
   content: string;
@@ -14,7 +15,7 @@ export interface ParseResult {
 }
 
 export interface QueueItem {
-  document: editor.ITextModel;
+  document: TextDocument;
   createdAt: number;
 }
 
@@ -75,7 +76,7 @@ export class DocumentParseQueue extends EventEmitter {
     const chunk = parser.parseChunk();
 
     if ((chunk as ASTChunkGreyScript).body?.length > 0) {
-      typeManager.analyze(document, chunk as ASTChunkGreyScript);
+      typeManager.analyze(getTextDocument(document), chunk as ASTChunkGreyScript);
 
       return {
         content,
@@ -89,7 +90,7 @@ export class DocumentParseQueue extends EventEmitter {
       const strictParser = new Parser(document.getValue());
       const strictChunk = strictParser.parseChunk();
 
-      typeManager.analyze(document, strictChunk as ASTChunkGreyScript);
+      typeManager.analyze(getTextDocument(document), strictChunk as ASTChunkGreyScript);
 
       return {
         content,
@@ -120,7 +121,7 @@ export class DocumentParseQueue extends EventEmitter {
     }
 
     this.queue.set(fileName, {
-      document,
+      document: getTextDocument(document),
       createdAt: Date.now()
     });
 

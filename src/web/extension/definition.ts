@@ -1,21 +1,20 @@
 import {
   ASTBase,
   ASTIdentifier,
-  ASTIndexExpression,
-  ASTMemberExpression
+  ASTMemberExpression,
+  ASTBaseBlockWithScope
 } from 'miniscript-core';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import transformASTToNamespace from './helper/ast-namespace.js';
 import { LookupHelper } from './helper/lookup-type.js';
 
 const findAllDefinitions = (
   monaco: typeof Monaco,
   helper: LookupHelper,
-  identifer: string,
-  root: ASTBase
+  item: ASTBase,
+  root: ASTBaseBlockWithScope
 ): Monaco.languages.LocationLink[] => {
-  const assignments = helper.findAllAssignmentsOfIdentifier(identifer, root);
+  const assignments = helper.findAllAssignmentsOfItem(item, root);
   const definitions: Monaco.languages.LocationLink[] = [];
 
   for (const assignment of assignments) {
@@ -60,28 +59,18 @@ export function activate(monaco: typeof Monaco) {
       }
 
       const previous = outer.length > 0 ? outer[outer.length - 1] : undefined;
-      let identifer = closest.name;
+      let target: ASTBase = closest;
 
       if (previous) {
         if (
           previous instanceof ASTMemberExpression &&
           previous.identifier === closest
         ) {
-          identifer = transformASTToNamespace(previous);
-        } else if (
-          previous instanceof ASTIndexExpression &&
-          previous.index === closest
-        ) {
-          identifer = transformASTToNamespace(previous);
+          target = previous;
         }
       }
 
-      const definitions = findAllDefinitions(
-        monaco,
-        helper,
-        identifer,
-        closest.scope!
-      );
+      const definitions = findAllDefinitions(monaco, helper, target, target.scope!);
 
       return definitions;
     }
