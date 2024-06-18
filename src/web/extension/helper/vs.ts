@@ -1,4 +1,18 @@
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import type {
+  editor,
+  IMarkdownString,
+  IRange,
+  languages
+} from 'monaco-editor/esm/vs/editor/editor.api.js';
+
+export interface TextDocument extends editor.ITextModel {
+  fileName: string;
+}
+
+export function getTextDocument(document: editor.ITextModel): TextDocument {
+  (document as any).fileName = 'default';
+  return document as TextDocument;
+}
 
 export class PseudoMarkdownString {
   value: string;
@@ -17,7 +31,7 @@ export class PseudoMarkdownString {
     return this;
   }
 
-  valueOf(): Monaco.IMarkdownString {
+  valueOf(): IMarkdownString {
     return {
       value: this.value
     };
@@ -25,33 +39,33 @@ export class PseudoMarkdownString {
 }
 
 export class PseudoHover {
-  markdown: PseudoMarkdownString;
+  markdowns: PseudoMarkdownString[];
 
-  constructor(markdown: PseudoMarkdownString) {
-    this.markdown = markdown;
+  constructor(markdowns: PseudoMarkdownString[]) {
+    this.markdowns = markdowns;
   }
 
-  valueOf(): Monaco.languages.Hover {
+  valueOf(): languages.Hover {
     return {
-      contents: [this.markdown.valueOf()]
+      contents: this.markdowns.map((it) => it.valueOf())
     };
   }
 }
 
 export class PseudoCompletionItem {
-  label: string | Monaco.languages.CompletionItemLabel;
-  kind: Monaco.languages.CompletionItemKind;
+  label: string | languages.CompletionItemLabel;
+  kind: languages.CompletionItemKind;
   insertText: string;
-  range: Monaco.IRange | Monaco.languages.CompletionItemRanges;
+  range: IRange | languages.CompletionItemRanges;
 
-  constructor(options: Monaco.languages.CompletionItem) {
+  constructor(options: languages.CompletionItem) {
     this.label = options.label;
     this.kind = options.kind;
     this.insertText = options.insertText;
     this.range = options.range;
   }
 
-  valueOf(): Monaco.languages.CompletionItem {
+  valueOf(): languages.CompletionItem {
     return {
       label: this.label,
       kind: this.kind,
@@ -68,7 +82,7 @@ export class PseudoCompletionList {
     this.items = items;
   }
 
-  valueOf(): Monaco.languages.CompletionList {
+  valueOf(): languages.CompletionList {
     return {
       suggestions: this.items.map((item) => item.valueOf())
     };
@@ -77,20 +91,20 @@ export class PseudoCompletionList {
 
 export class PseudoSignatureInformation {
   label: string;
-  parameters: Monaco.languages.ParameterInformation[];
-  documentation: string | Monaco.IMarkdownString;
+  parameters: languages.ParameterInformation[];
+  documentation: string | IMarkdownString;
 
   constructor(
     label: string,
-    parameters: Monaco.languages.ParameterInformation[],
-    documentation: string | Monaco.IMarkdownString
+    parameters: languages.ParameterInformation[],
+    documentation: string | IMarkdownString
   ) {
     this.label = label;
     this.parameters = parameters;
     this.documentation = documentation;
   }
 
-  valueOf(): Monaco.languages.SignatureInformation {
+  valueOf(): languages.SignatureInformation {
     return {
       label: this.label,
       parameters: this.parameters,
@@ -113,7 +127,7 @@ export class PseudoSignatureHelp {
     return this;
   }
 
-  valueOf(): Monaco.languages.SignatureHelpResult {
+  valueOf(): languages.SignatureHelpResult {
     return {
       value: {
         signatures: this.signatures.map((item) => item.valueOf()),

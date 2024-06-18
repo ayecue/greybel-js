@@ -1,74 +1,33 @@
-import { parse, Spec } from 'comment-parser';
-import { SignatureDefinitionArg } from 'meta-utils';
-import Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
+import {
+  SignatureDefinitionFunction,
+  SignatureDefinitionFunctionArg,
+  SignatureDefinitionTypeMeta
+} from 'meta-utils';
+import { IEntity } from 'miniscript-type-analyzer';
 
-import { TypeInfoWithDefinition } from './type-manager.js';
 import {
   PseudoHover,
   PseudoMarkdownString,
   PseudoSignatureInformation
 } from './vs.js';
 
-const formatType = (type: string): string => {
-  const segments = type.split(':');
-  if (segments.length === 1) {
-    return segments[0];
+export function formatTypes(types: SignatureDefinitionTypeMeta[] = []): string {
+  return types.map((item) => item.toString().replace(',', '٫')).join(' or ');
+}
+
+export function formatDefaultValue(value: number | string): string {
+  if (typeof value === 'string') {
+    return `"${value}"`;
   }
-  return `${segments[0]}<${segments[1]}>`;
-};
+  return value.toString();
+}
 
-const formatTypes = (types: string[] = []): string => {
-  return types.map(formatType).join(' or ');
-};
-
-const convertSpecToString = (it: Spec): string => {
-  return [it.name, it.description].filter((it) => it !== undefined).join(' ');
-};
-
-const useCommentDefinitionOrDefault = (
-  item: TypeInfoWithDefinition
-): TypeInfoWithDefinition => {
-  const commentDefs = parse(`/**
-    ${item.definition.description}
-  */`);
-  const [commentDef] = commentDefs;
-
-  if (commentDef.tags.length > 0) {
-    const commentDescription = [
-      commentDef.description ?? '',
-      ...commentDef.tags
-        .filter((it) => it.tag === 'description')
-        .map(convertSpecToString)
-    ].join('\n\n');
-    const commentArgs: SignatureDefinitionArg[] = commentDef.tags
-      .filter((it) => it.tag === 'param')
-      .map((it) => ({
-        label: it.name,
-        type: it.type.split('|').join(' or '),
-        opt: it.optional
-      }));
-    const commentReturnValues = commentDef.tags.find(
-      (it) => it.tag === 'return'
-    ) ?? { type: 'any' };
-    const commentExample = commentDef.tags
-      .filter((it) => it.tag === 'example')
-      .map(convertSpecToString);
-
-    return new TypeInfoWithDefinition(item.label, ['function'], {
-      arguments: commentArgs,
-      returns: commentReturnValues.type.split('|'),
-      description: commentDescription,
-      example: commentExample
-    });
-  }
-
-  return item;
-};
-
-export const createTooltipHeader = (item: TypeInfoWithDefinition) => {
-  const definition = item.definition;
-  const args = definition.arguments || [];
-  const returnValues = formatTypes(definition.returns) || 'null';
+export const createTooltipHeader = (
+  item: IEntity,
+  definition: SignatureDefinitionFunction
+) => {
+  const args = definition.getArguments() || [];
+  const returnValues = formatTypes(definition.getReturns()) || 'null';
 
   if (args.length === 0) {
     return `(${item.kind}) ${item.label} (): ${returnValues}`;
@@ -77,8 +36,12 @@ export const createTooltipHeader = (item: TypeInfoWithDefinition) => {
   const argValues = args
     .map(
       (item) =>
-        `${item.label}${item.opt ? '?' : ''}: ${formatType(item.type)}${
-          item.default ? ` = ${item.default}` : ''
+        `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${formatTypes(
+          item.getTypes()
+        )}${
+          item.getDefault()
+            ? ` = ${formatDefaultValue(item.getDefault().value)}`
+            : ''
         }`
     )
     .join(', ');
@@ -88,20 +51,20 @@ export const createTooltipHeader = (item: TypeInfoWithDefinition) => {
 
 export const appendTooltipHeader = (
   text: PseudoMarkdownString,
-  item: TypeInfoWithDefinition
+  item: IEntity,
+  definition: SignatureDefinitionFunction
 ) => {
-  text.appendCodeblock(createTooltipHeader(item));
+  text.appendCodeblock(createTooltipHeader(item, definition));
   text.appendMarkdown('***\n');
 };
 
 export const appendTooltipBody = (
   text: PseudoMarkdownString,
-  item: TypeInfoWithDefinition
+  definition: SignatureDefinitionFunction
 ) => {
-  const definition = item.definition;
-  const example = definition.example || [];
+  const example = definition.getExample() || [];
 
-  text.appendMarkdown(definition.description + '\n');
+  text.appendMarkdown(definition.getDescription() + '\n');
 
   if (example.length > 0) {
     text.appendMarkdown('#### Examples:\n');
@@ -110,37 +73,47 @@ export const appendTooltipBody = (
 };
 
 export const createSignatureInfo = (
-  item: TypeInfoWithDefinition
-): PseudoSignatureInformation => {
-  const typeInfo = useCommentDefinitionOrDefault(item);
-  const label = createTooltipHeader(typeInfo);
-  const args = typeInfo.definition.arguments ?? [];
-  const parameters: Monaco.languages.ParameterInformation[] = args.map(
-    (argItem: SignatureDefinitionArg) => {
+  item: IEntity
+): PseudoSignatureInformation[] => {
+  const signatureInfos: PseudoSignatureInformation[] = [];
+
+  for (const definition of item.signatureDefinitions) {
+    const fnDef = definition as SignatureDefinitionFunction;
+    const label = createTooltipHeader(item, fnDef);
+    const args = fnDef.getArguments() ?? [];
+    const text = new PseudoMarkdownString('');
+
+    appendTooltipBody(text, fnDef);
+
+    const parameters = args.map((argItem: SignatureDefinitionFunctionArg) => {
       return {
-        label: `${argItem.label}${argItem.opt ? '?' : ''}: ${argItem.type}`
+        label: `${argItem.getLabel()}${
+          argItem.isOptional() ? '?' : ''
+        }: ${argItem.getTypes().join(' or ')}`
       };
-    }
-  );
-  const documentation = new PseudoMarkdownString('');
+    });
+    const documentation = text;
 
-  appendTooltipBody(documentation, typeInfo);
+    signatureInfos.push(
+      new PseudoSignatureInformation(label, parameters, documentation)
+    );
+  }
 
-  const signatureInfo = new PseudoSignatureInformation(
-    label,
-    parameters,
-    documentation
-  );
-
-  return signatureInfo;
+  return signatureInfos;
 };
 
-export const createHover = (item: TypeInfoWithDefinition): PseudoHover => {
-  const typeInfo = useCommentDefinitionOrDefault(item);
-  const text = new PseudoMarkdownString('');
+export const createHover = (item: IEntity): PseudoHover => {
+  const texts: PseudoMarkdownString[] = [];
 
-  appendTooltipHeader(text, typeInfo);
-  appendTooltipBody(text, typeInfo);
+  for (const definition of item.signatureDefinitions) {
+    const text = new PseudoMarkdownString('');
+    const fnDef = definition as SignatureDefinitionFunction;
 
-  return new PseudoHover(text);
+    appendTooltipHeader(text, item, fnDef);
+    appendTooltipBody(text, fnDef);
+
+    texts.push(text);
+  }
+
+  return new PseudoHover(texts);
 };

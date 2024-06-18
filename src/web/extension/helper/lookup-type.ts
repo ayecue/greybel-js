@@ -1,27 +1,28 @@
-import { ASTChunkAdvanced } from 'greybel-core';
+import { SignatureDefinitionBaseType } from 'meta-utils';
 import {
   ASTAssignmentStatement,
   ASTBase,
   ASTBaseBlockWithScope,
   ASTChunk,
-  ASTFunctionStatement,
-  ASTIdentifier,
   ASTIndexExpression,
   ASTMemberExpression,
   ASTType
 } from 'miniscript-core';
-import { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api.js';
-
-import transformASTToNamespace from './ast-namespace.js';
-import * as ASTScraper from './ast-scraper.js';
-import transformASTToString from './ast-stringify.js';
-import documentParseQueue from './model-manager.js';
-import typeManager, { lookupBase, TypeInfo } from './type-manager.js';
 import {
-  isGlobalsContextNamespace,
-  removeContextPrefixInNamespace,
-  removeGlobalsContextPrefixInNamespace
-} from './utils.js';
+  CompletionItem,
+  CompletionItemKind as EntityCompletionItemKind,
+  Entity,
+  IEntity
+} from 'miniscript-type-analyzer';
+import type {
+  editor,
+  Position
+} from 'monaco-editor/esm/vs/editor/editor.api.js';
+
+import * as ASTScraper from './ast-scraper.js';
+import documentParseQueue from './model-manager.js';
+import typeManager, { lookupBase } from './type-manager.js';
+import { getTextDocument, TextDocument } from './vs.js';
 
 export type LookupOuter = ASTBase[];
 
@@ -31,193 +32,103 @@ export interface LookupASTResult {
 }
 
 export class LookupHelper {
-  readonly document: editor.ITextModel;
+  readonly document: TextDocument;
 
   constructor(document: editor.ITextModel) {
-    this.document = document;
+    this.document = getTextDocument(document);
   }
 
   findAllAssignmentsOfIdentifier(
     identifier: string,
-    root: ASTBase
+    root: ASTBaseBlockWithScope
   ): ASTAssignmentStatement[] {
-    const identiferWithoutPrefix = removeContextPrefixInNamespace(identifier);
-    const assignments = [...this.lookupAssignments(root)];
-    const result: ASTAssignmentStatement[] = [];
+    return typeManager
+      .get(this.document)
+      .getScopeContext(root)
+      .aggregator.resolveAvailableAssignmentsWithQuery(identifier);
+  }
+
+  findAllAssignmentsOfItem(
+    item: ASTBase,
+    root: ASTBaseBlockWithScope
+  ): ASTAssignmentStatement[] {
+    return typeManager
+      .get(this.document)
+      .getScopeContext(root)
+      .aggregator.resolveAvailableAssignments(item);
+  }
+
+  findAllAvailableIdentifierInRoot(): Map<string, CompletionItem> {
+    return typeManager
+      .get(this.document)
+      .getRootScopeContext()
+      .scope.getAllIdentifier();
+  }
+
+  findAllPossibleProperties(): Map<string, CompletionItem> {
+    return new Entity({
+      document: typeManager.get(this.document),
+      kind: EntityCompletionItemKind.Variable
+    })
+      .addType(SignatureDefinitionBaseType.Any)
+      .getAllIdentifier();
+  }
+
+  findAllAvailableIdentifier(
+    root: ASTBaseBlockWithScope
+  ): Map<string, CompletionItem> {
+    return typeManager
+      .get(this.document)
+      .getScopeContext(root)
+      .scope.getAllIdentifier();
+  }
+
+  findAllAvailableIdentifierRelatedToPosition(
+    item: ASTBase
+  ): Map<string, CompletionItem> {
+    const typeDoc = typeManager.get(this.document);
+    const result: Map<string, CompletionItem> = new Map();
+    const scopeContext = typeDoc.getScopeContext(item.scope);
+    const assignments = Array.from(
+      scopeContext
+        .scope.locals.getAllIdentifier()
+        .entries()
+    )
+      .map(([key, item]) => {
+        return {
+          identifier: key,
+          ...item
+        };
+      })
+      .sort((a, b) => a.line - b.line);
 
     for (let index = 0; index < assignments.length; index++) {
-      const assignment = assignments[index] as ASTAssignmentStatement;
-      const current = removeContextPrefixInNamespace(
-        transformASTToNamespace(assignment.variable)
-      );
+      const assignment = assignments[index];
 
-      if (current === identiferWithoutPrefix) {
-        result.push(assignment);
-      }
+      if (assignment.line >= item.end!.line) break;
+      result.set(assignment.identifier, {
+        kind: assignment.kind,
+        line: assignment.line
+      });
     }
 
-    if (root instanceof ASTChunk) {
-      const scopes: ASTBaseBlockWithScope[] = [root, ...root.scopes];
+    if (typeDoc.globals !== scopeContext.scope.locals) {
+      const outer = scopeContext.scope.outer;
 
-      for (const item of scopes) {
-        const assignments = [...item.assignments];
+      for (const assignment of outer.getAllIdentifier()) {
+        result.set(...assignment);
+      }
 
-        for (let index = 0; index < assignments.length; index++) {
-          const assignment = assignments[index] as ASTAssignmentStatement;
-          const current = transformASTToNamespace(assignment.variable);
+      if (typeDoc.globals !== outer) {
+        const globals = scopeContext.scope.globals;
 
-          if (!isGlobalsContextNamespace(current)) {
-            continue;
-          }
-
-          if (
-            removeGlobalsContextPrefixInNamespace(current) ===
-            identiferWithoutPrefix
-          ) {
-            result.push(assignment);
-          }
+        for (const assignment of globals.getAllIdentifier()) {
+          result.set(...assignment);
         }
       }
     }
 
     return result;
-  }
-
-  lookupAssignments(item: ASTBase): ASTAssignmentStatement[] {
-    // lookup closest wrapping assignment
-    const scopes = this.lookupScopes(item);
-    const result: ASTAssignmentStatement[] = [];
-
-    for (const scope of scopes) {
-      result.push(...(scope.assignments as ASTAssignmentStatement[]));
-    }
-
-    return result;
-  }
-
-  findAllAvailableIdentifier(item: ASTBase): string[] {
-    const scopes = this.lookupScopes(item);
-    const result: string[] = [];
-    const outerScope = scopes.length > 1 ? scopes[1] : null;
-    const globalScope = this.lookupGlobalScope(item);
-
-    for (const scope of scopes) {
-      const assignments = [...scope.assignments];
-
-      for (let index = 0; index < assignments.length; index++) {
-        const assignment = assignments[index] as ASTAssignmentStatement;
-        const current = removeContextPrefixInNamespace(
-          transformASTToString(assignment.variable)
-        );
-        result.push(current);
-
-        if (scope === globalScope) {
-          result.push(`globals.${current}`);
-        }
-
-        if (scope === outerScope) {
-          result.push(`outer.${current}`);
-        }
-      }
-    }
-
-    return Array.from(new Set(result));
-  }
-
-  findAllAvailableIdentifierRelatedToPosition(item: ASTBase): string[] {
-    const scopes = this.lookupScopes(item);
-    const result: string[] = [];
-    const rootScope = scopes.shift();
-    const outerScope = scopes.length > 0 ? scopes[0] : null;
-    const globalScope = this.lookupGlobalScope(item);
-
-    if (rootScope) {
-      if (rootScope instanceof ASTFunctionStatement) {
-        for (const parameter of rootScope.parameters) {
-          if (parameter instanceof ASTAssignmentStatement) {
-            const parameterName = (parameter.variable as ASTIdentifier).name;
-            result.push(parameterName, `locals.${parameterName}`);
-          } else if (parameter instanceof ASTIdentifier) {
-            result.push(parameter.name, `locals.${parameter.name}`);
-          }
-        }
-      }
-
-      const assignments = [...rootScope.assignments];
-
-      for (let index = 0; index < assignments.length; index++) {
-        const assignment = assignments[index] as ASTAssignmentStatement;
-
-        if (assignment.end!.line >= item.end!.line) break;
-
-        const current = removeContextPrefixInNamespace(
-          transformASTToString(assignment.variable)
-        );
-        result.push(current, `locals.${current}`);
-
-        if (rootScope === globalScope) {
-          result.push(`globals.${current}`);
-        }
-      }
-    }
-
-    for (const scope of scopes) {
-      const assignments = [...scope.assignments];
-
-      for (let index = 0; index < assignments.length; index++) {
-        const assignment = assignments[index] as ASTAssignmentStatement;
-        const current = removeContextPrefixInNamespace(
-          transformASTToString(assignment.variable)
-        );
-        result.push(current);
-
-        if (scope === globalScope) {
-          result.push(`globals.${current}`);
-        }
-
-        if (scope === outerScope) {
-          result.push(`outer.${current}`);
-        }
-      }
-    }
-
-    return Array.from(new Set(result));
-  }
-
-  lookupScope(item: ASTBase): ASTBaseBlockWithScope | null {
-    return item.scope || null;
-  }
-
-  lookupScopes(item: ASTBase): ASTBaseBlockWithScope[] {
-    const result: ASTBaseBlockWithScope[] = [];
-    let current = item.scope;
-
-    if (item instanceof ASTBaseBlockWithScope) {
-      result.push(item);
-    }
-
-    while (current) {
-      result.push(current);
-      current = current.scope;
-    }
-
-    return result;
-  }
-
-  lookupGlobalScope(item: ASTBase): ASTChunkAdvanced {
-    let result: ASTBaseBlockWithScope = null;
-    let current = item.scope;
-
-    if (item instanceof ASTBaseBlockWithScope) {
-      result = item;
-    }
-
-    while (current) {
-      result = current;
-      current = current.scope;
-    }
-
-    return result as ASTChunkAdvanced;
   }
 
   lookupAST(position: Position): LookupASTResult | null {
@@ -281,21 +192,26 @@ export class LookupHelper {
     return null;
   }
 
-  lookupBasePath(item: ASTBase): TypeInfo | null {
-    const base = lookupBase(item);
-    const typeMap = typeManager.get(this.document);
+  lookupBasePath(item: ASTBase): IEntity | null {
+    const typeDoc = typeManager.get(this.document);
 
-    if (typeMap && base) {
-      return typeMap.resolvePath(base);
+    if (typeDoc === null) {
+      return null;
+    }
+
+    const base = lookupBase(item);
+
+    if (base) {
+      return typeDoc.resolveNamespace(base);
     }
 
     return null;
   }
 
-  lookupTypeInfo({ closest, outer }: LookupASTResult): TypeInfo | null {
-    const typeMap = typeManager.get(this.document);
+  lookupTypeInfo({ closest, outer }: LookupASTResult): IEntity | null {
+    const typeDoc = typeManager.get(this.document);
 
-    if (!typeMap) {
+    if (typeDoc === null) {
       return null;
     }
 
@@ -305,19 +221,19 @@ export class LookupHelper {
       previous?.type === ASTType.MemberExpression &&
       closest === (previous as ASTMemberExpression).identifier
     ) {
-      return typeMap.resolvePath(previous);
+      return typeDoc.resolveType(previous, true);
     } else if (
       previous?.type === ASTType.IndexExpression &&
       closest === (previous as ASTIndexExpression).index &&
       closest.type === ASTType.StringLiteral
     ) {
-      return typeMap.resolvePath(previous);
+      return typeDoc.resolveType(previous, true);
     }
 
-    return typeMap.resolve(closest);
+    return typeDoc.resolveType(closest, true);
   }
 
-  lookupType(position: Position): TypeInfo | null {
+  lookupType(position: Position): IEntity | null {
     const me = this;
     const astResult = me.lookupAST(position);
 

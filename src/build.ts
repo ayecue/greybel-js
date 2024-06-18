@@ -1,7 +1,7 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
 import { BuildError } from 'greybel-transpiler';
-import { greyscriptMeta } from 'greyscript-meta/dist/meta.js';
+import { greyscriptMeta } from 'greyscript-meta';
 import { BuildType, Transpiler } from 'greyscript-transpiler';
 import isInsideContainer from 'is-inside-container';
 import mkdirp from 'mkdirp';
@@ -48,7 +48,9 @@ export default async function build(
         'params',
         ...buildOptions.excludedNamespaces,
         ...Array.from(
-          Object.keys(greyscriptMeta.getSignaturesByType('general'))
+          Object.keys(
+            greyscriptMeta.getTypeSignature('general').getDefinitions()
+          )
         )
       ],
       disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
