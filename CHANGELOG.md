@@ -1145,3 +1145,6 @@ All notable changes to this project will be documented in this file.
 - separate webview from greyscript-meta
 - fix behavior of val intrinsic on leading comma
 - support funcRef intrinsic
+- add repeat keyword
+- implement new type manager which keeps better track of types and properties
+- fix and improve documentation regarding intrinsics
