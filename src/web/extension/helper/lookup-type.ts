@@ -88,9 +88,9 @@ export class LookupHelper {
   ): Map<string, CompletionItem> {
     const typeDoc = typeManager.get(this.document);
     const result: Map<string, CompletionItem> = new Map();
+    const scopeContext = typeDoc.getScopeContext(item.scope);
     const assignments = Array.from(
-      typeDoc
-        .getScopeContext(item.scope)
+      scopeContext
         .scope.locals.getAllIdentifier()
         .entries()
     )
@@ -112,13 +112,19 @@ export class LookupHelper {
       });
     }
 
-    if (item.scope.scope) {
-      const outerAssignments = typeDoc
-        .getScopeContext(item.scope.scope)
-        .scope.getAllIdentifier();
+    if (typeDoc.globals !== scopeContext.scope.locals) {
+      const outer = scopeContext.scope.outer;
 
-      for (const assignment of outerAssignments) {
+      for (const assignment of outer.getAllIdentifier()) {
         result.set(...assignment);
+      }
+
+      if (typeDoc.globals !== outer) {
+        const globals = scopeContext.scope.globals;
+
+        for (const assignment of globals.getAllIdentifier()) {
+          result.set(...assignment);
+        }
       }
     }
 
