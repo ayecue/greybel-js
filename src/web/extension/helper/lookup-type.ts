@@ -1,3 +1,4 @@
+import { SignatureDefinitionBaseType } from 'meta-utils';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -8,20 +9,20 @@ import {
   ASTType
 } from 'miniscript-core';
 import {
-  CompletionItemKind as EntityCompletionItemKind,
   CompletionItem,
+  CompletionItemKind as EntityCompletionItemKind,
   Entity,
   IEntity
 } from 'miniscript-type-analyzer';
-import {
-  SignatureDefinitionBaseType
-} from 'meta-utils';
-import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import type {
+  editor,
+  Position
+} from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import * as ASTScraper from './ast-scraper.js';
 import documentParseQueue from './model-manager.js';
 import typeManager, { lookupBase } from './type-manager.js';
-import { TextDocument, getTextDocument } from './vs.js';
+import { getTextDocument, TextDocument } from './vs.js';
 
 export type LookupOuter = ASTBase[];
 
@@ -66,10 +67,11 @@ export class LookupHelper {
 
   findAllPossibleProperties(): Map<string, CompletionItem> {
     return new Entity({
-      document: typeManager
-        .get(this.document),
+      document: typeManager.get(this.document),
       kind: EntityCompletionItemKind.Variable
-    }).addType(SignatureDefinitionBaseType.Any).getAllIdentifier();
+    })
+      .addType(SignatureDefinitionBaseType.Any)
+      .getAllIdentifier();
   }
 
   findAllAvailableIdentifier(
@@ -200,10 +202,7 @@ export class LookupHelper {
     return null;
   }
 
-  lookupTypeInfo({
-    closest,
-    outer
-  }: LookupASTResult): IEntity | null {
+  lookupTypeInfo({ closest, outer }: LookupASTResult): IEntity | null {
     const typeDoc = typeManager.get(this.document);
 
     if (typeDoc === null) {

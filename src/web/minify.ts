@@ -44,7 +44,9 @@ export default function build(
     excludedNamespaces: [
       'params',
       ...buildOptions.excludedNamespaces,
-      ...Array.from(Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions()))
+      ...Array.from(
+        Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions())
+      )
     ],
     disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
     disableNamespacesOptimization: buildOptions.disableNamespacesOptimization

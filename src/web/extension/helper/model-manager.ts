@@ -5,7 +5,7 @@ import { ASTBase } from 'miniscript-core';
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import typeManager from './type-manager.js';
-import { TextDocument, getTextDocument } from './vs.js';
+import { getTextDocument, TextDocument } from './vs.js';
 
 export interface ParseResult {
   content: string;
@@ -76,7 +76,10 @@ export class DocumentParseQueue extends EventEmitter {
     const chunk = parser.parseChunk();
 
     if ((chunk as ASTChunkGreyScript).body?.length > 0) {
-      typeManager.analyze(getTextDocument(document), chunk as ASTChunkGreyScript);
+      typeManager.analyze(
+        getTextDocument(document),
+        chunk as ASTChunkGreyScript
+      );
 
       return {
         content,
@@ -90,7 +93,10 @@ export class DocumentParseQueue extends EventEmitter {
       const strictParser = new Parser(document.getValue());
       const strictChunk = strictParser.parseChunk();
 
-      typeManager.analyze(getTextDocument(document), strictChunk as ASTChunkGreyScript);
+      typeManager.analyze(
+        getTextDocument(document),
+        strictChunk as ASTChunkGreyScript
+      );
 
       return {
         content,

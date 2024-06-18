@@ -1,18 +1,14 @@
-import {
-  ASTBase,
-  ASTCallExpression,
-  ASTType
-} from 'miniscript-core';
+import { ASTBase, ASTCallExpression, ASTType } from 'miniscript-core';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupASTResult, LookupHelper } from './helper/lookup-type.js';
 import documentParseQueue from './helper/model-manager.js';
-import {
-  PseudoSignatureHelp
-} from './helper/vs.js';
 import { createSignatureInfo } from './helper/tooltip.js';
+import { PseudoSignatureHelp } from './helper/vs.js';
 
-const getClosestCallExpression = (astResult: LookupASTResult): ASTCallExpression | null => {
+const getClosestCallExpression = (
+  astResult: LookupASTResult
+): ASTCallExpression | null => {
   if (astResult.closest.type === ASTType.CallExpression) {
     return astResult.closest as ASTCallExpression;
   }
@@ -68,9 +64,7 @@ export function activate(monaco: typeof Monaco) {
         const leftIndex = argItem.start!.character - 1;
         const rightIndex = argItem.end!.character;
 
-        return (
-          leftIndex <= position.column && rightIndex >= position.column
-        );
+        return leftIndex <= position.column && rightIndex >= position.column;
       });
 
       const signatureHelp = new PseudoSignatureHelp();

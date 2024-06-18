@@ -1,8 +1,8 @@
 import {
   ASTBase,
+  ASTBaseBlockWithScope,
   ASTIdentifier,
-  ASTMemberExpression,
-  ASTBaseBlockWithScope
+  ASTMemberExpression
 } from 'miniscript-core';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
@@ -70,7 +70,12 @@ export function activate(monaco: typeof Monaco) {
         }
       }
 
-      const definitions = findAllDefinitions(monaco, helper, target, target.scope!);
+      const definitions = findAllDefinitions(
+        monaco,
+        helper,
+        target,
+        target.scope!
+      );
 
       return definitions;
     }

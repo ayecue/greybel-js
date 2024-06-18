@@ -1,7 +1,5 @@
+import { SignatureDefinitionTypeMeta } from 'meta-utils';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
-import {
-  SignatureDefinitionTypeMeta
-} from 'meta-utils';
 
 import { LookupHelper } from './helper/lookup-type.js';
 import { createHover, formatTypes } from './helper/tooltip.js';
@@ -38,7 +36,9 @@ export function activate(monaco: typeof Monaco) {
       }
 
       const hoverText = new PseudoMarkdownString('');
-      const metaTypes = Array.from(entity.types).map(SignatureDefinitionTypeMeta.parse)
+      const metaTypes = Array.from(entity.types).map(
+        SignatureDefinitionTypeMeta.parse
+      );
 
       hoverText.appendCodeblock(
         `(${entity.kind}) ${entity.label}: ${formatTypes(metaTypes)}`

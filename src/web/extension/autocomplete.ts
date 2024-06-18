@@ -1,36 +1,39 @@
 import {
   ASTBase,
+  ASTIdentifier,
   ASTIndexExpression,
   ASTMemberExpression
 } from 'miniscript-core';
-import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { CompletionItem as EntityCompletionItem } from 'miniscript-type-analyzer';
+import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { getAvailableConstants } from './autocomplete/constants.js';
 import { getAvailableKeywords } from './autocomplete/keywords.js';
 import { getAvailableOperators } from './autocomplete/operators.js';
+import { getCompletionItemKind } from './helper/kind.js';
 import { LookupHelper } from './helper/lookup-type.js';
 import documentParseQueue from './helper/model-manager.js';
-import {
-  PseudoCompletionItem,
-  PseudoCompletionList
-} from './helper/vs.js';
-import { getCompletionItemKind } from './helper/kind.js';
+import { PseudoCompletionItem, PseudoCompletionList } from './helper/vs.js';
 
-export const transformToCompletionItems = (identifer: Map<string, EntityCompletionItem>, range: Monaco.Range) => {
+export const transformToCompletionItems = (
+  identifer: Map<string, EntityCompletionItem>,
+  range: Monaco.Range
+) => {
   const items: PseudoCompletionItem[] = [];
 
   for (const [property, item] of identifer) {
-    items.push(new PseudoCompletionItem({
-      label: property,
-      kind: getCompletionItemKind(item.kind),
-      insertText: property,
-      range
-    }));
+    items.push(
+      new PseudoCompletionItem({
+        label: property,
+        kind: getCompletionItemKind(item.kind),
+        insertText: property,
+        range
+      })
+    );
   }
 
   return items;
-}
+};
 
 export const getPropertyCompletionList = (
   helper: LookupHelper,
@@ -46,7 +49,9 @@ export const getPropertyCompletionList = (
   return transformToCompletionItems(entity.getAllIdentifier(), range);
 };
 
-export const getDefaultCompletionList = (range: Monaco.Range): PseudoCompletionItem[] => {
+export const getDefaultCompletionList = (
+  range: Monaco.Range
+): PseudoCompletionItem[] => {
   return [
     ...getAvailableConstants(range),
     ...getAvailableKeywords(range),
@@ -70,41 +75,45 @@ export function activate(monaco: typeof Monaco) {
         position.lineNumber,
         position.column
       );
+
       const helper = new LookupHelper(document);
-
-      if (document.getValueInRange(currentRange) === '.') {
-        const completionItems: PseudoCompletionItem[] = [
-          ...transformToCompletionItems(helper.findAllPossibleProperties(), currentRange)
-        ];
-
-        if (completionItems.length > 0) {
-          return new PseudoCompletionList(completionItems).valueOf();
-        }
-      }
-
       const astResult = helper.lookupAST(position);
       const completionItems: PseudoCompletionItem[] = [];
       let isProperty = false;
 
       if (astResult) {
-        const { closest } = astResult;
+        const { closest, outer } = astResult;
+        const previous = outer.length > 0 ? outer[outer.length - 1] : null;
 
-        if (
-          closest instanceof ASTMemberExpression
-        ) {
-          completionItems.push(...getPropertyCompletionList(helper, currentRange, closest));
+        if (closest instanceof ASTMemberExpression) {
+          completionItems.push(
+            ...getPropertyCompletionList(helper, currentRange, closest)
+          );
+          isProperty = true;
+        } else if (closest instanceof ASTIndexExpression) {
+          completionItems.push(
+            ...getPropertyCompletionList(helper, currentRange, closest)
+          );
           isProperty = true;
         } else if (
-          closest instanceof ASTIndexExpression
+          closest instanceof ASTIdentifier &&
+          previous instanceof ASTMemberExpression
         ) {
-          completionItems.push(...getPropertyCompletionList(helper, currentRange, closest));
+          completionItems.push(
+            ...getPropertyCompletionList(helper, currentRange, previous)
+          );
           isProperty = true;
         } else {
           completionItems.push(...getDefaultCompletionList(currentRange));
         }
       } else {
         completionItems.push(...getDefaultCompletionList(currentRange));
-        completionItems.push(...transformToCompletionItems(helper.findAllAvailableIdentifierInRoot(), currentRange));
+        completionItems.push(
+          ...transformToCompletionItems(
+            helper.findAllAvailableIdentifierInRoot(),
+            currentRange
+          )
+        );
       }
 
       if (!astResult || isProperty) {
@@ -113,8 +122,10 @@ export function activate(monaco: typeof Monaco) {
 
       // get all identifer available in scope
       completionItems.push(
-        ...transformToCompletionItems(helper
-          .findAllAvailableIdentifierRelatedToPosition(astResult.closest), currentRange)
+        ...transformToCompletionItems(
+          helper.findAllAvailableIdentifierRelatedToPosition(astResult.closest),
+          currentRange
+        )
       );
 
       return new PseudoCompletionList(completionItems).valueOf();

@@ -22,7 +22,10 @@ export function formatDefaultValue(value: number | string): string {
   return value.toString();
 }
 
-export const createTooltipHeader = (item: IEntity, definition: SignatureDefinitionFunction) => {
+export const createTooltipHeader = (
+  item: IEntity,
+  definition: SignatureDefinitionFunction
+) => {
   const args = definition.getArguments() || [];
   const returnValues = formatTypes(definition.getReturns()) || 'null';
 
@@ -33,7 +36,12 @@ export const createTooltipHeader = (item: IEntity, definition: SignatureDefiniti
   const argValues = args
     .map(
       (item) =>
-        `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${formatTypes(item.getTypes())}${item.getDefault() ? ` = ${formatDefaultValue(item.getDefault().value)}` : ''
+        `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${formatTypes(
+          item.getTypes()
+        )}${
+          item.getDefault()
+            ? ` = ${formatDefaultValue(item.getDefault().value)}`
+            : ''
         }`
     )
     .join(', ');
@@ -79,16 +87,16 @@ export const createSignatureInfo = (
 
     const parameters = args.map((argItem: SignatureDefinitionFunctionArg) => {
       return {
-        label: `${argItem.getLabel()}${argItem.isOptional() ? '?' : ''}: ${argItem.getTypes().join(' or ')}`
+        label: `${argItem.getLabel()}${
+          argItem.isOptional() ? '?' : ''
+        }: ${argItem.getTypes().join(' or ')}`
       };
     });
     const documentation = text;
 
-    signatureInfos.push(new PseudoSignatureInformation(
-      label,
-      parameters,
-      documentation
-    ));
+    signatureInfos.push(
+      new PseudoSignatureInformation(label, parameters, documentation)
+    );
   }
 
   return signatureInfos;

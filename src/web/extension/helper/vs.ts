@@ -1,4 +1,9 @@
-import type { editor, IMarkdownString, languages, IRange } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import type {
+  editor,
+  IMarkdownString,
+  IRange,
+  languages
+} from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 export interface TextDocument extends editor.ITextModel {
   fileName: string;
@@ -129,7 +134,7 @@ export class PseudoSignatureHelp {
         activeSignature: this.activeSignature,
         activeParameter: this.activeParameter
       },
-      dispose: () => { }
+      dispose: () => {}
     };
   }
 }

@@ -2,10 +2,10 @@ import { ASTAssignmentStatement } from 'miniscript-core';
 import { createExpressionId } from 'miniscript-type-analyzer';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-import documentParseQueue from './helper/model-manager.js';
-import { TextDocument, getTextDocument } from './helper/vs.js';
-import typeManager from './helper/type-manager.js';
 import { getSymbolItemKind } from './helper/kind.js';
+import documentParseQueue from './helper/model-manager.js';
+import typeManager from './helper/type-manager.js';
+import { getTextDocument, TextDocument } from './helper/vs.js';
 
 const findAllAssignments = (
   monaco: typeof Monaco,
@@ -20,7 +20,9 @@ const findAllAssignments = (
     const assignment = assignmentItem as ASTAssignmentStatement;
     const entity = typeDoc.resolveNamespace(assignment.variable, true);
     const label = entity?.label ?? createExpressionId(assignmentItem.variable);
-    const kind = entity?.kind ? getSymbolItemKind(entity.kind) : monaco.languages.SymbolKind.Variable;
+    const kind = entity?.kind
+      ? getSymbolItemKind(entity.kind)
+      : monaco.languages.SymbolKind.Variable;
 
     const range = new monaco.Range(
       assignment.variable.start.line,
@@ -54,11 +56,7 @@ export function activate(monaco: typeof Monaco) {
         return [];
       }
 
-      return findAllAssignments(
-        monaco,
-        getTextDocument(document),
-        ''
-      );
+      return findAllAssignments(monaco, getTextDocument(document), '');
     }
   });
 }
