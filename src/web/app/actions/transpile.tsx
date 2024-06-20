@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import minify from '../../minify.js';
+import build from '../../transpile.js';
 import { buildClassName } from '../utils.js';
 
 export interface TranspileOptions {
@@ -11,6 +11,9 @@ export interface TranspileOptions {
 export default function Transpile({ content, onError }: TranspileOptions) {
   const [transformResult, setTransformResult] = useState('');
   const [buildType, setBuildType] = useState('0');
+  const [keepParens, setKeepParens] = useState(false);
+  const [usesTab, setUsesTab] = useState(true);
+  const [whitespaceAmount, setWhitespaceAmount] = useState(2);
   const [obfuscation, setObfuscation] = useState(false);
   const [disableLO, setDisableLO] = useState(false);
   const [disableNO, setDisableNO] = useState(false);
@@ -18,9 +21,12 @@ export default function Transpile({ content, onError }: TranspileOptions) {
   const [excludedNamespaces, setExcludedNamespaces] = useState('');
   const transpile = async () => {
     try {
-      const output = await minify(content, {
+      const output = await build(content, {
         uglify: buildType === '1',
         beautify: buildType === '2',
+        beautifyKeepParentheses: keepParens,
+        beautifyIndentation: usesTab ? 0 : 1,
+        beautifyIndentationSpaces: whitespaceAmount,
         obfuscation,
         disableLiteralsOptimization: disableLO,
         disableNamespacesOptimization: disableNO,
@@ -110,6 +116,32 @@ export default function Transpile({ content, onError }: TranspileOptions) {
               id="excludedNamespaces"
               type="text"
               onChange={(ev) => setExcludedNamespaces(ev.target.value)}
+            />
+          </li>
+          <li onClick={() => setKeepParens(!keepParens)}>
+            <input
+              id="keepParens"
+              type="checkbox"
+              checked={keepParens}
+              readOnly
+            />
+            <label>Keep parentheses</label>
+          </li>
+          <li onClick={() => setUsesTab(!usesTab)}>
+            <input
+              id="usesTab"
+              type="checkbox"
+              checked={usesTab}
+              readOnly
+            />
+            <label>Use tabs</label>
+          </li>
+          <li>
+            <label>Whitespace amount</label>
+            <input
+              id="whitespaceAmount"
+              type="number"
+              onChange={(ev) => setWhitespaceAmount(parseInt(ev.target.value))}
             />
           </li>
         </ul>

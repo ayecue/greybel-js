@@ -1,18 +1,8 @@
 import type {
-  editor,
   IMarkdownString,
   IRange,
   languages
 } from 'monaco-editor/esm/vs/editor/editor.api.js';
-
-export interface TextDocument extends editor.ITextModel {
-  fileName: string;
-}
-
-export function getTextDocument(document: editor.ITextModel): TextDocument {
-  (document as any).fileName = 'default';
-  return document as TextDocument;
-}
 
 export class PseudoMarkdownString {
   value: string;
