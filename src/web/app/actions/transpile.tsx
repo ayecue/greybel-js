@@ -120,7 +120,7 @@ export default function Transpile({ content, onError }: TranspileOptions) {
           </li>
           <li onClick={() => setKeepParens(!keepParens)}>
             <input
-              id="usesTab"
+              id="keepParens"
               type="checkbox"
               checked={keepParens}
               readOnly
