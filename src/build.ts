@@ -16,7 +16,11 @@ import {
   parseImporterMode
 } from './build/importer.js';
 import { createInstaller } from './build/installer.js';
-import { BuildOptions, parseBuildOptions } from './build/options.js';
+import {
+  BeautifyIndentationType,
+  BuildOptions,
+  parseBuildOptions
+} from './build/options.js';
 import { TranspilerResourceProvider } from './build/resource.js';
 import { ansiProvider, useColor } from './execute/output.js';
 
@@ -26,15 +30,24 @@ export default async function build(
   options: Partial<BuildOptions> = {}
 ): Promise<boolean> {
   const envMapper = new EnvMapper();
-  const buildOptions: BuildOptions = parseBuildOptions(options);
+  const transpilerOptions: BuildOptions = parseBuildOptions(options);
   let buildType = BuildType.DEFAULT;
+  let buildOptions = {};
 
-  envMapper.load(buildOptions.envFiles, buildOptions.envVars);
+  envMapper.load(transpilerOptions.envFiles, transpilerOptions.envVars);
 
-  if (buildOptions.uglify) {
+  if (transpilerOptions.uglify) {
     buildType = BuildType.UGLIFY;
-  } else if (buildOptions.beautify) {
+  } else if (transpilerOptions.beautify) {
     buildType = BuildType.BEAUTIFY;
+    buildOptions = {
+      keepParentheses: transpilerOptions.beautifyKeepParentheses,
+      indentation:
+        transpilerOptions.beautifyIndentation === BeautifyIndentationType.Tab
+          ? 0
+          : 1,
+      indentationSpaces: transpilerOptions.beautifyIndentationSpaces
+    };
   }
 
   try {
@@ -43,28 +56,31 @@ export default async function build(
       resourceHandler: new TranspilerResourceProvider().getHandler(),
       target,
       buildType,
-      obfuscation: buildOptions.obfuscation,
+      buildOptions,
+      obfuscation: transpilerOptions.obfuscation,
       excludedNamespaces: [
         'params',
-        ...buildOptions.excludedNamespaces,
+        ...transpilerOptions.excludedNamespaces,
         ...Array.from(
           Object.keys(
             greyscriptMeta.getTypeSignature('general').getDefinitions()
           )
         )
       ],
-      disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
-      disableNamespacesOptimization: buildOptions.disableNamespacesOptimization,
+      disableLiteralsOptimization:
+        transpilerOptions.disableLiteralsOptimization,
+      disableNamespacesOptimization:
+        transpilerOptions.disableNamespacesOptimization,
       environmentVariables: new Map(Object.entries(envMapper.map)),
       processImportPathCallback: (importPath: string) => {
         const relativePath = createBasePath(target, importPath);
-        return path.posix.join(buildOptions.ingameDirectory, relativePath);
+        return path.posix.join(transpilerOptions.ingameDirectory, relativePath);
       }
     }).parse();
 
     let outputPath = path.resolve(output);
 
-    if (!buildOptions.disableBuildFolder) {
+    if (!transpilerOptions.disableBuildFolder) {
       outputPath = path.resolve(output, './build');
 
       try {
@@ -77,36 +93,38 @@ export default async function build(
     await mkdirp(outputPath);
     await createParseResult(target, outputPath, result);
 
-    if (buildOptions.installer) {
+    if (transpilerOptions.installer) {
       console.log('Creating installer.');
 
       await createInstaller({
         target,
         autoCompile: {
-          enabled: buildOptions.autoCompile,
-          purge: buildOptions.autoCompilePurge,
-          binaryName: buildOptions.autoCompileName
+          enabled: transpilerOptions.autoCompile,
+          purge: transpilerOptions.autoCompilePurge,
+          binaryName: transpilerOptions.autoCompileName
         },
-        ingameDirectory: buildOptions.ingameDirectory,
+        ingameDirectory: transpilerOptions.ingameDirectory,
         buildPath: outputPath,
         result,
-        maxChars: buildOptions.maxChars
+        maxChars: transpilerOptions.maxChars
       });
     }
 
-    if (buildOptions.createIngame) {
+    if (transpilerOptions.createIngame) {
       console.log('Importing files ingame.');
 
       const importResults = await createImporter({
         target,
-        ingameDirectory: buildOptions.ingameDirectory,
+        ingameDirectory: transpilerOptions.ingameDirectory,
         result,
-        mode: parseImporterMode(buildOptions.createIngameMode),
-        agentType: parseImporterAgentType(buildOptions.createIngameAgentType),
+        mode: parseImporterMode(transpilerOptions.createIngameMode),
+        agentType: parseImporterAgentType(
+          transpilerOptions.createIngameAgentType
+        ),
         autoCompile: {
-          enabled: buildOptions.autoCompile,
-          purge: buildOptions.autoCompilePurge,
-          binaryName: buildOptions.autoCompileName
+          enabled: transpilerOptions.autoCompile,
+          purge: transpilerOptions.autoCompilePurge,
+          binaryName: transpilerOptions.autoCompileName
         }
       });
       const successfulItems = importResults.filter((item) => item.success);
@@ -118,11 +136,11 @@ export default async function build(
         );
       } else if (failedItems.length > 0) {
         console.log(
-          `Import was only partially successful. Only ${successfulItems.length} files got imported to ${buildOptions.ingameDirectory}!`
+          `Import was only partially successful. Only ${successfulItems.length} files got imported to ${transpilerOptions.ingameDirectory}!`
         );
       } else {
         console.log(
-          `${successfulItems.length} files got imported to ${buildOptions.ingameDirectory}!`
+          `${successfulItems.length} files got imported to ${transpilerOptions.ingameDirectory}!`
         );
       }
     }

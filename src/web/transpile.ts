@@ -2,9 +2,12 @@ import { BuildType } from 'greybel-transpiler';
 import { greyscriptMeta } from 'greyscript-meta';
 import { DirectTranspiler } from 'greyscript-transpiler';
 
-export interface MinifyOptions {
+export interface TranspileOptions {
   uglify?: boolean;
   beautify?: boolean;
+  beautifyKeepParentheses?: boolean;
+  beautifyIndentation?: number;
+  beautifyIndentationSpaces?: number;
   maxWords?: number;
   obfuscation?: boolean;
   excludedNamespaces?: string[];
@@ -16,9 +19,9 @@ export interface MinifyOptions {
 
 export default function build(
   code: string,
-  options: MinifyOptions = {}
+  options: TranspileOptions = {}
 ): string {
-  const buildOptions = {
+  const transpilerOptions = {
     uglify: false,
     beautify: false,
 
@@ -27,28 +30,39 @@ export default function build(
     excludedNamespaces: [],
     disableLiteralsOptimization: false,
     disableNamespacesOptimization: false,
+    beautifyKeepParentheses: false,
+    beautifyIndentation: 0,
+    beautifyIndentationSpaces: 2,
     ...options
   };
   let buildType = BuildType.DEFAULT;
+  let buildOptions = {};
 
-  if (buildOptions.uglify) {
+  if (transpilerOptions.uglify) {
     buildType = BuildType.UGLIFY;
-  } else if (buildOptions.beautify) {
+  } else if (transpilerOptions.beautify) {
     buildType = BuildType.BEAUTIFY;
+    buildOptions = {
+      keepParentheses: transpilerOptions.beautifyKeepParentheses,
+      indentation: transpilerOptions.beautifyIndentation,
+      indentationSpaces: transpilerOptions.beautifyIndentationSpaces
+    };
   }
 
   return new DirectTranspiler({
     code,
     buildType,
-    obfuscation: buildOptions.obfuscation,
+    buildOptions,
+    obfuscation: transpilerOptions.obfuscation,
     excludedNamespaces: [
       'params',
-      ...buildOptions.excludedNamespaces,
+      ...transpilerOptions.excludedNamespaces,
       ...Array.from(
         Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions())
       )
     ],
-    disableLiteralsOptimization: buildOptions.disableLiteralsOptimization,
-    disableNamespacesOptimization: buildOptions.disableNamespacesOptimization
+    disableLiteralsOptimization: transpilerOptions.disableLiteralsOptimization,
+    disableNamespacesOptimization:
+      transpilerOptions.disableNamespacesOptimization
   }).parse();
 }

@@ -519,14 +519,22 @@ div.editor-console-stdout {
   flex-direction: column;
 }
 
-#excludedNamespaces {
+#excludedNamespaces,
+#whitespaceAmount {
   background: #000;
   color: green;
   border-radius: 5px;
   border: 1px solid #FFF;
-  width: 60%;
   height: 28px;
-  margin: 5px 0;
+  margin: 5px 2px;
+}
+
+#excludedNamespaces {
+  width: 60%;
+}
+
+#whitespaceAmount {
+  width: 30px;
 }
 
 /* Help */

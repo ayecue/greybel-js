@@ -1,10 +1,18 @@
 import { AgentType, ImporterMode } from './importer.js';
 
+export enum BeautifyIndentationType {
+  Tab = 'tab',
+  Whitespace = 'whitespace'
+}
+
 export interface BuildOptions {
   disableBuildFolder: boolean;
   // transformer
   uglify: boolean;
   beautify: boolean;
+  beautifyKeepParentheses: boolean;
+  beautifyIndentation: string;
+  beautifyIndentationSpaces: number;
   obfuscation: boolean;
   excludedNamespaces: string[];
   disableLiteralsOptimization: boolean;
@@ -27,6 +35,9 @@ const defaultOptions: BuildOptions = {
   disableBuildFolder: false,
   uglify: false,
   beautify: false,
+  beautifyKeepParentheses: false,
+  beautifyIndentation: BeautifyIndentationType.Tab,
+  beautifyIndentationSpaces: 2,
   obfuscation: false,
   installer: false,
   autoCompile: false,
@@ -50,6 +61,13 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
       options.disableBuildFolder ?? defaultOptions.disableBuildFolder,
     uglify: options.uglify ?? defaultOptions.uglify,
     beautify: options.beautify ?? defaultOptions.beautify,
+    beautifyKeepParentheses:
+      options.beautifyKeepParentheses ?? defaultOptions.beautifyKeepParentheses,
+    beautifyIndentation:
+      options.beautifyIndentation ?? defaultOptions.beautifyIndentation,
+    beautifyIndentationSpaces:
+      options.beautifyIndentationSpaces ??
+      defaultOptions.beautifyIndentationSpaces,
     obfuscation: options.obfuscation ?? defaultOptions.obfuscation,
     installer: options.installer ?? defaultOptions.installer,
     autoCompile: options.autoCompile ?? defaultOptions.autoCompile,

@@ -67,6 +67,9 @@ if (!semver.satisfies(process.version, engineVersion)) {
     )
     .option('-u, --uglify', 'Minify your code.')
     .option('-b, --beautify', 'Beautify your code.')
+    .option('-bkp, --beautify-keep-parentheses', 'Always keep the parentheses.')
+    .option('-bi, --beautify-indentation <type>', 'Tab or whitespace. What should be used for indentation?')
+    .option('-bis, --beautify-indentation-spaces <number>', 'Define the amount of whitespaces when using whitespaces as indentation.')
     .option('-o, --obfuscation', 'Allows the namespace optimization to use a wider range of characters in order to safe more space.')
     // installer + in-game importer
     .option('-id, --ingame-directory <ingameDirectory>', 'In-game directory target path.')
@@ -108,6 +111,9 @@ if (!semver.satisfies(process.version, engineVersion)) {
     envVars: options.envVars,
     uglify: options.uglify,
     beautify: options.beautify,
+    beautifyKeepParentheses: options.beautifyKeepParentheses,
+    beautifyIndentation: options.beautifyIndentation,
+    beautifyIndentationSpaces: options.beautifyIndentationSpaces ? parseInt(options.beautifyIndentationSpaces) : null,
     obfuscation: options.obfuscation,
     disableLiteralsOptimization: options.disableLiteralsOptimization,
     disableNamespacesOptimization: options.disableNamespacesOptimization,
@@ -115,7 +121,7 @@ if (!semver.satisfies(process.version, engineVersion)) {
     // installer + in-game importer
     installer: options.installer,
     autoCompile: options.autoCompile,
-    maxChars: options.maxChars,
+    maxChars: options.maxChars ? parseInt(options.maxChars) : null,
     ingameDirectory: options.ingameDirectory,
     createIngame: options.createIngame,
     createIngameAgentType: options.createIngameAgentType,
