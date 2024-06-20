@@ -1153,3 +1153,6 @@ All notable changes to this project will be documented in this file.
 ## [3.3.8] - 20.06.2024
 
 - add parenthesis for compound assignment - related to [#197](https://github.com/ayecue/greybel-js/issues/197) - thanks for reporting to [@sornii](https://github.com/sornii)
+- add transpiler beautifier option to keep parentheses - thanks for the suggestion to [@stevenklar](https://github.com/stevenklar)
+- add transpiler beautifier option to set indendation by either tab or whitespace
+- add transpiler beautifier option to set amount of whitespaces for indentation
