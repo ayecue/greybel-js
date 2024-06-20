@@ -36,13 +36,16 @@ export default function build(
     ...options
   };
   let buildType = BuildType.DEFAULT;
-  let buildOptions = {};
+  let buildOptions: any = {
+    isDevMode: true
+  };
 
   if (transpilerOptions.uglify) {
     buildType = BuildType.UGLIFY;
   } else if (transpilerOptions.beautify) {
     buildType = BuildType.BEAUTIFY;
     buildOptions = {
+      isDevMode: true,
       keepParentheses: transpilerOptions.beautifyKeepParentheses,
       indentation: transpilerOptions.beautifyIndentation,
       indentationSpaces: transpilerOptions.beautifyIndentationSpaces
