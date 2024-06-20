@@ -5,7 +5,6 @@ import { ASTBase } from 'miniscript-core';
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import typeManager from './type-manager.js';
-import { getTextDocument, TextDocument } from './vs.js';
 
 export interface ParseResult {
   content: string;
@@ -15,7 +14,7 @@ export interface ParseResult {
 }
 
 export interface QueueItem {
-  document: TextDocument;
+  document: editor.ITextModel;
   createdAt: number;
 }
 
@@ -54,7 +53,7 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   refresh(document: editor.ITextModel): ParseResult {
-    const key = document.uri.path;
+    const key = document.uri.fsPath;
 
     if (!this.queue.has(key) && this.results.has(key)) {
       return this.results.get(key)!;
@@ -76,10 +75,7 @@ export class DocumentParseQueue extends EventEmitter {
     const chunk = parser.parseChunk();
 
     if ((chunk as ASTChunkGreyScript).body?.length > 0) {
-      typeManager.analyze(
-        getTextDocument(document),
-        chunk as ASTChunkGreyScript
-      );
+      typeManager.analyze(document.uri.fsPath, chunk as ASTChunkGreyScript);
 
       return {
         content,
@@ -94,7 +90,7 @@ export class DocumentParseQueue extends EventEmitter {
       const strictChunk = strictParser.parseChunk();
 
       typeManager.analyze(
-        getTextDocument(document),
+        document.uri.fsPath,
         strictChunk as ASTChunkGreyScript
       );
 
@@ -115,7 +111,7 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   update(document: editor.ITextModel): boolean {
-    const fileName = document.uri.path;
+    const fileName = document.uri.fsPath;
     const content = document.getValue();
 
     if (this.queue.has(fileName)) {
@@ -127,7 +123,7 @@ export class DocumentParseQueue extends EventEmitter {
     }
 
     this.queue.set(fileName, {
-      document: getTextDocument(document),
+      document,
       createdAt: Date.now()
     });
 
@@ -135,11 +131,11 @@ export class DocumentParseQueue extends EventEmitter {
   }
 
   get(document: editor.ITextModel): ParseResult {
-    return this.results.get(document.uri.path) || this.refresh(document);
+    return this.results.get(document.uri.fsPath) || this.refresh(document);
   }
 
   clear(document: editor.ITextModel): void {
-    this.results.delete(document.uri.path);
+    this.results.delete(document.uri.fsPath);
     this.emit('cleared', document);
   }
 }

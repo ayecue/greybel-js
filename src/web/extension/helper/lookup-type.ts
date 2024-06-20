@@ -22,7 +22,6 @@ import type {
 import * as ASTScraper from './ast-scraper.js';
 import documentParseQueue from './model-manager.js';
 import typeManager, { lookupBase } from './type-manager.js';
-import { getTextDocument, TextDocument } from './vs.js';
 
 export type LookupOuter = ASTBase[];
 
@@ -32,10 +31,10 @@ export interface LookupASTResult {
 }
 
 export class LookupHelper {
-  readonly document: TextDocument;
+  readonly document: editor.ITextModel;
 
   constructor(document: editor.ITextModel) {
-    this.document = getTextDocument(document);
+    this.document = document;
   }
 
   findAllAssignmentsOfIdentifier(
@@ -43,7 +42,7 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): ASTAssignmentStatement[] {
     return typeManager
-      .get(this.document)
+      .get(this.document.uri.fsPath)
       .getScopeContext(root)
       .aggregator.resolveAvailableAssignmentsWithQuery(identifier);
   }
@@ -53,21 +52,21 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): ASTAssignmentStatement[] {
     return typeManager
-      .get(this.document)
+      .get(this.document.uri.fsPath)
       .getScopeContext(root)
       .aggregator.resolveAvailableAssignments(item);
   }
 
   findAllAvailableIdentifierInRoot(): Map<string, CompletionItem> {
     return typeManager
-      .get(this.document)
+      .get(this.document.uri.fsPath)
       .getRootScopeContext()
       .scope.getAllIdentifier();
   }
 
   findAllPossibleProperties(): Map<string, CompletionItem> {
     return new Entity({
-      document: typeManager.get(this.document),
+      document: typeManager.get(this.document.uri.fsPath),
       kind: EntityCompletionItemKind.Variable
     })
       .addType(SignatureDefinitionBaseType.Any)
@@ -78,7 +77,7 @@ export class LookupHelper {
     root: ASTBaseBlockWithScope
   ): Map<string, CompletionItem> {
     return typeManager
-      .get(this.document)
+      .get(this.document.uri.fsPath)
       .getScopeContext(root)
       .scope.getAllIdentifier();
   }
@@ -86,13 +85,11 @@ export class LookupHelper {
   findAllAvailableIdentifierRelatedToPosition(
     item: ASTBase
   ): Map<string, CompletionItem> {
-    const typeDoc = typeManager.get(this.document);
+    const typeDoc = typeManager.get(this.document.uri.fsPath);
     const result: Map<string, CompletionItem> = new Map();
     const scopeContext = typeDoc.getScopeContext(item.scope);
     const assignments = Array.from(
-      scopeContext
-        .scope.locals.getAllIdentifier()
-        .entries()
+      scopeContext.scope.locals.getAllIdentifier().entries()
     )
       .map(([key, item]) => {
         return {
@@ -193,7 +190,7 @@ export class LookupHelper {
   }
 
   lookupBasePath(item: ASTBase): IEntity | null {
-    const typeDoc = typeManager.get(this.document);
+    const typeDoc = typeManager.get(this.document.uri.fsPath);
 
     if (typeDoc === null) {
       return null;
@@ -209,7 +206,7 @@ export class LookupHelper {
   }
 
   lookupTypeInfo({ closest, outer }: LookupASTResult): IEntity | null {
-    const typeDoc = typeManager.get(this.document);
+    const typeDoc = typeManager.get(this.document.uri.fsPath);
 
     if (typeDoc === null) {
       return null;

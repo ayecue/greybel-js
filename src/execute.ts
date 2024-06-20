@@ -5,7 +5,6 @@ import {
 } from 'greybel-gh-mock-intrinsics';
 import {
   CustomFunction,
-  DefaultResourceHandler,
   HandlerContainer,
   ObjectValue,
   PrepareError,

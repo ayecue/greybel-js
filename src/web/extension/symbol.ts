@@ -5,14 +5,13 @@ import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 import { getSymbolItemKind } from './helper/kind.js';
 import documentParseQueue from './helper/model-manager.js';
 import typeManager from './helper/type-manager.js';
-import { getTextDocument, TextDocument } from './helper/vs.js';
 
 const findAllAssignments = (
   monaco: typeof Monaco,
-  document: TextDocument,
+  document: Monaco.editor.ITextModel,
   query: string
 ): Monaco.languages.DocumentSymbol[] => {
-  const typeDoc = typeManager.get(document);
+  const typeDoc = typeManager.get(document.uri.fsPath);
   const assignments = typeDoc.resolveAllAssignmentsWithQuery(query);
   const result: Monaco.languages.DocumentSymbol[] = [];
 
@@ -56,7 +55,7 @@ export function activate(monaco: typeof Monaco) {
         return [];
       }
 
-      return findAllAssignments(monaco, getTextDocument(document), '');
+      return findAllAssignments(monaco, document, '');
     }
   });
 }
