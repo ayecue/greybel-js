@@ -1149,3 +1149,7 @@ All notable changes to this project will be documented in this file.
 - implement new type manager which keeps better track of types and properties
 - fix and improve documentation regarding intrinsics
 - support defining argument and return types for functions through comments to which the hover and auto complete features will react accordingly
+
+## [3.3.8] - 20.06.2024
+
+- add parenthesis for compound assignment - related to [#197](https://github.com/ayecue/greybel-js/issues/197) - thanks for reporting to [@sornii](https://github.com/sornii)
