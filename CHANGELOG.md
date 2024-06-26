@@ -1163,4 +1163,4 @@ All notable changes to this project will be documented in this file.
 
 ## [3.3.10] - 26.06.2024
 
-- minor optimizations regarding type resolver such as resolving types through parentheses, using a proxy container for signature definitions and fixing line overriding for identifier causing to use wrong start lines
+- minor optimizations regarding type resolver such as resolving types through parentheses, keeping api definitions apart from custom definitions preventing unwanted merged definitions, using a proxy container for signature definitions and fixing line overriding for identifier causing to use wrong start lines
