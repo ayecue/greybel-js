@@ -1,4 +1,3 @@
-import { SignatureDefinitionBaseType } from 'meta-utils';
 import {
   ASTAssignmentStatement,
   ASTBase,
@@ -10,8 +9,6 @@ import {
 } from 'miniscript-core';
 import {
   CompletionItem,
-  CompletionItemKind as EntityCompletionItemKind,
-  Entity,
   IEntity
 } from 'miniscript-type-analyzer';
 import type {
@@ -62,15 +59,6 @@ export class LookupHelper {
       .get(this.document.uri.fsPath)
       .getRootScopeContext()
       .scope.getAllIdentifier();
-  }
-
-  findAllPossibleProperties(): Map<string, CompletionItem> {
-    return new Entity({
-      document: typeManager.get(this.document.uri.fsPath),
-      kind: EntityCompletionItemKind.Variable
-    })
-      .addType(SignatureDefinitionBaseType.Any)
-      .getAllIdentifier();
   }
 
   findAllAvailableIdentifier(
