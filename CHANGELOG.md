@@ -1164,3 +1164,10 @@ All notable changes to this project will be documented in this file.
 ## [3.3.10] - 26.06.2024
 
 - minor optimizations regarding type resolver such as resolving types through parentheses, keeping api definitions apart from custom definitions preventing unwanted merged definitions, using a proxy container for signature definitions and fixing line overriding for identifier causing to use wrong start lines
+
+## [3.3.11] - 01.07.2024
+
+- add super keyword to type-analyzer
+- fix member expression containing new unary when resolving type
+- only use shallow copy when copying entity to avoid memory exhaustion for type-analyzer
+- properly resolve members of scope variables and api definitions for type-analyzer
