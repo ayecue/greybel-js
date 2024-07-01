@@ -9,6 +9,7 @@ import {
 } from 'miniscript-core';
 import {
   CompletionItem,
+  CompletionItemKind,
   IEntity
 } from 'miniscript-type-analyzer';
 import type {
@@ -76,6 +77,21 @@ export class LookupHelper {
     const typeDoc = typeManager.get(this.document.uri.fsPath);
     const result: Map<string, CompletionItem> = new Map();
     const scopeContext = typeDoc.getScopeContext(item.scope);
+
+    if (scopeContext.scope.isSelfAvailable()) {
+      result.set('self', {
+        kind: CompletionItemKind.Constant,
+        line: -1
+      });
+    }
+
+    if (scopeContext.scope.isSuperAvailable()) {
+      result.set('super', {
+        kind: CompletionItemKind.Constant,
+        line: -1
+      });
+    }
+
     const assignments = Array.from(
       scopeContext.scope.locals.getAllIdentifier().entries()
     )

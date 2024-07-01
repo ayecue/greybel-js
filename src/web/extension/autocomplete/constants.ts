@@ -6,16 +6,10 @@ export const AVAILABLE_CONSTANTS = [
   'true',
   'false',
   'null',
-  'map',
-  'funcRef',
-  'list',
-  'number',
-  'string',
   'params',
   'globals',
   'locals',
-  'outer',
-  'self'
+  'outer'
 ] as const;
 
 export const getAvailableConstants = (
