@@ -113,6 +113,10 @@ export class LookupHelper {
       }
     }
 
+    for (const assignment of typeDoc.api.getAllIdentifier()) {
+      result.set(...assignment);
+    }
+
     return result;
   }
 
