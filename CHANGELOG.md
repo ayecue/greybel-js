@@ -1171,3 +1171,10 @@ All notable changes to this project will be documented in this file.
 - fix member expression containing new unary when resolving type
 - only use shallow copy when copying entity to avoid memory exhaustion for type-analyzer
 - properly resolve members of scope variables and api definitions for type-analyzer
+
+## [3.3.12] - 14.07.2024
+
+- fix resolving of namespaces
+- optimize deep-hash and deep-equal
+- improve error message when path not found in type
+- fix typo in len meta description
