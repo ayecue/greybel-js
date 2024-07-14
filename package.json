@@ -34,7 +34,7 @@
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
     "greybel-agent": "~1.7.2",
-    "greybel-gh-mock-intrinsics": "~4.10.0",
+    "greybel-gh-mock-intrinsics": "~4.10.1",
     "greybel-intrinsics": "~4.9.0",
     "greyscript-core": "~1.7.0",
     "greyscript-interpreter": "~1.9.2",

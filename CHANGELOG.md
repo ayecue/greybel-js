@@ -1178,3 +1178,4 @@ All notable changes to this project will be documented in this file.
 - optimize deep-hash and deep-equal
 - improve error message when path not found in type
 - fix typo in len meta description
+- use gs instead of ms interpreter in launch intrinsic
