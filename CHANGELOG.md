@@ -1179,3 +1179,4 @@ All notable changes to this project will be documented in this file.
 - improve error message when path not found in type
 - fix typo in len meta description
 - use gs instead of ms interpreter in launch intrinsic
+- improve definition provider
