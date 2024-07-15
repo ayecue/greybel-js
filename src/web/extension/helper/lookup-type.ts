@@ -12,7 +12,8 @@ import {
   CompletionItem,
   CompletionItemKind,
   IEntity,
-  injectIdentifers
+  injectIdentifers,
+  isValidIdentifierLiteral
 } from 'miniscript-type-analyzer';
 import type {
   editor,
@@ -224,7 +225,7 @@ export class LookupHelper {
     } else if (
       previous?.type === ASTType.IndexExpression &&
       closest === (previous as ASTIndexExpression).index &&
-      closest.type === ASTType.StringLiteral
+      isValidIdentifierLiteral(closest)
     ) {
       return typeDoc.resolveType(previous, true);
     }
