@@ -1189,3 +1189,4 @@ All notable changes to this project will be documented in this file.
 ## [3.3.14] - 15.07.2024
 
 - properly check in type-analyzer if string in index is valid identifier
+- let type-analyzer resolve isa expressions as number
