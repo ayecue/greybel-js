@@ -1180,3 +1180,8 @@ All notable changes to this project will be documented in this file.
 - fix typo in len meta description
 - use gs instead of ms interpreter in launch intrinsic
 - improve definition provider
+
+## [3.3.13] - 15.07.2024
+
+- add missing map intrinsic description
+- fix autocomplete including map related intrinsics in general

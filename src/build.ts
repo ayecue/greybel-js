@@ -90,7 +90,7 @@ export default async function build(
         await fs.rm(outputPath, {
           recursive: true
         });
-      } catch (err) { }
+      } catch (err) {}
     }
 
     await mkdirp(outputPath);
@@ -158,7 +158,8 @@ export default async function build(
       console.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
+            err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
@@ -166,7 +167,8 @@ export default async function build(
       console.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+            err.message
           }\n${err.stack}`
         )
       );
