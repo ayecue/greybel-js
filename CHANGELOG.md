@@ -1190,3 +1190,8 @@ All notable changes to this project will be documented in this file.
 
 - properly check in type-analyzer if string in index is valid identifier
 - let type-analyzer resolve isa expressions as number
+
+## [3.3.15] - 17.07.2024
+
+- let type-analyzer resolve logical expressions as number
+- let type-analyzer set proper label for binary expression
