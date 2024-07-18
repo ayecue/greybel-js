@@ -1203,3 +1203,8 @@ All notable changes to this project will be documented in this file.
 - fix beautify when having multiple commands in one line via semicolon
 - fix signature parser for multiline comments
 - add support for envar, file and line in type-analyzer
+
+## [3.3.17] - 18.07.2024
+
+- fix launch_path meta example
+- improve launch_path, program_path and launch meta descriptions
