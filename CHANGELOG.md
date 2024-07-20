@@ -1208,3 +1208,7 @@ All notable changes to this project will be documented in this file.
 
 - fix launch_path meta example
 - improve launch_path, program_path and launch meta descriptions
+
+## [3.3.18] - 20.07.2024
+
+- optimize build size
