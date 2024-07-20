@@ -13,3 +13,4 @@ tsconfig.json
 .editorconfig
 example
 .node-persist
+build-web.cjs
