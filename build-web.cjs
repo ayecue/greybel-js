@@ -10,7 +10,6 @@ const build = async () => {
       .build({
         entryPoints: ['./out/web.js'],
         bundle: true,
-        platform: 'node',
         outfile: 'out/web.bundled.js',
         sourcemap: false,
         minify: true,
