@@ -1,6 +1,6 @@
 {
   "name": "greybel-js",
-  "version": "3.3.17",
+  "version": "3.3.18",
   "engines": {
     "node": ">=18.17.0"
   },
@@ -22,12 +22,12 @@
     }
   ],
   "dependencies": {
-    "@babel/runtime": "^7.16.7",
     "@inquirer/core": "^1.0.1",
     "@inquirer/prompts": "^1.0.0",
     "@inquirer/type": "^1.0.0",
     "another-ansi": "^1.0.2",
     "ansi-escapes": "^6.2.0",
+    "chalk": "^5.3.0",
     "cli-progress": "^3.11.2",
     "commander": "^7.2.0",
     "comment-parser": "^1.4.1",
@@ -42,9 +42,9 @@
     "greyscript-transpiler": "~0.9.0",
     "is-inside-container": "^1.0.0",
     "lru-cache": "^7.14.1",
+    "miniscript-type-analyzer": "~0.6.0",
     "mkdirp": "^1.0.4",
     "monaco-textmate-provider": "^1.3.0",
-    "miniscript-type-analyzer": "~0.6.0",
     "node-persist": "^3.1.3",
     "open": "^8.2.1",
     "pacote": "^15.1.3",
@@ -73,7 +73,7 @@
     "build": "npm run build:local && npm run build:web && npm run move:web",
     "move:web": "cp -a web/. out/",
     "build:local": "tsc -p ./",
-    "build:web": "rollup --config rollup.config.js --bundleConfigAsCjs",
+    "build:web": "node build-web.cjs",
     "watch": "tsc -watch -p ./",
     "lint": "eslint './src/**/*.ts'",
     "lint:fix": "eslint --fix './src/**/*.ts'"
@@ -96,16 +96,6 @@
     "interpreter"
   ],
   "devDependencies": {
-    "@babel/core": "^7.24.9",
-    "@babel/helpers": "^7.24.8",
-    "@babel/plugin-transform-runtime": "^7.24.7",
-    "@babel/preset-env": "^7.24.8",
-    "@babel/preset-react": "^7.24.7",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^26.0.1",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
     "@types/cli-progress": "^3.11.0",
     "@types/mkdirp": "^1.0.2",
     "@types/mute-stream": "^0.0.1",
@@ -117,6 +107,10 @@
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "@vscode/test-electron": "^2.0.3",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.21.0",
+    "esbuild-plugin-globals": "^0.2.0",
+    "esbuild-plugin-polyfill-node": "^0.3.0",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
@@ -126,10 +120,6 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-security": "^1.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "rollup": "^3.20.2",
-    "rollup-plugin-dotenv": "^0.5.1",
-    "rollup-plugin-external-globals": "^0.11.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
     "source-map-support": "^0.5.12",
     "typescript": "^5.0.4"
   }
