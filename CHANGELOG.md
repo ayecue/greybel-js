@@ -1212,3 +1212,7 @@ All notable changes to this project will be documented in this file.
 ## [3.3.18] - 20.07.2024
 
 - optimize build size
+
+## [3.3.19] - 21.07.2024
+
+- optimize interpreter task schedule
