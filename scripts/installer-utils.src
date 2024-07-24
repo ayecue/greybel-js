@@ -16,14 +16,20 @@ m = function(filePath, content, isNew)
 			result = c.create_folder(parentPath, folderName) == 1
 			if result != 1 then exit("Could not create folder in """ + folderPath + """ due to: " + result)
 			print("New folder """ + folderPath + """ got created.")
+			folderHandle = c.File(folderPath)
 		end if
-		if not folderHandle.is_folder then exit("Entity at """ + folderPath + """ is not a folder thus installation got aborted.")
+		if not folderHandle.is_folder then exit("Entity at """ + folderPath + """ is not a folder. Installation got aborted.")
 	end for
 	parentPath = "/" + segments.join("/")
-	result = c.touch(parentPath, fileName)
-	if result != 1 then exit("Could not create file in """ + filePath + """ due to: " + result)
 	fileEntity = c.File(filePath)
-	if fileEntity == null then exit("Unable to get file at """ + filePath + """ thus installation got aborted.")
+	if fileEntity == null then
+		result = c.touch(parentPath, fileName)
+		if result != 1 then exit("Could not create file in """ + filePath + """ due to: " + result)
+		fileEntity = c.File(filePath)
+	end if
+	if fileEntity == null then exit("Unable to get file at """ + filePath + """. Installation got aborted.")
+	if fileEntity.is_folder then exit("File at """ + filePath + """ is a folder but should be a source file. Installation got aborted.")
+	if fileEntity.is_binary then exit("File at """ + filePath + """ is a binary but should be a source file. Installation got aborted.")
 	if isNew then
 		fileEntity.set_content(content)
 		print("New file """ + filePath + """ got created.")
