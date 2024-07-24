@@ -1216,3 +1216,9 @@ All notable changes to this project will be documented in this file.
 ## [3.3.19] - 22.07.2024
 
 - optimize interpreter task schedule, resulting in faster execution
+
+## [3.4.0] - 24.07.2024
+
+- fix beautify indent on shorthand if else
+- make installer code more verbose, including more error messages
+- update message-hook agent to version 0.5, being able to properly sync windows between the two clients (NOTE: you'll need download the newest dll manually)
