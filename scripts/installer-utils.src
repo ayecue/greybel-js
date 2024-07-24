@@ -6,7 +6,11 @@ m = function(filePath, content, isNew)
 	for segment in segments
 		parentPath = "/" + segments[ : __segment_idx].join("/")
 		folderName = segment
-		folderPath = parentPath + "/" + folderName
+		if parentPath == "/" then
+			folderPath = "/" + folderName
+		else
+			folderPath = parentPath + "/" + folderName
+		end if
 		folderHandle = c.File(folderPath)
 		if folderHandle == null then
 			result = c.create_folder(parentPath, folderName) == 1
