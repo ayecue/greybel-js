@@ -29,6 +29,7 @@ export interface BuildOptions {
   createIngameMode: string;
   autoCompilePurge: boolean;
   autoCompileName: string | null;
+  postCommand: string;
 }
 
 const defaultOptions: BuildOptions = {
@@ -52,7 +53,8 @@ const defaultOptions: BuildOptions = {
   createIngameAgentType: AgentType.C2,
   createIngameMode: ImporterMode.Local,
   autoCompilePurge: false,
-  autoCompileName: null
+  autoCompileName: null,
+  postCommand: ''
 };
 
 export const parseBuildOptions = (options: Partial<BuildOptions>) => {
@@ -90,6 +92,7 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
       options.createIngameMode ?? defaultOptions.createIngameMode,
     autoCompilePurge:
       options.autoCompilePurge ?? defaultOptions.autoCompilePurge,
-    autoCompileName: options.autoCompileName ?? defaultOptions.autoCompileName
+    autoCompileName: options.autoCompileName ?? defaultOptions.autoCompileName,
+    postCommand: options.postCommand ?? defaultOptions.postCommand
   };
 };

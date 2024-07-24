@@ -128,7 +128,8 @@ export default async function build(
           enabled: transpilerOptions.autoCompile,
           purge: transpilerOptions.autoCompilePurge,
           binaryName: transpilerOptions.autoCompileName
-        }
+        },
+        postCommand: transpilerOptions.postCommand
       });
       const successfulItems = importResults.filter((item) => item.success);
       const failedItems = importResults.filter((item) => !item.success);

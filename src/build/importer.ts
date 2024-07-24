@@ -5,6 +5,7 @@ import path from 'path';
 
 import { generateAutoCompileCode } from './auto-compile-helper.js';
 import { createBasePath } from './create-base-path.js';
+import { wait } from '../helper/wait.js';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
 
 export enum ErrorResponseMessage {
@@ -63,6 +64,7 @@ export interface ImporterOptions {
     purge: boolean;
     binaryName: string | null;
   };
+  postCommand: string;
 }
 
 class Importer {
@@ -76,6 +78,7 @@ class Importer {
     purge: boolean;
     binaryName: string | null;
   };
+  private postCommand: string;
 
   constructor(options: ImporterOptions) {
     this.target = options.target;
@@ -84,6 +87,7 @@ class Importer {
     this.agentType = options.agentType;
     this.mode = options.mode;
     this.autoCompile = options.autoCompile;
+    this.postCommand = options.postCommand;
   }
 
   private createImportList(
@@ -188,6 +192,22 @@ class Importer {
         }),
         ({ output }) => console.log(output)
       );
+    }
+
+    if (this.postCommand.length > 0) {
+      agent.tryToRun(
+        null,
+        'cd ' + this.ingameDirectory,
+        ({ output }) => console.log(output)
+      );
+      await wait(500);
+      agent.tryToRun(
+        null,
+        this.postCommand,
+        ({ output }) => console.log(output)
+      );
+      await wait(500);
+      agent.terminal = null;
     }
 
     await agent.dispose();

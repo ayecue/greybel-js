@@ -138,13 +138,13 @@ The message-hook agent will essentially send messages to the game server through
 
 #### BepInEx 5.x.x
 - Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
-- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ca68f9722ebfc7efb1d7fb0a868fa669f6ae82b0/GreyHackMessageHook5.dll)
+- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook5.dll)
 - Put GreyHackMessageHook5.dll into the plugins folder of BepInEx
 - modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
 
 #### BepInEx 6.x.x
 - Download + Install [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) ([Installation guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html))
-- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ca68f9722ebfc7efb1d7fb0a868fa669f6ae82b0/GreyHackMessageHook.dll)
+- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook.dll)
 - Put GreyHackMessageHook.dll into the plugins folder of BepInEx
 - modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
 
