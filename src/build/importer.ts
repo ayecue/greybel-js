@@ -7,6 +7,18 @@ import { generateAutoCompileCode } from './auto-compile-helper.js';
 import { createBasePath } from './create-base-path.js';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
 
+export enum ErrorResponseMessage {
+  OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
+  DesktopUI = 'Error: Desktop GUI is not running.',
+  CanOnlyRunOnComputer = 'Error: this program can only be run on computers.',
+  CannotBeExecutedRemotely = 'Error: this program can not be executed remotely',
+  CannotLaunch = "Can't launch program. Permission denied.",
+  NotAttached = 'Error: script is not attached to any existing terminal',
+  DeviceNotFound = 'Error: device not found.',
+  NoInternet = 'Error: No internet connection',
+  InvalidCommand = 'Unknown error: invalid command.'
+}
+
 export enum AgentType {
   C2 = 'headless',
   C2Light = 'message-hook'
@@ -133,14 +145,31 @@ class Importer {
         console.log(`Imported ${item.ingameFilepath} successful`);
         results.push({ path: item.ingameFilepath, success: true });
       } else {
-        console.log(
-          `Importing of ${item.ingameFilepath} failed due to ${response.message}`
-        );
         results.push({
           path: item.ingameFilepath,
           success: false,
           reason: response.message
         });
+
+        switch (response.message) {
+          case ErrorResponseMessage.OutOfRam:
+          case ErrorResponseMessage.DesktopUI:
+          case ErrorResponseMessage.CanOnlyRunOnComputer:
+          case ErrorResponseMessage.CannotBeExecutedRemotely:
+          case ErrorResponseMessage.CannotLaunch:
+          case ErrorResponseMessage.NotAttached:
+          case ErrorResponseMessage.DeviceNotFound:
+          case ErrorResponseMessage.NoInternet:
+          case ErrorResponseMessage.InvalidCommand: {
+            console.log(`Importing got aborted due to ${response.message}`);
+            return results;
+          }
+          default: {
+            console.error(
+              `Importing of ${item.ingameFilepath} failed due to ${response.message}`
+            );
+          }
+        }
       }
     }
 

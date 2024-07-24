@@ -203,7 +203,9 @@ class Installer {
       '	c.File(program_path).delete',
       'end function',
       ''
-    ].map((line) => line.trim()).join(';');
+    ]
+      .map((line) => line.trim())
+      .join(';');
   }
 
   createContentFooterAutoCompile(): string[] {
