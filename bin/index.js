@@ -51,10 +51,11 @@ function attachBuildCommand() {
       filepath: 'File to compile.',
       output: 'Output directory.'
     })
-    .action(function (filepath, output) {
+    .action(function (filepath, output, buildOptions) {
       options.action = 'build';
       options.filepath = filepath;
       options.output = output || '.';
+      Object.assign(options, buildOptions);
     })
     // transformer
     .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
@@ -154,9 +155,10 @@ function attachExecuteCommand() {
     .description('Interpreter for Greyscript.', {
       filepath: 'File to run.'
     })
-    .action(function (filepath) {
+    .action(function (filepath, executeOptions) {
       options.action = 'execute';
       options.filepath = filepath;
+      Object.assign(options, executeOptions);
     })
     .option('-p, --params <params...>', 'Defines params used in script execution.')
     .option('-i, --interactive', 'Enter params in interactive mode instead of arguments.')
@@ -226,8 +228,6 @@ async function main() {
   attachUICommand();
 
   program.parse(process.argv);
-
-  options = Object.assign(options, program.opts());
 
   switch (options.action) {
     case 'build':
