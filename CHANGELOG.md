@@ -1224,3 +1224,4 @@ All notable changes to this project will be documented in this file.
 - update message-hook agent to version 0.5, being able to properly sync windows between the two clients (NOTE: you'll need download the newest dll manually)
 - add postCommand option to build - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
 - only expose one executable greybel command and instead use nested commands for different functionalities
+- add inject expression - related to [#218](https://github.com/ayecue/greybel-vs/issues/218) - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
