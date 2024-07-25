@@ -12,8 +12,11 @@ import {
 import readline from 'readline';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
+import {
+  customInput as input,
+  customPassword as password
+} from '../helper/prompts.js';
 import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
-import { customInput as input, customPassword as password } from './prompts.js';
 
 export const ansiProvider = new AnotherAnsiProvider();
 const hasOwnProperty = Object.prototype.hasOwnProperty;

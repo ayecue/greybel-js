@@ -3,32 +3,11 @@ import { TranspilerParseResult } from 'greybel-transpiler';
 import storage from 'node-persist';
 import path from 'path';
 
+import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
+import { createBasePath } from '../helper/create-base-path.js';
 import { wait } from '../helper/wait.js';
-import { generateAutoCompileCode } from './auto-compile-helper.js';
-import { createBasePath } from './create-base-path.js';
+import { AgentType, ErrorResponseMessage, ImporterMode } from './types.js';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
-
-export enum ErrorResponseMessage {
-  OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
-  DesktopUI = 'Error: Desktop GUI is not running.',
-  CanOnlyRunOnComputer = 'Error: this program can only be run on computers.',
-  CannotBeExecutedRemotely = 'Error: this program can not be executed remotely',
-  CannotLaunch = "Can't launch program. Permission denied.",
-  NotAttached = 'Error: script is not attached to any existing terminal',
-  DeviceNotFound = 'Error: device not found.',
-  NoInternet = 'Error: No internet connection',
-  InvalidCommand = 'Unknown error: invalid command.'
-}
-
-export enum AgentType {
-  C2 = 'headless',
-  C2Light = 'message-hook'
-}
-
-export enum ImporterMode {
-  Local = 'local',
-  Public = 'public'
-}
 
 const IMPORTER_MODE_MAP = {
   [ImporterMode.Local]: 2,
@@ -195,16 +174,22 @@ class Importer {
       );
     }
 
-    if (this.postCommand.length > 0) {
-      agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
-        console.log(output)
-      );
-      await wait(500);
-      agent.tryToRun(null, this.postCommand, ({ output }) =>
-        console.log(output)
-      );
-      await wait(500);
-      agent.terminal = null;
+    if (this.postCommand !== '') {
+      if (this.agentType === AgentType.C2Light) {
+        agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
+          console.log(output)
+        );
+        await wait(500);
+        agent.tryToRun(null, this.postCommand, ({ output }) =>
+          console.log(output)
+        );
+        await wait(500);
+        agent.terminal = null;
+      } else {
+        console.warn(
+          `Warning: Post command can only be executed when agent type is ${AgentType.C2Light}`
+        );
+      }
     }
 
     await agent.dispose();

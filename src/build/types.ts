@@ -1,4 +1,24 @@
-import { AgentType, ImporterMode } from './importer.js';
+export enum ErrorResponseMessage {
+  OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
+  DesktopUI = 'Error: Desktop GUI is not running.',
+  CanOnlyRunOnComputer = 'Error: this program can only be run on computers.',
+  CannotBeExecutedRemotely = 'Error: this program can not be executed remotely',
+  CannotLaunch = "Can't launch program. Permission denied.",
+  NotAttached = 'Error: script is not attached to any existing terminal',
+  DeviceNotFound = 'Error: device not found.',
+  NoInternet = 'Error: No internet connection',
+  InvalidCommand = 'Unknown error: invalid command.'
+}
+
+export enum AgentType {
+  C2 = 'headless',
+  C2Light = 'message-hook'
+}
+
+export enum ImporterMode {
+  Local = 'local',
+  Public = 'public'
+}
 
 export enum BeautifyIndentationType {
   Tab = 'tab',

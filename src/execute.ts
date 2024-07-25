@@ -13,10 +13,10 @@ import {
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
 
-import EnvMapper from './build/env-mapper.js';
 import GreybelPseudoDebugger from './execute/debugger.js';
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
-import { InterpreterResourceProvider } from './execute/resource.js';
+import EnvMapper from './helper/env-mapper.js';
+import { InterpreterResourceProvider } from './helper/resource.js';
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;

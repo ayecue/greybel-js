@@ -2,8 +2,8 @@ import fs from 'fs/promises';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
 
-import { generateAutoCompileCode } from './auto-compile-helper.js';
-import { createBasePath } from './create-base-path.js';
+import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
+import { createBasePath } from '../helper/create-base-path.js';
 
 type ImportItem = {
   filepath: string;
