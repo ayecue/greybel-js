@@ -1,6 +1,6 @@
 {
   "name": "greybel-js",
-  "version": "3.3.19",
+  "version": "3.4.0",
   "engines": {
     "node": ">=18.17.0"
   },
@@ -33,16 +33,16 @@
     "comment-parser": "^1.4.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "greybel-agent": "~1.7.2",
-    "greybel-gh-mock-intrinsics": "~4.11.1",
-    "greybel-intrinsics": "~4.10.1",
-    "greyscript-core": "~1.7.0",
-    "greyscript-interpreter": "~1.10.1",
+    "greybel-agent": "~1.8.1",
+    "greybel-gh-mock-intrinsics": "~4.12.0",
+    "greybel-intrinsics": "~4.11.0",
+    "greyscript-core": "~1.8.4",
+    "greyscript-interpreter": "~1.11.0",
     "greyscript-meta": "~4.0.10",
-    "greyscript-transpiler": "~0.9.0",
+    "greyscript-transpiler": "~0.10.1",
     "is-inside-container": "^1.0.0",
     "lru-cache": "^7.14.1",
-    "miniscript-type-analyzer": "~0.6.0",
+    "miniscript-type-analyzer": "~0.7.0",
     "mkdirp": "^1.0.4",
     "monaco-textmate-provider": "^1.3.0",
     "node-persist": "^3.1.3",
@@ -62,10 +62,7 @@
     "url": "https://github.com/ayecue/greybel-js/issues"
   },
   "bin": {
-    "greybel": "./bin/compile.js",
-    "greybel-repl": "./bin/repl.js",
-    "greybel-execute": "./bin/execute.js",
-    "greybel-ui": "./bin/ui.js"
+    "greybel": "./bin/index.js"
   },
   "scripts": {
     "prepublishOnly": "npm run build",
@@ -108,9 +105,9 @@
     "@typescript-eslint/parser": "^5.27.1",
     "@vscode/test-electron": "^2.0.3",
     "dotenv": "^16.4.5",
-    "esbuild": "^0.21.0",
-    "esbuild-plugin-globals": "^0.2.0",
-    "esbuild-plugin-polyfill-node": "^0.3.0",
+    "esbuild": "0.21.0",
+    "esbuild-plugin-globals": "0.2.0",
+    "esbuild-plugin-polyfill-node": "0.3.0",
     "eslint": "^8.17.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",

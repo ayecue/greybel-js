@@ -71,13 +71,13 @@ greybel-cli() {
 ```
 After the alias is in place greybel-js can be used like this: 
 ```
-greybel-cli greybel-execute path/file.src
+greybel-cli greybel execute path/file.src
 ```
 
 # Transpiler
 ```
 Transpiler CLI
-Example: greybel <myscriptfile> [output]
+Example: greybel build <myscriptfile> [output]
 
 Arguments:
 	filepath                    File to compile
@@ -107,6 +107,7 @@ Options:
   -ci, --create-ingame                           Enable transfer of your code files into Grey Hack.
   -cia, --create-ingame-agent-type <agent-type>  Agent type used for in-game transfer. You can choose between "headless" or "message-hook".
   -cim, --create-ingame-mode <mode>              Mode used for in-game transfer. You can choose between "local" or "public".
+  -pcmd, --post-command <command>                Specify this option if you would like to execute a post command.
   -dbf, --disable-build-folder                   Disable the default behaviour of putting the output into a build folder. It will instead just
                                                  put it wherever you set the output destination to.
   -h, --help                                     display help for command
@@ -115,7 +116,7 @@ Options:
 ## Examples:
 ### Most common build command:
 ```
-greybel /my/code/file.src
+greybel build /my/code/file.src
 ```
 
 ## Auto create files in-game
@@ -137,14 +138,14 @@ A minor caveat is that a Steam account and password need to be provided. The ref
 The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. You can find a description for both versions of BepInEx below.
 
 #### BepInEx 5.x.x
-- Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.1) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
-- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ada96de7fae26d6aca85b1e6aba6873799cd37e6/GreyHackMessageHook5.dll)
+- Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
+- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook5.dll) (Latest version: 0.5)
 - Put GreyHackMessageHook5.dll into the plugins folder of BepInEx
 - modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
 
 #### BepInEx 6.x.x
 - Download + Install [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) ([Installation guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html))
-- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/ada96de7fae26d6aca85b1e6aba6873799cd37e6/GreyHackMessageHook.dll)
+- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook.dll) (Latest version: 0.5)
 - Put GreyHackMessageHook.dll into the plugins folder of BepInEx
 - modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
 
@@ -219,13 +220,6 @@ Here is an [example](/example/environment-variables) of environment variable inj
 
 Any valid MiniScript or GreyScript syntax is supported. Additionally, some minor syntax sugar is added to those languages. If you use those keep in mind to transpile your code first. Using these is completely optional though.
 
-### While, For and Function - shorthand
-```
-while(true) print("hello world")
-for item in [1, 2, 3] print(item)
-test = function() return 42
-```
-
 ### No trailing comma is required in maps or lists
 ```
 myList = [
@@ -267,10 +261,34 @@ a = b & c
 print("test")
 ```
 
+### Filename expression
+```
+print(#filename)
+```
+The filename expression will be replaced with the string literal containing the name of the file before transpiling. Can be useful for debugging.
+
+### Line expression
+```
+print(#line)
+```
+The line expression will be replaced with the number literal containing the line of the expression before transpiling. Can be useful for debugging.
+
+### Envar expression
+```
+print(#envar MY_TEST_VAR)
+```
+The envar expression will be replaced with the value of the provided environment variable. Make sure you defined an environment variable for the provided namespace if there is no value found it will instead use `null`.
+
+### Inject expression
+```
+print(#inject "path/to/file";)
+```
+The inject expression will be replaced with the content of whatever file exists at the provided path. In case the file does not exist it will be replaced with `null`. Content that gets injected will automatically be escaped.
+
 # Interpreter
 ```
 Interpreter CLI
-Example: greybel-execute <myscriptfile>
+Example: greybel execute <myscriptfile>
 
 Arguments:
 	myscriptfile			File to execute
@@ -386,7 +404,7 @@ test
 # REPL
 ```
 REPL CLI
-Example: greybel-repl
+Example: greybel repl
 ```
 
 For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended any more due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
@@ -396,7 +414,7 @@ REPL also features a [local environment](#local-environment) and [GreyScript API
 # Web-UI
 ```
 Web UI CLI
-Example: greybel-ui
+Example: greybel ui
 ```
 
 Simple UI which can be used for [minifying](#transpiler) and [executing](#interpreter) code. There is also a [VSCode extension](https://github.com/ayecue/greybel-vs) which includes a lot of neat features. Like for example a debugger with breakpoints etc.

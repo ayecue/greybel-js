@@ -7,9 +7,6 @@ import isInsideContainer from 'is-inside-container';
 import mkdirp from 'mkdirp';
 import path from 'path';
 
-import { createBasePath } from './build/create-base-path.js';
-import { createParseResult } from './build/create-parse-result.js';
-import EnvMapper from './build/env-mapper.js';
 import {
   createImporter,
   parseImporterAgentType,
@@ -20,9 +17,12 @@ import {
   BeautifyIndentationType,
   BuildOptions,
   parseBuildOptions
-} from './build/options.js';
-import { TranspilerResourceProvider } from './build/resource.js';
+} from './build/types.js';
 import { ansiProvider, useColor } from './execute/output.js';
+import { createBasePath } from './helper/create-base-path.js';
+import { createParseResult } from './helper/create-parse-result.js';
+import EnvMapper from './helper/env-mapper.js';
+import { TranspilerResourceProvider } from './helper/resource.js';
 
 export default async function build(
   filepath: string,
@@ -128,7 +128,8 @@ export default async function build(
           enabled: transpilerOptions.autoCompile,
           purge: transpilerOptions.autoCompilePurge,
           binaryName: transpilerOptions.autoCompileName
-        }
+        },
+        postCommand: transpilerOptions.postCommand
       });
       const successfulItems = importResults.filter((item) => item.success);
       const failedItems = importResults.filter((item) => !item.success);

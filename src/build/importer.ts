@@ -3,19 +3,11 @@ import { TranspilerParseResult } from 'greybel-transpiler';
 import storage from 'node-persist';
 import path from 'path';
 
-import { generateAutoCompileCode } from './auto-compile-helper.js';
-import { createBasePath } from './create-base-path.js';
+import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
+import { createBasePath } from '../helper/create-base-path.js';
+import { wait } from '../helper/wait.js';
+import { AgentType, ErrorResponseMessage, ImporterMode } from './types.js';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
-
-export enum AgentType {
-  C2 = 'headless',
-  C2Light = 'message-hook'
-}
-
-export enum ImporterMode {
-  Local = 'local',
-  Public = 'public'
-}
 
 const IMPORTER_MODE_MAP = {
   [ImporterMode.Local]: 2,
@@ -51,6 +43,7 @@ export interface ImporterOptions {
     purge: boolean;
     binaryName: string | null;
   };
+  postCommand: string;
 }
 
 class Importer {
@@ -65,6 +58,8 @@ class Importer {
     binaryName: string | null;
   };
 
+  private postCommand: string;
+
   constructor(options: ImporterOptions) {
     this.target = options.target;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
@@ -72,6 +67,7 @@ class Importer {
     this.agentType = options.agentType;
     this.mode = options.mode;
     this.autoCompile = options.autoCompile;
+    this.postCommand = options.postCommand;
   }
 
   private createImportList(
@@ -133,14 +129,31 @@ class Importer {
         console.log(`Imported ${item.ingameFilepath} successful`);
         results.push({ path: item.ingameFilepath, success: true });
       } else {
-        console.log(
-          `Importing of ${item.ingameFilepath} failed due to ${response.message}`
-        );
         results.push({
           path: item.ingameFilepath,
           success: false,
           reason: response.message
         });
+
+        switch (response.message) {
+          case ErrorResponseMessage.OutOfRam:
+          case ErrorResponseMessage.DesktopUI:
+          case ErrorResponseMessage.CanOnlyRunOnComputer:
+          case ErrorResponseMessage.CannotBeExecutedRemotely:
+          case ErrorResponseMessage.CannotLaunch:
+          case ErrorResponseMessage.NotAttached:
+          case ErrorResponseMessage.DeviceNotFound:
+          case ErrorResponseMessage.NoInternet:
+          case ErrorResponseMessage.InvalidCommand: {
+            console.log(`Importing got aborted due to ${response.message}`);
+            return results;
+          }
+          default: {
+            console.error(
+              `Importing of ${item.ingameFilepath} failed due to ${response.message}`
+            );
+          }
+        }
       }
     }
 
@@ -159,6 +172,24 @@ class Importer {
         }),
         ({ output }) => console.log(output)
       );
+    }
+
+    if (this.postCommand !== '') {
+      if (this.agentType === AgentType.C2Light) {
+        agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
+          console.log(output)
+        );
+        await wait(500);
+        agent.tryToRun(null, this.postCommand, ({ output }) =>
+          console.log(output)
+        );
+        await wait(500);
+        agent.terminal = null;
+      } else {
+        console.warn(
+          `Warning: Post command can only be executed when agent type is ${AgentType.C2Light}`
+        );
+      }
     }
 
     await agent.dispose();
