@@ -220,13 +220,6 @@ Here is an [example](/example/environment-variables) of environment variable inj
 
 Any valid MiniScript or GreyScript syntax is supported. Additionally, some minor syntax sugar is added to those languages. If you use those keep in mind to transpile your code first. Using these is completely optional though.
 
-### While, For and Function - shorthand
-```
-while(true) print("hello world")
-for item in [1, 2, 3] print(item)
-test = function() return 42
-```
-
 ### No trailing comma is required in maps or lists
 ```
 myList = [
@@ -267,6 +260,30 @@ a = b & c
 */
 print("test")
 ```
+
+### Filename expression
+```
+print(#filename)
+```
+The filename expression will be replaced with the string literal containing the name of the file before transpiling. Can be useful for debugging.
+
+### Line expression
+```
+print(#line)
+```
+The line expression will be replaced with the number literal containing the line of the expression before transpiling. Can be useful for debugging.
+
+### Envar expression
+```
+print(#envar MY_TEST_VAR)
+```
+The envar expression will be replaced with the value of the provided environment variable. Make sure you defined an environment variable for the provided namespace if there is no value found it will instead use `null`.
+
+### Inject expression
+```
+print(#inject "path/to/file";)
+```
+The inject expression will be replaced with the content of whatever file exists at the provided path. In case the file does not exist it will be replaced with `null`. Content that gets injected will automatically be escaped.
 
 # Interpreter
 ```
