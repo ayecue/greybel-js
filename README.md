@@ -107,6 +107,7 @@ Options:
   -ci, --create-ingame                           Enable transfer of your code files into Grey Hack.
   -cia, --create-ingame-agent-type <agent-type>  Agent type used for in-game transfer. You can choose between "headless" or "message-hook".
   -cim, --create-ingame-mode <mode>              Mode used for in-game transfer. You can choose between "local" or "public".
+  -pcmd, --post-command <command>                Specify this option if you would like to execute a post command.
   -dbf, --disable-build-folder                   Disable the default behaviour of putting the output into a build folder. It will instead just
                                                  put it wherever you set the output destination to.
   -h, --help                                     display help for command
