@@ -71,13 +71,13 @@ greybel-cli() {
 ```
 After the alias is in place greybel-js can be used like this: 
 ```
-greybel-cli greybel-execute path/file.src
+greybel-cli greybel execute path/file.src
 ```
 
 # Transpiler
 ```
 Transpiler CLI
-Example: greybel <myscriptfile> [output]
+Example: greybel build <myscriptfile> [output]
 
 Arguments:
 	filepath                    File to compile
@@ -115,7 +115,7 @@ Options:
 ## Examples:
 ### Most common build command:
 ```
-greybel /my/code/file.src
+greybel build /my/code/file.src
 ```
 
 ## Auto create files in-game
@@ -270,7 +270,7 @@ print("test")
 # Interpreter
 ```
 Interpreter CLI
-Example: greybel-execute <myscriptfile>
+Example: greybel execute <myscriptfile>
 
 Arguments:
 	myscriptfile			File to execute
@@ -386,7 +386,7 @@ test
 # REPL
 ```
 REPL CLI
-Example: greybel-repl
+Example: greybel repl
 ```
 
 For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended any more due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
@@ -396,7 +396,7 @@ REPL also features a [local environment](#local-environment) and [GreyScript API
 # Web-UI
 ```
 Web UI CLI
-Example: greybel-ui
+Example: greybel ui
 ```
 
 Simple UI which can be used for [minifying](#transpiler) and [executing](#interpreter) code. There is also a [VSCode extension](https://github.com/ayecue/greybel-vs) which includes a lot of neat features. Like for example a debugger with breakpoints etc.

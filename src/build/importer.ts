@@ -3,9 +3,9 @@ import { TranspilerParseResult } from 'greybel-transpiler';
 import storage from 'node-persist';
 import path from 'path';
 
+import { wait } from '../helper/wait.js';
 import { generateAutoCompileCode } from './auto-compile-helper.js';
 import { createBasePath } from './create-base-path.js';
-import { wait } from '../helper/wait.js';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
 
 export enum ErrorResponseMessage {
@@ -78,6 +78,7 @@ class Importer {
     purge: boolean;
     binaryName: string | null;
   };
+
   private postCommand: string;
 
   constructor(options: ImporterOptions) {
@@ -195,16 +196,12 @@ class Importer {
     }
 
     if (this.postCommand.length > 0) {
-      agent.tryToRun(
-        null,
-        'cd ' + this.ingameDirectory,
-        ({ output }) => console.log(output)
+      agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
+        console.log(output)
       );
       await wait(500);
-      agent.tryToRun(
-        null,
-        this.postCommand,
-        ({ output }) => console.log(output)
+      agent.tryToRun(null, this.postCommand, ({ output }) =>
+        console.log(output)
       );
       await wait(500);
       agent.terminal = null;

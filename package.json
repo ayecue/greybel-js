@@ -62,10 +62,7 @@
     "url": "https://github.com/ayecue/greybel-js/issues"
   },
   "bin": {
-    "greybel": "./bin/compile.js",
-    "greybel-repl": "./bin/repl.js",
-    "greybel-execute": "./bin/execute.js",
-    "greybel-ui": "./bin/ui.js"
+    "greybel": "./bin/index.js"
   },
   "scripts": {
     "prepublishOnly": "npm run build",
