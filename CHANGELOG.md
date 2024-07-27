@@ -1225,3 +1225,7 @@ All notable changes to this project will be documented in this file.
 - add postCommand option to build - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
 - only expose one executable greybel command and instead use nested commands for different functionalities
 - add inject expression - related to [#218](https://github.com/ayecue/greybel-vs/issues/218) - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
+
+## [3.4.1] - 27.07.2024
+
+- remove uneccessary file to decrease package size
