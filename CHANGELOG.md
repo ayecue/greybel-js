@@ -1229,3 +1229,7 @@ All notable changes to this project will be documented in this file.
 ## [3.4.1] - 27.07.2024
 
 - remove uneccessary file to decrease package size
+
+## [3.4.2] - 01.08.2024
+
+- show proper error message when trying to call propery from null value instead of throwing ".getWithOrigin is not a function"
