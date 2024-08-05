@@ -1233,3 +1233,7 @@ All notable changes to this project will be documented in this file.
 ## [3.4.2] - 01.08.2024
 
 - show proper error message when trying to call propery from null value instead of throwing ".getWithOrigin is not a function"
+
+## [3.4.3] - 05.08.2024
+
+- fix "Unexpected identifier 'assert'" error on newer node versions - related to [#212](https://github.com/ayecue/greybel-vs/issues/212) - thanks for reporting Pungent Bonfire
