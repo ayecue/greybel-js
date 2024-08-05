@@ -1,7 +1,6 @@
 import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import cliProgress from 'cli-progress';
-import cssColorNames from 'css-color-names/css-color-names.json' assert { type: 'json' };
 import {
   KeyEvent,
   OutputHandler,
@@ -9,6 +8,7 @@ import {
   UpdateOptions,
   VM
 } from 'greybel-interpreter';
+import { createRequire } from 'node:module';
 import readline from 'readline';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
@@ -17,6 +17,10 @@ import {
   customPassword as password
 } from '../helper/prompts.js';
 import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
+
+// revisit once import type { 'json' } is supported by lts
+const require = createRequire(import.meta.url);
+const cssColorNames = require('css-color-names/css-color-names.json');
 
 export const ansiProvider = new AnotherAnsiProvider();
 const hasOwnProperty = Object.prototype.hasOwnProperty;
