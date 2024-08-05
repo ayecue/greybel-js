@@ -1,15 +1,19 @@
-#!/usr/bin/env -S node --no-warnings
+#!/usr/bin/env -S node --no-warnings --no-deprecation
 
 import { AnotherAnsiProvider, ColorType } from 'another-ansi';
 import { program } from 'commander';
 import pacote from 'pacote';
 import semver from 'semver';
 import open from 'open';
+import { createRequire } from 'node:module';
 
 import execute from '../out/execute.js';
 import build from '../out/build.js';
 import repl from '../out/repl.js';
-import packageJSON from '../package.json' assert { type: 'json' };
+
+// revisit once import type { 'json' } is supported by lts
+const require = createRequire(import.meta.url);
+const packageJSON = require('../package.json');
 
 const ansiProvider = new AnotherAnsiProvider();
 const engineVersion = packageJSON.engines.node;
