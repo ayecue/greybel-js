@@ -1236,4 +1236,4 @@ All notable changes to this project will be documented in this file.
 
 ## [3.4.3] - 05.08.2024
 
-- fix "Unexpected identifier 'assert'" error on newer node versions - related to [#212](https://github.com/ayecue/greybel-vs/issues/212) - thanks for reporting Pungent Bonfire
+- fix "Unexpected identifier 'assert'" error on newer node versions - related to [#212](https://github.com/ayecue/greybel-js/issues/212) - thanks for reporting Pungent Bonfire
