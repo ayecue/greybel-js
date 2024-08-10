@@ -294,7 +294,7 @@ Arguments:
 	myscriptfile			File to execute
 
 Options:
-	-p, --params <params...>    Defines params used in script execution.
+  -p, --params <params...>    Defines params used in script execution.
   -i, --interactive           Enter params in interactive mode instead of arguments.
   -d, --debug                 Enable debug mode which will cause to stop at debugger statements.
   -s, --seed <seed>           Define seed value which is used to generate entities.
