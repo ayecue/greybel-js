@@ -134,7 +134,7 @@ export class LookupHelper {
   lookupAST(position: Position): LookupASTResult | null {
     const me = this;
     const chunk = documentParseQueue.get(me.document).document as ASTChunk;
-    const lineItems = chunk.lines.get(position.lineNumber);
+    const lineItems = chunk.lines[position.lineNumber];
 
     if (!lineItems) {
       return null;
