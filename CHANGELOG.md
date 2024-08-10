@@ -1240,8 +1240,12 @@ All notable changes to this project will be documented in this file.
 
 ## [3.4.4] - 10.08.2024
 
-- fix bytecode generator to properly add negative numbers as default parameters, "function myFunc(index = -1)" works now
-- properly support grouped comparisons, "0" <= numberStr <= "9" works now
+- fix bytecode generator to properly add negative numbers as default parameters, `function myFunc(index = -1)` works now
+- fix handling of non literal comparisons such as biggerThan, biggerThanOrEqual, lessThan or lessThanEqual, `"23" < [42]` now correctly returns null
+- properly support grouped comparisons, `"0" <= numberStr <= "9"` works now
+- properly parse shorthands if those are containing a block
 - fix metaxploit load not checking if returned entity is actually a file
-- fix beautify not handling multiline expressions in block openers correctly resulting in a bunch of additional new lines each beautify
+- fix beautify not handling multiline expressions in block openers correctly resulting in unwanted new lines
+- fix beautify not properly appending comment if keepParentheses option is active
+- fix beautify not handling if shorthands with function blocks in them correctly resulting in unwanted new lines
 - minor performance improvements in parser
