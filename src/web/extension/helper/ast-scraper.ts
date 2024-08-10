@@ -5,7 +5,9 @@ import {
   ASTCallStatement,
   ASTChunk,
   ASTElseClause,
-  ASTEvaluationExpression,
+  ASTIsaExpression,
+  ASTLogicalExpression,
+  ASTBinaryExpression,
   ASTForGenericStatement,
   ASTFunctionStatement,
   ASTIfClause,
@@ -21,7 +23,8 @@ import {
   ASTSliceExpression,
   ASTType,
   ASTUnaryExpression,
-  ASTWhileStatement
+  ASTWhileStatement,
+  ASTComparisonGroupExpression
 } from 'miniscript-core';
 
 export interface ScraperMap {
@@ -171,7 +174,7 @@ const getScraperMap = function (
         visit(fieldItem, level);
       }
     },
-    BinaryExpression: function (item: ASTEvaluationExpression, level: number) {
+    BinaryExpression: function (item: ASTBinaryExpression, level: number) {
       visit(item.left, level);
       visit(item.right, level);
     },
@@ -181,13 +184,18 @@ const getScraperMap = function (
     ) {
       visit(item.argument, level);
     },
-    IsaExpression: function (item: ASTEvaluationExpression, level: number) {
+    IsaExpression: function (item: ASTIsaExpression, level: number) {
       visit(item.left, level);
       visit(item.right, level);
     },
-    LogicalExpression: function (item: ASTEvaluationExpression, level: number) {
+    LogicalExpression: function (item: ASTLogicalExpression, level: number) {
       visit(item.left, level);
       visit(item.right, level);
+    },
+    ComparisonGroupExpression: function (item: ASTComparisonGroupExpression, level: number) {
+      for (let index = 0; index < item.expressions.length; index++) {
+        visit(item.expressions[index], level);
+      }
     },
     UnaryExpression: function (item: ASTUnaryExpression, level: number) {
       visit(item.argument, level);
@@ -197,7 +205,7 @@ const getScraperMap = function (
         visit(bodyItem, level);
       }
     },
-    InvalidCodeExpression: () => {}
+    InvalidCodeExpression: () => { }
   };
 };
 
