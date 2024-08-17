@@ -1260,3 +1260,7 @@ All notable changes to this project will be documented in this file.
 - fix beautify for if shorthand clause with comment
 - fix beautify adding an unwanted new line to empty blocks
 - fix beautify adding unwanted new lines for if shorthands with multiline expression towards end of block
+
+## [3.4.7] - 17.08.2024
+
+- fix beautify causing misbehaviour when list/map one-liners had comment at end
