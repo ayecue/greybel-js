@@ -9,6 +9,7 @@ CLI which provides a set of tools for working with GreyScript. GreyScript is a  
 - Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
 - Greybel UI Demo: [greybel-ui](https://editor.greyscript.org)
 - VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
+- LSP: [GreyScript language server](https://github.com/ayecue/greybel-languageserver).
 - GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
 - Grey Hack Image Transformer: [gh-image-transformer](https://github.com/ayecue/gh-image-transformer)
 - Grey Hack Website Image Generator: [gh-website-image-generator](https://github.com/ayecue/gh-website-image-generator)
