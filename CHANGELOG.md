@@ -1264,3 +1264,8 @@ All notable changes to this project will be documented in this file.
 ## [3.4.7] - 17.08.2024
 
 - fix beautify causing misbehaviour when list/map one-liners had comment at end
+
+## [3.4.8] - 19.08.2024
+
+- allow binary expression to be executed as statement
+- cleanup open handles of binary/logical expression that are statements
