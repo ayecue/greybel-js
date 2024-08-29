@@ -1269,3 +1269,7 @@ All notable changes to this project will be documented in this file.
 
 - allow binary expression to be executed as statement
 - cleanup open handles of binary/logical expression that are statements
+
+## [3.4.9] - 29.08.2024
+
+- update set_content tooltip to include lacking permissions as reason to return 0
