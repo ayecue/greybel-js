@@ -1273,3 +1273,7 @@ All notable changes to this project will be documented in this file.
 ## [3.4.9] - 29.08.2024
 
 - update set_content tooltip to include lacking permissions as reason to return 0
+
+## [3.4.10] - 02.09.2024
+
+- fix error related to type analyzer that could cause "Cannot read properties of undefined (reading 'start')" in lsp
