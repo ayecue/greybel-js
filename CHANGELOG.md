@@ -1282,3 +1282,7 @@ All notable changes to this project will be documented in this file.
 
 - fix beautify for parentheses and comments where a comment would be right after closing parenthese
 - fix function argument recovery if invalid syntax was provided in function arguments
+
+## [3.5.0] - 13.09.2024
+
+- refactor transformer in transpiler to improve transformations
