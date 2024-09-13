@@ -40,6 +40,12 @@ export default async function build(
 
   if (transpilerOptions.uglify) {
     buildType = BuildType.UGLIFY;
+    buildOptions = {
+      disableLiteralsOptimization:
+        transpilerOptions.disableLiteralsOptimization,
+      disableNamespacesOptimization:
+        transpilerOptions.disableNamespacesOptimization,
+    };
   } else if (transpilerOptions.beautify) {
     buildType = BuildType.BEAUTIFY;
     buildOptions = {
@@ -70,10 +76,6 @@ export default async function build(
           )
         )
       ],
-      disableLiteralsOptimization:
-        transpilerOptions.disableLiteralsOptimization,
-      disableNamespacesOptimization:
-        transpilerOptions.disableNamespacesOptimization,
       environmentVariables: new Map(Object.entries(envMapper.map)),
       processImportPathCallback: (importPath: string) => {
         const relativePath = createBasePath(target, importPath);
@@ -90,7 +92,7 @@ export default async function build(
         await fs.rm(outputPath, {
           recursive: true
         });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     await mkdirp(outputPath);
@@ -159,8 +161,7 @@ export default async function build(
       console.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
@@ -168,8 +169,7 @@ export default async function build(
       console.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
           }\n${err.stack}`
         )
       );

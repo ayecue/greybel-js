@@ -1282,3 +1282,10 @@ All notable changes to this project will be documented in this file.
 
 - fix beautify for parentheses and comments where a comment would be right after closing parenthese
 - fix function argument recovery if invalid syntax was provided in function arguments
+
+## [3.5.0] - 13.09.2024
+
+- refactor transformer in transpiler to improve transformations
+- fix conflict with comments on beautify - related to [#53](https://github.com/ayecue/miniscript-vs/issues/53) - thanks for reporting to [@Xisec](https://github.com/Xisec)
+- fix edge cases for variable optimizations on uglify
+- fix edge cases for literal optimizations on uglify

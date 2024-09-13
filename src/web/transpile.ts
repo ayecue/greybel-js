@@ -42,13 +42,18 @@ export default function build(
 
   if (transpilerOptions.uglify) {
     buildType = BuildType.UGLIFY;
+    buildOptions = {
+      disableLiteralsOptimization: transpilerOptions.disableLiteralsOptimization,
+      disableNamespacesOptimization:
+        transpilerOptions.disableNamespacesOptimization
+    }
   } else if (transpilerOptions.beautify) {
     buildType = BuildType.BEAUTIFY;
     buildOptions = {
       isDevMode: true,
       keepParentheses: transpilerOptions.beautifyKeepParentheses,
       indentation: transpilerOptions.beautifyIndentation,
-      indentationSpaces: transpilerOptions.beautifyIndentationSpaces
+      indentationSpaces: transpilerOptions.beautifyIndentationSpaces,
     };
   }
 
@@ -63,9 +68,6 @@ export default function build(
       ...Array.from(
         Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions())
       )
-    ],
-    disableLiteralsOptimization: transpilerOptions.disableLiteralsOptimization,
-    disableNamespacesOptimization:
-      transpilerOptions.disableNamespacesOptimization
+    ]
   }).parse();
 }
