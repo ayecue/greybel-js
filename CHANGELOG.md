@@ -1289,3 +1289,8 @@ All notable changes to this project will be documented in this file.
 - fix conflict with comments on beautify - related to [#53](https://github.com/ayecue/miniscript-vs/issues/53) - thanks for reporting to [@Xisec](https://github.com/Xisec)
 - fix edge cases for variable optimizations on uglify
 - fix edge cases for literal optimizations on uglify
+
+## [3.5.1] - 16.09.2024
+
+- fix globals shorthand identifier not getting injected when no literal optimization were happening - related to [#157](https://github.com/ayecue/greybel-js/issues/157) - thanks for reporting to [@smiley8D](https://github.com/smiley8D)
+- fix behaviour of import op in runtime which caused it's payload to be called every time it was imported, instead it's only getting executed once now - related to [#222](https://github.com/ayecue/greybel-js/issues/222) - thanks for reporting to [@smiley8D](https://github.com/smiley8D)
