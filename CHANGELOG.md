@@ -1294,3 +1294,11 @@ All notable changes to this project will be documented in this file.
 
 - fix globals shorthand identifier not getting injected when no literal optimization were happening - related to [#157](https://github.com/ayecue/greybel-js/issues/157) - thanks for reporting to [@smiley8D](https://github.com/smiley8D)
 - fix behaviour of import op in runtime which caused it's payload to be called every time it was imported, instead it's only getting executed once now - related to [#222](https://github.com/ayecue/greybel-js/issues/222) - thanks for reporting to [@smiley8D](https://github.com/smiley8D)
+
+
+## [3.5.2] - 27.10.2024
+
+- properly handle values that cannot be iterated through on for loop
+- fix type analyzer failing if slice expression was used after expression - related to [#255](https://github.com/ayecue/greybel-vs/issues/255) - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
+- add meta description for intrinsics of current nightly version
+- update textmate with methods and types of current nightly version
