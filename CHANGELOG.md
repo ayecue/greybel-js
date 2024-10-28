@@ -1302,3 +1302,8 @@ All notable changes to this project will be documented in this file.
 - fix type analyzer failing if slice expression was used after expression - related to [#255](https://github.com/ayecue/greybel-vs/issues/255) - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
 - add meta description for intrinsics of current nightly version
 - update textmate with methods and types of current nightly version
+
+## [3.5.3] - 27810.2024
+
+- add custom types handling in type analyzer - related to [#198](https://github.com/ayecue/greybel-vs/issues/198)
+- fix issue related to building of larger projects which could lead to maximum call stack size exceeded error to be thrown - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
