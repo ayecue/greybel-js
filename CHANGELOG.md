@@ -1311,5 +1311,5 @@ All notable changes to this project will be documented in this file.
 ## [3.5.4] - 04.11.2024
 
 - extend custom types with virtual properties
-- allow custom type statement above new statements
+- allow custom type type docs above new statements
 - show inherited properties of custom types properly in autocomplete
