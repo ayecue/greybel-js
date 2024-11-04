@@ -1307,3 +1307,9 @@ All notable changes to this project will be documented in this file.
 
 - add custom types handling in type analyzer - related to [#198](https://github.com/ayecue/greybel-vs/issues/198)
 - fix issue related to building of larger projects which could lead to maximum call stack size exceeded error to be thrown - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
+
+## [3.5.4] - 04.11.2024
+
+- extend custom types with virtual properties
+- allow "custom type" type docs above new statements
+- show inherited properties of custom types properly in autocomplete
