@@ -42,7 +42,7 @@
     "greyscript-transpiler": "~1.2.4",
     "is-inside-container": "^1.0.0",
     "lru-cache": "^7.14.1",
-    "miniscript-type-analyzer": "~0.12.3",
+    "miniscript-type-analyzer": "~0.13.0",
     "mkdirp": "^1.0.4",
     "monaco-textmate-provider": "^1.4.0",
     "node-persist": "^3.1.3",

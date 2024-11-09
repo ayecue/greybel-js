@@ -8,6 +8,10 @@ import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';
 
+const definitionLinkToString = (link: Monaco.languages.LocationLink): string => {
+  return `${link.uri.toString()}#${link.range.startLineNumber}:${link.range.startColumn}-${link.range.endLineNumber}:${link.range.endColumn}`;
+}
+
 const findAllDefinitions = (
   monaco: typeof Monaco,
   helper: LookupHelper,
@@ -16,22 +20,31 @@ const findAllDefinitions = (
 ): Monaco.languages.LocationLink[] => {
   const assignments = helper.findAllAssignmentsOfItem(item, root);
   const definitions: Monaco.languages.LocationLink[] = [];
+  const visited = new Set<string>();
 
   for (const assignment of assignments) {
-    if (!assignment.start || !assignment.end) {
+    const node = assignment.node;
+
+    if (!node.start || !node.end) {
       continue;
     }
 
     const definitionLink: Monaco.languages.LocationLink = {
       uri: helper.document.uri,
       range: new monaco.Range(
-        assignment.start.line,
-        assignment.start.character,
-        assignment.end.line,
-        assignment.end.character
+        node.start.line,
+        node.start.character,
+        node.end.line,
+        node.end.character
       )
     };
+    const linkString = definitionLinkToString(definitionLink);
 
+    if (visited.has(linkString)) {
+      continue;
+    }
+
+    visited.add(linkString);
     definitions.push(definitionLink);
   }
 
