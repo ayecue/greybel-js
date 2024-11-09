@@ -16,6 +16,7 @@ import { Interpreter } from 'greyscript-interpreter';
 import GreybelPseudoDebugger from './execute/debugger.js';
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 import EnvMapper from './helper/env-mapper.js';
+import { logger } from './helper/logger.js';
 import { InterpreterResourceProvider } from './helper/resource.js';
 
 export interface ExecuteOptions {
@@ -61,13 +62,13 @@ export default async function execute(
   interpreter.setDebugger(new GreybelPseudoDebugger(interpreter));
 
   try {
-    console.time('Execution');
+    const startTime = Date.now();
     interpreter.params = options.params || [];
     await interpreter.run();
-    console.timeEnd('Execution');
+    logger.debug(`Execution time: ${Date.now() - startTime}ms`);
   } catch (err: any) {
     if (err instanceof PrepareError) {
-      console.error(
+      logger.error(
         useColor(
           'red',
           `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
@@ -76,7 +77,7 @@ export default async function execute(
         )
       );
     } else if (err instanceof RuntimeError) {
-      console.error(
+      logger.error(
         useColor(
           'red',
           `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
@@ -85,7 +86,7 @@ export default async function execute(
         )
       );
     } else {
-      console.error(
+      logger.error(
         useColor(
           'red',
           `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${

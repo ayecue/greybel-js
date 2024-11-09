@@ -43,17 +43,18 @@ export default function build(
   if (transpilerOptions.uglify) {
     buildType = BuildType.UGLIFY;
     buildOptions = {
-      disableLiteralsOptimization: transpilerOptions.disableLiteralsOptimization,
+      disableLiteralsOptimization:
+        transpilerOptions.disableLiteralsOptimization,
       disableNamespacesOptimization:
         transpilerOptions.disableNamespacesOptimization
-    }
+    };
   } else if (transpilerOptions.beautify) {
     buildType = BuildType.BEAUTIFY;
     buildOptions = {
       isDevMode: true,
       keepParentheses: transpilerOptions.beautifyKeepParentheses,
       indentation: transpilerOptions.beautifyIndentation,
-      indentationSpaces: transpilerOptions.beautifyIndentationSpaces,
+      indentationSpaces: transpilerOptions.beautifyIndentationSpaces
     };
   }
 

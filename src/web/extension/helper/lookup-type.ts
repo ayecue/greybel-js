@@ -9,6 +9,7 @@ import {
   ASTType
 } from 'miniscript-core';
 import {
+  ASTDefinitionItem,
   CompletionItem,
   CompletionItemKind,
   IEntity,
@@ -41,7 +42,7 @@ export class LookupHelper {
   findAllAssignmentsOfIdentifier(
     identifier: string,
     root: ASTBaseBlockWithScope
-  ): ASTAssignmentStatement[] {
+  ): ASTDefinitionItem[] {
     return typeManager
       .get(this.document.uri.fsPath)
       .getScopeContext(root)
@@ -51,7 +52,7 @@ export class LookupHelper {
   findAllAssignmentsOfItem(
     item: ASTBase,
     root: ASTBaseBlockWithScope
-  ): ASTAssignmentStatement[] {
+  ): ASTDefinitionItem[] {
     return typeManager
       .get(this.document.uri.fsPath)
       .getScopeContext(root)

@@ -12,6 +12,7 @@ import { createRequire } from 'node:module';
 import readline from 'readline';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
 
+import { logger } from '../helper/logger.js';
 import {
   customInput as input,
   customPassword as password
@@ -151,7 +152,7 @@ export default class CLIOutputHandler extends OutputHandler {
     loadingBar.start(timeout, 0);
 
     if (!process.stdin.isTTY) {
-      console.warn(
+      logger.warn(
         'Stdin TTY is false. Therefore the progress bar cannot be shown.'
       );
     }
@@ -220,7 +221,7 @@ export default class CLIOutputHandler extends OutputHandler {
       if (process.stdin.isTTY) {
         process.stdin.setRawMode(true);
       } else {
-        console.warn(
+        logger.warn(
           "Stdin TTY is false. Therefore anyKey isn't able to detect any input. Press enter to continue."
         );
       }

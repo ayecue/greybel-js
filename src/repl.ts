@@ -20,6 +20,7 @@ import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
 
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
+import { logger } from './helper/logger.js';
 import GrebyelPseudoDebugger from './repl/debugger.js';
 
 export interface REPLOptions {
@@ -80,7 +81,7 @@ export default async function repl(
         });
       } catch (err: any) {
         if (err instanceof PrepareError) {
-          console.error(
+          logger.error(
             useColor(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
@@ -89,7 +90,7 @@ export default async function repl(
             )
           );
         } else if (err instanceof RuntimeError) {
-          console.error(
+          logger.error(
             useColor(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
@@ -98,7 +99,7 @@ export default async function repl(
             )
           );
         } else {
-          console.error(
+          logger.error(
             useColor(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
@@ -112,7 +113,7 @@ export default async function repl(
       console.groupEnd();
     }
   } catch (err: any) {
-    console.error(err);
+    logger.error(err);
 
     return false;
   }
