@@ -21,7 +21,7 @@ const engineVersion = packageJSON.engines.node;
 let options = {};
 
 if (!semver.satisfies(process.version, engineVersion)) {
-  console.log(
+  logger.debug(
     ansiProvider.color(
       ColorType.Yellow,
       `Required node version ${engineVersion} not satisfied with current version ${process.version}.`
@@ -37,7 +37,7 @@ async function checkForLatestVersion() {
   });
 
   if (latestManifest.version !== version) {
-    console.warn(
+    logger.debug(
       ansiProvider.color(
         ColorType.Yellow,
         `New version of ${packageJSON.name} is available ${latestManifest.version}.`
@@ -225,8 +225,6 @@ async function runUICommand() {
 async function main() {
   const version = packageJSON.version;
 
-  await checkForLatestVersion();
-
   program.version(version);
 
   attachBuildCommand();
@@ -239,6 +237,8 @@ async function main() {
   if (options.silent) {
     // only allows info and error logs
     logger.setLogLevel('info');
+  } else {
+    checkForLatestVersion().catch(console.error);
   }
 
   switch (options.action) {
