@@ -1313,3 +1313,8 @@ All notable changes to this project will be documented in this file.
 - extend custom types with virtual properties
 - allow "custom type" type docs above new statements
 - show inherited properties of custom types properly in autocomplete
+
+## [3.5.5] - 09.11.2024
+
+- improve definition provider
+- add silence option to build and execute - thanks for the suggestion to [cantemizyurek](https://github.com/cantemizyurek)

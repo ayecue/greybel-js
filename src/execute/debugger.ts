@@ -9,6 +9,7 @@ import {
 } from 'greybel-interpreter';
 import { Interpreter } from 'greyscript-interpreter';
 
+import { logger } from '../helper/logger.js';
 import { ansiProvider, useColor } from './output.js';
 
 export default class GrebyelPseudoDebugger extends Debugger {
@@ -26,14 +27,14 @@ export default class GrebyelPseudoDebugger extends Debugger {
   async interact(vm: VM) {
     const op = vm.getFrame().getCurrentInstruction();
 
-    console.log(
+    logger.info(
       useColor('cyan', ansiProvider.modify(ModifierType.Bold, `REPL - Console`))
     );
-    console.log(
+    logger.info(
       useColor('cyan', `You can execute code in the current context.`)
     );
-    console.log(``);
-    console.log(
+    logger.info(``);
+    logger.info(
       useColor(
         'cyan',
         `Press "next" or "exit" to either move to the next line or continue execution.`
@@ -63,7 +64,7 @@ export default class GrebyelPseudoDebugger extends Debugger {
       try {
         me.interpreter.debugger.setBreakpoint(false);
         await me.interpreter.injectInLastContext(line);
-        console.log(
+        logger.info(
           useColor(
             'green',
             `Execution on ${op.source.path}:${op.source?.start?.line} was successful.`
@@ -71,7 +72,7 @@ export default class GrebyelPseudoDebugger extends Debugger {
         );
       } catch (err: any) {
         if (err instanceof PrepareError) {
-          console.error(
+          logger.error(
             useColor(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
@@ -80,7 +81,7 @@ export default class GrebyelPseudoDebugger extends Debugger {
             )
           );
         } else if (err instanceof RuntimeError) {
-          console.error(
+          logger.error(
             useColor(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
@@ -89,7 +90,7 @@ export default class GrebyelPseudoDebugger extends Debugger {
             )
           );
         } else {
-          console.error(
+          logger.error(
             useColor(
               'red',
               `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${

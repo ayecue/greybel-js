@@ -16,9 +16,9 @@ const findAllAssignments = (
   const result: Monaco.languages.DocumentSymbol[] = [];
 
   for (const assignmentItem of assignments) {
-    const assignment = assignmentItem as ASTAssignmentStatement;
+    const assignment = assignmentItem.node as ASTAssignmentStatement;
     const entity = typeDoc.resolveNamespace(assignment.variable, true);
-    const label = entity?.label ?? createExpressionId(assignmentItem.variable);
+    const label = entity?.label ?? createExpressionId(assignment.variable);
     const kind = entity?.kind
       ? getSymbolItemKind(entity.kind)
       : monaco.languages.SymbolKind.Variable;

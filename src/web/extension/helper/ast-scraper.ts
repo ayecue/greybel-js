@@ -1,20 +1,21 @@
 import {
   ASTAssignmentStatement,
   ASTBase,
+  ASTBinaryExpression,
   ASTCallExpression,
   ASTCallStatement,
   ASTChunk,
+  ASTComparisonGroupExpression,
   ASTElseClause,
-  ASTIsaExpression,
-  ASTLogicalExpression,
-  ASTBinaryExpression,
   ASTForGenericStatement,
   ASTFunctionStatement,
   ASTIfClause,
   ASTIfStatement,
   ASTIndexExpression,
+  ASTIsaExpression,
   ASTListConstructorExpression,
   ASTListValue,
+  ASTLogicalExpression,
   ASTMapConstructorExpression,
   ASTMapKeyString,
   ASTMemberExpression,
@@ -23,8 +24,7 @@ import {
   ASTSliceExpression,
   ASTType,
   ASTUnaryExpression,
-  ASTWhileStatement,
-  ASTComparisonGroupExpression
+  ASTWhileStatement
 } from 'miniscript-core';
 
 export interface ScraperMap {
@@ -192,7 +192,10 @@ const getScraperMap = function (
       visit(item.left, level);
       visit(item.right, level);
     },
-    ComparisonGroupExpression: function (item: ASTComparisonGroupExpression, level: number) {
+    ComparisonGroupExpression: function (
+      item: ASTComparisonGroupExpression,
+      level: number
+    ) {
       for (let index = 0; index < item.expressions.length; index++) {
         visit(item.expressions[index], level);
       }
@@ -205,7 +208,7 @@ const getScraperMap = function (
         visit(bodyItem, level);
       }
     },
-    InvalidCodeExpression: () => { }
+    InvalidCodeExpression: () => {}
   };
 };
 

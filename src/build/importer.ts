@@ -5,6 +5,7 @@ import path from 'path';
 
 import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
 import { createBasePath } from '../helper/create-base-path.js';
+import { logger } from '../helper/logger.js';
 import { wait } from '../helper/wait.js';
 import { AgentType, ErrorResponseMessage, ImporterMode } from './types.js';
 const { GreybelC2Agent, GreybelC2LightAgent } = GreybelAgentPkg.default;
@@ -126,7 +127,7 @@ class Importer {
       );
 
       if (response.success) {
-        console.log(`Imported ${item.ingameFilepath} successful`);
+        logger.debug(`Imported ${item.ingameFilepath} successful`);
         results.push({ path: item.ingameFilepath, success: true });
       } else {
         results.push({
@@ -145,11 +146,11 @@ class Importer {
           case ErrorResponseMessage.DeviceNotFound:
           case ErrorResponseMessage.NoInternet:
           case ErrorResponseMessage.InvalidCommand: {
-            console.log(`Importing got aborted due to ${response.message}`);
+            logger.debug(`Importing got aborted due to ${response.message}`);
             return results;
           }
           default: {
-            console.error(
+            logger.error(
               `Importing of ${item.ingameFilepath} failed due to ${response.message}`
             );
           }
@@ -170,23 +171,23 @@ class Importer {
           purge: this.autoCompile.purge,
           binaryName: this.autoCompile.binaryName
         }),
-        ({ output }) => console.log(output)
+        ({ output }) => logger.debug(output)
       );
     }
 
     if (this.postCommand !== '') {
       if (this.agentType === AgentType.C2Light) {
         agent.tryToRun(null, 'cd ' + this.ingameDirectory, ({ output }) =>
-          console.log(output)
+          logger.debug(output)
         );
         await wait(500);
         agent.tryToRun(null, this.postCommand, ({ output }) =>
-          console.log(output)
+          logger.debug(output)
         );
         await wait(500);
         agent.terminal = null;
       } else {
-        console.warn(
+        logger.warn(
           `Warning: Post command can only be executed when agent type is ${AgentType.C2Light}`
         );
       }

@@ -86,6 +86,7 @@ Arguments:
 
 Options:
   -V, --version                                  output the version number
+  -si, --silence                                 Silences any uncessary noise.
   -ev, --env-files <file...>                     Specifiy environment variables file.
   -vr, --env-vars <var...>                       Specifiy environment variable definition.
   -en, --exclude-namespaces <namespace...>       Exclude namespaces from optimization. This option is only used in combination with uglifying.
@@ -295,6 +296,7 @@ Arguments:
 	myscriptfile			File to execute
 
 Options:
+  -si, --silence              Silences any uncessary noise.
   -p, --params <params...>    Defines params used in script execution.
   -i, --interactive           Enter params in interactive mode instead of arguments.
   -d, --debug                 Enable debug mode which will cause to stop at debugger statements.

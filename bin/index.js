@@ -10,6 +10,7 @@ import { createRequire } from 'node:module';
 import execute from '../out/execute.js';
 import build from '../out/build.js';
 import repl from '../out/repl.js';
+import { logger } from '../out/helper/logger.js';
 
 // revisit once import type { 'json' } is supported by lts
 const require = createRequire(import.meta.url);
@@ -20,7 +21,7 @@ const engineVersion = packageJSON.engines.node;
 let options = {};
 
 if (!semver.satisfies(process.version, engineVersion)) {
-  console.log(
+  logger.debug(
     ansiProvider.color(
       ColorType.Yellow,
       `Required node version ${engineVersion} not satisfied with current version ${process.version}.`
@@ -36,7 +37,7 @@ async function checkForLatestVersion() {
   });
 
   if (latestManifest.version !== version) {
-    console.warn(
+    logger.debug(
       ansiProvider.color(
         ColorType.Yellow,
         `New version of ${packageJSON.name} is available ${latestManifest.version}.`
@@ -112,7 +113,8 @@ function attachBuildCommand() {
       'Specify this option if you would like to execute a post command.'
     )
     // output
-    .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.');
+    .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
+    .option('-si, --silent', 'Silences any uncessary noise.');
 }
 
 async function runBuildCommand() {
@@ -169,7 +171,8 @@ function attachExecuteCommand() {
     .option('-d, --debug', 'Enable debug mode which will cause to stop at debugger statements.')
     .option('-s, --seed <seed>', 'Define seed value which is used to generate entities.')
     .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
-    .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.');
+    .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.')
+    .option('-si, --silent', 'Silences any uncessary noise.');
 }
 
 async function runExecuteCommand() {
@@ -222,8 +225,6 @@ async function runUICommand() {
 async function main() {
   const version = packageJSON.version;
 
-  await checkForLatestVersion();
-
   program.version(version);
 
   attachBuildCommand();
@@ -232,6 +233,13 @@ async function main() {
   attachUICommand();
 
   program.parse(process.argv);
+
+  if (options.silent) {
+    // only allows info and error logs
+    logger.setLogLevel('info');
+  } else {
+    checkForLatestVersion().catch(console.error);
+  }
 
   switch (options.action) {
     case 'build':

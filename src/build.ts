@@ -22,6 +22,7 @@ import { ansiProvider, useColor } from './execute/output.js';
 import { createBasePath } from './helper/create-base-path.js';
 import { createParseResult } from './helper/create-parse-result.js';
 import EnvMapper from './helper/env-mapper.js';
+import { logger } from './helper/logger.js';
 import { TranspilerResourceProvider } from './helper/resource.js';
 
 export default async function build(
@@ -44,7 +45,7 @@ export default async function build(
       disableLiteralsOptimization:
         transpilerOptions.disableLiteralsOptimization,
       disableNamespacesOptimization:
-        transpilerOptions.disableNamespacesOptimization,
+        transpilerOptions.disableNamespacesOptimization
     };
   } else if (transpilerOptions.beautify) {
     buildType = BuildType.BEAUTIFY;
@@ -92,14 +93,14 @@ export default async function build(
         await fs.rm(outputPath, {
           recursive: true
         });
-      } catch (err) { }
+      } catch (err) {}
     }
 
     await mkdirp(outputPath);
     await createParseResult(target, outputPath, result);
 
     if (transpilerOptions.installer) {
-      console.log('Creating installer.');
+      logger.debug('Creating installer.');
 
       await createInstaller({
         target,
@@ -116,7 +117,7 @@ export default async function build(
     }
 
     if (transpilerOptions.createIngame) {
-      console.log('Importing files ingame.');
+      logger.debug('Importing files ingame.');
 
       const importResults = await createImporter({
         target,
@@ -137,15 +138,15 @@ export default async function build(
       const failedItems = importResults.filter((item) => !item.success);
 
       if (successfulItems.length === 0) {
-        console.log(
+        logger.debug(
           'No files could get imported! This might be due to a new Grey Hack version or other reasons.'
         );
       } else if (failedItems.length > 0) {
-        console.log(
+        logger.debug(
           `Import was only partially successful. Only ${successfulItems.length} files got imported to ${transpilerOptions.ingameDirectory}!`
         );
       } else {
-        console.log(
+        logger.debug(
           `${successfulItems.length} files got imported to ${transpilerOptions.ingameDirectory}!`
         );
       }
@@ -155,21 +156,23 @@ export default async function build(
       outputPath = options.disableBuildFolder ? './' : './build';
     }
 
-    console.log(`Build done. Available in ${outputPath}.`);
+    logger.debug(`Build done. Available in ${outputPath}.`);
   } catch (err: any) {
     if (err instanceof BuildError) {
-      console.error(
+      logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
+            err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
     } else {
-      console.error(
+      logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+            err.message
           }\n${err.stack}`
         )
       );
