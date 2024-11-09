@@ -1317,4 +1317,4 @@ All notable changes to this project will be documented in this file.
 ## [3.5.5] - 09.11.2024
 
 - improve definition provider
-- add silence option to build and execute
+- add silence option to build and execute - thanks for the suggestion to [cantemizyurek](https://github.com/cantemizyurek)
