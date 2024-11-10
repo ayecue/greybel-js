@@ -1318,3 +1318,7 @@ All notable changes to this project will be documented in this file.
 
 - improve definition provider
 - add silence option to build and execute - thanks for the suggestion to [cantemizyurek](https://github.com/cantemizyurek)
+
+## [3.5.6] - 10.11.2024
+
+- properly handle cyclic isa defintions in type analyzer
