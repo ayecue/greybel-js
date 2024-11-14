@@ -133,8 +133,8 @@ The message-hook agent allows you to send messages to the game server through th
 2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
-      - **macOS**: "/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
-      - **Linux**: "/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
+      - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
+      - **Linux**: `"/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" || %command%`
 4. **Launch Grey Hack** via Steam to load BepInEx 5 with the plugin.
 
 ##### BepInEx 6.x.x
@@ -143,8 +143,8 @@ The message-hook agent allows you to send messages to the game server through th
 2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
-      - **macOS**: "/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
-      - **Linux**: "/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
+      - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
+      - **Linux**: `"/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" || %command%`
 4. **Launch Grey Hack** via Steam to load BepInEx 6 with the plugin.
 
 With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.
