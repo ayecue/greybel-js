@@ -1,78 +1,66 @@
 # Greybel-JS
 
-CLI which provides a set of tools for working with GreyScript. GreyScript is a  scripting language used within [GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/).
+CLI that provides a set of tools for working with GreyScript. GreyScript is a scripting language used within [GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/).
 
 ## Links
 
-- Latest changes: [Changelog](/CHANGELOG.md)
-- Projects using Greybel: [viper-3.0](https://github.com/cantemizyurek/viper-3.0)
-- Demo Projects: [Minesweeper](https://github.com/ayecue/minesweeper-gs), [JSON](https://github.com/ayecue/json), [TEdit](https://github.com/ayecue/tedit)
-- Greybel UI Demo: [greybel-ui](https://editor.greyscript.org)
-- VSCode extension: [greybel-vs](https://github.com/ayecue/greybel-vs)
-- LSP: [GreyScript language server](https://github.com/ayecue/greybel-languageserver)
-- GreyScript API: [GreyScript Documentation](https://documentation.greyscript.org)
-- Grey Hack Image Transformer: [gh-image-transformer](https://github.com/ayecue/gh-image-transformer)
-- Grey Hack Website Image Generator: [gh-website-image-generator](https://github.com/ayecue/gh-website-image-generator)
-- Discord: [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M)
+**Project Resources**
+- [Changelog](https://github.com/ayecue/greybel-js/blob/main/CHANGELOG.md): View the latest changes and updates.
+- [greybel-js CLI](https://github.com/ayecue/greybel-js): Command-line interface for Greybel.
+- [GreyScript Documentation](https://documentation.greyscript.org): API documentation for GreyScript.
+- [Greybel UI Demo](https://editor.greyscript.org): Online editor to write specifically GreyScript.
+- [VSCode Extension](https://github.com/ayecue/greybel-vs): VSCode extension for GreyScript.
+- [Language server](https://github.com/ayecue/greybel-languageserver/blob/main/packages/node/README.md): LSP supporting GreyScript.
+
+**Demo Projects Using Greybel**
+- [Viper 3.0](https://github.com/cantemizyurek/viper-3.0): Example project demonstrating Greybel.
+- [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript.
+- [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality.
+- [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript.
+
+**Grey Hack Tools**
+- [Image Transformer](https://github.com/ayecue/gh-image-transformer): Tool for transforming images in Grey Hack.
+- [Website Image Generator](https://github.com/ayecue/gh-website-image-generator): Tool for generating Grey Hack website images.
+
+**Community**
+- [Greybel Discord](https://discord.gg/q8tR8F8u2M): Join the community on Discord for support and discussion.
 
 ## Features
 
-- [Simplify importing for small and big projects](#transpiler)
-	- [Import your files into the game without copy + paste](#auto-create-files-in-game)
-	- [Handle dependencies between code files](#dependency-management-transpiler)
-	- [Environment variables while transpiling](#environment-variables-transpiler)
-	- [Minor syntax additions](#syntax)
-	- Minimizing your script, depending on the size of your project you can save up to 40%
-		- optimizing literals (strings, booleans, numbers)
-		- minifying namespaces
-		- removing whitespaces + tabs
-		- obfuscate your code (even though that's just a side effect of all the steps above)
-	- Beautify your code (can be useful to deobfuscate code)
-- [Execute/Test your code outside of GreyHack](#interpreter)
-	- [Handle dependencies between code files](#dependency-management-interpreter)
-	- [Local mock environment](#local-environment)
-	- [GreyScript API support](#greyscript-api-support)
-	- [Debug your code](#debugger-cli)
-	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support-cli)
-	- [Environment variables](#environment-variables-interpreter)
-- [REPL for GreyScript](#repl)
-- [Web UI](#web-ui)
-	- [Share code](#share-code)
-	- [Save code](#save-code)
-	- [Debug your code](#debugger-web-ui)
-	- [TextMesh Pro Rich Text support](#textmesh-pro-rich-text-support-web-ui)
+- **Easily manage imports for small and large projects**  
+  - [Import files directly into the game without needing to copy-paste](#auto-create-files-in-game)
+  - [Handle dependencies between different code files](#dependency-management-transpiler)
+  - [Use environment variables during the transpilation process](#environment-variables-transpiler)
+  - [Syntax enhancements for easier coding](#syntax)
+  - **Minimize your scripts** to save up to 40% on large projects  
+    - Optimize literals (strings, booleans, numbers)
+    - Minify namespace names
+    - Remove unnecessary whitespace and tabs
+    - Obfuscate code (as a side effect of the above optimizations)
+  - **Beautify your code** for easier readability (helpful for deobfuscation)
+
+- **Run and test your code outside of GreyHack**  
+  - [Manage file dependencies in the interpreter](#dependency-management-interpreter)
+  - [Simulate a local mock environment for testing](#local-environment)
+  - [Full support for the GreyScript API](#greyscript-api-support)
+  - [Debug your code with ease](#debugger-cli)
+  - [Support for TextMesh Pro Rich Text](#textmesh-pro-rich-text-support-cli)
+  - [Use environment variables in your code execution](#environment-variables-interpreter)
+
+- **Interactive REPL for GreyScript**  
+  - Easily experiment with your code in a live environment
+
+- **Web UI for enhanced coding experience**  
+  - [Share your code easily](#share-code)
+  - [Save your work directly in the web interface](#save-code)
+  - [Debug your code within the web UI](#debugger-web-ui)
+  - [TextMesh Pro Rich Text support in the web UI](#textmesh-pro-rich-text-support-web-ui)
+
 
 # Install
 
 ```
 npm i -g greybel-js
-```
-
-# Alternative setup via Docker
-
-Execute the following commands to build the image:
-```bash
-docker pull crater44/greybel-cli
-docker tag crater44/greybel-cli:latest greybel-cli
-```
-Now you can run any greybel-js related command via docker by using the following command:
-```bash
-docker run -i -v "$(pwd):/app" greybel-cli <your-greybel-command>
-```
-It'll create a volume on the fly in which the command gets executed and create the build folder if necessary. As it is a container it'll work isolated from the rest of your system.
-
-To update the package you'll need to rebuild the image.
-
-Hint: You can also create an alias to use greybel-js but it should be created as a function instead of a regular alias since the latter would cache the pwd command's value on the first execution:
-
-```
-greybel-cli() {
-    docker run -i -v $(pwd):/app greybel-cli $@
-}
-```
-After the alias is in place greybel-js can be used like this: 
-```
-greybel-cli greybel execute path/file.src
 ```
 
 # Transpiler
@@ -121,35 +109,43 @@ Options:
 greybel build /my/code/file.src
 ```
 
-## Auto create files in-game
+## Auto Create Files In-Game
 
-It is possible to automatically create transpiled files in the game. This can be activated by using the `--create-ingame` flag. Additionally, you can choose between two agents by using `--create-ingame-agent-type`. Depending on the agent there are certain prerequisites to fulfill or behaviors to watch out for.
+You can automatically create transpiled files directly in the game using the `--create-ingame` flag. Additionally, you can specify which agent to use for this process by adding the `--create-ingame-agent-type` flag. There are two available agent types, and each comes with its own set of prerequisites and behaviors to be aware of.
 
-### Headless
+#### Headless
 
-When you are using headless you are essentially connecting to the game without using the actual native game client. Depending on which mode you selected, either `local` or `public` the agent will import the files into either singleplayer or multiplayer.
+When using headless mode, you connect to the game without the native game client. Depending on your selected mode, either `local` or `public`, the agent will import files into either a single-player or multiplayer session.
 
-By default `local` is selected. Keep in mind that the game needs to have a single-player session running for `local` to work. For `public` there is no need to have the game client running.
+By default, `local` mode is selected. Note that for `local` to work, the game must have a single-player session running. In `public` mode, there is no need for the game client to be running.
 
-A minor caveat is that a Steam account and password need to be provided. The refresh token will be cached so no continued providing of credentials is required.
+One important requirement is that a Steam account and password must be provided. The refresh token will be cached, so you won’t need to provide credentials continuously. You can clear the refresh token at any time using the "Clear secrets" command.
 
-**Note**: This agent will potentially log you out of Grey Hack since Grey Hack only allows one active game session.
+**Note**: This agent may log you out of Grey Hack since the game only allows one active session at a time.
 
-### Message Hook
+#### Message Hook
 
-The message-hook agent will essentially send messages to the game server through the game client. For that to work you'll have to install [BepInEx](https://github.com/BepInEx/BepInEx) first and then the plugin second. You can find a description for both versions of BepInEx below.
+The message-hook agent allows you to send messages to the game server through the game client. To use this feature, you need to first install [BepInEx](https://github.com/BepInEx/BepInEx) and then the plugin. Below, you can find installation instructions for both versions of BepInEx.
 
-#### BepInEx 5.x.x
-- Download + Install [BepInEx version 5.x.x](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2) ([Installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html))
-- Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook5.dll) (Latest version: 0.5)
-- Put GreyHackMessageHook5.dll into the plugins folder of BepInEx
-- modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
+##### BepInEx 5.x.x
+1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
+    - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+3. **Configure Launch Options (macOS/Linux Only)**:
+    - Go to Steam Library > Grey Hack > Properties > Launch Options.
+      - **macOS**: "/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
+      - **Linux**: "/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
+4. **Launch Grey Hack** via Steam to load BepInEx 5 with the plugin.
 
-#### BepInEx 6.x.x
-- Download + Install [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1) ([Installation guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html))
-- Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook.dll) (Latest version: 0.5)
-- Put GreyHackMessageHook.dll into the plugins folder of BepInEx
-- modify the Steam launch path to `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%` (**ONLY FOR NONE WINDOWS USERS**)
+##### BepInEx 6.x.x
+1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.1 UnityMono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.1)
+    - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/af926c972880e331ec0c9d7f0cce1bea055c02bc/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+3. **Configure Launch Options (macOS/Linux Only)**:
+    - Go to Steam Library > Grey Hack > Properties > Launch Options.
+      - **macOS**: "/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
+      - **Linux**: "/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%
+4. **Launch Grey Hack** via Steam to load BepInEx 6 with the plugin.
 
 With all that done you can now start the game and start either a single-player or multiplayer session. You'll be now able to sync files with the game without getting disconnected.
 
@@ -161,53 +157,51 @@ Additionally, you won't need to provide any Steam credentials nor do you need to
 
 ## Dependency Management (Transpiler)
 
-Greybel enables you to split your code into different files which is useful to keep readability and also to make reusable code.
+Greybel allows you to split your code into multiple files, improving readability and making code reusable.
 
-It is recommended to use [include](#include) and [import](#import) for small or medium-sized projects.
+For small or medium-sized projects, it’s recommended to use [include](#include) and [import](#import). For larger projects, use [import_code](#import_code) to avoid exceeding the **160,000** character limit in GreyHack, as the transpiler bundles your files efficiently.
 
-For big projects, [import_code](#import_code) should be used instead since the transpiler will bundle your files in a way that makes full use of the [import_code](#import_code) capabilities in the game to avoid exceeding the maximum character limit of **160.000**.
+Greybel also detects cyclic dependencies, throwing an error with the problematic file.
 
-Cyclic dependencies will be detected as well. In case there is one an error will be thrown indicating which file is causing it.
-
-A step by step guide is available [here](https://main.greyscript.org/manuals/useful-tools-for-greyscript.html#manage-your-dependencies) as well.
+For a detailed guide, refer to [this page](https://main.greyscript.org/manuals/useful-tools-for-greyscript.html#manage-your-dependencies).
 
 ### Import
 
-Used to import exported namespaces from a file. Features of this import functionality:
-- supports relative imports
-- only loads code when required
-- does not pollute global scope
-- only gets imported once regardless of how many times it got imported
-- only exports what you want
-- code will be appended to the root file which may cause exceeding the character limit of GreyHack, use [import_code](#import_code) instead if that is an issue
+Imports exported namespaces from another file with these features:
+- Supports relative imports
+- Loads code only when required
+- Doesn’t pollute the global scope
+- Only imported once, no matter how many times referenced
+- Exports only what is needed
+- Appends code to the root file (may exceed GreyHack’s character limit; use [import_code](#import_code) if this is an issue)
 
-You can take a look at the [example code](/example/import) to get a better idea of how to use this feature.
+For an example, check out the [sample code](/example/import).
 
 ### Include
 
-Used to import the content of a file. Features of this import functionality:
-- supports relative includes
-- very easy to use
-- will pollute global scope
-- will include the content of a file every time, which may cause redundant code
-- may cause exceeding the character limit of GreyHack, use [import_code](#import_code) instead if that is an issue
+Imports the content of a file with these features:
+- Supports relative includes
+- Easy to use
+- Pollutes the global scope
+- Includes the file content every time, which may cause redundancy
+- Could exceed the character limit in GreyHack; use [import_code](#import_code) instead
 
-To get a better idea you can take a look at the following [example code](/example/include).
+For an example, check out the [sample code](/example/include).
 
 ### import_code
 
-Used to import code from a file. Features of this import functionality:
-- keeps files separate in-game, which is useful to avoid the character limit
-- supports nested `import_code`
-- supports relative imports
+Imports code from a file with these features:
+- Keeps files separate in-game, preventing the character limit issue
+- Supports nested `import_code`
+- Supports relative imports
 
-Here is some [example code](/example/import-code).
+For an example, check out the [sample code](/example/import-code).
 
-By using the `--installer` flag Greybel will create one or more installer files depending on the size of your project. These installer files will essentially contain all different code files and logic to create all files in the game. So basically you just need to copy and paste the code of the installer files into the game and then compile + execute them. By using the `--auto-compile` flag additional logic will be appended that will automatically compile the project and remove all source files.
+When using the `--installer` flag, Greybel creates installer files for your project. These files bundle all your code and logic for easy pasting into the game. After that, you can compile and execute them. The `--auto-compile` flag adds automatic compilation and source file removal.
 
-By using the `--ingame-directory` CLI parameter you can also define to which in-game space you want to import the files. By default `/root/` will be used.
+You can also specify an in-game directory using the `--ingame-directory` CLI parameter, with `/root/` as the default.
 
-Additionally, it is important to mention that **nested** `import_code` is supported as well. This is made possible by moving all imports into the entry file depending on their usage throughout the project. It is recommended to only use `import_code` at the head of the file since the import locations of nested files cannot be guaranteed.
+**Note**: Nested `import_code` is supported. It’s recommended to place `import_code` at the top of files, as the import order of nested files is not guaranteed.
 
 ## Environment Variables (Transpiler)
 
