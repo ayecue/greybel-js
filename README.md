@@ -12,11 +12,12 @@ CLI that provides a set of tools for working with GreyScript. GreyScript is a sc
 - [VSCode Extension](https://github.com/ayecue/greybel-vs): VSCode extension for GreyScript.
 - [Language server](https://github.com/ayecue/greybel-languageserver/blob/main/packages/node/README.md): LSP supporting GreyScript.
 
-**Demo Projects Using Greybel**
-- [Viper 3.0](https://github.com/cantemizyurek/viper-3.0): Example project demonstrating Greybel.
-- [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript.
-- [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality.
-- [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript.
+**Projects Using Greybel**
+- [minizod](https://github.com/cantemizyurek/minizod): A lightweight, Zod-inspired validation library for MiniScript.
+- [Viper 3.0](https://github.com/cantemizyurek/viper-3.0): Viper is a hacking shell tool for game named Grey Hack.
+- [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript. (Demo project)
+- [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
+- [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript. (Demo project)
 
 **Grey Hack Tools**
 - [Image Transformer](https://github.com/ayecue/gh-image-transformer): Tool for transforming images in Grey Hack.
