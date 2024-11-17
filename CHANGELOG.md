@@ -1326,3 +1326,7 @@ All notable changes to this project will be documented in this file.
 ## [3.5.7] - 10.11.2024
 
 - include all custom type definitions of entities with multiple types
+
+## [3.5.8] - 17.11.2024
+
+- fix mock env folder deletion behaviour - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
