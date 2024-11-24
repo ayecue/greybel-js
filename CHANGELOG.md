@@ -1330,3 +1330,8 @@ All notable changes to this project will be documented in this file.
 ## [3.5.8] - 17.11.2024
 
 - fix mock env folder deletion behaviour - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
+
+## [3.5.9] - 24.11.2024
+
+- forbid keywords in uglify namespaces opimization - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
+- fix for iteration namespace optimization of __i_idx variables - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
