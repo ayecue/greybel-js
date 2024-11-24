@@ -1333,7 +1333,7 @@ All notable changes to this project will be documented in this file.
 
 ## [3.5.9] - 24.11.2024
 
-- forbid keywords in uglify namespaces opimization - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
+- forbid keywords in uglify namespaces optimization - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
 - fix for iteration namespace optimization of __i_idx variables - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
 
 ## [3.5.10] - 24.11.2024
