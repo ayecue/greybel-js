@@ -1339,3 +1339,5 @@ All notable changes to this project will be documented in this file.
 ## [3.5.10] - 24.11.2024
 
 - fix literal optimization for negative numeric values - thanks for reporting to [@linuxgruven](https://github.com/linuxgruven)
+
+## [3.5.11] - 28.11.2024
