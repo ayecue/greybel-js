@@ -1344,3 +1344,7 @@ All notable changes to this project will be documented in this file.
 
 - fix rnd intrinsic seed behaviour - thanks for reporting to GSQ
 - fix bitwise intrinsic to properly do 64bit bitwise operations - thanks for reporting to GSQ
+
+## [3.5.12] - 01.12.2024
+
+- minor improvement to assumption logic of non existing properties
