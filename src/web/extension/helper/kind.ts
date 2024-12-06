@@ -1,44 +1,44 @@
 import { CompletionItemKind as EntityCompletionItemKind } from 'miniscript-type-analyzer';
 import type { languages } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
+const CompletionItemKindMapping: Record<EntityCompletionItemKind, languages.CompletionItemKind> = {
+  [EntityCompletionItemKind.Constant]: 14,
+  [EntityCompletionItemKind.Internal]: 14,
+  [EntityCompletionItemKind.InternalFunction]: 14,
+  [EntityCompletionItemKind.InternalProperty]: 14,
+  [EntityCompletionItemKind.Property]: 4,
+  [EntityCompletionItemKind.Variable]: 4,
+  [EntityCompletionItemKind.Expression]: 4,
+  [EntityCompletionItemKind.Function]: 1,
+  [EntityCompletionItemKind.ListConstructor]: 17,
+  [EntityCompletionItemKind.MapConstructor]: 18,
+  [EntityCompletionItemKind.Literal]: 13,
+  [EntityCompletionItemKind.Unknown]: 13,
+};
+
 export const getCompletionItemKind = (
   kind: EntityCompletionItemKind
 ): languages.CompletionItemKind => {
-  switch (kind) {
-    case EntityCompletionItemKind.Constant:
-      return 14;
-    case EntityCompletionItemKind.Variable:
-      return 4;
-    case EntityCompletionItemKind.Expression:
-      return 4;
-    case EntityCompletionItemKind.Function:
-      return 1;
-    case EntityCompletionItemKind.ListConstructor:
-    case EntityCompletionItemKind.MapConstructor:
-    case EntityCompletionItemKind.Literal:
-    case EntityCompletionItemKind.Unknown:
-      return 13;
-  }
+  return CompletionItemKindMapping[kind] || 4;
+};
+
+const SymbolKindMapping: Record<EntityCompletionItemKind, languages.SymbolKind> = {
+  [EntityCompletionItemKind.Constant]: 13,
+  [EntityCompletionItemKind.Internal]: 13,
+  [EntityCompletionItemKind.InternalFunction]: 13,
+  [EntityCompletionItemKind.InternalProperty]: 13,
+  [EntityCompletionItemKind.Property]: 12,
+  [EntityCompletionItemKind.Variable]: 12,
+  [EntityCompletionItemKind.Expression]: 12,
+  [EntityCompletionItemKind.Function]: 11,
+  [EntityCompletionItemKind.ListConstructor]: 17,
+  [EntityCompletionItemKind.MapConstructor]: 18,
+  [EntityCompletionItemKind.Literal]: 12,
+  [EntityCompletionItemKind.Unknown]: 12,
 };
 
 export const getSymbolItemKind = (
   kind: EntityCompletionItemKind
 ): languages.SymbolKind => {
-  switch (kind) {
-    case EntityCompletionItemKind.Constant:
-      return 13;
-    case EntityCompletionItemKind.Variable:
-      return 12;
-    case EntityCompletionItemKind.Expression:
-      return 12;
-    case EntityCompletionItemKind.Function:
-      return 11;
-    case EntityCompletionItemKind.ListConstructor:
-      return 17;
-    case EntityCompletionItemKind.MapConstructor:
-      return 18;
-    case EntityCompletionItemKind.Literal:
-    case EntityCompletionItemKind.Unknown:
-      return 12;
-  }
+  return SymbolKindMapping[kind] || 12;
 };

@@ -5,7 +5,7 @@ import {
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';
-import { createHover, formatTypes } from './helper/tooltip.js';
+import { createHover, formatKind, formatTypes } from './helper/tooltip.js';
 import { PseudoHover, PseudoMarkdownString } from './helper/vs.js';
 
 export function activate(monaco: typeof Monaco) {
@@ -42,7 +42,7 @@ export function activate(monaco: typeof Monaco) {
       const metaTypes = Array.from(entity.types).map(
         SignatureDefinitionTypeMeta.parse
       );
-      let label = `(${entity.kind}) ${entity.label}: ${formatTypes(metaTypes)}`;
+      let label = `(${formatKind(entity.kind)}) ${entity.label}: ${formatTypes(metaTypes)}`;
 
       if (entity.types.has(SignatureDefinitionBaseType.Map)) {
         const records: Record<string, string> = {};

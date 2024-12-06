@@ -18,7 +18,7 @@ const findAllAssignments = (
   for (const assignmentItem of assignments) {
     const assignment = assignmentItem.node as ASTAssignmentStatement;
     const entity = typeDoc.resolveNamespace(assignment.variable, true);
-    const label = entity?.label ?? createExpressionId(assignment.variable);
+    const label = createExpressionId(assignment.variable);
     const kind = entity?.kind
       ? getSymbolItemKind(entity.kind)
       : monaco.languages.SymbolKind.Variable;
