@@ -8,7 +8,7 @@ import mkdirp from 'mkdirp';
 import path from 'path';
 
 import {
-  createImporter,
+  executeImport,
   parseImporterAgentType,
   parseImporterMode
 } from './build/importer.js';
@@ -93,7 +93,7 @@ export default async function build(
         await fs.rm(outputPath, {
           recursive: true
         });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     await mkdirp(outputPath);
@@ -119,7 +119,7 @@ export default async function build(
     if (transpilerOptions.createIngame) {
       logger.debug('Importing files ingame.');
 
-      const importResults = await createImporter({
+      await executeImport({
         target,
         ingameDirectory: transpilerOptions.ingameDirectory,
         result,
@@ -134,22 +134,6 @@ export default async function build(
         },
         postCommand: transpilerOptions.postCommand
       });
-      const successfulItems = importResults.filter((item) => item.success);
-      const failedItems = importResults.filter((item) => !item.success);
-
-      if (successfulItems.length === 0) {
-        logger.debug(
-          'No files could get imported! This might be due to a new Grey Hack version or other reasons.'
-        );
-      } else if (failedItems.length > 0) {
-        logger.debug(
-          `Import was only partially successful. Only ${successfulItems.length} files got imported to ${transpilerOptions.ingameDirectory}!`
-        );
-      } else {
-        logger.debug(
-          `${successfulItems.length} files got imported to ${transpilerOptions.ingameDirectory}!`
-        );
-      }
     }
 
     if (isInsideContainer()) {
@@ -162,8 +146,7 @@ export default async function build(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
@@ -171,8 +154,7 @@ export default async function build(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
           }\n${err.stack}`
         )
       );
