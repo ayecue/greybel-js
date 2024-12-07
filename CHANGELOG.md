@@ -1354,3 +1354,8 @@ All notable changes to this project will be documented in this file.
 - remove map and list properties from assignment registry resulting in less noise within the symbol provider
 - include full namespace in symbol provider
 - add new entity kinds to improve visibility of internal intrinsics in auto complete
+
+## [3.5.14] - 07.12.2024
+
+- fix file extension handling in build intrinsic - related to [#271](https://github.com/ayecue/greybel-vs/issues/271) - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
+- improve error reporting on file imports - should make it more clear what the reason for failure is
