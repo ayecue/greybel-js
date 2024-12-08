@@ -1359,3 +1359,8 @@ All notable changes to this project will be documented in this file.
 
 - fix file extension handling in build intrinsic - related to [#271](https://github.com/ayecue/greybel-vs/issues/271) - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
 - improve error reporting on file imports - should make it more clear what the reason for failure is
+
+## [3.5.15] - 07.12.2024
+
+- change type analyzer to only assume on define
+- when merging internal definitions take first entity kind instead of using internal kind
