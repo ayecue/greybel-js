@@ -1364,3 +1364,7 @@ All notable changes to this project will be documented in this file.
 
 - change type analyzer to only assume on define
 - when merging internal definitions take first entity kind instead of using internal kind
+
+## [3.5.16] - 09.12.2024
+
+- prevent the transpiler from using special patterns when inserting transformed code - this fix resolves issues with code combinations that include special patterns such as $$, $&, $', $n, and $<name>
