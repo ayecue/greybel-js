@@ -1368,3 +1368,4 @@ All notable changes to this project will be documented in this file.
 ## [3.5.16] - 09.12.2024
 
 - prevent the transpiler from using special patterns when inserting transformed code - this fix resolves issues with code combinations that include special patterns such as $$, $&, $', $n, and $<name>
+- update hashing method in interpreter in favor of lower collision but worse performance
