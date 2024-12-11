@@ -4,6 +4,7 @@ export interface GenerateAutoCompileCodeOptions {
   importPaths: string[];
   purge: boolean;
   binaryName: string | null;
+  allowImport: boolean;
 }
 
 export const generateAutoCompileCode = ({
@@ -11,7 +12,8 @@ export const generateAutoCompileCode = ({
   rootFilePath,
   importPaths,
   purge,
-  binaryName
+  binaryName,
+  allowImport
 }: GenerateAutoCompileCodeOptions): string => {
   return `
       rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
@@ -22,7 +24,7 @@ export const generateAutoCompileCode = ({
       myComputer = host_computer(myShell)
       purge = ${+purge}
 
-      result = build(myShell, rootDirectory + rootFilePath, rootDirectory)
+      result = build(myShell, rootDirectory + rootFilePath, rootDirectory, ${allowImport ? 1 : 0})
       if result != "" then exit("Error when building! Reason: " + result)
       binary = File(myComputer, (rootDirectory + rootFilePath).replace("\\.[^.]*?$", ""))
       print("Build done. Output file: " + binary.path)

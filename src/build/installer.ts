@@ -98,6 +98,7 @@ export interface InstallerOptions {
     enabled: boolean;
     purge: boolean;
     binaryName: string | null;
+    allowImport: boolean;
   };
 }
 
@@ -115,6 +116,7 @@ class Installer {
     enabled: boolean;
     purge: boolean;
     binaryName: string | null;
+    allowImport: boolean;
   };
 
   constructor(options: InstallerOptions) {
@@ -229,7 +231,8 @@ class Installer {
         rootFilePath: rootRef.ingameFilepath,
         importPaths: this.importList.map((it) => it.ingameFilepath),
         purge: this.autoCompile.purge,
-        binaryName: this.autoCompile.binaryName
+        binaryName: this.autoCompile.binaryName,
+        allowImport: this.autoCompile.allowImport
       }).split(';');
     }
 

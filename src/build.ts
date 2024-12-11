@@ -107,7 +107,8 @@ export default async function build(
         autoCompile: {
           enabled: transpilerOptions.autoCompile,
           purge: transpilerOptions.autoCompilePurge,
-          binaryName: transpilerOptions.autoCompileName
+          binaryName: transpilerOptions.autoCompileName,
+          allowImport: transpilerOptions.allowImport
         },
         ingameDirectory: transpilerOptions.ingameDirectory,
         buildPath: outputPath,
@@ -130,7 +131,8 @@ export default async function build(
         autoCompile: {
           enabled: transpilerOptions.autoCompile,
           purge: transpilerOptions.autoCompilePurge,
-          binaryName: transpilerOptions.autoCompileName
+          binaryName: transpilerOptions.autoCompileName,
+          allowImport: transpilerOptions.allowImport
         },
         postCommand: transpilerOptions.postCommand
       });
