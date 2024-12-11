@@ -98,6 +98,10 @@ function attachBuildCommand() {
       'Enables auto-compile within the installer or create-ingame feature. This option will also delete all files in-game after building.'
     )
     .option(
+      '-ai, --allow-import',
+      'Enables allowImport on auto-compile.'
+    )
+    .option(
       '-acp, --auto-compile-purge',
       'Specify this option if you would like all of the imported folders to be deleted after the auto-compilation process is completed regardless of any files may remaining in those folders.'
     )
@@ -136,6 +140,7 @@ async function runBuildCommand() {
     // installer + in-game importer
     installer: options.installer,
     autoCompile: options.autoCompile,
+    allowImport: options.allowImport,
     maxChars: options.maxChars ? parseInt(options.maxChars) : null,
     ingameDirectory: options.ingameDirectory,
     createIngame: options.createIngame,

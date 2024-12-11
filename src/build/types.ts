@@ -41,6 +41,7 @@ export interface BuildOptions {
   envVars: string[];
   // installer + in-game importer
   installer: boolean;
+  allowImport: boolean;
   maxChars: number;
   autoCompile: boolean;
   ingameDirectory: string;
@@ -62,6 +63,7 @@ const defaultOptions: BuildOptions = {
   obfuscation: false,
   installer: false,
   autoCompile: false,
+  allowImport: false,
   excludedNamespaces: [],
   disableLiteralsOptimization: false,
   disableNamespacesOptimization: false,
@@ -93,6 +95,7 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     obfuscation: options.obfuscation ?? defaultOptions.obfuscation,
     installer: options.installer ?? defaultOptions.installer,
     autoCompile: options.autoCompile ?? defaultOptions.autoCompile,
+    allowImport: options.allowImport ?? defaultOptions.allowImport,
     excludedNamespaces:
       options.excludedNamespaces ?? defaultOptions.excludedNamespaces,
     disableLiteralsOptimization:
