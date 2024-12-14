@@ -92,6 +92,7 @@ Options:
                                                  amount defined in this option. By default the maximum is 160k chars.
   -ac, --auto-compile                            Enables auto-compile within the installer or create-ingame feature. This option will also
                                                  delete all files in-game after building.
+  -ai, --allow-import                            Enables allowImport on auto-compile.
   -acp, --auto-compile-purge                     Specify this option if you would like all of the imported folders to be deleted after the
                                                  auto-compilation process is completed regardless of any files may remaining in those folders.
   -acn, --auto-compile-name <name>               Specify this option if you would like define a special name for the in-game binary.
