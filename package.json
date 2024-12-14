@@ -39,7 +39,7 @@
     "greyscript-core": "~2.3.2",
     "greyscript-interpreter": "~2.3.0",
     "greyscript-meta": "~4.1.0",
-    "greyscript-transpiler": "~1.4.0",
+    "greyscript-transpiler": "~1.4.1",
     "is-inside-container": "^1.0.0",
     "lru-cache": "^7.14.1",
     "miniscript-type-analyzer": "~0.18.0",
