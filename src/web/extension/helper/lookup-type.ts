@@ -63,7 +63,7 @@ export class LookupHelper {
     return typeManager
       .get(this.document.uri.fsPath)
       .getRootScopeContext()
-      .scope.getAllIdentifier();
+      .scope.getAvailableIdentifier();
   }
 
   findAllAvailableIdentifier(
@@ -72,7 +72,7 @@ export class LookupHelper {
     return typeManager
       .get(this.document.uri.fsPath)
       .getScopeContext(root)
-      .scope.getAllIdentifier();
+      .scope.getAvailableIdentifier();
   }
 
   findAllAvailableIdentifierRelatedToPosition(
@@ -123,7 +123,7 @@ export class LookupHelper {
     if (scopeContext.scope.outer)
       injectIdentifers(result, scopeContext.scope.outer);
 
-    for (const assignment of typeDoc.container.getAllIdentifier(
+    for (const assignment of typeDoc.container.getAvailableIdentifier(
       SignatureDefinitionBaseType.General
     )) {
       result.set(...assignment);
