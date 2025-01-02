@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import GitHubButton from 'react-github-btn'
 
 import Execute from './actions/execute.js';
 import Transpile from './actions/transpile.js';
@@ -162,8 +163,9 @@ export function Root(options: RootOptions) {
         </div>
       </div>
       <div className="readme">
-          <ExternalLinks externalLinks={options.externalLinks} />
-        </div>
+        <GitHubButton href="https://github.com/ayecue/greybel-js" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ayecue/greybel-js on GitHub">Star</GitHubButton>
+        <ExternalLinks className="external-links-wrapper" externalLinks={options.externalLinks} />
+      </div>
     </div>
   );
 }
