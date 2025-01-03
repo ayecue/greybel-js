@@ -623,7 +623,7 @@ div.editor-console-stdout {
   transform: rotate(-45deg);
 }
 
-.readme>span {
+.readme .github-button {
   position: fixed;
   top: 0;
   right: 0;

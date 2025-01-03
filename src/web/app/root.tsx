@@ -163,7 +163,9 @@ export function Root(options: RootOptions) {
         </div>
       </div>
       <div className="readme">
-        <GitHubButton href="https://github.com/ayecue/greybel-js" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ayecue/greybel-js on GitHub">Star</GitHubButton>
+        <div className="github-button">
+          <GitHubButton href="https://github.com/ayecue/greybel-js" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-icon="octicon-star" data-size="large" aria-label="Star ayecue/greybel-js on GitHub">Star</GitHubButton>
+        </div>
         <ExternalLinks className="external-links-wrapper" externalLinks={options.externalLinks} />
       </div>
     </div>
