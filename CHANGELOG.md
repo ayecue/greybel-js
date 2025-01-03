@@ -1367,8 +1367,15 @@ All notable changes to this project will be documented in this file.
 
 ## [3.5.16] - 14.12.2024
 
-- prevent the transpiler from using special patterns when inserting transformed code - this fix resolves issues with code combinations that include special patterns such as $$, $&, $', $n, and $<name>
+- prevent the transpiler from using special patterns when inserting transformed code - this fix resolves issues with code combinations that include special patterns such as `$$`, `$&`, `$'`, `$n`, and `$<name>`
 - update hashing method in interpreter in favor of lower collision but worse performance
 - add allowImport option for both installer and create ingame flow
 - fix line registry in parser which could potentially mess up auto complete items within block openers - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
 - improve beautifier transformation in regards of comments within lists and maps
+
+## [3.5.17] - 02.01.2025
+
+- support nested type signatures for maps and lists such as `map<string,number>` or `list<string>`
+- add support to resolve type of for-in iterator
+- add support to resolve type of #import namespace correctly
+- resolve all possible value types if `any` type is existing in index expression

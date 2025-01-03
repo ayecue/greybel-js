@@ -46,7 +46,7 @@ export const getPropertyCompletionList = (
     return [];
   }
 
-  return transformToCompletionItems(entity.getAllIdentifier(), range);
+  return transformToCompletionItems(entity.getAvailableIdentifier(), range);
 };
 
 export const getDefaultCompletionList = (

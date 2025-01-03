@@ -237,16 +237,16 @@ const reportFailure = (failedItems: ImportResultFailure[], agentType: AgentType)
           
 The issue appears to be due to the lack of an available socket. This could suggest that the BepInEx plugin is not installed correctly, or the game is not running. Double-check the plugin installation and ensure the game is running.
   
-For detailed troubleshooting steps, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook.`
+For detailed troubleshooting steps, please consult the documentation: https://github.com/ayecue/greybel-js?tab=readme-ov-file#message-hook.`
         );
         return;
       }
 
       logger.debug(`File import failed!
         
-The issue appears to be due to the lack of an available socket. This might indicate that the game is not running. Please ensure the game is started before proceeding. Additionally note that it is recommend to rather use the message-hook agent but that requires installing BepInEx: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook.
+The issue appears to be due to the lack of an available socket. This might indicate that the game is not running. Please ensure the game is started before proceeding. Additionally note that it is recommend to rather use the message-hook agent but that requires installing BepInEx: https://github.com/ayecue/greybel-js?tab=readme-ov-file#message-hook.
 
-For detailed troubleshooting steps related to the headless agent, please consult the documentation: https://github.com/ayecue/greybel-vs?tab=readme-ov-file#headless.`
+For detailed troubleshooting steps related to the headless agent, please consult the documentation: https://github.com/ayecue/greybel-js?tab=readme-ov-file#headless.`
       );
       return;
     } else if (singularErrorReason.indexOf(CommonImportErrorReason.NewGameVersion) !== -1) {

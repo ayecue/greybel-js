@@ -8,15 +8,17 @@ export interface AppExternalLink {
 export interface ExternalLinksProps {
   externalLinks: AppExternalLink[];
   maxLinks?: number;
+  className?: string;
 }
 
 export default function ExternalLinks({
   externalLinks,
+  className,
   maxLinks = 2
 }: ExternalLinksProps) {
   if (externalLinks.length <= maxLinks) {
     return (
-      <ul>
+      <ul className={className}>
         {externalLinks.map((externalLink: AppExternalLink, index) => {
           return (
             <li key={index} className="external-links">
@@ -34,7 +36,7 @@ export default function ExternalLinks({
 
   if (fullView) {
     return (
-      <ul>
+      <ul className={className}>
         {externalLinks.map((externalLink: AppExternalLink, index) => {
           return (
             <li key={index} className="external-links">
@@ -52,7 +54,7 @@ export default function ExternalLinks({
   }
 
   return (
-    <ul>
+    <ul className={className}>
       {externalLinks
         .slice(0, maxLinks)
         .map((externalLink: AppExternalLink, index) => {

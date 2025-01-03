@@ -623,7 +623,15 @@ div.editor-console-stdout {
   transform: rotate(-45deg);
 }
 
-.readme ul {
+.readme .github-button {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  z-index: 999;
+}
+
+.readme .external-links-wrapper {
   margin: 0;
   padding: 0;
   left: 5px;
@@ -634,14 +642,14 @@ div.editor-console-stdout {
   opacity: 0.7;
 }
 
-.readme li {
+.readme .external-links-wrapper li {
   margin: 0;
   padding: 0;
   list-style: none;
   display: inline-block;
 }
 
-.readme ul .collapse {
+.readme .external-links-wrapper .collapse {
   cursor: pointer;
   padding: 0.7em 1.4em;
   color: #CCC;

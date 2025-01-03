@@ -1,16 +1,52 @@
 import {
   ASTBase,
   ASTBaseBlockWithScope,
+  ASTForGenericStatement,
   ASTIdentifier,
-  ASTMemberExpression
+  ASTMemberExpression,
+  ASTType
 } from 'miniscript-core';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';
+import { ASTDefinitionItem } from 'miniscript-type-analyzer';
 
 const definitionLinkToString = (link: Monaco.languages.LocationLink): string => {
   return `${link.uri.toString()}#${link.range.startLineNumber}:${link.range.startColumn}-${link.range.endLineNumber}:${link.range.endColumn}`;
 }
+
+const getLocation = (
+  monaco: typeof Monaco,
+  helper: LookupHelper,
+  item: ASTDefinitionItem
+): Monaco.languages.LocationLink => {
+  const node = item.node;
+  let range: Monaco.Range;
+  switch (node.type) {
+    case ASTType.ForGenericStatement: {
+      const stmt = node as ASTForGenericStatement;
+      range = new monaco.Range(
+        stmt.variable.start.line,
+        stmt.variable.start.character,
+        stmt.variable.end.line,
+        stmt.variable.end.character
+      );
+      break;
+    }
+    default: {
+      range = new monaco.Range(
+        node.start.line,
+        node.start.character,
+        node.end.line,
+        node.end.character
+      );
+    }
+  }
+  return {
+    uri: helper.document.uri,
+    range
+  };
+};
 
 const findAllDefinitions = (
   monaco: typeof Monaco,
@@ -29,15 +65,7 @@ const findAllDefinitions = (
       continue;
     }
 
-    const definitionLink: Monaco.languages.LocationLink = {
-      uri: helper.document.uri,
-      range: new monaco.Range(
-        node.start.line,
-        node.start.character,
-        node.end.line,
-        node.end.character
-      )
-    };
+    const definitionLink = getLocation(monaco, helper, assignment);
     const linkString = definitionLinkToString(definitionLink);
 
     if (visited.has(linkString)) {
