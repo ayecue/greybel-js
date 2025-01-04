@@ -1383,3 +1383,8 @@ All notable changes to this project will be documented in this file.
 ## [3.5.18] - 03.01.2025
 
 - support nested type signatures for maps and lists in property comment docs
+
+## [3.5.19] - 04.01.2025
+
+- fix index expression behaviour within statement
+- fix collpase button position in editor UI
