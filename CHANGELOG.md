@@ -1387,3 +1387,4 @@ All notable changes to this project will be documented in this file.
 ## [3.5.19] - 04.01.2025
 
 - fix index expression behaviour within statement
+- fix collpase button position in editor UI
