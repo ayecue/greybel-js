@@ -1388,3 +1388,7 @@ All notable changes to this project will be documented in this file.
 
 - fix index expression behaviour within statement
 - fix collpase button position in editor UI
+
+## [3.5.20] - 05.01.2025
+
+- fix comment docs not recognising comments in nested functions - thanks for reporting to [@redit0](https://github.com/redit0)
