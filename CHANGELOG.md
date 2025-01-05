@@ -1391,4 +1391,4 @@ All notable changes to this project will be documented in this file.
 
 ## [3.5.20] - 05.01.2025
 
-- fix comment docs not recognising comments in nested functions
+- fix comment docs not recognising comments in nested functions - thanks for reporting to [@redit0](https://github.com/redit0)
