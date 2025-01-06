@@ -1397,3 +1397,7 @@ All notable changes to this project will be documented in this file.
 
 - fix index expression behaviour within statement
 - fix type resolve of index expression
+
+## [3.5.22] - 06.01.2025
+
+- fix invalid line positions of clauses when resolving type
