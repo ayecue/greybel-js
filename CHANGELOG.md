@@ -1405,3 +1405,7 @@ All notable changes to this project will be documented in this file.
 ## [3.5.23] - 06.01.2025
 
 - improve type resolve of index expression
+
+## [3.5.24] - 08.01.2025
+
+- use temporary folder to use "dddd.src" as file name when building to force smallest possible binary size - thanks for the suggestion to [@redit0](https://github.com/redit0)
