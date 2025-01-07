@@ -1,3 +1,7 @@
+import { randomString } from './random-string.js';
+
+const SHORTEST_NAME = 'dddd' as const;
+
 export interface GenerateAutoCompileCodeOptions {
   rootDirectory: string;
   rootFilePath: string;
@@ -20,30 +24,39 @@ export const generateAutoCompileCode = ({
       rootFilePath = "${rootFilePath}"
       filePaths = [${importPaths.map((it) => `"${it}"`).join(',')}]
       binaryName = ${binaryName !== null ? `"${binaryName}"` : 'null'};
+      tmpDirectory = "${randomString(5)}"
       myShell = get_shell
       myComputer = host_computer(myShell)
       purge = ${+purge}
 
-      result = build(myShell, rootDirectory + rootFilePath, rootDirectory, ${allowImport ? 1 : 0})
+      srcFile = File(myComputer, rootDirectory + rootFilePath)
+      if srcFile == null then exit("Couldn't find source file in " + rootDirectory + rootFilePath)
+
+      fileName = name(srcFile)
+      if binaryName == null then binaryName = replace_regex(fileName, "\\.[^.]+$", "")
+      destination = parent_path(path(srcFile))
+
+      result = create_folder(myComputer, destination, tmpDirectory)
+      if result != 1 then exit("Error when creating temporary build folder! Reason: " + result)
+
+      tmpFolder = File(myComputer, destination + "/" + tmpDirectory)
+      if tmpFolder == null then exit("Couldn't find temporary build folder in " + destination + "/" + tmpDirectory)
+
+      result = move(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
+      if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
+
+      result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
+    allowImport ? 1 : 0
+  })
       if result != "" then exit("Error when building! Reason: " + result)
-      binary = File(myComputer, (rootDirectory + rootFilePath).replace("\\.[^.]*?$", ""))
-      print("Build done. Output file: " + binary.path)
 
-      if binaryName then
-        if (binaryName != binary.name) then
-          preExistingFile = File(myComputer, binary.path.replace("[^/]*?$", "") + binaryName)
+      binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
+      if binaryFile == null then exit("Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME}")
 
-          if preExistingFile then
-            result = delete(preExistingFile)
-            if result != "" then print("Deletion of pre-existing file failed! Reason: " + result) else print("Delete pre-existing " + binaryName + " done!")
-          end if
-
-          result = rename(binary, binaryName)
-          if result != "" then print("Renaming failed! Reason: " + result) else print("Renaming to " + binaryName + " done!")
-        else
-          print("Skipping rename to " + binaryName)
-        end if
-      end if
+      result = move(binaryFile, destination, binaryName)
+      if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
+      delete(tmpFolder)
+      print("Build done in " + destination)
 
       remainingFolderMap = {}
 

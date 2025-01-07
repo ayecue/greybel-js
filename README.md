@@ -24,6 +24,7 @@ CLI that provides a set of tools for working with GreyScript. GreyScript is a sc
 - [Website Image Generator](https://github.com/ayecue/gh-website-image-generator): Tool for generating Grey Hack website images.
 
 **Community**
+- [awesome-greyhack](https://github.com/stevenklar/awesome-greyhack): List with several resources resources related to Grey Hack.
 - [Greybel Discord](https://discord.gg/q8tR8F8u2M): Join the community on Discord for support and discussion.
 
 ## Features

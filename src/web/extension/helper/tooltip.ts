@@ -57,14 +57,17 @@ export const createTooltipHeader = (
       (item) =>
         `${item.getLabel()}${item.isOptional() ? '?' : ''}: ${formatTypes(
           item.getTypes()
-        )}${item.getDefault()
-          ? ` = ${formatDefaultValue(item.getDefault().value)}`
-          : ''
+        )}${
+          item.getDefault()
+            ? ` = ${formatDefaultValue(item.getDefault().value)}`
+            : ''
         }`
     )
     .join(', ');
 
-  return `(${formatKind(item.kind)}) ${item.label} (${argValues}): ${returnValues}`;
+  return `(${formatKind(item.kind)}) ${
+    item.label
+  } (${argValues}): ${returnValues}`;
 };
 
 export const appendTooltipHeader = (
@@ -105,8 +108,9 @@ export const createSignatureInfo = (
 
     const parameters = args.map((argItem: SignatureDefinitionFunctionArg) => {
       return {
-        label: `${argItem.getLabel()}${argItem.isOptional() ? '?' : ''
-          }: ${argItem.getTypes().join(' or ')}`
+        label: `${argItem.getLabel()}${
+          argItem.isOptional() ? '?' : ''
+        }: ${argItem.getTypes().join(' or ')}`
       };
     });
     const documentation = text;

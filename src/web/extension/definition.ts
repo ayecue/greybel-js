@@ -6,14 +6,18 @@ import {
   ASTMemberExpression,
   ASTType
 } from 'miniscript-core';
+import { ASTDefinitionItem } from 'miniscript-type-analyzer';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';
-import { ASTDefinitionItem } from 'miniscript-type-analyzer';
 
-const definitionLinkToString = (link: Monaco.languages.LocationLink): string => {
-  return `${link.uri.toString()}#${link.range.startLineNumber}:${link.range.startColumn}-${link.range.endLineNumber}:${link.range.endColumn}`;
-}
+const definitionLinkToString = (
+  link: Monaco.languages.LocationLink
+): string => {
+  return `${link.uri.toString()}#${link.range.startLineNumber}:${
+    link.range.startColumn
+  }-${link.range.endLineNumber}:${link.range.endColumn}`;
+};
 
 const getLocation = (
   monaco: typeof Monaco,
