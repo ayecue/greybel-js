@@ -40,13 +40,17 @@ export function activate(monaco: typeof Monaco) {
 
       const hoverText = new PseudoMarkdownString('');
       const metaTypes = entity.toMeta().map(SignatureDefinitionTypeMeta.parse);
-      let label = `(${formatKind(entity.kind)}) ${entity.label}: ${formatTypes(metaTypes)}`;
+      let label = `(${formatKind(entity.kind)}) ${entity.label}: ${formatTypes(
+        metaTypes
+      )}`;
 
       if (entity.types.has(SignatureDefinitionBaseType.Map)) {
         const records: Record<string, string> = {};
 
         for (const [key, item] of entity.values) {
-          const metaTypes = item.toMeta().map(SignatureDefinitionTypeMeta.parse);
+          const metaTypes = item
+            .toMeta()
+            .map(SignatureDefinitionTypeMeta.parse);
           records[key.slice(2)] = formatTypes(metaTypes);
         }
 

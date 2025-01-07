@@ -1,5 +1,13 @@
-import { ASTAssignmentStatement, ASTForGenericStatement, ASTType } from 'miniscript-core';
-import { ASTDefinitionItem, createExpressionId, Document as MSDocument } from 'miniscript-type-analyzer';
+import {
+  ASTAssignmentStatement,
+  ASTForGenericStatement,
+  ASTType
+} from 'miniscript-core';
+import {
+  ASTDefinitionItem,
+  createExpressionId,
+  Document as MSDocument
+} from 'miniscript-type-analyzer';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { getSymbolItemKind } from './helper/kind.js';

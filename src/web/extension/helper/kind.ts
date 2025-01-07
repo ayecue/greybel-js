@@ -1,7 +1,10 @@
 import { CompletionItemKind as EntityCompletionItemKind } from 'miniscript-type-analyzer';
 import type { languages } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-const CompletionItemKindMapping: Record<EntityCompletionItemKind, languages.CompletionItemKind> = {
+const CompletionItemKindMapping: Record<
+  EntityCompletionItemKind,
+  languages.CompletionItemKind
+> = {
   [EntityCompletionItemKind.Constant]: 14,
   [EntityCompletionItemKind.Internal]: 14,
   [EntityCompletionItemKind.InternalFunction]: 14,
@@ -13,7 +16,7 @@ const CompletionItemKindMapping: Record<EntityCompletionItemKind, languages.Comp
   [EntityCompletionItemKind.ListConstructor]: 17,
   [EntityCompletionItemKind.MapConstructor]: 18,
   [EntityCompletionItemKind.Literal]: 13,
-  [EntityCompletionItemKind.Unknown]: 13,
+  [EntityCompletionItemKind.Unknown]: 13
 };
 
 export const getCompletionItemKind = (
@@ -22,7 +25,10 @@ export const getCompletionItemKind = (
   return CompletionItemKindMapping[kind] || 4;
 };
 
-const SymbolKindMapping: Record<EntityCompletionItemKind, languages.SymbolKind> = {
+const SymbolKindMapping: Record<
+  EntityCompletionItemKind,
+  languages.SymbolKind
+> = {
   [EntityCompletionItemKind.Constant]: 13,
   [EntityCompletionItemKind.Internal]: 13,
   [EntityCompletionItemKind.InternalFunction]: 13,
@@ -34,7 +40,7 @@ const SymbolKindMapping: Record<EntityCompletionItemKind, languages.SymbolKind> 
   [EntityCompletionItemKind.ListConstructor]: 17,
   [EntityCompletionItemKind.MapConstructor]: 18,
   [EntityCompletionItemKind.Literal]: 12,
-  [EntityCompletionItemKind.Unknown]: 12,
+  [EntityCompletionItemKind.Unknown]: 12
 };
 
 export const getSymbolItemKind = (
