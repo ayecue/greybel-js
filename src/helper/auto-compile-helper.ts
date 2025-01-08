@@ -53,11 +53,6 @@ export const generateAutoCompileCode = ({
       binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
       if binaryFile == null then exit("Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME}")
 
-      result = move(binaryFile, destination, binaryName)
-      if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
-      delete(tmpFolder)
-      print("Build done in " + destination)
-
       remainingFolderMap = {}
 
       for filePath in filePaths
@@ -95,6 +90,11 @@ export const generateAutoCompileCode = ({
 
         currentFolderPath = pop(remainingFolderPaths)
       end while
+
+      result = move(binaryFile, destination, binaryName)
+      if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
+      delete(tmpFolder)
+      print("Build done in " + destination)
     `
     .split('\n')
     .map((it) => it.trim())
