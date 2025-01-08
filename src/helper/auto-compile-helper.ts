@@ -42,7 +42,7 @@ export const generateAutoCompileCode = ({
       tmpFolder = File(myComputer, destination + "/" + tmpDirectory)
       if tmpFolder == null then exit("Couldn't find temporary build folder in " + destination + "/" + tmpDirectory)
 
-      result = move(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
+      result = copy(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
       if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
 
       result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
