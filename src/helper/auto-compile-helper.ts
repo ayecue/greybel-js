@@ -42,7 +42,7 @@ export const generateAutoCompileCode = ({
       tmpFolder = File(myComputer, destination + "/" + tmpDirectory)
       if tmpFolder == null then exit("Couldn't find temporary build folder in " + destination + "/" + tmpDirectory)
 
-      result = move(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
+      result = copy(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
       if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
 
       result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
@@ -52,11 +52,6 @@ export const generateAutoCompileCode = ({
 
       binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
       if binaryFile == null then exit("Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME}")
-
-      result = move(binaryFile, destination, binaryName)
-      if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
-      delete(tmpFolder)
-      print("Build done in " + destination)
 
       remainingFolderMap = {}
 
@@ -95,6 +90,11 @@ export const generateAutoCompileCode = ({
 
         currentFolderPath = pop(remainingFolderPaths)
       end while
+
+      result = move(binaryFile, destination, binaryName)
+      if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
+      delete(tmpFolder)
+      print("Build done in " + destination)
     `
     .split('\n')
     .map((it) => it.trim())
