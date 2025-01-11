@@ -1418,4 +1418,4 @@ All notable changes to this project will be documented in this file.
 
 - fix comment doc parsing swallowing first asterisk - thanks for reporting to [@redit0](https://github.com/redit0)
 - fix overflow optional arg - thanks for reporting to Stigma
-- improve env loading
+- improve env var parsing
