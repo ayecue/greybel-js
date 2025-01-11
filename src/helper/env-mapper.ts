@@ -12,9 +12,10 @@ function readVarLines(
   for (line of varLines) {
     line = line.trim();
     if (line === '' || line[0] === '#') continue;
-    const def = line.split('=');
-    const name = def.shift()?.trim();
-    const value = def.shift()?.trim();
+    const eqIndex = line.indexOf('=');
+    if (eqIndex === -1) continue;
+    const name = line.substring(0, eqIndex).trim();
+    const value = line.substring(eqIndex + 1);
 
     if (name && value) {
       map[name] = value;
