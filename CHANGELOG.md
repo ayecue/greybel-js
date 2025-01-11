@@ -1413,3 +1413,9 @@ All notable changes to this project will be documented in this file.
 ## [3.5.25] - 08.01.2025
 
 - move final binary after deleting files in auto compile - thanks for reporting to [@redit0](https://github.com/redit0)
+
+## [3.5.26] - 11.01.2025
+
+- fix comment doc parsing swallowing first asterisk - thanks for reporting to [@redit0](https://github.com/redit0)
+- fix overflow optional arg - thanks for reporting to Stigma
+- improve env loading
