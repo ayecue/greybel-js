@@ -4,6 +4,7 @@ import path from 'path';
 
 import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
 import { createBasePath } from '../helper/create-base-path.js';
+import { escapeMSString } from '../helper/escape-ms-string.js';
 
 type ImportItem = {
   filepath: string;
@@ -160,9 +161,10 @@ class Installer {
       return {
         filepath: target,
         ingameFilepath,
-        content: code
-          .replace(/"/g, '""')
-          .replace(/import_code\(/gi, 'import"+"_"+"code(')
+        content: escapeMSString(code).replace(
+          /import_code\(/gi,
+          'import"+"_"+"code('
+        )
       };
     });
 
