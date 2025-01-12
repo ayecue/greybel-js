@@ -43,7 +43,7 @@ export default async function execute(
       outputHandler: new CLIOutputHandler(),
       resourceHandler
     }),
-    environmentVariables: new Map(Object.entries(envMapper.map)),
+    environmentVariables: envMapper.toMap(),
     debugMode: options.debugMode
   });
 

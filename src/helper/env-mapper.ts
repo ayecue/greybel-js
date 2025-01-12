@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
+import { escapeMSString } from './escape-ms-string';
+
 function readVarLines(
   varLines: string[],
   map: { [key: string]: string }
@@ -67,5 +69,17 @@ export default class EnvironmentVariables {
     const varExists = key in me.map;
     if (varExists) return me.map[key];
     return null;
+  }
+
+  toMap(escape: boolean = false): Map<string, string> {
+    const entries = Object.entries(this.map);
+
+    if (escape) {
+      return new Map(
+        entries.map(([key, value]) => [key, escapeMSString(value)])
+      );
+    }
+
+    return new Map(entries);
   }
 }
