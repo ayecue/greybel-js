@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { escapeMSString } from './escape-ms-string';
+import { escapeMSString } from './escape-ms-string.js';
 
 function readVarLines(
   varLines: string[],
