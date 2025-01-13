@@ -1430,3 +1430,4 @@ All notable changes to this project will be documented in this file.
 ## [3.5.28] - 12.01.2025
 
 - show error when continue or break are used if there is no wrapping iterator block - related to [#289](https://github.com/ayecue/greybel-vs/issues/289) - thanks for reporting to Stigma
+- fix lib_name not appending `.so` - thanks for reporting to Stigma
