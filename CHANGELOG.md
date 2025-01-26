@@ -1433,3 +1433,7 @@ All notable changes to this project will be documented in this file.
 - fix lib_name not appending `.so` - thanks for reporting to Stigma
 - fix decipher regarding bank passwords - thanks for reporting to Stigma
 - add another new line at end of passwd - thanks for reporting to Stigma
+
+## [3.5.29] - 26.01.2025
+
+- fix rename intrinsic - thanks for reporting to [@ide1ta](https://github.com/ide1ta)
