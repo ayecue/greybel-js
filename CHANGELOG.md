@@ -1445,3 +1445,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.31] - 30.01.2025
 
 - raise client version in headless client to latest public Grey Hack version
+
+## [2.5.32] - 05.02.2025
+
+- update meta descriptions
