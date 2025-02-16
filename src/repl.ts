@@ -11,7 +11,6 @@ import {
   DefaultType,
   HandlerContainer,
   ObjectValue,
-  ObjectValue as ObjectValueType,
   PrepareError,
   RuntimeError,
   VM
@@ -22,10 +21,7 @@ import { Interpreter } from 'greyscript-interpreter';
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
 import GrebyelPseudoDebugger from './repl/debugger.js';
-
-export interface REPLOptions {
-  api?: ObjectValueType;
-}
+import { REPLOptions } from './repl/types.js';
 
 export default async function repl(
   options: REPLOptions = {}
@@ -84,8 +80,7 @@ export default async function repl(
           logger.error(
             useColor(
               'red',
-              `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
-                err.message
+              `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
               } at ${err.target}:${err.range?.start || 0}`
             )
           );
@@ -93,8 +88,7 @@ export default async function repl(
           logger.error(
             useColor(
               'red',
-              `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
-                err.message
+              `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
               } at ${err.target}\n${err.stack}`
             )
           );
@@ -102,8 +96,7 @@ export default async function repl(
           logger.error(
             useColor(
               'red',
-              `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-                err.message
+              `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
               }\n${err.stack}`
             )
           );

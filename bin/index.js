@@ -10,6 +10,7 @@ import { createRequire } from 'node:module';
 import execute from '../out/execute.js';
 import build from '../out/build.js';
 import repl from '../out/repl.js';
+import upload from '../out/upload.js';
 import { logger } from '../out/helper/logger.js';
 
 // revisit once import type { 'json' } is supported by lts
@@ -158,6 +159,39 @@ async function runBuildCommand() {
   process.exit(0);
 }
 
+function attachImportCommand() {
+  const command = program.command('import');
+
+  command
+    .arguments('<targetpath>')
+    .description('File import for Grey Hack.', {
+      targetpath: 'File to import.'
+    })
+    .action(function (targetpath, uploadOptions) {
+      options.action = 'import';
+      options.targetpath = targetpath;
+      Object.assign(options, uploadOptions);
+    })
+    // installer + in-game importer
+    .option('-id, --ingame-directory <ingameDirectory>', 'In-game directory target path.')
+    .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
+    .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".');
+}
+
+async function runImportCommand() {
+  const success = await upload(options.targetpath, {
+    ingameDirectory: options.ingameDirectory,
+    createIngameAgentType: options.createIngameAgentType,
+    createIngameMode: options.createIngameMode
+  });
+
+  if (!success) {
+    process.exit(1);
+  }
+
+  process.exit(0);
+}
+
 function attachExecuteCommand() {
   const command = program.command('execute');
 
@@ -233,6 +267,7 @@ async function main() {
   program.version(version);
 
   attachBuildCommand();
+  attachImportCommand();
   attachExecuteCommand();
   attachREPLCommand();
   attachUICommand();
@@ -249,6 +284,9 @@ async function main() {
   switch (options.action) {
     case 'build':
       await runBuildCommand();
+      return;
+    case 'import':
+      await runImportCommand();
       return;
     case 'execute':
       await runExecuteCommand();
