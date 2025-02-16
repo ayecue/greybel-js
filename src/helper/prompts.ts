@@ -1,5 +1,4 @@
 import {
-  AsyncPromptConfig,
   createPrompt,
   isBackspaceKey,
   isEnterKey,
@@ -9,9 +8,10 @@ import {
 import { Prompt } from '@inquirer/type';
 import chalk from 'chalk';
 
-type CustomInputConfig = AsyncPromptConfig & {
+type CustomInputConfig = {
   default?: string;
   transformer?: (value: string, { isFinal }: { isFinal: boolean }) => string;
+  message: string;
 };
 
 export const customInput = createPrompt<string, CustomInputConfig>(
@@ -32,18 +32,9 @@ export const customInput = createPrompt<string, CustomInputConfig>(
       if (isEnterKey(key)) {
         const answer = value || defaultValue || '';
         setStatus('loading');
-        const isValid = await config.validate(answer);
-        if (isValid === true) {
-          setValue(answer);
-          setStatus('done');
-          done(answer);
-        } else {
-          // TODO: Can we keep the value after validation failure?
-          // `rl.line = value` works but it looses the cursor position.
-          setValue('');
-          setError(isValid || 'You must provide a valid value');
-          setStatus('pending');
-        }
+        setValue(answer);
+        setStatus('done');
+        done(answer);
       } else if (isBackspaceKey(key) && !value) {
         setDefaultValue(undefined);
       } else {

@@ -4,7 +4,7 @@ import { BuildError } from 'greybel-transpiler';
 import { greyscriptMeta } from 'greyscript-meta';
 import { BuildType, Transpiler } from 'greyscript-transpiler';
 import isInsideContainer from 'is-inside-container';
-import mkdirp from 'mkdirp';
+import { mkdirpNative } from 'mkdirp';
 import path from 'path';
 
 import {
@@ -93,10 +93,10 @@ export default async function build(
         await fs.rm(outputPath, {
           recursive: true
         });
-      } catch (err) {}
+      } catch (err) { }
     }
 
-    await mkdirp(outputPath);
+    await mkdirpNative(outputPath);
     await createParseResult(target, outputPath, result);
 
     if (transpilerOptions.installer) {
@@ -148,8 +148,7 @@ export default async function build(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
@@ -157,8 +156,7 @@ export default async function build(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
           }\n${err.stack}`
         )
       );

@@ -3,8 +3,6 @@ import { createRoot } from 'react-dom/client';
 
 import App from './web/app.js';
 
-const urlSearchParams = new URLSearchParams(location.search);
-
 const root = createRoot(document.querySelector('#container')!);
 root.render(
   React.createElement(App, {
