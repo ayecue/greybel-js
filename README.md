@@ -407,7 +407,7 @@ Import CLI
 Example: greybel import <myscriptfile>
 
 Arguments:
-	targetPath                  File to import
+	targetpath                  File or folder to import
 
 Options:
   -V, --version                                  output the version number
