@@ -1449,3 +1449,7 @@ All notable changes to this project will be documented in this file.
 ## [2.5.32] - 05.02.2025
 
 - update meta descriptions
+
+## [2.5.33] - 16.02.2025
+
+- add import command
