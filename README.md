@@ -401,6 +401,22 @@ end function
 test
 ```
 
+# Import
+```
+Import CLI
+Example: greybel import <myscriptfile>
+
+Arguments:
+	targetPath                  File to import
+
+Options:
+  -V, --version                                  output the version number
+  -id, --ingame-directory <ingameDirectory>      In-game directory target path.
+  -cia, --create-ingame-agent-type <agent-type>  Agent type used for in-game transfer. You can choose between "headless" or "message-hook".
+  -cim, --create-ingame-mode <mode>              Mode used for in-game transfer. You can choose between "local" or "public".
+  -h, --help                                     display help for command
+```
+
 # REPL
 ```
 REPL CLI
