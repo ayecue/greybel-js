@@ -33,7 +33,7 @@
     "comment-parser": "^1.4.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "glob": "^11.0.1",
+    "glob": "^10.4.5",
     "greybel-agent": "~1.8.2",
     "greybel-gh-mock-intrinsics": "~5.5.8",
     "greybel-intrinsics": "~5.5.2",
