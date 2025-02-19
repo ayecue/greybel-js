@@ -1456,5 +1456,5 @@ All notable changes to this project will be documented in this file.
 
 ## [2.5.34] - 19.02.2025
 
-- deprecate post command feature to due exploiting
+- deprecate post command feature due to exploiting
 - deprecate headless client due no further support
