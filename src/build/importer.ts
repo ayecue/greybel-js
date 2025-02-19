@@ -175,28 +175,28 @@ const reportFailure = (
       -1
     ) {
       logger.debug(`File import failed
-          
+
 The issue appears to be due to the lack of an available socket. This could suggest that the BepInEx plugin is not installed correctly, or the game is not running. Double-check the plugin installation and ensure the game is running.
-          
+
 For detailed troubleshooting steps, please consult the documentation: https://github.com/ayecue/greybel-js?tab=readme-ov-file#message-hook.`);
       return;
     } else if (
       singularErrorReason.indexOf(CommonImportErrorReason.NewGameVersion) !== -1
     ) {
       logger.debug(`File import failed
-      
+
 It seems that the game has received an update. This can sometimes cause issues with the import process. Please wait for the Greybel developers to update the package and try again later.`);
       return;
     }
     logger.debug(`File import failed
-  
+
 The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub.`);
 
     return;
   }
 
   logger.debug(`File import failed!
-    
+
 The reason seems to be unknown for now. Please either join the discord or create an issue on GitHub.`);
 };
 
