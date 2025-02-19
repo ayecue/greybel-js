@@ -111,8 +111,6 @@ function attachBuildCommand() {
       'Specify this option if you would like define a special name for the in-game binary.'
     )
     .option('-ci, --create-ingame', 'Enable transfer of your code files into Grey Hack.')
-    .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
-    .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".')
     // output
     .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
     .option('-si, --silent', 'Silences any uncessary noise.');
@@ -141,8 +139,6 @@ async function runBuildCommand() {
     maxChars: options.maxChars ? parseInt(options.maxChars) : null,
     ingameDirectory: options.ingameDirectory,
     createIngame: options.createIngame,
-    createIngameAgentType: options.createIngameAgentType,
-    createIngameMode: options.createIngameMode,
     autoCompilePurge: options.autoCompilePurge,
     autoCompileName: options.autoCompileName
   });
@@ -168,16 +164,12 @@ function attachImportCommand() {
       Object.assign(options, uploadOptions);
     })
     // installer + in-game importer
-    .option('-id, --ingame-directory <ingameDirectory>', 'In-game directory target path.')
-    .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
-    .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".');
+    .option('-id, --ingame-directory <ingameDirectory>', 'In-game directory target path.');
 }
 
 async function runImportCommand() {
   const success = await upload(options.targetpath, {
-    ingameDirectory: options.ingameDirectory,
-    createIngameAgentType: options.createIngameAgentType,
-    createIngameMode: options.createIngameMode
+    ingameDirectory: options.ingameDirectory
   });
 
   if (!success) {

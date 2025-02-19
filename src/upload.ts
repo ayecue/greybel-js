@@ -1,15 +1,14 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
 import {
-  executeImport,
-  parseImporterAgentType,
-  parseImporterMode
+  executeImport
 } from './build/importer.js';
 import { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
 import { parseUploadOptions, UploadOptions } from './upload/types.js';
 import { glob } from 'glob';
 import path from 'path';
+import { AgentType } from './build/types.js';
 
 const getFiles = async (target: string): Promise<string[]> => {
   const stat = await fs.stat(target);
@@ -64,10 +63,7 @@ export default async function upload(
         result[item.path] = item.content;
         return result;
       }, {}),
-      mode: parseImporterMode(uploadOptions.createIngameMode),
-      agentType: parseImporterAgentType(
-        uploadOptions.createIngameAgentType
-      ),
+      agentType: AgentType.C2Light,
       autoCompile: {
         enabled: false,
         purge: false,
