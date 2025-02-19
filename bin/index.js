@@ -113,10 +113,6 @@ function attachBuildCommand() {
     .option('-ci, --create-ingame', 'Enable transfer of your code files into Grey Hack.')
     .option('-cia, --create-ingame-agent-type <agent-type>', 'Agent type used for in-game transfer. You can choose between "headless" or "message-hook".')
     .option('-cim, --create-ingame-mode <mode>', 'Mode used for in-game transfer. You can choose between "local" or "public".')
-    .option(
-      '-pcmd, --post-command <command>',
-      'Specify this option if you would like to execute a post command.'
-    )
     // output
     .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
     .option('-si, --silent', 'Silences any uncessary noise.');
@@ -148,8 +144,7 @@ async function runBuildCommand() {
     createIngameAgentType: options.createIngameAgentType,
     createIngameMode: options.createIngameMode,
     autoCompilePurge: options.autoCompilePurge,
-    autoCompileName: options.autoCompileName,
-    postCommand: options.postCommand
+    autoCompileName: options.autoCompileName
   });
 
   if (!success) {

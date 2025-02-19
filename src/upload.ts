@@ -73,8 +73,7 @@ export default async function upload(
         purge: false,
         binaryName: null,
         allowImport: false
-      },
-      postCommand: ''
+      }
     });
 
     logger.debug(`Import done. Files available in ${ingameDirectory}.`);

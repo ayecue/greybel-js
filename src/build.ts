@@ -133,8 +133,7 @@ export default async function build(
           purge: transpilerOptions.autoCompilePurge,
           binaryName: transpilerOptions.autoCompileName,
           allowImport: transpilerOptions.allowImport
-        },
-        postCommand: transpilerOptions.postCommand
+        }
       });
     }
 
