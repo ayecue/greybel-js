@@ -8,12 +8,11 @@ import { mkdirpNative } from 'mkdirp';
 import path from 'path';
 
 import {
-  executeImport,
-  parseImporterAgentType,
-  parseImporterMode
+  executeImport
 } from './build/importer.js';
 import { createInstaller } from './build/installer.js';
 import {
+  AgentType,
   BeautifyIndentationType,
   BuildOptions,
   parseBuildOptions
@@ -124,17 +123,13 @@ export default async function build(
         target,
         ingameDirectory: transpilerOptions.ingameDirectory,
         result,
-        mode: parseImporterMode(transpilerOptions.createIngameMode),
-        agentType: parseImporterAgentType(
-          transpilerOptions.createIngameAgentType
-        ),
+        agentType: AgentType.C2Light,
         autoCompile: {
           enabled: transpilerOptions.autoCompile,
           purge: transpilerOptions.autoCompilePurge,
           binaryName: transpilerOptions.autoCompileName,
           allowImport: transpilerOptions.allowImport
-        },
-        postCommand: transpilerOptions.postCommand
+        }
       });
     }
 

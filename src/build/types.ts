@@ -15,11 +15,6 @@ export enum AgentType {
   C2Light = 'message-hook'
 }
 
-export enum ImporterMode {
-  Local = 'local',
-  Public = 'public'
-}
-
 export enum BeautifyIndentationType {
   Tab = 'tab',
   Whitespace = 'whitespace'
@@ -46,11 +41,8 @@ export interface BuildOptions {
   autoCompile: boolean;
   ingameDirectory: string;
   createIngame: boolean;
-  createIngameAgentType: string;
-  createIngameMode: string;
   autoCompilePurge: boolean;
   autoCompileName: string | null;
-  postCommand: string;
 }
 
 const defaultOptions: BuildOptions = {
@@ -72,11 +64,8 @@ const defaultOptions: BuildOptions = {
   envVars: [],
   ingameDirectory: '/root/',
   createIngame: false,
-  createIngameAgentType: AgentType.C2,
-  createIngameMode: ImporterMode.Local,
   autoCompilePurge: false,
-  autoCompileName: null,
-  postCommand: ''
+  autoCompileName: null
 };
 
 export const parseBuildOptions = (options: Partial<BuildOptions>) => {
@@ -109,13 +98,8 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     envVars: options.envVars ?? defaultOptions.envVars,
     ingameDirectory: options.ingameDirectory ?? defaultOptions.ingameDirectory,
     createIngame: options.createIngame ?? defaultOptions.createIngame,
-    createIngameAgentType:
-      options.createIngameAgentType ?? defaultOptions.createIngameAgentType,
-    createIngameMode:
-      options.createIngameMode ?? defaultOptions.createIngameMode,
     autoCompilePurge:
       options.autoCompilePurge ?? defaultOptions.autoCompilePurge,
-    autoCompileName: options.autoCompileName ?? defaultOptions.autoCompileName,
-    postCommand: options.postCommand ?? defaultOptions.postCommand
+    autoCompileName: options.autoCompileName ?? defaultOptions.autoCompileName
   };
 };
