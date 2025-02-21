@@ -1458,3 +1458,8 @@ All notable changes to this project will be documented in this file.
 
 - deprecate post command feature due to exploiting
 - deprecate headless client due no further support
+
+## [2.5.35] - 21.02.2025
+
+- update nodejs version to latest lts
+- update dependencies
