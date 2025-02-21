@@ -22,12 +22,6 @@ export function activate(monaco: typeof Monaco) {
         return;
       }
 
-      const typeInfo = helper.lookupTypeInfo(astResult);
-
-      if (!typeInfo) {
-        return;
-      }
-
       const entity = helper.lookupTypeInfo(astResult);
 
       if (!entity) {
