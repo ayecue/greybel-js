@@ -26,14 +26,14 @@
     "@inquirer/prompts": "^7.3.2",
     "@inquirer/type": "^3.0.4",
     "another-ansi": "^1.0.2",
-    "ansi-escapes": "^6.2.0",
+    "ansi-escapes": "^7.0.0",
     "chalk": "^5.4.1",
     "cli-progress": "^3.12.0",
     "commander": "^7.2.0",
     "comment-parser": "^1.4.1",
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
-    "glob": "^10.4.5",
+    "glob": "^11.0.1",
     "greybel-agent": "~1.9.0",
     "greybel-gh-mock-intrinsics": "~5.5.8",
     "greybel-intrinsics": "~5.5.2",
@@ -51,7 +51,7 @@
     "semver": "^7.7.1",
     "text-mesh-transformer": "^1.4.1",
     "transform-json-to-html": "^1.1.1",
-    "uuid": "^8.3.2"
+    "uuid": "^11.1.0"
   },
   "peerDependencies": {
     "@monaco-editor/loader": "^1.4.0",
