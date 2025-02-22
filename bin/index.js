@@ -106,10 +106,6 @@ function attachBuildCommand() {
       '-acp, --auto-compile-purge',
       'Specify this option if you would like all of the imported folders to be deleted after the auto-compilation process is completed regardless of any files may remaining in those folders.'
     )
-    .option(
-      '-acn, --auto-compile-name <name>',
-      'Specify this option if you would like define a special name for the in-game binary.'
-    )
     .option('-ci, --create-ingame', 'Enable transfer of your code files into Grey Hack.')
     // output
     .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
@@ -139,8 +135,7 @@ async function runBuildCommand() {
     maxChars: options.maxChars ? parseInt(options.maxChars) : null,
     ingameDirectory: options.ingameDirectory,
     createIngame: options.createIngame,
-    autoCompilePurge: options.autoCompilePurge,
-    autoCompileName: options.autoCompileName
+    autoCompilePurge: options.autoCompilePurge
   });
 
   if (!success) {

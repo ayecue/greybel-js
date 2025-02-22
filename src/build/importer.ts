@@ -35,7 +35,6 @@ export interface ImporterOptions {
   autoCompile: {
     enabled: boolean;
     purge: boolean;
-    binaryName: string | null;
     allowImport: boolean;
   };
 }
@@ -49,7 +48,6 @@ class Importer {
   private autoCompile: {
     enabled: boolean;
     purge: boolean;
-    binaryName: string | null;
     allowImport: boolean;
   };
 
@@ -85,10 +83,10 @@ class Importer {
     switch (this.agentType) {
       case AgentType.C2Light: {
         return new Agent({
-          warn: () => {},
-          error: () => {},
-          info: () => {},
-          debug: () => {}
+          warn: () => { },
+          error: () => { },
+          info: () => { },
+          debug: () => { }
         });
       }
     }

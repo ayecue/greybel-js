@@ -99,7 +99,6 @@ export interface InstallerOptions {
   autoCompile: {
     enabled: boolean;
     purge: boolean;
-    binaryName: string | null;
     allowImport: boolean;
   };
 }
@@ -118,7 +117,6 @@ class Installer {
   private autoCompile: {
     enabled: boolean;
     purge: boolean;
-    binaryName: string | null;
     allowImport: boolean;
   };
 

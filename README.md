@@ -97,7 +97,6 @@ Options:
   -ai, --allow-import                            Enables allowImport on auto-compile.
   -acp, --auto-compile-purge                     Specify this option if you would like all of the imported folders to be deleted after the
                                                  auto-compilation process is completed regardless of any files may remaining in those folders.
-  -acn, --auto-compile-name <name>               Specify this option if you would like define a special name for the in-game binary.
   -ci, --create-ingame                           Enable transfer of your code files into Grey Hack.
   -dbf, --disable-build-folder                   Disable the default behaviour of putting the output into a build folder. It will instead just
                                                  put it wherever you set the output destination to.

@@ -152,7 +152,7 @@ export default async function build(
         await fs.rm(outputPath, {
           recursive: true
         });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     await mkdirpNative(outputPath);
@@ -167,7 +167,6 @@ export default async function build(
         autoCompile: {
           enabled: buildOptions.autoCompile,
           purge: buildOptions.autoCompilePurge,
-          binaryName: buildOptions.autoCompileName,
           allowImport: buildOptions.allowImport
         },
         ingameDirectory: buildOptions.ingameDirectory,
@@ -189,7 +188,6 @@ export default async function build(
         autoCompile: {
           enabled: buildOptions.autoCompile,
           purge: buildOptions.autoCompilePurge,
-          binaryName: buildOptions.autoCompileName,
           allowImport: buildOptions.allowImport
         }
       });
@@ -201,8 +199,7 @@ export default async function build(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Build error')}: ${err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
@@ -210,8 +207,7 @@ export default async function build(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
-            err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
           }\n${err.stack}`
         )
       );
