@@ -81,7 +81,12 @@ class Importer {
   async createAgent(): Promise<any> {
     switch (this.agentType) {
       case AgentType.C2Light: {
-        return new Agent();
+        return new Agent({
+          warn: () => { },
+          error: () => { },
+          info: () => { },
+          debug: () => { }
+        });
       }
     }
   }
