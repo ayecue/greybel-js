@@ -1,5 +1,3 @@
-import { AgentType } from "../build/types.js";
-
 export interface UploadOptions {
   ingameDirectory: string;
 }

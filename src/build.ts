@@ -3,7 +3,6 @@ import fs from 'fs/promises';
 import { BuildError } from 'greybel-transpiler';
 import { greyscriptMeta } from 'greyscript-meta';
 import { BuildType, Transpiler } from 'greyscript-transpiler';
-import isInsideContainer from 'is-inside-container';
 import { mkdirpNative } from 'mkdirp';
 import path from 'path';
 
@@ -131,10 +130,6 @@ export default async function build(
           allowImport: transpilerOptions.allowImport
         }
       });
-    }
-
-    if (isInsideContainer()) {
-      outputPath = options.disableBuildFolder ? './' : './build';
     }
 
     logger.debug(`Build done. Available in ${outputPath}.`);

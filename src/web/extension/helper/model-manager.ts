@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { ASTChunkGreyScript, Parser } from 'greyscript-core';
-import LRU from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { ASTBase } from 'miniscript-core';
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
@@ -22,7 +22,7 @@ export const DOCUMENT_PARSE_QUEUE_INTERVAL = 1000;
 export const DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT = 2000;
 
 export class DocumentParseQueue extends EventEmitter {
-  results: LRU<string, ParseResult>;
+  results: LRUCache<string, ParseResult>;
 
   private queue: Map<string, QueueItem>;
   private interval: NodeJS.Timeout | null;
@@ -30,7 +30,7 @@ export class DocumentParseQueue extends EventEmitter {
 
   constructor(parseTimeout: number = DOCUMENT_PARSE_QUEUE_PARSE_TIMEOUT) {
     super();
-    this.results = new LRU({
+    this.results = new LRUCache({
       ttl: 1000 * 60 * 20,
       ttlAutopurge: true
     });

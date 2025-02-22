@@ -25,7 +25,7 @@ export default function build(
     uglify: false,
     beautify: false,
 
-    maxWords: 80000,
+    maxWords: 160000,
     obfuscation: false,
     excludedNamespaces: [],
     disableLiteralsOptimization: false,

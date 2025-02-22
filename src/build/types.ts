@@ -11,7 +11,6 @@ export enum ErrorResponseMessage {
 }
 
 export enum AgentType {
-  C2 = 'headless',
   C2Light = 'message-hook'
 }
 
