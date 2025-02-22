@@ -1465,3 +1465,7 @@ All notable changes to this project will be documented in this file.
 - update dependencies
 - update BepInEx plugin dependencies - should be now compatible with latest 6.0.0 version
 - use new client package in preparation of new message-hook version
+
+## [2.6.1] - 22.02.2025
+
+- support meta tags for import_code
