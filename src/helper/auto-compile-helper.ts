@@ -43,9 +43,10 @@ export const generateAutoCompileCode = ({
         result = copy(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
         if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
 
-        result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
-    allowImport ? 1 : 0
-  })
+        wait(1)
+
+        result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${allowImport ? 1 : 0
+    })
         if result != "" then exit("Error when building! Reason: " + result)
 
         binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
