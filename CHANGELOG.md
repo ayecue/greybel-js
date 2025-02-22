@@ -1463,3 +1463,4 @@ All notable changes to this project will be documented in this file.
 
 - update nodejs version to latest lts
 - update dependencies
+- update BepInEx plugin dependencies - should be now compatible with latest 6.0.0 version
