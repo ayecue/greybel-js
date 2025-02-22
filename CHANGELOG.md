@@ -1469,3 +1469,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.1] - 22.02.2025
 
 - support meta tags for import_code
+
+## [3.6.2] - 23.02.2025
+
+- support multiple files in build command via glob pattern
