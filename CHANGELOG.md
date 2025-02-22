@@ -1442,30 +1442,30 @@ All notable changes to this project will be documented in this file.
 
 - fix aireplay cap creation using wrong value - related to [#292](https://github.com/ayecue/greybel-vs/issues/292) - thanks for reporting to [@Patrick-van-Halm](https://github.com/Patrick-van-Halm)
 
-## [2.5.31] - 30.01.2025
+## [3.5.31] - 30.01.2025
 
 - raise client version in headless client to latest public Grey Hack version
 
-## [2.5.32] - 05.02.2025
+## [3.5.32] - 05.02.2025
 
 - update meta descriptions
 
-## [2.5.33] - 16.02.2025
+## [3.5.33] - 16.02.2025
 
 - add import command
 
-## [2.5.34] - 19.02.2025
+## [3.5.34] - 19.02.2025
 
 - deprecate post command feature due to exploiting
 - deprecate headless client due no further support
 
-## [2.6.0] - 21.02.2025
+## [3.6.0] - 21.02.2025
 
 - update nodejs version to latest lts
 - update dependencies
 - update BepInEx plugin dependencies - should be now compatible with latest 6.0.0 version
 - use new client package in preparation of new message-hook version
 
-## [2.6.1] - 22.02.2025
+## [3.6.1] - 22.02.2025
 
 - support meta tags for import_code
