@@ -18,7 +18,7 @@ CLI that provides a set of tools for working with GreyScript. GreyScript is a sc
 - [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
 - [TEdit](https://github.com/ayecue/tedit): Text editor built with GreyScript. (Demo project)
 
-You also have a project which is using Greybel? Feel free to create a pull request to show it off here.
+<small>Do you have a project that uses Greybel? If so, feel free to create a pull request to showcase it here.</small>
 
 **Grey Hack Tools**
 - [Image Transformer](https://github.com/ayecue/gh-image-transformer): Tool for transforming images in Grey Hack.
