@@ -4,54 +4,57 @@ const SHORTEST_NAME = 'dddd' as const;
 
 export interface GenerateAutoCompileCodeOptions {
   rootDirectory: string;
-  rootFilePath: string;
+  rootFilePaths: string[];
   importPaths: string[];
   purge: boolean;
-  binaryName: string | null;
   allowImport: boolean;
 }
 
 export const generateAutoCompileCode = ({
   rootDirectory,
-  rootFilePath,
+  rootFilePaths,
   importPaths,
   purge,
-  binaryName,
   allowImport
 }: GenerateAutoCompileCodeOptions): string => {
   return `
       rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
-      rootFilePath = "${rootFilePath}"
+      rootFilePaths = [${rootFilePaths.map((it) => `"${it}"`).join(',')}]
       filePaths = [${importPaths.map((it) => `"${it}"`).join(',')}]
-      binaryName = ${binaryName !== null ? `"${binaryName}"` : 'null'};
       tmpDirectory = "${randomString(5)}"
       myShell = get_shell
       myComputer = host_computer(myShell)
       purge = ${+purge}
 
-      srcFile = File(myComputer, rootDirectory + rootFilePath)
-      if srcFile == null then exit("Couldn't find source file in " + rootDirectory + rootFilePath)
+      for rootFilePath in rootFilePaths
+        srcFile = File(myComputer, rootDirectory + rootFilePath)
+        if srcFile == null then exit("Couldn't find source file in " + rootDirectory + rootFilePath)
 
-      fileName = name(srcFile)
-      if binaryName == null then binaryName = replace_regex(fileName, "\\.[^.]+$", "")
-      destination = parent_path(path(srcFile))
+        fileName = name(srcFile)
+        binaryName = replace_regex(fileName, "\\.[^.]+$", "")
+        destination = parent_path(path(srcFile))
 
-      result = create_folder(myComputer, destination, tmpDirectory)
-      if result != 1 then exit("Error when creating temporary build folder! Reason: " + result)
+        result = create_folder(myComputer, destination, tmpDirectory)
+        if result != 1 then exit("Error when creating temporary build folder! Reason: " + result)
 
-      tmpFolder = File(myComputer, destination + "/" + tmpDirectory)
-      if tmpFolder == null then exit("Couldn't find temporary build folder in " + destination + "/" + tmpDirectory)
+        tmpFolder = File(myComputer, destination + "/" + tmpDirectory)
+        if tmpFolder == null then exit("Couldn't find temporary build folder in " + destination + "/" + tmpDirectory)
 
-      result = copy(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
-      if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
+        result = copy(srcFile, tmpFolder.path, "${SHORTEST_NAME}.src")
+        if result != 1 then exit("Error when moving source file into temporary build folder! Reason: " + result)
 
-      result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
+        result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
     allowImport ? 1 : 0
   })
-      if result != "" then exit("Error when building! Reason: " + result)
+        if result != "" then exit("Error when building! Reason: " + result)
 
-      binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
-      if binaryFile == null then exit("Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME}")
+        binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
+        if binaryFile == null then exit("Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME}")
+
+        result = move(binaryFile, destination, binaryName)
+        if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
+        delete(tmpFolder)
+      end for
 
       remainingFolderMap = {}
 
@@ -91,9 +94,6 @@ export const generateAutoCompileCode = ({
         currentFolderPath = pop(remainingFolderPaths)
       end while
 
-      result = move(binaryFile, destination, binaryName)
-      if result != 1 then exit("Error when moving binary file into destination folder! Reason: " + result)
-      delete(tmpFolder)
       print("Build done in " + destination)
     `
     .split('\n')

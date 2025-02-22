@@ -1,4 +1,4 @@
-import { CustomFunction } from "greybel-interpreter";
+import { CustomFunction } from 'greybel-interpreter';
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;

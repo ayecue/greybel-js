@@ -1,5 +1,5 @@
-import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import { TranspilerParseResult } from 'greybel-transpiler';
+import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import path from 'path';
 
 import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
@@ -27,8 +27,9 @@ export type ImportResultFailure = {
 export type ImportResult = ImportResultSuccess | ImportResultFailure;
 
 export interface ImporterOptions {
-  target: string;
+  rootDir: string;
   ingameDirectory: string;
+  rootPaths: string[];
   agentType: AgentType;
   result: TranspilerParseResult;
   autoCompile: {
@@ -42,7 +43,8 @@ export interface ImporterOptions {
 class Importer {
   private importRefs: Map<string, ImportItem>;
   private agentType: AgentType;
-  private target: string;
+  private rootDir: string;
+  private rootPaths: string[];
   private ingameDirectory: string;
   private autoCompile: {
     enabled: boolean;
@@ -52,20 +54,21 @@ class Importer {
   };
 
   constructor(options: ImporterOptions) {
-    this.target = options.target;
+    this.rootDir = options.rootDir;
+    this.rootPaths = options.rootPaths;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
-    this.importRefs = this.createImportList(options.target, options.result);
+    this.importRefs = this.createImportList(options.rootDir, options.result);
     this.agentType = options.agentType;
     this.autoCompile = options.autoCompile;
   }
 
   private createImportList(
-    rootTarget: string,
+    rootDir: string,
     parseResult: TranspilerParseResult
   ): Map<string, ImportItem> {
     return Object.entries(parseResult).reduce<Map<string, ImportItem>>(
       (result, [target, code]) => {
-        const ingameFilepath = createBasePath(rootTarget, target, '');
+        const ingameFilepath = createBasePath(rootDir, target, '');
 
         result.set(target, {
           ingameFilepath,
@@ -82,10 +85,10 @@ class Importer {
     switch (this.agentType) {
       case AgentType.C2Light: {
         return new Agent({
-          warn: () => { },
-          error: () => { },
-          info: () => { },
-          debug: () => { }
+          warn: () => {},
+          error: () => {},
+          info: () => {},
+          debug: () => {}
         });
       }
     }
@@ -135,17 +138,18 @@ class Importer {
     }
 
     if (this.autoCompile.enabled) {
-      const rootRef = this.importRefs.get(this.target);
+      const rootImports = this.rootPaths.map((it) => {
+        return this.importRefs.get(it);
+      });
 
       await agent.tryToEvaluate(
         generateAutoCompileCode({
           rootDirectory: this.ingameDirectory,
-          rootFilePath: rootRef.ingameFilepath,
+          rootFilePaths: rootImports.map((it) => it.ingameFilepath),
           importPaths: Array.from(this.importRefs.values()).map(
             (it) => it.ingameFilepath
           ),
           purge: this.autoCompile.purge,
-          binaryName: this.autoCompile.binaryName,
           allowImport: this.autoCompile.allowImport
         }),
         ({ output }) => logger.debug(output)

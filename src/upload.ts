@@ -1,14 +1,13 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
-import {
-  executeImport
-} from './build/importer.js';
+import { glob } from 'glob';
+import path from 'path';
+
+import { executeImport } from './build/importer.js';
+import { AgentType } from './build/types.js';
 import { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
 import { parseUploadOptions, UploadOptions } from './upload/types.js';
-import { glob } from 'glob';
-import path from 'path';
-import { AgentType } from './build/types.js';
 
 const getFiles = async (target: string): Promise<string[]> => {
   const stat = await fs.stat(target);
@@ -17,16 +16,14 @@ const getFiles = async (target: string): Promise<string[]> => {
     return await glob('**/*', {
       cwd: target,
       absolute: true,
-      nodir: true,
+      nodir: true
     });
   } else if (stat.isFile()) {
-    return [
-      target
-    ];
+    return [target];
   }
 
   return [];
-}
+};
 
 export default async function upload(
   targetpath: string,
@@ -39,25 +36,25 @@ export default async function upload(
     const files = await getFiles(target);
 
     if (files.length === 0) {
-      logger.warn(useColor(
-        'yellow',
-        'No files found!'
-      ));
+      logger.warn(useColor('yellow', 'No files found!'));
       return;
     }
 
-    const ingameDirectory = uploadOptions.ingameDirectory
-    const filesWithContent = await Promise.all(files.map(async (filepath) => {
-      const content = await fs.readFile(filepath, { encoding: 'utf-8' });
+    const ingameDirectory = uploadOptions.ingameDirectory;
+    const filesWithContent = await Promise.all(
+      files.map(async (filepath) => {
+        const content = await fs.readFile(filepath, { encoding: 'utf-8' });
 
-      return {
-        path: filepath,
-        content
-      };
-    }));
+        return {
+          path: filepath,
+          content
+        };
+      })
+    );
 
     await executeImport({
-      target,
+      rootDir: path.dirname(target),
+      rootPaths: [],
       ingameDirectory: ingameDirectory.replace(/\/$/i, ''),
       result: filesWithContent.reduce((result, item) => {
         result[item.path] = item.content;
@@ -77,7 +74,8 @@ export default async function upload(
     logger.error(
       useColor(
         'red',
-        `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+        `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+          err.message
         }\n${err.stack}`
       )
     );

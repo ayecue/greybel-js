@@ -90,8 +90,9 @@ class InstallerFile {
 }
 
 export interface InstallerOptions {
-  target: string;
+  rootDir: string;
   ingameDirectory: string;
+  rootPaths: string[];
   buildPath: string;
   result: TranspilerParseResult;
   maxChars: number;
@@ -105,7 +106,8 @@ export interface InstallerOptions {
 
 class Installer {
   private importList: ImportItem[];
-  private target: string;
+  private rootDir: string;
+  private rootPaths: string[];
   private ingameDirectory: string;
   private buildPath: string;
   private maxChars: number;
@@ -121,13 +123,14 @@ class Installer {
   };
 
   constructor(options: InstallerOptions) {
-    this.target = options.target;
+    this.rootDir = options.rootDir;
     this.buildPath = options.buildPath;
+    this.rootPaths = options.rootPaths;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.maxChars = options.maxChars;
     this.autoCompile = options.autoCompile;
     this.files = [];
-    this.importList = this.createImportList(options.target, options.result);
+    this.importList = this.createImportList(options.rootDir, options.result);
     this.createdFiles = [];
     this.autoCompile = options.autoCompile;
   }
@@ -152,11 +155,11 @@ class Installer {
   }
 
   private createImportList(
-    rootTarget: string,
+    rootDir: string,
     parseResult: TranspilerParseResult
   ): ImportItem[] {
     const imports = Object.entries(parseResult).map(([target, code]) => {
-      const ingameFilepath = createBasePath(rootTarget, target, '');
+      const ingameFilepath = createBasePath(rootDir, target, '');
 
       return {
         filepath: target,
@@ -224,16 +227,15 @@ class Installer {
 
   createContentFooterAutoCompile(): string[] {
     if (this.autoCompile.enabled) {
-      const rootRef = this.importList.find(
-        (item) => item.filepath === this.target
-      );
+      const rootImports = this.rootPaths.map((it) => {
+        return this.importList.find((item) => item.filepath === it);
+      });
 
       return generateAutoCompileCode({
         rootDirectory: this.ingameDirectory,
-        rootFilePath: rootRef.ingameFilepath,
+        rootFilePaths: rootImports.map((it) => it.ingameFilepath),
         importPaths: this.importList.map((it) => it.ingameFilepath),
         purge: this.autoCompile.purge,
-        binaryName: this.autoCompile.binaryName,
         allowImport: this.autoCompile.allowImport
       }).split(';');
     }

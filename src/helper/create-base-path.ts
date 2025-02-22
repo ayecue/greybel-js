@@ -1,11 +1,11 @@
 import path from 'path';
 
 export const createBasePath = (
-  target: string,
+  targetDir: string,
   filePath: string,
   base: string = '.'
 ): string => {
-  const targetRootSegments = path.dirname(target).split(path.sep);
+  const targetRootSegments = targetDir.split(path.sep);
   const pathSegments = filePath.split(path.sep);
   const filtered: string[] = [];
 
