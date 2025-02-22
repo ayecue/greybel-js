@@ -1,4 +1,4 @@
-import GreybelAgentPkg from 'greybel-agent';
+import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import { TranspilerParseResult } from 'greybel-transpiler';
 import path from 'path';
 
@@ -6,7 +6,7 @@ import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
 import { createBasePath } from '../helper/create-base-path.js';
 import { logger } from '../helper/logger.js';
 import { AgentType, ErrorResponseMessage } from './types.js';
-const { GreybelC2LightAgent } = GreybelAgentPkg.default;
+const { Agent } = GreyHackMessageHookClientPkg;
 
 type ImportItem = {
   ingameFilepath: string;
@@ -80,11 +80,8 @@ class Importer {
 
   async createAgent(): Promise<any> {
     switch (this.agentType) {
-      case AgentType.C2: {
-        throw new Error('Headless mode is no longer supported.');
-      }
       case AgentType.C2Light: {
-        return new GreybelC2LightAgent([125, 150]);
+        return new Agent();
       }
     }
   }

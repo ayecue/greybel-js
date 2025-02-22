@@ -1459,8 +1459,9 @@ All notable changes to this project will be documented in this file.
 - deprecate post command feature due to exploiting
 - deprecate headless client due no further support
 
-## [2.5.35] - 21.02.2025
+## [2.6.0] - 21.02.2025
 
 - update nodejs version to latest lts
 - update dependencies
 - update BepInEx plugin dependencies - should be now compatible with latest 6.0.0 version
+- use new client package in preparation of new message-hook version
