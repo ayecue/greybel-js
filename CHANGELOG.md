@@ -1477,3 +1477,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.3] - 23.02.2025
 
 - fixed issue with documentation comments where omitting the return type but including other tags resulted in no type being assigned
+
+## [3.6.4] - 23.02.2025
+
+- properly implement path resolve behaviour regarding file extensions so it is similar with extension behaviour
