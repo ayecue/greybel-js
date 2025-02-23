@@ -1473,3 +1473,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.2] - 23.02.2025
 
 - support multiple files in build command via glob pattern
+
+## [3.6.3] - 23.02.2025
+
+- fixed issue with documentation comments where omitting the return type but including other tags resulted in no type being assigned
