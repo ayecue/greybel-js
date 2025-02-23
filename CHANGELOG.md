@@ -1481,3 +1481,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.4] - 23.02.2025
 
 - properly implement path resolve behaviour regarding file extensions so it is similar with extension behaviour
+
+## [3.6.5] - 24.02.2025
+
+- improve find root logic for build

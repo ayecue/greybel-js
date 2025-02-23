@@ -1,13 +1,12 @@
 import path from 'path';
 
-export const createBasePath = (
+export const getMatchingSegments = (
   targetDir: string,
-  filePath: string,
-  base: string = '.'
-): string => {
+  filePath: string
+): string[] => {
   const targetRootSegments = targetDir.split(path.sep);
   const pathSegments = filePath.split(path.sep);
-  const filtered: string[] = [];
+  const matches: string[] = [];
 
   for (const segment of targetRootSegments) {
     const current = pathSegments.shift();
@@ -16,8 +15,18 @@ export const createBasePath = (
       break;
     }
 
-    filtered.push(current);
+    matches.push(current);
   }
+
+  return matches;
+};
+
+export const createBasePath = (
+  targetDir: string,
+  filePath: string,
+  base: string = '.'
+): string => {
+  const filtered: string[] = getMatchingSegments(targetDir, filePath);
 
   if (path.win32.sep === path.sep) {
     return filePath

@@ -20,7 +20,7 @@ import {
   parseBuildOptions
 } from './build/types.js';
 import { ansiProvider, useColor } from './execute/output.js';
-import { createBasePath } from './helper/create-base-path.js';
+import { createBasePath, getMatchingSegments } from './helper/create-base-path.js';
 import { createParseResult } from './helper/create-parse-result.js';
 import EnvMapper from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
@@ -60,21 +60,13 @@ function findRootPath(filePaths: string[]): string | null {
     return null;
   }
 
-  const sortedPaths = filePaths.slice().sort();
-  let commonPath = path.dirname(sortedPaths[0]);
+  let currentPath = path.dirname(filePaths[0]);
 
-  for (let i = 1; i < sortedPaths.length; i++) {
-    const currentPath = sortedPaths[i];
-
-    while (currentPath.indexOf(commonPath) !== 0) {
-      commonPath = path.dirname(commonPath);
-      if (commonPath === '/' || commonPath === '.') {
-        return null;
-      }
-    }
+  for (let i = 1; i < filePaths.length; i++) {
+    currentPath = getMatchingSegments(currentPath, filePaths[i]).join(path.sep);
   }
 
-  return commonPath;
+  return currentPath;
 }
 
 async function transpileFile(
