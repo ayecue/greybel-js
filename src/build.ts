@@ -131,6 +131,12 @@ export default async function build(
     absolute: true,
     nodir: true
   });
+
+  if (filepaths.length === 0) {
+    logger.warn(useColor('yellow', 'No files found!'));
+    return false;
+  }
+
   const rootPath = findRootPath(filepaths);
 
   envMapper.load(buildOptions.envFiles, buildOptions.envVars);
