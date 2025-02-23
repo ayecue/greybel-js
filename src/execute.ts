@@ -15,10 +15,10 @@ import { Interpreter } from 'greyscript-interpreter';
 
 import GreybelPseudoDebugger from './execute/debugger.js';
 import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
+import { ExecuteOptions } from './execute/types.js';
 import EnvMapper from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
 import { InterpreterResourceProvider } from './helper/resource.js';
-import { ExecuteOptions } from './execute/types.js';
 
 export default async function execute(
   target: string,
@@ -63,7 +63,8 @@ export default async function execute(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+            err.message
           } at ${err.target}:${err.range?.start || 0}`
         )
       );
@@ -71,7 +72,8 @@ export default async function execute(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+            err.message
           } at ${err.target}\n${err.stack}`
         )
       );
@@ -79,7 +81,8 @@ export default async function execute(
       logger.error(
         useColor(
           'red',
-          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+          `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+            err.message
           }\n${err.stack}`
         )
       );

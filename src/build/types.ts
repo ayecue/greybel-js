@@ -41,7 +41,6 @@ export interface BuildOptions {
   ingameDirectory: string;
   createIngame: boolean;
   autoCompilePurge: boolean;
-  autoCompileName: string | null;
 }
 
 const defaultOptions: BuildOptions = {
@@ -63,8 +62,7 @@ const defaultOptions: BuildOptions = {
   envVars: [],
   ingameDirectory: '/root/',
   createIngame: false,
-  autoCompilePurge: false,
-  autoCompileName: null
+  autoCompilePurge: false
 };
 
 export const parseBuildOptions = (options: Partial<BuildOptions>) => {
@@ -98,7 +96,6 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     ingameDirectory: options.ingameDirectory ?? defaultOptions.ingameDirectory,
     createIngame: options.createIngame ?? defaultOptions.createIngame,
     autoCompilePurge:
-      options.autoCompilePurge ?? defaultOptions.autoCompilePurge,
-    autoCompileName: options.autoCompileName ?? defaultOptions.autoCompileName
+      options.autoCompilePurge ?? defaultOptions.autoCompilePurge
   };
 };

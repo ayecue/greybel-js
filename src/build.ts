@@ -1,14 +1,17 @@
 import { ModifierType } from 'another-ansi';
 import fs from 'fs/promises';
-import { BuildError } from 'greybel-transpiler';
+import { glob } from 'glob';
+import {
+  BuildError,
+  TranspilerOptions,
+  TranspilerParseResult
+} from 'greybel-transpiler';
 import { greyscriptMeta } from 'greyscript-meta';
 import { BuildType, Transpiler } from 'greyscript-transpiler';
 import { mkdirpNative } from 'mkdirp';
 import path from 'path';
 
-import {
-  executeImport
-} from './build/importer.js';
+import { executeImport } from './build/importer.js';
 import { createInstaller } from './build/installer.js';
 import {
   AgentType,
@@ -23,68 +26,132 @@ import EnvMapper from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
 import { TranspilerResourceProvider } from './helper/resource.js';
 
+function getTranspilerOptions(options: BuildOptions) {
+  let buildType = BuildType.DEFAULT;
+  let buildOptions: TranspilerOptions['buildOptions'] = {
+    isDevMode: false
+  };
+
+  if (options.uglify) {
+    buildType = BuildType.UGLIFY;
+    buildOptions = {
+      disableLiteralsOptimization: options.disableLiteralsOptimization,
+      disableNamespacesOptimization: options.disableNamespacesOptimization
+    };
+  } else if (options.beautify) {
+    buildType = BuildType.BEAUTIFY;
+    buildOptions = {
+      isDevMode: false,
+      keepParentheses: options.beautifyKeepParentheses,
+      indentation:
+        options.beautifyIndentation === BeautifyIndentationType.Tab ? 0 : 1,
+      indentationSpaces: options.beautifyIndentationSpaces
+    };
+  }
+
+  return {
+    buildType,
+    buildOptions
+  };
+}
+
+function findRootPath(filePaths: string[]): string | null {
+  if (filePaths.length === 0) {
+    return null;
+  }
+
+  const sortedPaths = filePaths.slice().sort();
+  let commonPath = path.dirname(sortedPaths[0]);
+
+  for (let i = 1; i < sortedPaths.length; i++) {
+    const currentPath = sortedPaths[i];
+
+    while (currentPath.indexOf(commonPath) !== 0) {
+      commonPath = path.dirname(commonPath);
+      if (commonPath === '/' || commonPath === '.') {
+        return null;
+      }
+    }
+  }
+
+  return commonPath;
+}
+
+async function transpileFile(
+  filepath: string,
+  buildOptions: BuildOptions,
+  envMapper: EnvMapper,
+  transpilerOptions: ReturnType<typeof getTranspilerOptions>
+) {
+  const target = path.resolve(filepath);
+  const rootDir = path.dirname(target);
+
+  return await new Transpiler({
+    resourceHandler: new TranspilerResourceProvider().getHandler(),
+    target,
+    buildType: transpilerOptions.buildType,
+    buildOptions: transpilerOptions.buildOptions,
+    obfuscation: buildOptions.obfuscation,
+    excludedNamespaces: [
+      'params',
+      ...buildOptions.excludedNamespaces,
+      ...Array.from(
+        Object.keys(greyscriptMeta.getTypeSignature('general').getDefinitions())
+      )
+    ],
+    environmentVariables: envMapper.toMap(true),
+    processImportPathCallback: (importPath: string) => {
+      const relativePath = createBasePath(rootDir, importPath);
+      return path.posix.join(buildOptions.ingameDirectory, relativePath);
+    }
+  }).parse();
+}
+
+function mergeTranspileResults(
+  results: TranspilerParseResult[]
+): TranspilerParseResult {
+  const merged: TranspilerParseResult = {};
+
+  for (const result of results) {
+    Object.assign(merged, result);
+  }
+
+  return merged;
+}
+
 export default async function build(
   filepath: string,
   output: string,
   options: Partial<BuildOptions> = {}
 ): Promise<boolean> {
   const envMapper = new EnvMapper();
-  const transpilerOptions: BuildOptions = parseBuildOptions(options);
-  let buildType = BuildType.DEFAULT;
-  let buildOptions: any = {
-    isDevMode: false
-  };
+  const buildOptions: BuildOptions = parseBuildOptions(options);
+  const transpilerOptions = getTranspilerOptions(buildOptions);
+  const filepaths = await glob(filepath, {
+    absolute: true,
+    nodir: true
+  });
 
-  envMapper.load(transpilerOptions.envFiles, transpilerOptions.envVars);
-
-  if (transpilerOptions.uglify) {
-    buildType = BuildType.UGLIFY;
-    buildOptions = {
-      disableLiteralsOptimization:
-        transpilerOptions.disableLiteralsOptimization,
-      disableNamespacesOptimization:
-        transpilerOptions.disableNamespacesOptimization
-    };
-  } else if (transpilerOptions.beautify) {
-    buildType = BuildType.BEAUTIFY;
-    buildOptions = {
-      isDevMode: false,
-      keepParentheses: transpilerOptions.beautifyKeepParentheses,
-      indentation:
-        transpilerOptions.beautifyIndentation === BeautifyIndentationType.Tab
-          ? 0
-          : 1,
-      indentationSpaces: transpilerOptions.beautifyIndentationSpaces
-    };
+  if (filepaths.length === 0) {
+    logger.warn(useColor('yellow', 'No files found!'));
+    return false;
   }
 
+  const rootPath = findRootPath(filepaths);
+
+  envMapper.load(buildOptions.envFiles, buildOptions.envVars);
+
   try {
-    const target = path.resolve(filepath);
-    const result = await new Transpiler({
-      resourceHandler: new TranspilerResourceProvider().getHandler(),
-      target,
-      buildType,
-      buildOptions,
-      obfuscation: transpilerOptions.obfuscation,
-      excludedNamespaces: [
-        'params',
-        ...transpilerOptions.excludedNamespaces,
-        ...Array.from(
-          Object.keys(
-            greyscriptMeta.getTypeSignature('general').getDefinitions()
-          )
-        )
-      ],
-      environmentVariables: envMapper.toMap(true),
-      processImportPathCallback: (importPath: string) => {
-        const relativePath = createBasePath(target, importPath);
-        return path.posix.join(transpilerOptions.ingameDirectory, relativePath);
-      }
-    }).parse();
+    const allResults = await Promise.all(
+      filepaths.map((filepath) =>
+        transpileFile(filepath, buildOptions, envMapper, transpilerOptions)
+      )
+    );
+    const result = mergeTranspileResults(allResults);
 
     let outputPath = path.resolve(output);
 
-    if (!transpilerOptions.disableBuildFolder) {
+    if (!buildOptions.disableBuildFolder) {
       outputPath = path.resolve(output, './build');
 
       try {
@@ -95,39 +162,39 @@ export default async function build(
     }
 
     await mkdirpNative(outputPath);
-    await createParseResult(target, outputPath, result);
+    await createParseResult(rootPath, outputPath, result);
 
-    if (transpilerOptions.installer) {
+    if (buildOptions.installer) {
       logger.debug('Creating installer.');
 
       await createInstaller({
-        target,
+        rootDir: rootPath,
+        rootPaths: filepaths,
         autoCompile: {
-          enabled: transpilerOptions.autoCompile,
-          purge: transpilerOptions.autoCompilePurge,
-          binaryName: transpilerOptions.autoCompileName,
-          allowImport: transpilerOptions.allowImport
+          enabled: buildOptions.autoCompile,
+          purge: buildOptions.autoCompilePurge,
+          allowImport: buildOptions.allowImport
         },
-        ingameDirectory: transpilerOptions.ingameDirectory,
+        ingameDirectory: buildOptions.ingameDirectory,
         buildPath: outputPath,
         result,
-        maxChars: transpilerOptions.maxChars
+        maxChars: buildOptions.maxChars
       });
     }
 
-    if (transpilerOptions.createIngame) {
+    if (buildOptions.createIngame) {
       logger.debug('Importing files ingame.');
 
       await executeImport({
-        target,
-        ingameDirectory: transpilerOptions.ingameDirectory,
+        rootDir: rootPath,
+        rootPaths: filepaths,
+        ingameDirectory: buildOptions.ingameDirectory,
         result,
         agentType: AgentType.C2Light,
         autoCompile: {
-          enabled: transpilerOptions.autoCompile,
-          purge: transpilerOptions.autoCompilePurge,
-          binaryName: transpilerOptions.autoCompileName,
-          allowImport: transpilerOptions.allowImport
+          enabled: buildOptions.autoCompile,
+          purge: buildOptions.autoCompilePurge,
+          allowImport: buildOptions.allowImport
         }
       });
     }

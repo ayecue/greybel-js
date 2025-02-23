@@ -80,7 +80,8 @@ export default async function repl(
           logger.error(
             useColor(
               'red',
-              `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
+              `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+                err.message
               } at ${err.target}:${err.range?.start || 0}`
             )
           );
@@ -88,7 +89,8 @@ export default async function repl(
           logger.error(
             useColor(
               'red',
-              `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
+              `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+                err.message
               } at ${err.target}\n${err.stack}`
             )
           );
@@ -96,7 +98,8 @@ export default async function repl(
           logger.error(
             useColor(
               'red',
-              `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+              `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+                err.message
               }\n${err.stack}`
             )
           );

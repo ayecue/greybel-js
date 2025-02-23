@@ -6,13 +6,13 @@ import path from 'path';
 import { createBasePath } from './create-base-path.js';
 
 export const createParseResult = async (
-  target: string,
+  rootDir: string,
   buildPath: string,
   result: TranspilerParseResult
 ): Promise<void> => {
   const relativePathFactory: (filePath: string) => string = (
     filePath: string
-  ) => createBasePath(target, filePath);
+  ) => createBasePath(rootDir, filePath);
 
   await Promise.all(
     Object.entries(result).map(async ([file, code]) => {
