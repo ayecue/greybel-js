@@ -1485,3 +1485,8 @@ All notable changes to this project will be documented in this file.
 ## [3.6.5] - 24.02.2025
 
 - improve find root logic for build
+
+## [3.6.6] - 25.02.2025
+
+- update aireplay documentation
+- fixed issue with documentation comments where @description was still visible after the recent changes
