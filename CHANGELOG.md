@@ -1490,3 +1490,7 @@ All notable changes to this project will be documented in this file.
 
 - update aireplay documentation
 - fixed issue with documentation comments where @description was still visible after the recent changes
+
+## [3.6.7] - 25.02.2025
+
+- fixed issue with documentation comments where @example was still visible after the recent changes - thanks for reporting to [@redit0](https://github.com/redit0)
