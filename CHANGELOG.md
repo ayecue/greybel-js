@@ -1498,3 +1498,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.8] - 02.03.2025
 
 - enable self and super to be overriden in type analyzer if context is not available
+
+## [3.6.9] - 03.03.2025
+
+- fixed behaviour in interpreter for comparison of functions, should now properly detect if an intrinsics function is the same as the one in the general namespace
