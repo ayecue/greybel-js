@@ -1509,3 +1509,8 @@ All notable changes to this project will be documented in this file.
 
 - fixed is_closed meta description
 - switched cdn for editor resources from unpkg.com to jsdelivr.net
+
+## [3.6.11] - 24.03.2025
+
+- fixed program_path to return current program path
+- fixed launch_path to return original program path
