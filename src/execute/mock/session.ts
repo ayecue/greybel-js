@@ -6,7 +6,7 @@ import {
   RuntimeError
 } from 'greybel-interpreter';
 import EnvMapper from '../../helper/env-mapper.js';
-import { InterpreterResourceProvider } from '../../helper/resource';
+import { InterpreterResourceProvider } from '../../helper/resource.js';
 import {
   createGHMockEnv,
   init as initGHIntrinsics

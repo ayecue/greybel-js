@@ -1,6 +1,7 @@
 import { ExecuteOptions, Session, SessionEnvironmentType } from './execute/types.js';
 import EnvMapper from './helper/env-mapper.js';
 import { MockSession } from './execute/mock/session.js';
+import { InGameSession } from './execute/in-game/session.js';
 
 export default async function execute(
   target: string,
@@ -17,6 +18,13 @@ export default async function execute(
       envMapper,
       debugMode: options.debugMode,
       seed: options.seed
+    });
+  } else if (options.envType === SessionEnvironmentType.Ingame) {
+    session = new InGameSession({
+      target,
+      envMapper,
+      debugMode: options.debugMode,
+      port: options.port
     });
   }
 

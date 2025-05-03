@@ -2,7 +2,7 @@ import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import { createRequire } from 'node:module';
 import cliProgress from 'cli-progress';
 import { Tag, TagRecordOpen, transform} from 'text-mesh-transformer';
-import { NodeJSKeyEvent } from './key-event';
+import { NodeJSKeyEvent } from './key-event.js';
 import ansiEscapes from 'ansi-escapes';
 import readline from 'readline';
 import { logger } from '../helper/logger.js';

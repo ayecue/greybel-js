@@ -1,6 +1,3 @@
-import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
-import ansiEscapes from 'ansi-escapes';
-import cliProgress from 'cli-progress';
 import {
   KeyEvent,
   OutputHandler,
@@ -8,16 +5,9 @@ import {
   UpdateOptions,
   VM
 } from 'greybel-interpreter';
-import readline from 'readline';
-import { TagRecordOpen, transform } from 'text-mesh-transformer';
 
-import { logger } from '../../helper/logger.js';
-import {
-  customInput as input,
-  customPassword as password
-} from '../../helper/prompts.js';
-import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from '../key-event.js';
-import { Terminal, wrapWithTag } from '../output.js';
+import { nodeJSKeyEventToKeyEvent } from '../key-event.js';
+import { Terminal } from '../output.js';
 
 export default class CLIOutputHandler extends OutputHandler {
   terminal: Terminal;
