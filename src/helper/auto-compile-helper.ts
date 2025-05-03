@@ -45,8 +45,9 @@ export const generateAutoCompileCode = ({
 
         wait(1)
 
-        result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${allowImport ? 1 : 0
-    })
+        result = build(myShell, tmpFolder.path + "/${SHORTEST_NAME}.src", tmpFolder.path, ${
+    allowImport ? 1 : 0
+  })
         if result != "" then exit("Error when building! Reason: " + result)
 
         binaryFile = File(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")

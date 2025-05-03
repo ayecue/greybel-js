@@ -1,4 +1,5 @@
 import { CustomFunction } from 'greybel-interpreter';
+
 import EnvMapper from '../helper/env-mapper.js';
 
 export interface ExecuteOptions {
@@ -18,7 +19,7 @@ export interface Session {
 }
 
 export interface SessionConstructor {
-  new(options: SessionOptions): Session;
+  new (options: SessionOptions): Session;
 }
 
 export interface SessionOptions {
@@ -47,7 +48,7 @@ export enum ClientMessageType {
   ContextUnexpectedErrorRpc = 1010,
   DisposedContextRpc = 1020,
   StatusRpc = 1200,
-  InvalidAction = 1300,
+  InvalidAction = 1300
 }
 
 export interface StackItem {

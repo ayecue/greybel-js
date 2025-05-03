@@ -83,10 +83,10 @@ class Importer {
     switch (this.agentType) {
       case AgentType.C2Light: {
         return new Agent({
-          warn: () => { },
-          error: () => { },
-          info: () => { },
-          debug: () => { }
+          warn: () => {},
+          error: () => {},
+          info: () => {},
+          debug: () => {}
         });
       }
     }

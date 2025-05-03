@@ -1,22 +1,24 @@
-import { HandlerContainer, ObjectValue } from 'greybel-interpreter';
-import { Interpreter } from 'greyscript-interpreter';
 import { ModifierType } from 'another-ansi';
-import {
-  PrepareError,
-  RuntimeError
-} from 'greybel-interpreter';
-import EnvMapper from '../../helper/env-mapper.js';
-import { InterpreterResourceProvider } from '../../helper/resource.js';
 import {
   createGHMockEnv,
   init as initGHIntrinsics
 } from 'greybel-gh-mock-intrinsics';
+import {
+  HandlerContainer,
+  ObjectValue,
+  PrepareError,
+  RuntimeError
+} from 'greybel-interpreter';
 import { init as initIntrinsics } from 'greybel-intrinsics';
-import CLIOutputHandler from './output.js';
-import GreybelPseudoDebugger from './debugger.js';
-import { Session, SessionOptions } from '../types.js';
+import { Interpreter } from 'greyscript-interpreter';
+
+import EnvMapper from '../../helper/env-mapper.js';
 import { logger } from '../../helper/logger.js';
+import { InterpreterResourceProvider } from '../../helper/resource.js';
 import { ansiProvider, useColor } from '../output.js';
+import { Session, SessionOptions } from '../types.js';
+import GreybelPseudoDebugger from './debugger.js';
+import CLIOutputHandler from './output.js';
 
 export interface MockSessionOptions extends SessionOptions {
   seed?: string;
@@ -81,7 +83,8 @@ export class MockSession implements Session {
         logger.error(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Prepare error')}: ${
+              err.message
             } at ${err.target}:${err.range?.start || 0}`
           )
         );
@@ -89,7 +92,8 @@ export class MockSession implements Session {
         logger.error(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Runtime error')}: ${
+              err.message
             } at ${err.target}\n${err.stack}`
           )
         );
@@ -97,7 +101,8 @@ export class MockSession implements Session {
         logger.error(
           useColor(
             'red',
-            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+            `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+              err.message
             }\n${err.stack}`
           )
         );

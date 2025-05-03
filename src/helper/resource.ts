@@ -4,8 +4,9 @@ import {
   ResourceHandler as TranspilerResourceHandler,
   ResourceProvider as TranspilerResourceProviderBase
 } from 'greybel-transpiler';
-import { DocumentURIBuilder } from './document-uri-builder.js';
 import path from 'path';
+
+import { DocumentURIBuilder } from './document-uri-builder.js';
 
 const createDocumentUriBuilder = (source: string) => {
   return new DocumentURIBuilder(path.resolve(source, '..'));
@@ -19,7 +20,9 @@ export class TranspilerResourceProvider extends TranspilerResourceProviderBase {
       ...handler,
       getTargetRelativeTo: async (source, target) => {
         const documentUriBuilder = createDocumentUriBuilder(source);
-        const result = await documentUriBuilder.getPathUseReturnOriginal(target);
+        const result = await documentUriBuilder.getPathUseReturnOriginal(
+          target
+        );
         return result.toString();
       },
       get: async (target: string): Promise<string> => {

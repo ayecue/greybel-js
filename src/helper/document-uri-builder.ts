@@ -1,10 +1,11 @@
-import pathUtil from "path";
 import fs from 'fs';
+import pathUtil from 'path';
 
 export function checkFileExists(file) {
-  return fs.promises.access(file, fs.constants.F_OK)
+  return fs.promises
+    .access(file, fs.constants.F_OK)
     .then(() => true)
-    .catch(() => false)
+    .catch(() => false);
 }
 
 export async function findExistingPath(

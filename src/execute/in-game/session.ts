@@ -1,13 +1,19 @@
-import { ClientMessageType, ContextBreakpoint, Session, SessionOptions } from "../types.js";
-import EnvMapper from '../../helper/env-mapper.js';
 import { input } from '@inquirer/prompts';
-import { ansiProvider, Terminal, useColor } from "../output.js";
-import { ModifierType } from "another-ansi";
-import { ContextAgent } from "greyhack-message-hook-client";
-import { findExistingPath } from "../../helper/document-uri-builder.js";
-import { randomString } from "../../helper/random-string.js";
-import fs from "fs";
-import pathUtils from "path";
+import { ModifierType } from 'another-ansi';
+import fs from 'fs';
+import { ContextAgent } from 'greyhack-message-hook-client';
+import pathUtils from 'path';
+
+import { findExistingPath } from '../../helper/document-uri-builder.js';
+import EnvMapper from '../../helper/env-mapper.js';
+import { randomString } from '../../helper/random-string.js';
+import { ansiProvider, Terminal, useColor } from '../output.js';
+import {
+  ClientMessageType,
+  ContextBreakpoint,
+  Session,
+  SessionOptions
+} from '../types.js';
 
 async function resolveFileExtension(path: string): Promise<string | null> {
   return await findExistingPath(
@@ -44,32 +50,35 @@ export class InGameSession implements Session {
     this.target = target;
     this.debugMode = debugMode;
     this.envMapper = envMapper;
-    this.agent = new ContextAgent({
-      warn: () => { },
-      error: () => { },
-      info: () => { },
-      debug: () => { }
-    }, port);
+    this.agent = new ContextAgent(
+      {
+        warn: () => {},
+        error: () => {},
+        info: () => {},
+        debug: () => {}
+      },
+      port
+    );
     this.instance = null;
     this.terminal = new Terminal();
     this.internalFileMap = {};
-    this.temporaryPath = "temp-" + randomString(10);
+    this.temporaryPath = 'temp-' + randomString(10);
   }
 
-  async prepare() {
-    
-  }
+  async prepare() {}
 
   async run(params: string[] = []): Promise<boolean> {
     const content = fs.readFileSync(this.target, 'utf8');
     this.basePath = process.cwd();
     const { value } = await this.agent.createContext(
-      `params=[${params.map((it) => `"${it.replace(/"/g, '""')}"`).join(',')}];` + content,
+      `params=[${params
+        .map((it) => `"${it.replace(/"/g, '""')}"`)
+        .join(',')}];` + content,
       this.target,
       this.basePath,
       this.debugMode,
       [],
-      this.envMapper.toMap(true),
+      this.envMapper.toMap(true)
     );
     this.running = true;
     this.instance = value;
@@ -80,14 +89,18 @@ export class InGameSession implements Session {
 
   private async verifyFilepath(path: string) {
     if (this.internalFileMap[path]) {
-      const resolvedPath = pathUtils.join(this.basePath, this.temporaryPath, `${path}.src`);
+      const resolvedPath = pathUtils.join(
+        this.basePath,
+        this.temporaryPath,
+        `${path}.src`
+      );
       const content = this.internalFileMap[path];
 
       fs.writeFileSync(resolvedPath, content);
 
       return {
-        resolvedPath: resolvedPath,
-        originalPath: path,
+        resolvedPath,
+        originalPath: path
       };
     }
 
@@ -95,12 +108,14 @@ export class InGameSession implements Session {
 
     return {
       resolvedPath: resolvedPath ?? path,
-      originalPath: path,
+      originalPath: path
     };
   }
 
   private async createFilepathMap(paths: string[]) {
-    const resolvedPaths = await Promise.all(paths.map(async (it) => this.verifyFilepath(it)));
+    const resolvedPaths = await Promise.all(
+      paths.map(async (it) => this.verifyFilepath(it))
+    );
 
     return resolvedPaths.reduce((result, { resolvedPath, originalPath }) => {
       result[originalPath] = resolvedPath;
@@ -108,12 +123,14 @@ export class InGameSession implements Session {
     }, {});
   }
 
-  private async parseContextBreakpoint(contextBreakpoint: any): Promise<ContextBreakpoint> {
+  private async parseContextBreakpoint(
+    contextBreakpoint: any
+  ): Promise<ContextBreakpoint> {
     const mappedPaths = await this.createFilepathMap([
       contextBreakpoint.filepath,
       ...contextBreakpoint.stacktrace.map((it) => it.filepath)
     ]);
-  
+
     return {
       contextID: contextBreakpoint.contextID,
       filepath: mappedPaths[contextBreakpoint.filepath],
@@ -125,7 +142,7 @@ export class InGameSession implements Session {
           filepath: mappedPaths[it.filepath],
           lineNum: it.lineNum,
           name: it.name,
-          isExternal: it.isExternal,
+          isExternal: it.isExternal
         };
       })
     };
@@ -150,7 +167,7 @@ export class InGameSession implements Session {
               )} >`
             )
           });
-  
+
           if (line === 'next') {
             await this.goToNextLine();
           } else if (line === 'exit') {
@@ -179,12 +196,18 @@ export class InGameSession implements Session {
         }
         case ClientMessageType.InputSentClientRpc: {
           if (response.anyKey) {
-            const key = await this.terminal.waitForKeyPress(response.output, () => this.stop());
+            const key = await this.terminal.waitForKeyPress(
+              response.output,
+              () => this.stop()
+            );
             this.instance.sendInput(key.code);
             break;
           }
 
-          const input = await this.terminal.waitForInput(response.isPassword, response.output);
+          const input = await this.terminal.waitForInput(
+            response.isPassword,
+            response.output
+          );
           this.instance.sendInput(input);
           break;
         }
@@ -243,7 +266,7 @@ export class InGameSession implements Session {
       this.running = false;
       this.instance = null;
       this.agent = null;
-      await instance.dispose().catch(() => { });
+      await instance.dispose().catch(() => {});
       await agent.dispose();
       try {
         fs.rmSync(tempFolderPath, {
@@ -251,7 +274,10 @@ export class InGameSession implements Session {
           force: true
         });
       } catch (err) {
-        console.warn(`Failed to delete temporary folder: ${tempFolderPath}`, err);
+        console.warn(
+          `Failed to delete temporary folder: ${tempFolderPath}`,
+          err
+        );
       }
     }
   }

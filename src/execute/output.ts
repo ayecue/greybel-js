@@ -1,16 +1,17 @@
 import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
-import { createRequire } from 'node:module';
-import cliProgress from 'cli-progress';
-import { Tag, TagRecordOpen, transform} from 'text-mesh-transformer';
-import { NodeJSKeyEvent } from './key-event.js';
 import ansiEscapes from 'ansi-escapes';
+import cliProgress from 'cli-progress';
+import EventEmitter from 'node:events';
+import { createRequire } from 'node:module';
 import readline from 'readline';
+import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
+
 import { logger } from '../helper/logger.js';
 import {
   customInput as input,
   customPassword as password
 } from '../helper/prompts.js';
-import EventEmitter from 'node:events';
+import { NodeJSKeyEvent } from './key-event.js';
 
 // revisit once import type { 'json' } is supported by lts
 const require = createRequire(import.meta.url);
@@ -98,14 +99,14 @@ export class Terminal {
     { appendNewLine = true, replace = false }: Partial<InputOptions> = {}
   ) {
     const transformed = this.processLine(message);
-  
+
     if (replace) {
       process.stdout.write(ansiEscapes.eraseLines(this.previousLinesCount));
       this.previousLinesCount = 0;
     }
-  
+
     this.previousLinesCount += transformed.split('\n').length;
-  
+
     if (appendNewLine) {
       process.stdout.write(transformed + '\n');
       this.previousLinesCount++;
@@ -203,16 +204,19 @@ export class Terminal {
     });
   }
 
-  waitForKeyPress(message: string, onExit: () => void): Promise<NodeJSKeyEvent> {
+  waitForKeyPress(
+    message: string,
+    onExit: () => void
+  ): Promise<NodeJSKeyEvent> {
     return new Promise((resolve, _reject) => {
       this.print(message, {
         appendNewLine: false
       });
-  
+
       readline.emitKeypressEvents(process.stdin);
-  
+
       process.stdin.resume();
-  
+
       if (process.stdin.isTTY) {
         process.stdin.setRawMode(true);
       } else {
@@ -220,14 +224,14 @@ export class Terminal {
           "Stdin TTY is false. Therefore anyKey isn't able to detect any input. Press enter to continue."
         );
       }
-  
+
       process.stdin.once(
         'keypress',
         (_character: string, key: NodeJSKeyEvent) => {
           if (key.ctrl && key.name === 'c') {
             onExit();
           }
-  
+
           process.stdin.pause();
           resolve(key);
         }

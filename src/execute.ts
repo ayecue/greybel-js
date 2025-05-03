@@ -1,7 +1,11 @@
-import { ExecuteOptions, Session, SessionEnvironmentType } from './execute/types.js';
-import EnvMapper from './helper/env-mapper.js';
-import { MockSession } from './execute/mock/session.js';
 import { InGameSession } from './execute/in-game/session.js';
+import { MockSession } from './execute/mock/session.js';
+import {
+  ExecuteOptions,
+  Session,
+  SessionEnvironmentType
+} from './execute/types.js';
+import EnvMapper from './helper/env-mapper.js';
 
 export default async function execute(
   target: string,
