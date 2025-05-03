@@ -1,6 +1,6 @@
 {
   "name": "greybel-js",
-  "version": "3.6.13",
+  "version": "3.6.14",
   "engines": {
     "node": ">=20.17.0"
   },
@@ -34,7 +34,7 @@
     "crlf-normalize": "^1.0.20",
     "css-color-names": "^1.0.1",
     "glob": "^11.0.1",
-    "greyhack-message-hook-client": "~0.6.0",
+    "greyhack-message-hook-client": "~0.6.2",
     "greybel-gh-mock-intrinsics": "~5.5.12",
     "greybel-intrinsics": "~5.5.5",
     "greyscript-core": "~2.5.5",
