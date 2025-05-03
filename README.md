@@ -278,13 +278,16 @@ Arguments:
 	myscriptfile			File to execute
 
 Options:
-  -si, --silence              Silences any uncessary noise.
   -p, --params <params...>    Defines params used in script execution.
   -i, --interactive           Enter params in interactive mode instead of arguments.
   -d, --debug                 Enable debug mode which will cause to stop at debugger statements.
-  -s, --seed <seed>           Define seed value which is used to generate entities.
+  -s, --seed <seed>           Define seed value which is used to generate entities. (only relevant when using Mock environment)
   -ev, --env-files <file...>  Specifiy environment variables file.
   -vr, --env-vars <var...>    Specifiy environment variable definition.
+  -si, --silent               Silences any uncessary noise.
+  -et, --env-type <type>      Set interpreter environment. (Mock, In-Game)
+  -pt, --port <port>          Set connection port for In-Game interpreter. (only relevant when using In-Game environment)
+  -h, --help                  display help for command
 ```
 
 For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
@@ -302,13 +305,15 @@ Greybel supports the injection of environment variables for the interpreter as w
 
 Here is an [example](/example/environment-variables) of environment variable injection.
 
-## Local environment
+### Mock Environment
 
-[Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics) will automatically generate a local environment. It will also generate other computers, networks, filesystems etc on the fly. Generating is by default based on a seed called `test`. The seed can be modified with the seed option. While using the same seed-generated entities should stay consistent.
+When using this environment, Greybel will automatically generate a local setup, including simulated computers, networks, filesystems, and more—on the fly. By default, generation is based on a seed value called test. You can modify this seed using the appropriate option. Using the same seed consistently will ensure that the generated entities remain stable across sessions.
 
-The local computer setup is hard coded. The admin credentials are `root:test`. You will also have `crypto.so` and `metaxploit.so` on your local computer available.
+The local computer configuration is hardcoded, with admin credentials set to root:test. Additionally, your local machine will have crypto.so and metaxploit.so available by default.
 
-Examples:
+Note that the mock environment runs locally and is independent from the actual game. As a result, some intrinsic game behaviors may not be fully supported. If you need highly accurate debugging, consider using the [In-game Environment](#ingame-environment) instead.
+
+#### Examples:
 ```
 metax = include_lib("/lib/metaxploit.so") //returns metaxploit interface
 print(metax) //prints metaxploit
@@ -316,16 +321,11 @@ print(metax) //prints metaxploit
 myShell = get_shell("root", "test") //get local root shell
 ```
 
-## Greyscript API support
+### Ingame Environment
 
-The intrinsics to support the Greyscript API are provided by [Greybel Intrinsics](https://github.com/ayecue/greybel-intrinsics) and [Greybel GreyHack Intrinsics](https://github.com/ayecue/greybel-gh-mock-intrinsics). Keep in mind that not all of these functions are completely mocked. Also, only API that is available in the stable build will be implemented.
+This environment uses the actual in-game setup. To use it, you must have [message-hook](#message-hook) installed and the game running in singleplayer mode.
 
-Not yet supported:
-- `AptClient` - only polyfill which "returns not yet supported"
-- `Blockchain` - only polyfill which "returns not yet supported"
-- `Wallet` - only polyfill which "returns not yet supported"
-- `SubWallet` - only polyfill which "returns not yet supported"
-- `Coin` - only polyfill which "returns not yet supported"
+The key advantage of the in-game environment is that it mirrors real gameplay behavior exactly—unlike the mock environment, which is an approximation.
 
 ## Debugger (CLI)
 Pauses execution and enables you to inspect/debug your code. Additionally, you'll be able to inject code.
