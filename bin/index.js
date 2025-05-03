@@ -202,7 +202,8 @@ async function runExecuteCommand() {
     params: options.params,
     seed: options.seed,
     envFiles: options.envFiles,
-    envVars: options.envVars
+    envVars: options.envVars,
+    envType: 'Mock'
   });
 
   if (!success) {

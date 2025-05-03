@@ -9,8 +9,8 @@ import {
 } from 'greybel-interpreter';
 import { Interpreter } from 'greyscript-interpreter';
 
-import { logger } from '../helper/logger.js';
-import { ansiProvider, useColor } from './output.js';
+import { logger } from '../../helper/logger.js';
+import { ansiProvider, useColor } from '../output.js';
 
 export default class GrebyelPseudoDebugger extends Debugger {
   interpreter: Interpreter;
