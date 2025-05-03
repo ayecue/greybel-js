@@ -1,5 +1,5 @@
-#import HelloWord from library/hello-world;
-#import HelloName from library/hello-name;
+#import HelloWord from "library/hello-world";
+#import HelloName from "library/hello-name";
 
 HelloWord() //prints "Hello world!"
 HelloName("Joe") //prints "Hello Joe!"

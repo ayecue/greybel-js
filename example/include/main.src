@@ -1,3 +1,3 @@
-#include library/hello-world;
+#include "library/hello-world";
 
 hello() //prints "Hello world!"
