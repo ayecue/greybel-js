@@ -1519,3 +1519,9 @@ All notable changes to this project will be documented in this file.
 
 - fixed values to return identical instance of list
 - fixed sort ascending and descending
+
+## [3.6.13] - 03.05.2025
+
+- add new debugger which is able to interact with game environment (message-hook has to be updated)
+- make upload agent port configurable
+- make interpreter agent port configurable
