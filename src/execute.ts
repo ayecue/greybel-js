@@ -30,6 +30,10 @@ export default async function execute(
       debugMode: options.debugMode,
       port: options.port
     });
+  } else {
+    throw new Error(
+      'Invalid environment type. Please use "Mock" or "In-Game".'
+    );
   }
 
   await session.prepare();

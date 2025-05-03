@@ -1,7 +1,7 @@
 import { input } from '@inquirer/prompts';
 import { ModifierType } from 'another-ansi';
 import fs from 'fs';
-import { ContextAgent } from 'greyhack-message-hook-client';
+import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import pathUtils from 'path';
 
 import { findExistingPath } from '../../helper/document-uri-builder.js';
@@ -14,6 +14,9 @@ import {
   Session,
   SessionOptions
 } from '../types.js';
+import { logger } from '../../helper/logger.js';
+
+const { ContextAgent } = GreyHackMessageHookClientPkg;
 
 async function resolveFileExtension(path: string): Promise<string | null> {
   return await findExistingPath(
@@ -47,9 +50,10 @@ export class InGameSession implements Session {
     debugMode = false,
     port = 7777
   }: InGameSessionOptions) {
-    this.target = target;
+    this.target = pathUtils.resolve(target);
     this.debugMode = debugMode;
     this.envMapper = envMapper;
+    this.basePath = process.cwd();
     this.agent = new ContextAgent(
       {
         warn: () => {},
@@ -65,11 +69,17 @@ export class InGameSession implements Session {
     this.temporaryPath = 'temp-' + randomString(10);
   }
 
-  async prepare() {}
+  async prepare() {
+    const resolvedPath = pathUtils.join(
+      this.basePath,
+      this.temporaryPath
+    );
+
+    fs.mkdirSync(resolvedPath);
+  }
 
   async run(params: string[] = []): Promise<boolean> {
     const content = fs.readFileSync(this.target, 'utf8');
-    this.basePath = process.cwd();
     const { value } = await this.agent.createContext(
       `params=[${params
         .map((it) => `"${it.replace(/"/g, '""')}"`)
@@ -157,6 +167,20 @@ export class InGameSession implements Session {
           break;
         }
         case ClientMessageType.ContextBreakpointRpc: {
+          logger.info(
+            useColor('cyan', ansiProvider.modify(ModifierType.Bold, `REPL - Console`))
+          );
+          logger.info(
+            useColor('cyan', `You can execute code in the current context.`)
+          );
+          logger.info(``);
+          logger.info(
+            useColor(
+              'cyan',
+              `Press "next" or "exit" to either move to the next line or continue execution.`
+            )
+          );
+
           const lastBreakpoint = await this.parseContextBreakpoint(response);
           const line = await input({
             message: useColor(
@@ -253,7 +277,7 @@ export class InGameSession implements Session {
       await this.instance.resolvedFile(path, null);
       return;
     }
-    const content = fs.readFileSync(resolvedPath);
+    const content = fs.readFileSync(resolvedPath, 'utf8');
     await this.instance.resolvedFile(resolvedPath, content);
   }
 
@@ -263,22 +287,21 @@ export class InGameSession implements Session {
       const instance = this.instance;
       const tempFolderPath = pathUtils.join(this.basePath, this.temporaryPath);
 
-      this.running = false;
       this.instance = null;
       this.agent = null;
-      await instance.dispose().catch(() => {});
-      await agent.dispose();
+      instance.dispose().catch(() => {});
+      agent.dispose().catch(() => { });
+      
       try {
         fs.rmSync(tempFolderPath, {
           recursive: true,
           force: true
         });
       } catch (err) {
-        console.warn(
-          `Failed to delete temporary folder: ${tempFolderPath}`,
-          err
-        );
+        logger.warn(`Failed to delete temporary folder: ${tempFolderPath}`);
       }
+
+      this.running = false;
     }
   }
 }

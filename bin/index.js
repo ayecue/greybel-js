@@ -194,19 +194,19 @@ function attachExecuteCommand() {
     .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
     .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.')
     .option('-si, --silent', 'Silences any uncessary noise.')
-    .option('-et, --env-type', 'Set interpreter environment. (Mock, In-Game)')
-    .option('-pt, --port', 'Set connection port for In-Game interpreter. (only relevant when using In-Game environment)');
+    .option('-et, --env-type <type>', 'Set interpreter environment. (Mock, In-Game)')
+    .option('-pt, --port <port>', 'Set connection port for In-Game interpreter. (only relevant when using In-Game environment)');
 }
 
 async function runExecuteCommand() {
   const success = await execute(options.filepath, {
-    debugMode: options.debugMode,
+    debugMode: options.debug,
     params: options.params,
     seed: options.seed,
     envFiles: options.envFiles,
     envVars: options.envVars,
     envType: options.envType ?? 'Mock',
-    port: options.port,
+    port: options.port ? Number(options.port) : null,
   });
 
   if (!success) {
