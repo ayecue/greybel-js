@@ -459,11 +459,6 @@ This functionality can be used to save and also share code with others. Every ti
 
 Note: For the UI feature Greybel will try to transform TextMesh Pro Rich-Text tags into HTML. But due to the nature of TextMesh Pro Rich-Text tags some formatting will get lost. If you are looking for a proper preview of your output in Grey Hack please check out [the preview output feature from the VSCode extension](https://github.com/ayecue/greybel-vs?tab=readme-ov-file#preview-output).
 
-# Todo
-
-* implement missing intrinsics
-* improve mock environment
-
 # Contact
 
 If you have any questions, feature requests or need help feel free to join the [dedicated Greybel Discord](https://discord.gg/q8tR8F8u2M).
