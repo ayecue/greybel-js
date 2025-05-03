@@ -73,7 +73,8 @@ export default async function upload(
     logger.error(
       useColor(
         'red',
-        `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${err.message
+        `${ansiProvider.modify(ModifierType.Bold, 'Unexpected error')}: ${
+          err.message
         }\n${err.stack}`
       )
     );

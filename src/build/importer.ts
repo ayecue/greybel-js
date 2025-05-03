@@ -6,7 +6,7 @@ import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
 import { createBasePath } from '../helper/create-base-path.js';
 import { logger } from '../helper/logger.js';
 import { AgentType, ErrorResponseMessage } from './types.js';
-const { Agent } = GreyHackMessageHookClientPkg;
+const { GameAgent: Agent } = GreyHackMessageHookClientPkg;
 
 type ImportItem = {
   ingameFilepath: string;
@@ -83,10 +83,10 @@ class Importer {
     switch (this.agentType) {
       case AgentType.C2Light: {
         return new Agent({
-          warn: () => { },
-          error: () => { },
-          info: () => { },
-          debug: () => { }
+          warn: () => {},
+          error: () => {},
+          info: () => {},
+          debug: () => {}
         });
       }
     }

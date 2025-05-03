@@ -1,13 +1,7 @@
 import { AnotherAnsiProvider, ModifierType } from 'another-ansi';
 import ansiEscapes from 'ansi-escapes';
 import cliProgress from 'cli-progress';
-import {
-  KeyEvent,
-  OutputHandler,
-  PrintOptions,
-  UpdateOptions,
-  VM
-} from 'greybel-interpreter';
+import EventEmitter from 'node:events';
 import { createRequire } from 'node:module';
 import readline from 'readline';
 import { Tag, TagRecordOpen, transform } from 'text-mesh-transformer';
@@ -17,7 +11,7 @@ import {
   customInput as input,
   customPassword as password
 } from '../helper/prompts.js';
-import { NodeJSKeyEvent, nodeJSKeyEventToKeyEvent } from './key-event.js';
+import { NodeJSKeyEvent } from './key-event.js';
 
 // revisit once import type { 'json' } is supported by lts
 const require = createRequire(import.meta.url);
@@ -79,11 +73,15 @@ export function wrapWithTag(openTag: TagRecordOpen, content: string): string {
   return `<${openTag.type}>${content}</${openTag.type}>`;
 }
 
-export default class CLIOutputHandler extends OutputHandler {
+export interface InputOptions {
+  appendNewLine: boolean;
+  replace: boolean;
+}
+
+export class Terminal {
   previousLinesCount: number;
 
   constructor() {
-    super();
     this.previousLinesCount = 0;
   }
 
@@ -97,9 +95,8 @@ export default class CLIOutputHandler extends OutputHandler {
   }
 
   print(
-    _vm: VM,
     message: string,
-    { appendNewLine = true, replace = false }: Partial<PrintOptions> = {}
+    { appendNewLine = true, replace = false }: Partial<InputOptions> = {}
   ) {
     const transformed = this.processLine(message);
 
@@ -119,9 +116,8 @@ export default class CLIOutputHandler extends OutputHandler {
   }
 
   update(
-    _vm: VM,
     message: string,
-    { appendNewLine = false, replace = false }: Partial<UpdateOptions> = {}
+    { appendNewLine = false, replace = false }: Partial<InputOptions> = {}
   ) {
     const transformed = this.processLine(message);
 
@@ -139,11 +135,11 @@ export default class CLIOutputHandler extends OutputHandler {
     }
   }
 
-  clear(_vm: VM) {
+  clear() {
     console.clear();
   }
 
-  progress(vm: VM, timeout: number): Promise<void> {
+  progress(ev: EventEmitter, timeout: number): Promise<void> {
     const startTime = Date.now();
     const loadingBar = new cliProgress.SingleBar(
       {},
@@ -169,7 +165,7 @@ export default class CLIOutputHandler extends OutputHandler {
 
         if (elapsed > timeout) {
           loadingBar.update(timeout);
-          vm.getSignal().removeListener('exit', onExit);
+          ev.removeListener('exit', onExit);
           clearInterval(interval);
           loadingBar.stop();
           resolve();
@@ -179,11 +175,11 @@ export default class CLIOutputHandler extends OutputHandler {
         loadingBar.update(elapsed);
       });
 
-      vm.getSignal().once('exit', onExit);
+      ev.once('exit', onExit);
     });
   }
 
-  waitForInput(_vm: VM, isPassword: boolean, message: string): Promise<string> {
+  waitForInput(isPassword: boolean, message: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const transformed = transform(
         message,
@@ -208,9 +204,12 @@ export default class CLIOutputHandler extends OutputHandler {
     });
   }
 
-  waitForKeyPress(vm: VM, message: string): Promise<KeyEvent> {
+  waitForKeyPress(
+    message: string,
+    onExit: () => void
+  ): Promise<NodeJSKeyEvent> {
     return new Promise((resolve, _reject) => {
-      this.print(vm, message, {
+      this.print(message, {
         appendNewLine: false
       });
 
@@ -230,11 +229,11 @@ export default class CLIOutputHandler extends OutputHandler {
         'keypress',
         (_character: string, key: NodeJSKeyEvent) => {
           if (key.ctrl && key.name === 'c') {
-            vm.exit();
+            onExit();
           }
 
           process.stdin.pause();
-          resolve(nodeJSKeyEventToKeyEvent(key));
+          resolve(key);
         }
       );
     });

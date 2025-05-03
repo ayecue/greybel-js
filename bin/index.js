@@ -190,19 +190,23 @@ function attachExecuteCommand() {
     .option('-p, --params <params...>', 'Defines params used in script execution.')
     .option('-i, --interactive', 'Enter params in interactive mode instead of arguments.')
     .option('-d, --debug', 'Enable debug mode which will cause to stop at debugger statements.')
-    .option('-s, --seed <seed>', 'Define seed value which is used to generate entities.')
+    .option('-s, --seed <seed>', 'Define seed value which is used to generate entities. (only relevant when using Mock environment)')
     .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
     .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.')
-    .option('-si, --silent', 'Silences any uncessary noise.');
+    .option('-si, --silent', 'Silences any uncessary noise.')
+    .option('-et, --env-type <type>', 'Set interpreter environment. (Mock, In-Game)')
+    .option('-pt, --port <port>', 'Set connection port for In-Game interpreter. (only relevant when using In-Game environment)');
 }
 
 async function runExecuteCommand() {
   const success = await execute(options.filepath, {
-    debugMode: options.debugMode,
+    debugMode: options.debug,
     params: options.params,
     seed: options.seed,
     envFiles: options.envFiles,
-    envVars: options.envVars
+    envVars: options.envVars,
+    envType: options.envType ?? 'Mock',
+    port: options.port ? Number(options.port) : null,
   });
 
   if (!success) {

@@ -18,7 +18,8 @@ import {
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
 
-import CLIOutputHandler, { ansiProvider, useColor } from './execute/output.js';
+import CLIOutputHandler from './execute/mock/output.js';
+import { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
 import GrebyelPseudoDebugger from './repl/debugger.js';
 import { REPLOptions } from './repl/types.js';
