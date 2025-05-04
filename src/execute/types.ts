@@ -36,6 +36,7 @@ export enum SessionEnvironmentType {
 }
 
 export enum ClientMessageType {
+  DecipherTimeClientRpc = 77,
   ClearScreenClientRpc = 79,
   InputSentClientRpc = 80,
   PrintSentClientRpc = 81,

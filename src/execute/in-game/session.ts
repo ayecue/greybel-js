@@ -214,6 +214,11 @@ export class InGameSession implements Session {
 
           break;
         }
+        case ClientMessageType.DecipherTimeClientRpc: {
+          this.terminal.print('Deciphering...');
+          await this.endDecipher();
+          break;
+        }
         case ClientMessageType.ContextLoadFileRpc: {
           await this.resolveFile(response.filepath);
           break;
@@ -272,6 +277,11 @@ export class InGameSession implements Session {
   async setDebugMode(debugMode: boolean) {
     if (this.instance == null) return;
     await this.instance.setDebugMode(debugMode);
+  }
+
+  async endDecipher() {
+    if (this.instance == null) return;
+    await this.instance.endDecipher();
   }
 
   async goToNextLine() {
