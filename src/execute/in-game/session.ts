@@ -31,7 +31,20 @@ export interface InGameSessionOptions extends SessionOptions {
   port: number;
 }
 
+function sessionExitHandler(options, exitCode) {
+  InGameSession.singleton?.stop();
+}
+
+process.on('exit', sessionExitHandler);
+process.on('SIGINT', sessionExitHandler);
+process.on('SIGUSR1', sessionExitHandler);
+process.on('SIGUSR2', sessionExitHandler);
+process.on('SIGTERM', sessionExitHandler);
+process.on('uncaughtException', sessionExitHandler);
+
 export class InGameSession implements Session {
+  static singleton: InGameSession | null = null;
+
   private target: string;
   private debugMode: boolean;
   private envMapper: EnvMapper;
@@ -67,6 +80,7 @@ export class InGameSession implements Session {
     this.terminal = new Terminal();
     this.internalFileMap = {};
     this.temporaryPath = 'temp-' + randomString(10);
+    InGameSession.singleton = this;
   }
 
   async prepare() {
@@ -289,8 +303,8 @@ export class InGameSession implements Session {
 
       this.instance = null;
       this.agent = null;
-      instance.dispose().catch(() => {});
-      agent.dispose().catch(() => { });
+      await instance.dispose().catch(console.warn);
+      agent.dispose().catch(console.warn);
       
       try {
         fs.rmSync(tempFolderPath, {
@@ -299,6 +313,10 @@ export class InGameSession implements Session {
         });
       } catch (err) {
         logger.warn(`Failed to delete temporary folder: ${tempFolderPath}`);
+      }
+
+      if (InGameSession.singleton === this) {
+        InGameSession.singleton = null;
       }
 
       this.running = false;
