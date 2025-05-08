@@ -1538,3 +1538,8 @@ All notable changes to this project will be documented in this file.
 ## [3.6.16] - 04.05.2025
 
 - fix decipher process for in-game runtime
+
+## [3.6.17] - 09.05.2025
+
+- properly handle namespace import when used in files imported via native import_code - thanks for reporting to [@Dixeet](https://github.com/Dixeet)
+- properly support #import behaviour for in-game runtime
