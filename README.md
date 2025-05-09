@@ -120,7 +120,7 @@ The message-hook agent allows you to send messages to the game server through th
 ##### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/04764a08352a8bea45bb0612250727dc5928ed10/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/04fdeb4e0cb8f636dc211a61fd8c4c10493acdcf/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -130,7 +130,7 @@ The message-hook agent allows you to send messages to the game server through th
 ##### BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/04764a08352a8bea45bb0612250727dc5928ed10/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/04fdeb4e0cb8f636dc211a61fd8c4c10493acdcf/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
