@@ -18,7 +18,7 @@ interface HealthCheckResult {
 }
 
 export class VersionManager {
-  static LATEST_MESSAGE_HOOK_VERSION: string = '0.6.4';
+  static LATEST_MESSAGE_HOOK_VERSION: string = '0.6.5';
   static RESOURCE_LINK: string = 'https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook';
   
   private static _notificationInterval: number = 1000 * 60 * 60; // 1 hours
