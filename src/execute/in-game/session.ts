@@ -88,7 +88,8 @@ export class InGameSession implements Session {
     const healthcheck = await VersionManager.performHealthCheck(this.agent);
 
     if (!healthcheck.isSingleplayer) {
-      throw new Error('Can only start in-game debug session with singleplayer running!');
+      logger.error('Can only start in-game debug session with singleplayer running!');
+      process.exit(1);
     }
 
     const resolvedPath = pathUtils.join(
