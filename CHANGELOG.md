@@ -1547,3 +1547,4 @@ All notable changes to this project will be documented in this file.
 ## [3.6.18] - 11.05.2025
 
 - improve message-hook version checker
+- fix interpreter location context naming for default interpreter
