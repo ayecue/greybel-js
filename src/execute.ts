@@ -6,6 +6,7 @@ import {
   SessionEnvironmentType
 } from './execute/types.js';
 import EnvMapper from './helper/env-mapper.js';
+import { VersionManager } from './helper/version-manager.js';
 
 export default async function execute(
   target: string,
@@ -30,6 +31,8 @@ export default async function execute(
       debugMode: options.debugMode,
       port: options.port
     });
+
+    VersionManager.triggerContextAgentHealthcheck();
   } else {
     throw new Error(
       'Invalid environment type. Please use "Mock" or "In-Game".'

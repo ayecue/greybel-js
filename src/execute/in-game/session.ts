@@ -15,6 +15,7 @@ import {
   SessionOptions
 } from '../types.js';
 import { logger } from '../../helper/logger.js';
+import { VersionManager } from '../../helper/version-manager.js';
 
 const { ContextAgent } = GreyHackMessageHookClientPkg;
 
@@ -84,6 +85,12 @@ export class InGameSession implements Session {
   }
 
   async prepare() {
+    const healthcheck = await VersionManager.performHealthCheck(this.agent);
+
+    if (!healthcheck.isSingleplayer) {
+      throw new Error('Can only start in-game debug session with singleplayer running!');
+    }
+
     const resolvedPath = pathUtils.join(
       this.basePath,
       this.temporaryPath
