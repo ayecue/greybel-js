@@ -28,6 +28,7 @@ import { createParseResult } from './helper/create-parse-result.js';
 import EnvMapper from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
 import { TranspilerResourceProvider } from './helper/resource.js';
+import { VersionManager } from './helper/version-manager.js';
 
 function getTranspilerOptions(options: BuildOptions) {
   let buildType = BuildType.DEFAULT;
@@ -192,6 +193,8 @@ export default async function build(
           allowImport: buildOptions.allowImport
         }
       });
+
+      await VersionManager.triggerContextAgentHealthcheck();
     }
 
     logger.debug(`Build done. Available in ${outputPath}.`);

@@ -8,6 +8,7 @@ import { AgentType } from './build/types.js';
 import { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
 import { parseUploadOptions, UploadOptions } from './upload/types.js';
+import { VersionManager } from './helper/version-manager.js';
 
 const getFiles = async (target: string): Promise<string[]> => {
   const stat = await fs.stat(target);
@@ -67,6 +68,8 @@ export default async function upload(
         allowImport: false
       }
     });
+
+    await VersionManager.triggerContextAgentHealthcheck();
 
     logger.debug(`Import done. Files available in ${ingameDirectory}.`);
   } catch (err: any) {
