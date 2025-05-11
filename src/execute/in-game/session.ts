@@ -108,7 +108,7 @@ export class InGameSession implements Session {
         .join(',')}];` + content,
       this.target,
       this.basePath,
-      'myprogram',
+      'x',
       this.debugMode,
       [],
       this.envMapper.toMap(true)

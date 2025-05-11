@@ -175,7 +175,7 @@ export class VersionManager {
       await this.verifyContextAgent(agent);
       await agent.dispose();
     } catch (err) {
-      console.error('Error while triggering agent healthceck: ', err.message);
+      console.error('Error while triggering agent healtcheck: ', err.message);
     }
   }
 }
