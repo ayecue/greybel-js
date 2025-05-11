@@ -1553,3 +1553,9 @@ All notable changes to this project will be documented in this file.
 
 - fix file transfer process for in-game runtime
 - add programName setting for in-game runtime
+
+## [3.6.20] - 11.05.2025
+
+- add port option to build and import
+- add programName option to execute
+- make --env-type not case sensitive
