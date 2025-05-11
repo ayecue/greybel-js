@@ -29,7 +29,8 @@ async function resolveFileExtension(path: string): Promise<string | null> {
 }
 
 export interface InGameSessionOptions extends SessionOptions {
-  port: number;
+  port?: number;
+  programName?: string;
 }
 
 function sessionExitHandler(options, exitCode) {
@@ -56,17 +57,20 @@ export class InGameSession implements Session {
   private agent: any;
   private running: boolean = false;
   private basePath: string | null = null;
+  private programName: string;
   private crashed: boolean = false;
 
   constructor({
     target,
     envMapper,
     debugMode = false,
-    port = 7777
+    port = 7777,
+    programName = 'myprogram'
   }: InGameSessionOptions) {
     this.target = pathUtils.resolve(target);
     this.debugMode = debugMode;
     this.envMapper = envMapper;
+    this.programName = programName;
     this.basePath = process.cwd();
     this.agent = new ContextAgent(
       {
@@ -108,7 +112,7 @@ export class InGameSession implements Session {
         .join(',')}];` + content,
       this.target,
       this.basePath,
-      'myprogram',
+      this.programName,
       this.debugMode,
       [],
       this.envMapper.toMap(true)

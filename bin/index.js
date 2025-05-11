@@ -107,6 +107,7 @@ function attachBuildCommand() {
       'Specify this option if you would like all of the imported folders to be deleted after the auto-compilation process is completed regardless of any files may remaining in those folders.'
     )
     .option('-ci, --create-ingame', 'Enable transfer of your code files into Grey Hack.')
+    .option('-pt, --port <port>', 'Set connection port for message-hook. (only relevant when using --create-ingame)')
     // output
     .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
     .option('-si, --silent', 'Silences any uncessary noise.');
@@ -135,7 +136,8 @@ async function runBuildCommand() {
     maxChars: options.maxChars ? parseInt(options.maxChars) : null,
     ingameDirectory: options.ingameDirectory,
     createIngame: options.createIngame,
-    autoCompilePurge: options.autoCompilePurge
+    autoCompilePurge: options.autoCompilePurge,
+    port: options.port ? Number(options.port) : null,
   });
 
   if (!success) {
@@ -158,13 +160,14 @@ function attachImportCommand() {
       options.targetpath = targetpath;
       Object.assign(options, uploadOptions);
     })
-    // installer + in-game importer
-    .option('-id, --ingame-directory <ingameDirectory>', 'In-game directory target path.');
+    .option('-id, --ingame-directory <ingameDirectory>', 'In-game directory target path.')
+    .option('-pt, --port <port>', 'Set connection port for message-hook.');
 }
 
 async function runImportCommand() {
   const success = await upload(options.targetpath, {
-    ingameDirectory: options.ingameDirectory
+    ingameDirectory: options.ingameDirectory,
+    port: options.port ? Number(options.port) : null,
   });
 
   if (!success) {
@@ -195,7 +198,8 @@ function attachExecuteCommand() {
     .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.')
     .option('-si, --silent', 'Silences any uncessary noise.')
     .option('-et, --env-type <type>', 'Set interpreter environment. (Mock, In-Game)')
-    .option('-pt, --port <port>', 'Set connection port for In-Game interpreter. (only relevant when using In-Game environment)');
+    .option('-pt, --port <port>', 'Set connection port for message-hook. (only relevant when using In-Game environment)')
+    .option('-pg, --programName <port>', 'Set program name used in runtime. (only relevant when using In-Game environment)');
 }
 
 async function runExecuteCommand() {
@@ -207,6 +211,7 @@ async function runExecuteCommand() {
     envVars: options.envVars,
     envType: options.envType ?? 'Mock',
     port: options.port ? Number(options.port) : null,
+    programName: options.programName,
   });
 
   if (!success) {

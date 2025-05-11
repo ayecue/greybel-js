@@ -4,7 +4,6 @@ import { glob } from 'glob';
 import path from 'path';
 
 import { executeImport } from './build/importer.js';
-import { AgentType } from './build/types.js';
 import { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
 import { parseUploadOptions, UploadOptions } from './upload/types.js';
@@ -61,7 +60,7 @@ export default async function upload(
         result[item.path] = item.content;
         return result;
       }, {}),
-      agentType: AgentType.C2Light,
+      port: options.port,
       autoCompile: {
         enabled: false,
         purge: false,

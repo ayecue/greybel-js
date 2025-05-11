@@ -10,10 +10,6 @@ export enum ErrorResponseMessage {
   InvalidCommand = 'Unknown error: invalid command.'
 }
 
-export enum AgentType {
-  C2Light = 'message-hook'
-}
-
 export enum BeautifyIndentationType {
   Tab = 'tab',
   Whitespace = 'whitespace'
@@ -41,6 +37,7 @@ export interface BuildOptions {
   ingameDirectory: string;
   createIngame: boolean;
   autoCompilePurge: boolean;
+  port: number;
 }
 
 const defaultOptions: BuildOptions = {
@@ -62,7 +59,8 @@ const defaultOptions: BuildOptions = {
   envVars: [],
   ingameDirectory: '/root/',
   createIngame: false,
-  autoCompilePurge: false
+  autoCompilePurge: false,
+  port: 7777
 };
 
 export const parseBuildOptions = (options: Partial<BuildOptions>) => {
@@ -96,6 +94,7 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     ingameDirectory: options.ingameDirectory ?? defaultOptions.ingameDirectory,
     createIngame: options.createIngame ?? defaultOptions.createIngame,
     autoCompilePurge:
-      options.autoCompilePurge ?? defaultOptions.autoCompilePurge
+      options.autoCompilePurge ?? defaultOptions.autoCompilePurge,
+    port: options.port ?? defaultOptions.port
   };
 };
