@@ -1559,3 +1559,8 @@ All notable changes to this project will be documented in this file.
 - add port option to build and import
 - add programName option to execute
 - make --env-type not case sensitive
+
+## [3.6.21] - 11.05.2025
+
+- fix error response in message-hook for BepInEx 5.x.x.x version
+- minor optimizations in message-hook
