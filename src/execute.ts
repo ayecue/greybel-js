@@ -32,7 +32,7 @@ export default async function execute(
       port: options.port
     });
 
-    VersionManager.triggerContextAgentHealthcheck();
+    await VersionManager.triggerContextAgentHealthcheck();
   } else {
     throw new Error(
       'Invalid environment type. Please use "Mock" or "In-Game".'

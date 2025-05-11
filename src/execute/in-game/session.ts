@@ -108,6 +108,7 @@ export class InGameSession implements Session {
         .join(',')}];` + content,
       this.target,
       this.basePath,
+      'myprogram',
       this.debugMode,
       [],
       this.envMapper.toMap(true)
@@ -227,6 +228,11 @@ export class InGameSession implements Session {
           await this.endDecipher();
           break;
         }
+        case ClientMessageType.SendFileSizeClientRpc: {
+          this.terminal.print('Transfer...');
+          await this.endDownload();
+          break;
+        }
         case ClientMessageType.ContextLoadFileRpc: {
           await this.resolveFile(response.filepath);
           break;
@@ -290,6 +296,11 @@ export class InGameSession implements Session {
   async endDecipher() {
     if (this.instance == null) return;
     await this.instance.endDecipher();
+  }
+
+  async endDownload() {
+    if (this.instance == null) return;
+    await this.instance.endDownload();
   }
 
   async goToNextLine() {
