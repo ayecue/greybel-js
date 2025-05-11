@@ -1548,3 +1548,8 @@ All notable changes to this project will be documented in this file.
 
 - improve message-hook version checker
 - fix interpreter location context naming for default interpreter
+
+## [3.6.19] - 11.05.2025
+
+- fix file transfer process for in-game runtime
+- add programName setting for in-game runtime
