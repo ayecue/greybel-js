@@ -36,6 +36,7 @@ export enum SessionEnvironmentType {
 }
 
 export enum ClientMessageType {
+  SendFileSizeClientRpc = 75,
   DecipherTimeClientRpc = 77,
   ClearScreenClientRpc = 79,
   InputSentClientRpc = 80,
