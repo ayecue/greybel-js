@@ -7,6 +7,7 @@ export interface ExecuteOptions {
   params: string[];
   seed?: string;
   port?: number;
+  programName?: string;
   envFiles: string[];
   envVars: string[];
   debugMode: boolean;
@@ -31,8 +32,8 @@ export interface SessionOptions {
 declare var Session: SessionConstructor;
 
 export enum SessionEnvironmentType {
-  Mock = 'Mock',
-  Ingame = 'In-Game'
+  Mock = 'mock',
+  Ingame = 'in-game'
 }
 
 export enum ClientMessageType {

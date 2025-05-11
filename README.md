@@ -98,6 +98,7 @@ Options:
   -acp, --auto-compile-purge                     Specify this option if you would like all of the imported folders to be deleted after the
                                                  auto-compilation process is completed regardless of any files may remaining in those folders.
   -ci, --create-ingame                           Enable transfer of your code files into Grey Hack.
+  -pt, --port <port>                             Set connection port for message-hook. (only relevant when using --create-ingame)
   -dbf, --disable-build-folder                   Disable the default behaviour of putting the output into a build folder. It will instead just
                                                  put it wherever you set the output destination to.
   -h, --help                                     display help for command
@@ -285,8 +286,9 @@ Options:
   -ev, --env-files <file...>  Specifiy environment variables file.
   -vr, --env-vars <var...>    Specifiy environment variable definition.
   -si, --silent               Silences any uncessary noise.
-  -et, --env-type <type>      Set interpreter environment. (Mock, In-Game)
-  -pt, --port <port>          Set connection port for In-Game interpreter. (only relevant when using In-Game environment)
+  -et, --env-type <type>      Set interpreter environment. (mock, in-game)
+  -pt, --port <port>          Set connection port for message-hook. (only relevant when using In-Game environment)
+  -pg, --programName <port>   Set program name used in runtime. (only relevant when using In-Game environment)
   -h, --help                  display help for command
 ```
 
@@ -397,6 +399,7 @@ Arguments:
 Options:
   -V, --version                                  output the version number
   -id, --ingame-directory <ingameDirectory>      In-game directory target path.
+  -pt, --port <port>                             Set connection port for message-hook.
   -h, --help                                     display help for command
 ```
 

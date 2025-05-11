@@ -14,7 +14,6 @@ import path from 'path';
 import { executeImport } from './build/importer.js';
 import { createInstaller } from './build/installer.js';
 import {
-  AgentType,
   BeautifyIndentationType,
   BuildOptions,
   parseBuildOptions
@@ -186,7 +185,7 @@ export default async function build(
         rootPaths: filepaths,
         ingameDirectory: buildOptions.ingameDirectory,
         result,
-        agentType: AgentType.C2Light,
+        port: buildOptions.port,
         autoCompile: {
           enabled: buildOptions.autoCompile,
           purge: buildOptions.autoCompilePurge,

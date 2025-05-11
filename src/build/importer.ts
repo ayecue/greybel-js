@@ -5,7 +5,7 @@ import path from 'path';
 import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
 import { createBasePath } from '../helper/create-base-path.js';
 import { logger } from '../helper/logger.js';
-import { AgentType, ErrorResponseMessage } from './types.js';
+import { ErrorResponseMessage } from './types.js';
 const { GameAgent: Agent } = GreyHackMessageHookClientPkg;
 
 type ImportItem = {
@@ -30,8 +30,8 @@ export interface ImporterOptions {
   rootDir: string;
   ingameDirectory: string;
   rootPaths: string[];
-  agentType: AgentType;
   result: TranspilerParseResult;
+  port: number;
   autoCompile: {
     enabled: boolean;
     purge: boolean;
@@ -41,10 +41,10 @@ export interface ImporterOptions {
 
 class Importer {
   private importRefs: Map<string, ImportItem>;
-  private agentType: AgentType;
   private rootDir: string;
   private rootPaths: string[];
   private ingameDirectory: string;
+  private port: number;
   private autoCompile: {
     enabled: boolean;
     purge: boolean;
@@ -54,9 +54,9 @@ class Importer {
   constructor(options: ImporterOptions) {
     this.rootDir = options.rootDir;
     this.rootPaths = options.rootPaths;
+    this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.rootDir, options.result);
-    this.agentType = options.agentType;
     this.autoCompile = options.autoCompile;
   }
 
@@ -80,16 +80,12 @@ class Importer {
   }
 
   async createAgent(): Promise<any> {
-    switch (this.agentType) {
-      case AgentType.C2Light: {
-        return new Agent({
-          warn: () => {},
-          error: () => {},
-          info: () => {},
-          debug: () => {}
-        });
-      }
-    }
+    return new Agent({
+      warn: () => {},
+      error: () => {},
+      info: () => {},
+      debug: () => {}
+    }, this.port);
   }
 
   async import(): Promise<ImportResult[]> {
@@ -166,8 +162,7 @@ enum CommonImportErrorReason {
 }
 
 const reportFailure = (
-  failedItems: ImportResultFailure[],
-  agentType: AgentType
+  failedItems: ImportResultFailure[]
 ): void => {
   const uniqueErrorReasons = new Set(failedItems.map((it) => it.reason));
 
@@ -218,7 +213,7 @@ export const executeImport = async (
   ) as ImportResultFailure[];
 
   if (successfulItems.length === 0) {
-    reportFailure(failedItems, options.agentType);
+    reportFailure(failedItems);
     return false;
   } else if (failedItems.length > 0) {
     logger.debug(

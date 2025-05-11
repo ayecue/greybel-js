@@ -1,5 +1,6 @@
 export interface UploadOptions {
   ingameDirectory: string;
+  port?: number;
 }
 
 const defaultOptions: UploadOptions = {

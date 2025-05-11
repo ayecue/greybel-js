@@ -13,22 +13,24 @@ export default async function execute(
   options: Partial<ExecuteOptions> = {}
 ): Promise<boolean> {
   const envMapper = new EnvMapper();
+  const envType = options.envType?.toLocaleLowerCase();
   let session: Session;
 
   envMapper.load(options.envFiles, options.envVars);
 
-  if (options.envType === SessionEnvironmentType.Mock) {
+  if (envType === SessionEnvironmentType.Mock) {
     session = new MockSession({
       target,
       envMapper,
       debugMode: options.debugMode,
       seed: options.seed
     });
-  } else if (options.envType === SessionEnvironmentType.Ingame) {
+  } else if (envType === SessionEnvironmentType.Ingame) {
     session = new InGameSession({
       target,
       envMapper,
       debugMode: options.debugMode,
+      programName: options.programName,
       port: options.port
     });
 
