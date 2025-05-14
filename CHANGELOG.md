@@ -1568,4 +1568,4 @@ All notable changes to this project will be documented in this file.
 ## [3.6.22] - 14.05.2025
 
 - support clear message in handler for in-game runtime
-- properly send keyCode for keys such as arrow keys, space, enter etc
+- properly send keyCode for keys such as arrow keys, space, enter etc for in-game runtime
