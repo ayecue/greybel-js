@@ -16,6 +16,7 @@ import {
 } from '../types.js';
 import { logger } from '../../helper/logger.js';
 import { VersionManager } from '../../helper/version-manager.js';
+import { transformInternalKeyEventToKeyEvent } from '../key-event.js';
 
 const { ContextAgent } = GreyHackMessageHookClientPkg;
 
@@ -261,7 +262,7 @@ export class InGameSession implements Session {
               response.output,
               () => this.stop()
             );
-            this.instance.sendInput(key.code);
+            this.instance.sendInput(transformInternalKeyEventToKeyEvent(key));
             break;
           }
 

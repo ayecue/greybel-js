@@ -6,7 +6,7 @@ import {
   VM
 } from 'greybel-interpreter';
 
-import { nodeJSKeyEventToKeyEvent } from '../key-event.js';
+import { transformInternalKeyEventToKeyEvent } from '../key-event.js';
 import { Terminal } from '../output.js';
 
 export default class CLIOutputHandler extends OutputHandler {
@@ -56,6 +56,6 @@ export default class CLIOutputHandler extends OutputHandler {
       vm.exit();
     });
 
-    return nodeJSKeyEventToKeyEvent(key);
+    return transformInternalKeyEventToKeyEvent(key);
   }
 }
