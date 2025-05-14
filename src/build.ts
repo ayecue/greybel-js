@@ -24,7 +24,7 @@ import {
   getMatchingSegments
 } from './helper/create-base-path.js';
 import { createParseResult } from './helper/create-parse-result.js';
-import EnvMapper from './helper/env-mapper.js';
+import { EnvironmentVariablesManager } from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
 import { TranspilerResourceProvider } from './helper/resource.js';
 import { VersionManager } from './helper/version-manager.js';
@@ -75,7 +75,7 @@ function findRootPath(filePaths: string[]): string | null {
 async function transpileFile(
   filepath: string,
   buildOptions: BuildOptions,
-  envMapper: EnvMapper,
+  envMapper: EnvironmentVariablesManager,
   transpilerOptions: ReturnType<typeof getTranspilerOptions>
 ) {
   const target = path.resolve(filepath);
@@ -119,7 +119,7 @@ export default async function build(
   output: string,
   options: Partial<BuildOptions> = {}
 ): Promise<boolean> {
-  const envMapper = new EnvMapper();
+  const envMapper = new EnvironmentVariablesManager();
   const buildOptions: BuildOptions = parseBuildOptions(options);
   const transpilerOptions = getTranspilerOptions(buildOptions);
   const filepaths = await glob(filepath, {

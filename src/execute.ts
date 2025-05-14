@@ -5,14 +5,14 @@ import {
   Session,
   SessionEnvironmentType
 } from './execute/types.js';
-import EnvMapper from './helper/env-mapper.js';
+import { EnvironmentVariablesManager } from './helper/env-mapper.js';
 import { VersionManager } from './helper/version-manager.js';
 
 export default async function execute(
   target: string,
   options: Partial<ExecuteOptions> = {}
 ): Promise<boolean> {
-  const envMapper = new EnvMapper();
+  const envMapper = new EnvironmentVariablesManager();
   const envType = options.envType?.toLocaleLowerCase();
   let session: Session;
 

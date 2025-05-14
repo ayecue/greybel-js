@@ -1,6 +1,6 @@
 import { CustomFunction } from 'greybel-interpreter';
 
-import EnvMapper from '../helper/env-mapper.js';
+import { EnvironmentVariablesManager } from '../helper/env-mapper.js';
 
 export interface ExecuteOptions {
   api: Map<string, CustomFunction>;
@@ -25,7 +25,7 @@ export interface SessionConstructor {
 
 export interface SessionOptions {
   target: string;
-  envMapper: EnvMapper;
+  envMapper: EnvironmentVariablesManager;
   debugMode?: boolean;
 }
 

@@ -12,7 +12,7 @@ import {
 import { init as initIntrinsics } from 'greybel-intrinsics';
 import { Interpreter } from 'greyscript-interpreter';
 
-import EnvMapper from '../../helper/env-mapper.js';
+import { EnvironmentVariablesManager } from '../../helper/env-mapper.js';
 import { logger } from '../../helper/logger.js';
 import { InterpreterResourceProvider } from '../../helper/resource.js';
 import { ansiProvider, useColor } from '../output.js';
@@ -27,7 +27,7 @@ export interface MockSessionOptions extends SessionOptions {
 export class MockSession implements Session {
   private target: string;
   private debugMode: boolean;
-  private envMapper: EnvMapper;
+  private envMapper: EnvironmentVariablesManager;
   private resourceHandler: InterpreterResourceProvider;
   private runtime: Interpreter;
   private seed?: string;

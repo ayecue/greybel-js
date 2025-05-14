@@ -42,7 +42,7 @@ function loadConfigFile(
   return readVarLines(content.split('\n'), map);
 }
 
-export default class EnvironmentVariables {
+export class EnvironmentVariablesManager {
   map: { [key: string]: string };
 
   constructor() {

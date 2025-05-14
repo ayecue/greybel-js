@@ -11,7 +11,7 @@ import {
   customInput as input,
   customPassword as password
 } from '../helper/prompts.js';
-import { NodeJSKeyEvent } from './key-event.js';
+import { InternalKeyEvent } from './key-event.js';
 
 // revisit once import type { 'json' } is supported by lts
 const require = createRequire(import.meta.url);
@@ -207,7 +207,7 @@ export class Terminal {
   waitForKeyPress(
     message: string,
     onExit: () => void
-  ): Promise<NodeJSKeyEvent> {
+  ): Promise<InternalKeyEvent> {
     return new Promise((resolve, _reject) => {
       this.print(message, {
         appendNewLine: false
@@ -227,7 +227,7 @@ export class Terminal {
 
       process.stdin.once(
         'keypress',
-        (_character: string, key: NodeJSKeyEvent) => {
+        (_character: string, key: InternalKeyEvent) => {
           if (key.ctrl && key.name === 'c') {
             onExit();
           }

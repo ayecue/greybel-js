@@ -1,7 +1,7 @@
 import { KeyCode } from 'greybel-gh-mock-intrinsics';
 import { KeyEvent } from 'greybel-interpreter';
 
-export interface NodeJSKeyEvent {
+export interface InternalKeyEvent {
   sequence: string;
   name: string;
   ctrl: boolean;
@@ -10,7 +10,7 @@ export interface NodeJSKeyEvent {
   code?: string;
 }
 
-export enum NodeJSKey {
+export enum InternalKey {
   Return = 'return',
   Escape = 'escape',
   Space = 'space',
@@ -40,74 +40,140 @@ export enum NodeJSKey {
   F12 = 'f12'
 }
 
-export function nodeJSKeyEventToKeyEvent(
-  nodeJSKeyEvent: NodeJSKeyEvent
+export function transformInternalKeyEventToKeyEvent(
+  InternalKeyEvent: InternalKeyEvent
 ): KeyEvent {
   const create = (keyCode: number, code: string): KeyEvent => ({
     keyCode,
     code
   });
 
-  switch (nodeJSKeyEvent.name) {
-    case NodeJSKey.Return:
+  switch (InternalKeyEvent.name) {
+    case InternalKey.Return:
       return create(KeyCode.Enter, 'Enter');
-    case NodeJSKey.Escape:
+    case InternalKey.Escape:
       return create(KeyCode.Escape, 'Escape');
-    case NodeJSKey.Space:
+    case InternalKey.Space:
       return create(KeyCode.Space, 'Space');
-    case NodeJSKey.Tab:
+    case InternalKey.Tab:
       return create(KeyCode.Tab, 'Tab');
-    case NodeJSKey.Left:
+    case InternalKey.Left:
       return create(KeyCode.LeftArrow, 'ArrowLeft');
-    case NodeJSKey.Up:
+    case InternalKey.Up:
       return create(KeyCode.UpArrow, 'ArrowUp');
-    case NodeJSKey.Right:
+    case InternalKey.Right:
       return create(KeyCode.RightArrow, 'ArrowRight');
-    case NodeJSKey.Down:
+    case InternalKey.Down:
       return create(KeyCode.DownArrow, 'ArrowDown');
-    case NodeJSKey.Backspace:
+    case InternalKey.Backspace:
       return create(KeyCode.Backspace, 'Backspace');
-    case NodeJSKey.Insert:
+    case InternalKey.Insert:
       return create(KeyCode.Insert, 'Insert');
-    case NodeJSKey.Home:
+    case InternalKey.Home:
       return create(KeyCode.Home, 'Home');
-    case NodeJSKey.End:
+    case InternalKey.End:
       return create(KeyCode.End, 'End');
-    case NodeJSKey.PageDown:
+    case InternalKey.PageDown:
       return create(KeyCode.PageDown, 'PageDown');
-    case NodeJSKey.PageUp:
+    case InternalKey.PageUp:
       return create(KeyCode.PageUp, 'PageUp');
-    case NodeJSKey.Delete:
+    case InternalKey.Delete:
       return create(KeyCode.Delete, 'Delete');
-    case NodeJSKey.F1:
+    case InternalKey.F1:
       return create(KeyCode.F1, 'F1');
-    case NodeJSKey.F2:
+    case InternalKey.F2:
       return create(KeyCode.F2, 'F2');
-    case NodeJSKey.F3:
+    case InternalKey.F3:
       return create(KeyCode.F3, 'F3');
-    case NodeJSKey.F4:
+    case InternalKey.F4:
       return create(KeyCode.F4, 'F4');
-    case NodeJSKey.F5:
+    case InternalKey.F5:
       return create(KeyCode.F5, 'F5');
-    case NodeJSKey.F6:
+    case InternalKey.F6:
       return create(KeyCode.F6, 'F6');
-    case NodeJSKey.F7:
+    case InternalKey.F7:
       return create(KeyCode.F7, 'F7');
-    case NodeJSKey.F8:
+    case InternalKey.F8:
       return create(KeyCode.F8, 'F8');
-    case NodeJSKey.F9:
+    case InternalKey.F9:
       return create(KeyCode.F9, 'F9');
-    case NodeJSKey.F10:
+    case InternalKey.F10:
       return create(KeyCode.F10, 'F10');
-    case NodeJSKey.F11:
+    case InternalKey.F11:
       return create(KeyCode.F11, 'F11');
-    case NodeJSKey.F12:
+    case InternalKey.F12:
       return create(KeyCode.F12, 'F12');
     default: {
-      const char = nodeJSKeyEvent.sequence;
+      const char = InternalKeyEvent.sequence;
       const charCode = char.charCodeAt(0);
-      const code = nodeJSKeyEvent.name || char;
+      const code = InternalKeyEvent.name || char;
       return { charCode, code };
+    }
+  }
+}
+
+
+export function transformInternalKeyEventToToIngameKeyCodeValue(
+  InternalKeyEvent: InternalKeyEvent
+): string {
+  switch (InternalKeyEvent.name) {
+    case InternalKey.Return:
+      return String.fromCharCode(13);
+    case InternalKey.Escape:
+      return 'Escape';
+    case InternalKey.Space:
+      return String.fromCharCode(32);
+    case InternalKey.Tab:
+      return 'Tab';
+    case InternalKey.Left:
+      return 'LeftArrow';
+    case InternalKey.Up:
+      return 'UpArrow';
+    case InternalKey.Right:
+      return 'RightArrow';
+    case InternalKey.Down:
+      return 'DownArrow';
+    case InternalKey.Backspace:
+      return 'Backspace';
+    case InternalKey.Insert:
+      return 'Insert';
+    case InternalKey.Home:
+      return 'Home';
+    case InternalKey.End:
+      return 'End';
+    case InternalKey.PageDown:
+      return 'PageDown';
+    case InternalKey.PageUp:
+      return 'PageUp';
+    case InternalKey.Delete:
+      return 'Delete';
+    case InternalKey.F1:
+      return 'F1';
+    case InternalKey.F2:
+      return 'F2';
+    case InternalKey.F3:
+      return 'F3';
+    case InternalKey.F4:
+      return 'F4';
+    case InternalKey.F5:
+      return 'F5';
+    case InternalKey.F6:
+      return 'F6';
+    case InternalKey.F7:
+      return 'F7';
+    case InternalKey.F8:
+      return 'F8';
+    case InternalKey.F9:
+      return 'F9';
+    case InternalKey.F10:
+      return 'F10';
+    case InternalKey.F11:
+      return 'F11';
+    case InternalKey.F12:
+      return 'F12';
+    default: {
+      const char = InternalKeyEvent.sequence;
+      return char;
     }
   }
 }
