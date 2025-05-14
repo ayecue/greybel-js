@@ -5,7 +5,7 @@ import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import pathUtils from 'path';
 
 import { findExistingPath } from '../../helper/document-uri-builder.js';
-import EnvMapper from '../../helper/env-mapper.js';
+import { EnvironmentVariablesManager } from '../../helper/env-mapper.js';
 import { randomString } from '../../helper/random-string.js';
 import { ansiProvider, Terminal, useColor } from '../output.js';
 import {
@@ -50,7 +50,7 @@ export class InGameSession implements Session {
 
   private target: string;
   private debugMode: boolean;
-  private envMapper: EnvMapper;
+  private envMapper: EnvironmentVariablesManager;
   private instance: any;
   private terminal: Terminal;
   private internalFileMap: Record<string, string>;
