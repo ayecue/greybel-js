@@ -1569,3 +1569,8 @@ All notable changes to this project will be documented in this file.
 
 - support clear message in handler for in-game runtime
 - properly send keyCode for keys such as arrow keys, space, enter etc for in-game runtime
+
+## [3.6.23] - 15.05.2025
+
+- fixed a sporadic NullPointerException in the parser occurring during the auto-compile phase of the create-ingame process on Windows
+- improved reliability of the auto-compile script in the create-ingame process on Windows by implementing retry logic for temporary file detection. This addresses premature exits in the file copy operation that caused occasional desynchronization
