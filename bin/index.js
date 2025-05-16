@@ -111,13 +111,15 @@ function attachBuildCommand() {
     .option('-pt, --port <port>', 'Set connection port for message-hook. (only relevant when using --create-ingame)')
     // output
     .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
-    .option('-si, --silent', 'Silences any uncessary noise.');
+    .option('-si, --silent', 'Silences any uncessary noise.')
+    .option('-of, --outputFilename <name>', 'Specify the name of the main output file.');
 }
 
 async function runBuildCommand() {
   const success = await build(options.filepath, options.output, {
     // output
     disableBuildFolder: options.disableBuildFolder,
+    outputFilename: options.outputFilename,
     // transformer
     fileExtensions: options.fileExtensions,
     envFiles: options.envFiles,

@@ -19,6 +19,7 @@ export enum BeautifyIndentationType {
 
 export interface BuildOptions {
   disableBuildFolder: boolean;
+  outputFilename: string | null;
   // transformer
   fileExtensions: string[] | null;
   uglify: boolean;
@@ -44,6 +45,7 @@ export interface BuildOptions {
 }
 
 const defaultOptions: BuildOptions = {
+  outputFilename: null,
   fileExtensions: null,
   disableBuildFolder: false,
   uglify: false,
@@ -95,6 +97,7 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     maxChars: options.maxChars ?? defaultOptions.maxChars,
     envFiles: options.envFiles ?? defaultOptions.envFiles,
     envVars: options.envVars ?? defaultOptions.envVars,
+    outputFilename: options.outputFilename ?? defaultOptions.outputFilename,
     fileExtensions: parseFileExtensions(options.fileExtensions) ?? defaultOptions.fileExtensions,
     ingameDirectory: options.ingameDirectory ?? defaultOptions.ingameDirectory,
     createIngame: options.createIngame ?? defaultOptions.createIngame,
