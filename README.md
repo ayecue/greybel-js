@@ -292,7 +292,7 @@ Options:
   -pt, --port <port>                      Set connection port for message-hook. (only relevant when using In-Game environment)
   -pg, --programName <port>               Set program name used in runtime. (only relevant when using In-Game environment)
   -fe, --file-extensions <extension...>   Define allowed file extensions.
-  -h, --help                  display help for command
+  -h, --help                              display help for command
 ```
 
 For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).
