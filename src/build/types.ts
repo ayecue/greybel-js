@@ -1,3 +1,5 @@
+import { parseFileExtensions } from "../helper/parse-file-extensions.js";
+
 export enum ErrorResponseMessage {
   OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
   DesktopUI = 'Error: Desktop GUI is not running.',
@@ -18,6 +20,7 @@ export enum BeautifyIndentationType {
 export interface BuildOptions {
   disableBuildFolder: boolean;
   // transformer
+  fileExtensions: string[] | null;
   uglify: boolean;
   beautify: boolean;
   beautifyKeepParentheses: boolean;
@@ -41,6 +44,7 @@ export interface BuildOptions {
 }
 
 const defaultOptions: BuildOptions = {
+  fileExtensions: null,
   disableBuildFolder: false,
   uglify: false,
   beautify: false,
@@ -91,6 +95,7 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     maxChars: options.maxChars ?? defaultOptions.maxChars,
     envFiles: options.envFiles ?? defaultOptions.envFiles,
     envVars: options.envVars ?? defaultOptions.envVars,
+    fileExtensions: parseFileExtensions(options.fileExtensions) ?? defaultOptions.fileExtensions,
     ingameDirectory: options.ingameDirectory ?? defaultOptions.ingameDirectory,
     createIngame: options.createIngame ?? defaultOptions.createIngame,
     autoCompilePurge:

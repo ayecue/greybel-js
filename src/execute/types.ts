@@ -12,6 +12,7 @@ export interface ExecuteOptions {
   envVars: string[];
   debugMode: boolean;
   envType: SessionEnvironmentType;
+  fileExtensions: string[] | null;
 }
 
 export interface Session {
