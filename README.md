@@ -78,6 +78,7 @@ Arguments:
 Options:
   -V, --version                                  output the version number
   -si, --silence                                 Silences any uncessary noise.
+  -fe, --file-extensions <extension...>          Define allowed file extensions.
   -ev, --env-files <file...>                     Specifiy environment variables file.
   -vr, --env-vars <var...>                       Specifiy environment variable definition.
   -en, --exclude-namespaces <namespace...>       Exclude namespaces from optimization. This option is only used in combination with uglifying.
@@ -101,6 +102,7 @@ Options:
   -pt, --port <port>                             Set connection port for message-hook. (only relevant when using --create-ingame)
   -dbf, --disable-build-folder                   Disable the default behaviour of putting the output into a build folder. It will instead just
                                                  put it wherever you set the output destination to.
+  -of, --outputFilename <name>                   Specify the name of the main output file.
   -h, --help                                     display help for command
 ```
 
@@ -279,16 +281,17 @@ Arguments:
 	myscriptfile			File to execute
 
 Options:
-  -p, --params <params...>    Defines params used in script execution.
-  -i, --interactive           Enter params in interactive mode instead of arguments.
-  -d, --debug                 Enable debug mode which will cause to stop at debugger statements.
-  -s, --seed <seed>           Define seed value which is used to generate entities. (only relevant when using Mock environment)
-  -ev, --env-files <file...>  Specifiy environment variables file.
-  -vr, --env-vars <var...>    Specifiy environment variable definition.
-  -si, --silent               Silences any uncessary noise.
-  -et, --env-type <type>      Set interpreter environment. (mock, in-game)
-  -pt, --port <port>          Set connection port for message-hook. (only relevant when using In-Game environment)
-  -pg, --programName <port>   Set program name used in runtime. (only relevant when using In-Game environment)
+  -p, --params <params...>                Defines params used in script execution.
+  -i, --interactive                       Enter params in interactive mode instead of arguments.
+  -d, --debug                             Enable debug mode which will cause to stop at debugger statements.
+  -s, --seed <seed>                       Define seed value which is used to generate entities. (only relevant when using Mock environment)
+  -ev, --env-files <file...>              Specifiy environment variables file.
+  -vr, --env-vars <var...>                Specifiy environment variable definition.
+  -si, --silent                           Silences any uncessary noise.
+  -et, --env-type <type>                  Set interpreter environment. (mock, in-game)
+  -pt, --port <port>                      Set connection port for message-hook. (only relevant when using In-Game environment)
+  -pg, --programName <port>               Set program name used in runtime. (only relevant when using In-Game environment)
+  -fe, --file-extensions <extension...>   Define allowed file extensions.
   -h, --help                  display help for command
 ```
 
