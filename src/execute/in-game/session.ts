@@ -17,15 +17,14 @@ import {
 import { logger } from '../../helper/logger.js';
 import { VersionManager } from '../../helper/version-manager.js';
 import { transformInternalKeyEventToKeyEvent } from '../key-event.js';
+import { configurationManager } from '../../helper/configuration-manager.js';
 
 const { ContextAgent } = GreyHackMessageHookClientPkg;
 
-async function resolveFileExtension(path: string): Promise<string | null> {
+async function resolveFileExtension(path: string, allowedFileExtension: string[]): Promise<string | null> {
   return await findExistingPath(
     path,
-    `${path}.src`,
-    `${path}.gs`,
-    `${path}.ms`
+    ...allowedFileExtension.map((ext) => `${path}.${ext}`)
   );
 }
 
@@ -142,7 +141,9 @@ export class InGameSession implements Session {
       };
     }
 
-    const resolvedPath = await resolveFileExtension(path);
+    const resolvedPath = await resolveFileExtension(path, configurationManager.get<string[]>(
+      'fileExtensions'
+    ));
 
     return {
       resolvedPath: resolvedPath ?? path,
@@ -320,7 +321,11 @@ export class InGameSession implements Session {
 
   private async resolveFile(path: string) {
     if (this.instance == null) return;
-    const resolvedPath = await resolveFileExtension(path);
+    
+    const resolvedPath = await resolveFileExtension(path, configurationManager.get<string[]>(
+      'fileExtensions'
+    ));
+
     if (resolvedPath == null) {
       await this.instance.resolvedFile(path, null);
       return;

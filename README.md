@@ -13,6 +13,7 @@ CLI that provides a set of tools for working with GreyScript. GreyScript is a sc
 - [Language server](https://github.com/ayecue/greybel-languageserver/blob/main/packages/node/README.md): LSP supporting GreyScript.
 
 **Projects Using Greybel**
+- [gsse](https://github.com/viper-guild/gsse): GreyScript Script Extender is a modular library that aims to expand the current scripting framework of greyscript.
 - [minizod](https://github.com/cantemizyurek/minizod): A lightweight, Zod-inspired validation library for MiniScript.
 - [Minesweeper](https://github.com/ayecue/minesweeper-gs): A Minesweeper game created in GreyScript. (Demo project)
 - [JSON Parser](https://github.com/ayecue/json): JSON parsing functionality. (Demo project)
@@ -78,6 +79,7 @@ Arguments:
 Options:
   -V, --version                                  output the version number
   -si, --silence                                 Silences any uncessary noise.
+  -fe, --file-extensions <extension...>          Define allowed file extensions.
   -ev, --env-files <file...>                     Specifiy environment variables file.
   -vr, --env-vars <var...>                       Specifiy environment variable definition.
   -en, --exclude-namespaces <namespace...>       Exclude namespaces from optimization. This option is only used in combination with uglifying.
@@ -101,6 +103,7 @@ Options:
   -pt, --port <port>                             Set connection port for message-hook. (only relevant when using --create-ingame)
   -dbf, --disable-build-folder                   Disable the default behaviour of putting the output into a build folder. It will instead just
                                                  put it wherever you set the output destination to.
+  -of, --outputFilename <name>                   Specify the name of the main output file.
   -h, --help                                     display help for command
 ```
 
@@ -121,7 +124,7 @@ The message-hook agent allows you to send messages to the game server through th
 ##### BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/b844900715080ac191b0db59e69520da7d8f7595/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/531bb2b769be2c7ac78ddd488b90b4ae8aed7b3c/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -131,7 +134,7 @@ The message-hook agent allows you to send messages to the game server through th
 ##### BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/b844900715080ac191b0db59e69520da7d8f7595/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/531bb2b769be2c7ac78ddd488b90b4ae8aed7b3c/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -279,17 +282,18 @@ Arguments:
 	myscriptfile			File to execute
 
 Options:
-  -p, --params <params...>    Defines params used in script execution.
-  -i, --interactive           Enter params in interactive mode instead of arguments.
-  -d, --debug                 Enable debug mode which will cause to stop at debugger statements.
-  -s, --seed <seed>           Define seed value which is used to generate entities. (only relevant when using Mock environment)
-  -ev, --env-files <file...>  Specifiy environment variables file.
-  -vr, --env-vars <var...>    Specifiy environment variable definition.
-  -si, --silent               Silences any uncessary noise.
-  -et, --env-type <type>      Set interpreter environment. (mock, in-game)
-  -pt, --port <port>          Set connection port for message-hook. (only relevant when using In-Game environment)
-  -pg, --programName <port>   Set program name used in runtime. (only relevant when using In-Game environment)
-  -h, --help                  display help for command
+  -p, --params <params...>                Defines params used in script execution.
+  -i, --interactive                       Enter params in interactive mode instead of arguments.
+  -d, --debug                             Enable debug mode which will cause to stop at debugger statements.
+  -s, --seed <seed>                       Define seed value which is used to generate entities. (only relevant when using Mock environment)
+  -ev, --env-files <file...>              Specifiy environment variables file.
+  -vr, --env-vars <var...>                Specifiy environment variable definition.
+  -si, --silent                           Silences any uncessary noise.
+  -et, --env-type <type>                  Set interpreter environment. (mock, in-game)
+  -pt, --port <port>                      Set connection port for message-hook. (only relevant when using In-Game environment)
+  -pg, --programName <port>               Set program name used in runtime. (only relevant when using In-Game environment)
+  -fe, --file-extensions <extension...>   Define allowed file extensions.
+  -h, --help                              display help for command
 ```
 
 For Windows, you can use something like PowerShell or [ConEmu](https://conemu.github.io/). Or just use the UI. GitBash is not recommended due to a [TTY issue with node](https://github.com/ayecue/greybel-js/issues/34).

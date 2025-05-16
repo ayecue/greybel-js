@@ -1,5 +1,6 @@
 import fs from 'fs';
 import pathUtil from 'path';
+import { configurationManager } from './configuration-manager.js';
 
 export function checkFileExists(file) {
   return fs.promises
@@ -42,7 +43,9 @@ export class DocumentURIBuilder {
 
   constructor(rootPath: string) {
     this.rootPath = rootPath;
-    this.fileExtensions = ['gs', 'ms', 'src'];
+    this.fileExtensions = configurationManager.get<string[]>(
+      'fileExtensions'
+    );
   }
 
   private getFromRootPath(path: string): string {

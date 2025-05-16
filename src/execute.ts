@@ -5,13 +5,24 @@ import {
   Session,
   SessionEnvironmentType
 } from './execute/types.js';
+import { configurationManager } from './helper/configuration-manager.js';
 import { EnvironmentVariablesManager } from './helper/env-mapper.js';
+import { parseFileExtensions } from './helper/parse-file-extensions.js';
 import { VersionManager } from './helper/version-manager.js';
 
 export default async function execute(
   target: string,
   options: Partial<ExecuteOptions> = {}
 ): Promise<boolean> {
+  const fileExtensions = parseFileExtensions(options.fileExtensions);
+
+  if (fileExtensions) {
+    configurationManager.set(
+      'fileExtensions',
+      fileExtensions
+    );
+  }
+
   const envMapper = new EnvironmentVariablesManager();
   const envType = options.envType?.toLocaleLowerCase();
   let session: Session;

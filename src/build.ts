@@ -28,6 +28,7 @@ import { EnvironmentVariablesManager } from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
 import { TranspilerResourceProvider } from './helper/resource.js';
 import { VersionManager } from './helper/version-manager.js';
+import { configurationManager } from './helper/configuration-manager.js';
 
 function getTranspilerOptions(options: BuildOptions) {
   let buildType = BuildType.DEFAULT;
@@ -132,16 +133,45 @@ export default async function build(
     return false;
   }
 
+  if (options.fileExtensions) {
+    configurationManager.set(
+      'fileExtensions',
+      options.fileExtensions
+    );
+  }
+
   const rootPath = findRootPath(filepaths);
 
   envMapper.load(buildOptions.envFiles, buildOptions.envVars);
 
   try {
-    const allResults = await Promise.all(
-      filepaths.map((filepath) =>
-        transpileFile(filepath, buildOptions, envMapper, transpilerOptions)
-      )
-    );
+    let allResults: TranspilerParseResult[];
+
+    if (buildOptions.outputFilename != null && buildOptions.outputFilename != '') {
+      if (filepaths.length > 1) {
+        logger.warn(useColor('yellow', 'Cannot use output filename option when targeting multiple files!'));
+        return false;
+      }
+
+      const mainFilepath = filepaths[0];
+      const outFilepath = path.join(path.dirname(mainFilepath), buildOptions.outputFilename);
+      const mainResult = await transpileFile(mainFilepath, buildOptions, envMapper, transpilerOptions);
+
+      // Remove the main file from the result and add the output filename
+      const mainContent = mainResult[mainFilepath];
+      delete mainResult[mainFilepath];
+      mainResult[outFilepath] = mainContent;
+      filepaths[0] = outFilepath;
+
+      allResults = [mainResult];
+    } else {
+      allResults = await Promise.all(
+        filepaths.map((filepath) =>
+          transpileFile(filepath, buildOptions, envMapper, transpilerOptions)
+        )
+      );
+    }
+
     const result = mergeTranspileResults(allResults);
 
     let outputPath = path.resolve(output);

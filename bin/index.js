@@ -64,6 +64,7 @@ function attachBuildCommand() {
       Object.assign(options, buildOptions);
     })
     // transformer
+    .option('-fe, --file-extensions <extension...>', 'Define allowed file extensions.')
     .option('-ev, --env-files <file...>', 'Specifiy environment variables file.')
     .option('-vr, --env-vars <var...>', 'Specifiy environment variable definition.')
     .option(
@@ -110,14 +111,17 @@ function attachBuildCommand() {
     .option('-pt, --port <port>', 'Set connection port for message-hook. (only relevant when using --create-ingame)')
     // output
     .option('-dbf, --disable-build-folder', 'Disable the default behaviour of putting the output into a build folder. It will instead just put it wherever you set the output destination to.')
-    .option('-si, --silent', 'Silences any uncessary noise.');
+    .option('-si, --silent', 'Silences any uncessary noise.')
+    .option('-of, --outputFilename <name>', 'Specify the name of the main output file.');
 }
 
 async function runBuildCommand() {
   const success = await build(options.filepath, options.output, {
     // output
     disableBuildFolder: options.disableBuildFolder,
+    outputFilename: options.outputFilename,
     // transformer
+    fileExtensions: options.fileExtensions,
     envFiles: options.envFiles,
     envVars: options.envVars,
     uglify: options.uglify,
@@ -199,11 +203,13 @@ function attachExecuteCommand() {
     .option('-si, --silent', 'Silences any uncessary noise.')
     .option('-et, --env-type <type>', 'Set interpreter environment. (Mock, In-Game)')
     .option('-pt, --port <port>', 'Set connection port for message-hook. (only relevant when using In-Game environment)')
-    .option('-pg, --programName <port>', 'Set program name used in runtime. (only relevant when using In-Game environment)');
+    .option('-pg, --programName <port>', 'Set program name used in runtime. (only relevant when using In-Game environment)')
+    .option('-fe, --file-extensions <extension...>', 'Define allowed file extensions.');
 }
 
 async function runExecuteCommand() {
   const success = await execute(options.filepath, {
+    fileExtensions: options.fileExtensions,
     debugMode: options.debug,
     params: options.params,
     seed: options.seed,
