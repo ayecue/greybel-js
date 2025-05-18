@@ -1579,3 +1579,7 @@ All notable changes to this project will be documented in this file.
 
 - added option to define additional file extensions considered during file extension auto-resolution - thanks for the suggestion to [@EntitySeaker](https://github.com/EntitySeaker)
 - added option to define the name of the main output file - thanks for the suggestion to [@EntitySeaker](https://github.com/EntitySeaker)
+
+## [3.6.25] - 17.05.2025
+
+- run message handling in message-hook on the Unity main thread to prevent Mono-related crashes - fixes rare, seemingly random crashes caused by background task execution
