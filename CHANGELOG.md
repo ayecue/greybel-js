@@ -1586,4 +1586,4 @@ All notable changes to this project will be documented in this file.
 
 ## [3.6.26] - 21.05.2025
 
-- add more safety and supress log in exit process handler for app controller in message-hook related to in-game runtime
+- add more safety and suppress log in exit process handler for app controller in message-hook related to in-game runtime
