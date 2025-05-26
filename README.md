@@ -444,7 +444,7 @@ The Message Hook enables Greybel to communicate with the game server via the gam
 
 To use the Message Hook, you must first install [BepInEx](https://github.com/BepInEx/BepInEx), followed by the appropriate plugin. Instructions are provided below for both [BepInEx](https://github.com/BepInEx/BepInEx) 5.x.x and 6.x.x versions.
 
-##### BepInEx 5.x.x
+## BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
 2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/52912097b0f2982bd98243a6ac515e57c16c7235/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
@@ -454,7 +454,7 @@ To use the Message Hook, you must first install [BepInEx](https://github.com/Bep
       - **Linux**: `"/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" || %command%`
 4. **Launch Grey Hack** via Steam to load BepInEx 5 with the plugin.
 
-##### BepInEx 6.x.x
+## BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
 2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/52912097b0f2982bd98243a6ac515e57c16c7235/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
