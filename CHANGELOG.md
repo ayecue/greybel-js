@@ -1584,6 +1584,7 @@ All notable changes to this project will be documented in this file.
 
 - run message handling in message-hook on the Unity main thread to prevent Mono-related crashes - fixes rare, seemingly random crashes caused by background task execution
 
-## [3.6.26] - 21.05.2025
+## [3.6.26] - 26.05.2025
 
 - add more safety and suppress log in exit process handler for app controller in message-hook related to in-game runtime
+- update assembly to latest version
