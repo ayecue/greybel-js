@@ -1588,3 +1588,7 @@ All notable changes to this project will be documented in this file.
 
 - add more safety and suppress log in exit process handler for app controller in message-hook related to in-game runtime
 - update assembly to latest version
+
+## [3.6.27] - 27.05.2025
+
+- maintain parser behaviour for native builds without imports in-game related to message-hook
