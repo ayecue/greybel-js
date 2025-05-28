@@ -203,7 +203,7 @@ function attachExecuteCommand() {
     .option('-si, --silent', 'Silences any uncessary noise.')
     .option('-et, --env-type <type>', 'Set interpreter environment. (Mock, In-Game)')
     .option('-pt, --port <port>', 'Set connection port for message-hook. (only relevant when using In-Game environment)')
-    .option('-pg, --programName <port>', 'Set program name used in runtime. (only relevant when using In-Game environment)')
+    .option('-pg, --programName <name>', 'Set program name used in runtime. (only relevant when using In-Game environment)')
     .option('-fe, --file-extensions <extension...>', 'Define allowed file extensions.');
 }
 

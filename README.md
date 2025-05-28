@@ -261,7 +261,7 @@ Options:
   -si, --silent                           Silences any uncessary noise.
   -et, --env-type <type>                  Set interpreter environment. (mock, in-game)
   -pt, --port <port>                      Set connection port for message-hook. (only relevant when using In-Game environment)
-  -pg, --programName <port>               Set program name used in runtime. (only relevant when using In-Game environment)
+  -pg, --programName <name>               Set program name used in runtime. (only relevant when using In-Game environment)
   -fe, --file-extensions <extension...>   Define allowed file extensions.
   -h, --help                              display help for command
 ```
