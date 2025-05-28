@@ -1596,3 +1596,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.28] - 28.05.2025
 
 - fix textmate definition for meta-typing pattern
+
+## [3.6.29] - 29.05.2025
+
+- fix potential desync in client message forwarder related to message-hook

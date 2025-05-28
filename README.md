@@ -261,7 +261,7 @@ Options:
   -si, --silent                           Silences any uncessary noise.
   -et, --env-type <type>                  Set interpreter environment. (mock, in-game)
   -pt, --port <port>                      Set connection port for message-hook. (only relevant when using In-Game environment)
-  -pg, --programName <port>               Set program name used in runtime. (only relevant when using In-Game environment)
+  -pg, --programName <name>               Set program name used in runtime. (only relevant when using In-Game environment)
   -fe, --file-extensions <extension...>   Define allowed file extensions.
   -h, --help                              display help for command
 ```
@@ -447,7 +447,7 @@ To use the Message Hook, you must first install [BepInEx](https://github.com/Bep
 ## BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/c90b668de8435d7dd6525315f014b95d5d05ded2/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/2db21e3566ec3bd1bae9218d19a8a88e1154b616/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -457,7 +457,7 @@ To use the Message Hook, you must first install [BepInEx](https://github.com/Bep
 ## BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/c90b668de8435d7dd6525315f014b95d5d05ded2/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/2db21e3566ec3bd1bae9218d19a8a88e1154b616/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
