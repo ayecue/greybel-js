@@ -1600,3 +1600,8 @@ All notable changes to this project will be documented in this file.
 ## [3.6.29] - 29.05.2025
 
 - fix potential desync in client message forwarder related to message-hook
+
+## [3.6.30] - 29.05.2025
+
+- use BepInEx threading helper instead of directly accessing the Unity thread to prevent race conditions in the message hook
+- update assembly to latest version
