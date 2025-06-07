@@ -1605,3 +1605,9 @@ All notable changes to this project will be documented in this file.
 
 - use BepInEx threading helper instead of directly accessing the Unity thread to prevent race conditions in the message hook
 - update assembly to latest version
+
+## [3.6.31] - 07.06.2025
+
+- update current_path description to make it clear that it returns a folder
+- update get_custom_object example to show a more common usecase
+- update typeof description to include partial object types
