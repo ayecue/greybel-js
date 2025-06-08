@@ -19,14 +19,12 @@ export interface EditorRootOptions {
   onError?: (err: any) => void;
   onChange?: (content: string) => void;
   onCreate?: (context: EditorContext) => void;
-  collapsed: boolean;
 }
 
 export function EditorRoot({
   initialContent,
   onError,
   onChange,
-  collapsed,
   onCreate
 }: EditorRootOptions) {
   const [editorContext, setEditorContext] = useState<EditorContext | null>(
@@ -93,10 +91,7 @@ export function EditorRoot({
 
   return (
     <div
-      className={buildClassName('editor-root', {
-        shouldAdd: collapsed,
-        className: 'fullscreen'
-      })}
+      className={buildClassName('editor-root')}
     >
       <Editor
         model={editorContext.model}

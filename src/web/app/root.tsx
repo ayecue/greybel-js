@@ -8,6 +8,7 @@ import ExternalLinks, { AppExternalLink } from './common/external-links.js';
 import EditorPopups, { DebugPopup } from './common/popups.js';
 import { EditorContext, EditorRoot } from './editor/index.js';
 import { buildClassName, guid, setQueryStringParameter } from './utils.js';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
 export interface RootOptions {
   initContent?: string;
@@ -22,7 +23,6 @@ export function Root(options: RootOptions) {
   const [errorEntries, setErrorEntries] = useState<ErrorEntry[]>([]);
   const [share, setShare] = useState<boolean>(false);
   const [debug, setDebug] = useState<DebugPopup | undefined>(undefined);
-  const [collapsed, setCollapsed] = useState(false);
   const [savePending, setSavePending] = useState(false);
   const activeErrors: ErrorEntry[] = [];
 
@@ -90,77 +90,64 @@ export function Root(options: RootOptions) {
         debug={debug}
       />
       <div className="editor-control">
-        <EditorRoot
-          initialContent={options.initContent}
-          onChange={(newContent) => {
-            setContent(newContent);
-            localStorage.setItem('ide-content', newContent);
-          }}
-          onError={(err) => showError(err.message)}
-          onCreate={(context) => setEditorContext(context)}
-          collapsed={collapsed}
-        />
-        <div
-          className={buildClassName('editor-side-panel', {
-            shouldAdd: collapsed,
-            className: 'hidden'
-          })}
-        >
-          <a
-            className={buildClassName(
-              'collapse',
-              'material-icons',
-              { shouldAdd: collapsed, className: 'closed' },
-              { shouldAdd: !collapsed, className: 'open' }
-            )}
-            onClick={() => setCollapsed(!collapsed)}
-            title="Collapse"
-          ></a>
-          <div>
-            <div className="editor-actions">
-              <div className="editor-main">
-                <a
-                  id="share"
-                  className="material-icons"
-                  title="Share"
-                  onClick={() => setShare(true)}
-                ></a>
-                <a
-                  id="save"
-                  className={buildClassName('material-icons', {
-                    shouldAdd: savePending,
-                    className: 'disabled'
-                  })}
-                  title="Save"
-                  onClick={() => onSave()}
-                ></a>
-              </div>
-              <Transpile
-                content={content}
-                onError={(err) => showError(err.message)}
-              />
-              <Execute
-                content={content}
-                onNewActiveLine={(line) =>
-                  editorContext.instance.revealLineInCenter(line)
-                }
-                onError={(err) => showError(err.message)}
-                setDebug={setDebug}
-              />
-              <div className="editor-help">
-                <label>Try this:</label>
-                <code>
-                  <span className="identifier">get_shell</span>(
-                  <span className="string">"root"</span>,{' '}
-                  <span className="string">"test"</span>){' '}
-                  <span className="comment">
-                    //to receive root shell on your local pc
-                  </span>
-                </code>
-              </div>
-            </div>
+        <PanelGroup direction="vertical" id="root-group">
+          <div
+            className={buildClassName('editor-top-panel')}
+          >
+            <a
+              id="share"
+              className="material-icons"
+              title="Share"
+              onClick={() => setShare(true)}
+            ></a>
+            <a
+              id="save"
+              className={buildClassName('material-icons', {
+                shouldAdd: savePending,
+                className: 'disabled'
+              })}
+              title="Save"
+              onClick={() => onSave()}
+            ></a>
           </div>
-        </div>
+          <Panel id="top-panel">
+            <EditorRoot
+              initialContent={options.initContent}
+              onChange={(newContent) => {
+                setContent(newContent);
+                localStorage.setItem('ide-content', newContent);
+              }}
+              onError={(err) => showError(err.message)}
+              onCreate={(context) => setEditorContext(context)}
+            />
+          </Panel>
+          <PanelResizeHandle id="resize-root-handle" />
+          <Panel id="bottom-panel" collapsedSize={5} minSize={5} defaultSize={10} collapsible={true}>
+            <div
+              className={buildClassName('editor-bottom-panel')}
+            >
+              <PanelGroup direction="horizontal" id="actions-group">
+                <Panel id="left-panel" collapsedSize={10} minSize={10} collapsible={true}>
+                  <Transpile
+                    content={content}
+                    onError={(err) => showError(err.message)}
+                  />
+                </Panel>
+                <PanelResizeHandle id="resize-actions-handle" />
+                <Panel id="right-panel" collapsedSize={20} minSize={20} collapsible={true}>
+                  <Execute
+                    content={content}
+                    onNewActiveLine={(line) =>
+                      editorContext.instance.revealLineInCenter(line)
+                    }
+                    onError={(err) => showError(err.message)}
+                    setDebug={setDebug}
+                    />
+                </Panel>
+              </PanelGroup>
+            </div>
+          </Panel>
+        </PanelGroup>
       </div>
       <div className="readme">
         <div className="github-button">

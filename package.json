@@ -49,6 +49,7 @@
     "open": "^10.1.0",
     "pacote": "^21.0.0",
     "react-github-btn": "^1.4.0",
+    "react-resizable-panels": "^3.0.2",
     "semver": "^7.7.1",
     "text-mesh-transformer": "^1.4.1",
     "transform-json-to-html": "^1.1.1",
