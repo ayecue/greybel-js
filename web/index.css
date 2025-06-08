@@ -38,12 +38,11 @@ body {
 
 /* Panels */
 #left-panel {
-  border-right: 2px solid #CCC;
   padding: 5px;
 }
 
 #right-panel {
-  border-right: 2px solid #CCC;
+  border-left: 2px solid #CCC;
   padding: 5px;
 }
 
@@ -52,13 +51,8 @@ body {
   border-bottom: 2px solid #CCC;
 }
 
-#bottom-panel {
-  border-bottom: 2px solid #CCC;
-}
-
 /* Editor Top Panel */
 .editor-top-panel {
-  height: 40px;
   padding: 5px;
 }
 
@@ -108,6 +102,11 @@ body {
 }
 
 /* Editor Bottom Panel */
+.editor-bottom-panel {
+  height: 100%;
+  border-bottom: 2px solid #CCC;
+}
+
 .editor-bottom-panel a {
   display: inline-block;
   padding: 5px;

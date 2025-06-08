@@ -126,7 +126,7 @@ export function Root(options: RootOptions) {
             <div
               className={buildClassName('editor-bottom-panel')}
             >
-              <PanelGroup direction="horizontal" id="actions-group">
+              <PanelGroup direction="horizontal" id="actions-group" style={{ overflow: 'auto'}}>
                 <Panel id="left-panel" collapsedSize={10} minSize={10} collapsible={true}>
                   <Transpile
                     content={content}
@@ -134,7 +134,7 @@ export function Root(options: RootOptions) {
                   />
                 </Panel>
                 <PanelResizeHandle id="resize-actions-handle" />
-                <Panel id="right-panel" collapsedSize={20} minSize={20} collapsible={true}>
+                <Panel id="right-panel" collapsedSize={20} minSize={20} collapsible={true} style={{ overflow: 'auto'}}>
                   <Execute
                     content={content}
                     onNewActiveLine={(line) =>
