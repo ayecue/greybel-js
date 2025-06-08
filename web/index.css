@@ -56,6 +56,17 @@ body {
   padding: 5px;
 }
 
+.editor-top-panel .editor-hint {
+  height: 30px;
+  left: 105px;
+  color: #f2de04;
+  right: 75px;
+  position: absolute;
+  display: inline-block;
+  top: 10px;
+  overflow: auto;
+}
+
 .editor-top-panel a {
   display: inline-block;
   padding: 5px;

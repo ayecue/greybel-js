@@ -109,6 +109,10 @@ export function Root(options: RootOptions) {
               title="Save"
               onClick={() => onSave()}
             ></a>
+            <span className="editor-hint">
+              This environment is a simulation and may not fully replicate every detail of the real in-game environment.
+              To access the root account, use the username root with the password test.
+            </span>
           </div>
           <Panel id="top-panel">
             <EditorRoot
@@ -122,7 +126,7 @@ export function Root(options: RootOptions) {
             />
           </Panel>
           <PanelResizeHandle id="resize-root-handle" />
-          <Panel id="bottom-panel" collapsedSize={5} minSize={5} defaultSize={10} collapsible={true}>
+          <Panel id="bottom-panel" collapsedSize={5} minSize={5} defaultSize={40} collapsible={true}>
             <div
               className={buildClassName('editor-bottom-panel')}
             >
