@@ -1611,3 +1611,4 @@ All notable changes to this project will be documented in this file.
 - update current_path description to make it clear that it returns a folder
 - update get_custom_object example to show a more common usecase
 - update typeof description to include partial object types
+- update web editor style
