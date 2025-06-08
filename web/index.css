@@ -52,6 +52,10 @@ body {
   border-bottom: 2px solid #CCC;
 }
 
+#bottom-panel {
+  border-bottom: 2px solid #CCC;
+}
+
 /* Editor Top Panel */
 .editor-top-panel {
   height: 40px;
