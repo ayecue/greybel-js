@@ -15,7 +15,11 @@ interface ExecuteOutputOptions {
 
 const AVAILABLE_RESOLUTIONS = [
   { width: 320, height: 200 },
+  { width: 480, height: 300 },
   { width: 640, height: 400 },
+  { width: 800, height: 500 },
+  { width: 960, height: 600 },
+  { width: 1120, height: 700 },
   { width: 1280, height: 800 }
 ];
 
@@ -24,7 +28,7 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
   const [stdoutText, setStdoutText] = useState<StdoutText | null>(null);
   const textRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [resoultion, setResolution] = useState<number>(1);
+  const [resoultion, setResolution] = useState<number>(2);
   const selectedResolution = AVAILABLE_RESOLUTIONS[resoultion];
   const idPrefix = props.id ?? 'default';
 
