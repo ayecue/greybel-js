@@ -45,7 +45,7 @@ CLI that provides a set of tools for working with GreyScript. GreyScript is a sc
 
 - **Run and test your code outside of GreyHack**  
   - [Manage file dependencies in the interpreter](#dependency-management-interpreter)
-  - [Simulate a local mock environment for testing](#local-environment)
+  - [Simulate a local mock environment for testing](#mock-environment)
   - [Full support for the GreyScript API](#greyscript-api-support)
   - [Debug your code with ease](#debugger-cli)
   - [Support for TextMesh Pro Rich Text](#textmesh-pro-rich-text-support-cli)
@@ -283,7 +283,7 @@ Here is an [example](/example/environment-variables) of environment variable inj
 
 ### Mock Environment
 
-When using this environment, Greybel will automatically generate a local setup, including simulated computers, networks, filesystems, and more—on the fly. By default, generation is based on a seed value called test. You can modify this seed using the appropriate option. Using the same seed consistently will ensure that the generated entities remain stable across sessions.
+When using this environment, Greybel will automatically generate a local setup, including simulated computers, networks, filesystems, and more, on the fly. By default, generation is based on a seed value called test. You can modify this seed using the appropriate option. Using the same seed consistently will ensure that the generated entities remain stable across sessions.
 
 The local computer configuration is hardcoded, with admin credentials set to root:test. Additionally, your local machine will have crypto.so and metaxploit.so available by default.
 
@@ -301,7 +301,7 @@ myShell = get_shell("root", "test") //get local root shell
 
 This environment uses the actual in-game setup. To use it, you must have [message-hook](#message-hook) installed and the game running in singleplayer mode.
 
-The key advantage of the in-game environment is that it mirrors real gameplay behavior exactly—unlike the mock environment, which is an approximation.
+The key advantage of the in-game environment is that it mirrors real gameplay behavior exactly, unlike the mock environment, which is an approximation.
 
 ## Debugger (CLI)
 Pauses execution and enables you to inspect/debug your code. Additionally, you'll be able to inject code.
@@ -447,7 +447,7 @@ To use the Message Hook, you must first install [BepInEx](https://github.com/Bep
 ## BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/0bff2cb4adf2013e54b1f88cd391865baa022b67/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/a8dd7b274836fb787f19d005b990405dae6e02fe/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -457,7 +457,7 @@ To use the Message Hook, you must first install [BepInEx](https://github.com/Bep
 ## BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/0bff2cb4adf2013e54b1f88cd391865baa022b67/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/a8dd7b274836fb787f19d005b990405dae6e02fe/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`

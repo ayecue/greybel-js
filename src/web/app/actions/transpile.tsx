@@ -5,10 +5,11 @@ import { buildClassName } from '../utils.js';
 
 export interface TranspileOptions {
   content: string;
+  className?: string;
   onError: (err: any) => void;
 }
 
-export default function Transpile({ content, onError }: TranspileOptions) {
+export default function Transpile({ content, className, onError }: TranspileOptions) {
   const [transformResult, setTransformResult] = useState('');
   const [buildType, setBuildType] = useState('0');
   const [keepParens, setKeepParens] = useState(false);
@@ -45,7 +46,10 @@ export default function Transpile({ content, onError }: TranspileOptions) {
   };
 
   return (
-    <div className="editor-transpile">
+    <div className={buildClassName('editor-transpile', {
+      shouldAdd: !!className,
+      className: className
+    })}>
       <div className="actions">
         <a
           id="transpile"

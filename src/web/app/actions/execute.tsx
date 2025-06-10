@@ -1,5 +1,5 @@
 import { Debugger, Interpreter, VM } from 'greybel-interpreter';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import execute from '../../execute.js';
 import { Stdin } from '../../std/stdin.js';
@@ -13,11 +13,23 @@ interface ExecuteOutputOptions {
   [key: string]: any;
 }
 
+const AVAILABLE_RESOLUTIONS = [
+  { width: 320, height: 200 },
+  { width: 480, height: 300 },
+  { width: 640, height: 400 },
+  { width: 800, height: 500 },
+  { width: 960, height: 600 },
+  { width: 1120, height: 700 },
+  { width: 1280, height: 800 }
+];
+
 function ExecuteOutput(props: ExecuteOutputOptions) {
   const [stdoutCanvas, setStdoutCanvas] = useState<StdoutCanvas | null>(null);
   const [stdoutText, setStdoutText] = useState<StdoutText | null>(null);
   const textRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [resoultion, setResolution] = useState<number>(2);
+  const selectedResolution = AVAILABLE_RESOLUTIONS[resoultion];
   const idPrefix = props.id ?? 'default';
 
   useEffect(() => {
@@ -58,9 +70,20 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
     setStdoutText(new StdoutText(textRef.current));
   }, [textRef]);
 
+  const updateResolution = useCallback((newRes: number) => {
+    if (newRes < 0 || newRes >= AVAILABLE_RESOLUTIONS.length) {
+      return;
+    }
+    setResolution(newRes);
+  }, [resoultion]);
+
   return (
     <div className="editor-console-stdout-wrapper">
       <label>Execution output:</label>
+      <div className="editor-console-stdout-options">
+        <a id="zoom-in" className="material-icons" onClick={() => updateResolution(resoultion + 1)} title="Zoom in"></a>
+        <a id="zoom-out" className="material-icons" onClick={() => updateResolution(resoultion - 1)} title="Zoom out"></a>
+      </div>
       <div
         { ...props }
         id={`${idPrefix}-text`}
@@ -81,11 +104,11 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
           hidden={stdoutCanvas === null}
           tabIndex={-1}
           ref={canvasRef}
-          width="100%"
-          height="100%"
+          width={selectedResolution.width}
+          height={selectedResolution.height}
           style={{
-            width: '100%',
-            height: '300px',
+            width: `${selectedResolution.width}px`,
+            height: `${selectedResolution.height}px`,
             background: '#231F20'
           }}
         >
@@ -97,6 +120,7 @@ function ExecuteOutput(props: ExecuteOutputOptions) {
 
 export interface ExecuteOptions {
   content: string;
+  className?: string;
   onNewActiveLine: (line: number) => void;
   onError?: (err: any) => void;
   setDebug: (debugOptions: DebugPopup | undefined) => void;
@@ -104,6 +128,7 @@ export interface ExecuteOptions {
 
 export default function Execute({
   content,
+  className,
   onError,
   onNewActiveLine,
   setDebug
@@ -204,7 +229,10 @@ export default function Execute({
   }, []);
 
   return (
-    <div className="editor-execute">
+    <div className={buildClassName('editor-execute', {
+      shouldAdd: !!className,
+      className: className
+    })}>
       <div className="actions">
         <a
           id="execute"

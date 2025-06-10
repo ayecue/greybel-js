@@ -1,6 +1,6 @@
 {
   "name": "greybel-js",
-  "version": "3.6.30",
+  "version": "3.6.31",
   "engines": {
     "node": ">=20.17.0"
   },
@@ -39,7 +39,7 @@
     "greyhack-message-hook-client": "~0.6.7",
     "greyscript-core": "~2.5.5",
     "greyscript-interpreter": "~2.5.4",
-    "greyscript-meta": "~4.3.1",
+    "greyscript-meta": "~4.3.2",
     "greyscript-transpiler": "~1.7.0",
     "lru-cache": "^11.0.2",
     "miniscript-type-analyzer": "~0.21.0",
@@ -49,6 +49,7 @@
     "open": "^10.1.0",
     "pacote": "^21.0.0",
     "react-github-btn": "^1.4.0",
+    "react-resizable-panels": "^3.0.2",
     "semver": "^7.7.1",
     "text-mesh-transformer": "^1.4.1",
     "transform-json-to-html": "^1.1.1",
