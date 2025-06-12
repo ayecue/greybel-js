@@ -1612,3 +1612,7 @@ All notable changes to this project will be documented in this file.
 - update get_custom_object example to show a more common usecase
 - update typeof description to include partial object types
 - update web editor style
+
+## [3.6.32] - 12.06.2025
+
+- forcefully terminate the execution thread to prevent lingering background processes in the in-game environment - requires the message-hook to be updated
