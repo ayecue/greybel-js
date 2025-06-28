@@ -1616,3 +1616,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.32] - 12.06.2025
 
 - forcefully terminate the execution thread to prevent lingering background processes in the in-game environment - requires the message-hook to be updated
+
+## [3.6.33] - 28.06.2025
+
+- use bepinex traverse to retrieve helperImport property in interpreter patch to prevent randomly occuring crashes - requires the message-hook to be updated
