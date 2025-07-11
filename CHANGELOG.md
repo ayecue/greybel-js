@@ -1620,3 +1620,7 @@ All notable changes to this project will be documented in this file.
 ## [3.6.33] - 28.06.2025
 
 - use bepinex traverse to retrieve helperImport property in interpreter patch to prevent randomly occuring crashes - requires the message-hook to be updated
+
+## [3.6.34] - 11.07.2025
+
+- fixed script crashing on user_input due to missing cpu usage instance initialisation, related to in-game env - requires the message-hook to be updated
