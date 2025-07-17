@@ -444,10 +444,12 @@ The Message Hook enables Greybel to communicate with the game server via the gam
 
 To use the Message Hook, you must first install [BepInEx](https://github.com/BepInEx/BepInEx), followed by the appropriate plugin. Instructions are provided below for both [BepInEx](https://github.com/BepInEx/BepInEx) 5.x.x and 6.x.x versions.
 
+**Note**: BepInEx 6.x.x is in a pre-release state and may be less stable than 5.x.x. If you experience frequent crashes, consider switching back to version 5.x.x.
+
 ## BepInEx 5.x.x
 1. **Download BepInEx 5.x.x**: [BepInEx v5.4.23.2](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/f293fb6cc847b77f45739a5b1b1b9be1c7a2bb90/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook5.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/8d080256b2f73177b793656159d48075f81d1757/GreyHackMessageHook5.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
@@ -457,16 +459,31 @@ To use the Message Hook, you must first install [BepInEx](https://github.com/Bep
 ## BepInEx 6.x.x
 1. **Download BepInEx 6.x.x**: [BepInEx version 6.0.0-pre.2 Unity.Mono](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
     - Install by extracting BepInEx files into your Grey Hack game folder (location of the game executable). See the [Installation Guide](https://docs.bepinex.dev/master/articles/user_guide/installation/unity_mono.html) if needed.
-2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/f293fb6cc847b77f45739a5b1b1b9be1c7a2bb90/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
+2. **Add the Plugin**: Download [GreyHackMessageHook.dll](https://gist.github.com/ayecue/b45998fa9a8869e4bbfff0f448ac98f9/raw/8d080256b2f73177b793656159d48075f81d1757/GreyHackMessageHook.dll) and move it to the plugins folder in BepInEx.
 3. **Configure Launch Options (macOS/Linux Only)**:
     - Go to Steam Library > Grey Hack > Properties > Launch Options.
       - **macOS**: `"/path/to/Steam/steamapps/common/Grey Hack/run_bepinex.sh" %command%`
       - **Linux**: `"/path/to/.steam/steam/steamapps/common/Grey Hack/run_bepinex.sh" || %command%`
 4. **Launch Grey Hack** via Steam to load BepInEx 6 with the plugin.
 
-**Note**: BepInEx 6.x.x is in a pre-release state and may be less stable than 5.x.x. If you experience frequent crashes, consider switching back to version 5.x.x.
+## Troubleshooting
 
-**Reminder**: Grey Hack must be running for this agent to function properly.
+### Grey Hack is crashing on startup on macOS (Apple Silicon)
+
+Since version `0.9.5694`, Grey Hack runs natively on Apple Silicon Macs. When used with BepInEx, this can cause crashes, specifically the following error: 
+```bash
+EntryPointNotFoundException: SteamInternal_SteamAPI_Init assembly:<unknown assembly> type:<unknown type> member:(null)
+  at (wrapper managed-to-native) Steamworks.SteamAPI+Native.SteamInternal_SteamAPI_Init(string,intptr)
+  at Steamworks.SteamAPI.Init (System.String pszInternalCheckInterfaceVersions, System.String& pOutErrMsg) [0x0000e] in <6edbf121be6b4184ba49a762e217ee3b>:0 
+  at Steamworks.SteamClient.Init (System.UInt32 appid, System.Boolean asyncCallbacks) [0x000f4] in <6edbf121be6b4184ba49a762e217ee3b>:0 
+  at ClientSteam.Start () [0x0001e] in <5900bf36cb6f404fa6809df9b65e2cde>:0 
+UnityEngine.DebugLogHandler:Internal_LogException(Exception, Object)
+UnityEngine.DebugLogHandler:LogException(Exception, Object)
+UnityEngine.Logger:LogException(Exception, Object)
+UnityEngine.Debug:LogException(Exception)
+ClientSteam:Start()
+```
+You can fix this crash by deleting the `libsteam_api.dylib` file located in the game's root directory. This crash is caused by multiple versions of `libsteam_api.dylib` being present, leading to the wrong library loading first. Deleting the duplicate `libsteam_api.dylib` in the game root prevents this conflict, allowing the correct version to load. This fix does not appear to affect gameplay or functionality.
 
 # Contact
 
