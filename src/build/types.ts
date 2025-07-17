@@ -1,4 +1,4 @@
-import { parseFileExtensions } from "../helper/parse-file-extensions.js";
+import { parseFileExtensions } from '../helper/parse-file-extensions.js';
 
 export enum ErrorResponseMessage {
   OutOfRam = 'I can not open the program. There is not enough RAM available. Close some program and try again.',
@@ -98,7 +98,9 @@ export const parseBuildOptions = (options: Partial<BuildOptions>) => {
     envFiles: options.envFiles ?? defaultOptions.envFiles,
     envVars: options.envVars ?? defaultOptions.envVars,
     outputFilename: options.outputFilename ?? defaultOptions.outputFilename,
-    fileExtensions: parseFileExtensions(options.fileExtensions) ?? defaultOptions.fileExtensions,
+    fileExtensions:
+      parseFileExtensions(options.fileExtensions) ??
+      defaultOptions.fileExtensions,
     ingameDirectory: options.ingameDirectory ?? defaultOptions.ingameDirectory,
     createIngame: options.createIngame ?? defaultOptions.createIngame,
     autoCompilePurge:

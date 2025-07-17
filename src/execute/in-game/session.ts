@@ -4,9 +4,13 @@ import fs from 'fs';
 import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 import pathUtils from 'path';
 
-import { findExistingPath } from '../../helper/document-uri-builder.js';
+import { configurationManager } from '../../helper/configuration-manager.js';
 import { EnvironmentVariablesManager } from '../../helper/env-mapper.js';
+import { GlobalFileSystemManager } from '../../helper/fs.js';
+import { logger } from '../../helper/logger.js';
 import { randomString } from '../../helper/random-string.js';
+import { VersionManager } from '../../helper/version-manager.js';
+import { transformInternalKeyEventToKeyEvent } from '../key-event.js';
 import { ansiProvider, Terminal, useColor } from '../output.js';
 import {
   ClientMessageType,
@@ -14,15 +18,14 @@ import {
   Session,
   SessionOptions
 } from '../types.js';
-import { logger } from '../../helper/logger.js';
-import { VersionManager } from '../../helper/version-manager.js';
-import { transformInternalKeyEventToKeyEvent } from '../key-event.js';
-import { configurationManager } from '../../helper/configuration-manager.js';
 
 const { ContextAgent } = GreyHackMessageHookClientPkg;
 
-async function resolveFileExtension(path: string, allowedFileExtension: string[]): Promise<string | null> {
-  return await findExistingPath(
+async function resolveFileExtension(
+  path: string,
+  allowedFileExtension: string[]
+): Promise<string | null> {
+  return await GlobalFileSystemManager.findExistingPath(
     path,
     ...allowedFileExtension.map((ext) => `${path}.${ext}`)
   );
@@ -92,14 +95,13 @@ export class InGameSession implements Session {
     const healthcheck = await VersionManager.performHealthCheck(this.agent);
 
     if (!healthcheck.isSingleplayer) {
-      logger.error('Can only start in-game debug session with singleplayer running!');
+      logger.error(
+        'Can only start in-game debug session with singleplayer running!'
+      );
       process.exit(1);
     }
 
-    const resolvedPath = pathUtils.join(
-      this.basePath,
-      this.temporaryPath
-    );
+    const resolvedPath = pathUtils.join(this.basePath, this.temporaryPath);
 
     fs.mkdirSync(resolvedPath);
   }
@@ -141,9 +143,10 @@ export class InGameSession implements Session {
       };
     }
 
-    const resolvedPath = await resolveFileExtension(path, configurationManager.get<string[]>(
-      'fileExtensions'
-    ));
+    const resolvedPath = await resolveFileExtension(
+      path,
+      configurationManager.get<string[]>('fileExtensions')
+    );
 
     return {
       resolvedPath: resolvedPath ?? path,
@@ -197,7 +200,10 @@ export class InGameSession implements Session {
         }
         case ClientMessageType.ContextBreakpointRpc: {
           logger.info(
-            useColor('cyan', ansiProvider.modify(ModifierType.Bold, `REPL - Console`))
+            useColor(
+              'cyan',
+              ansiProvider.modify(ModifierType.Bold, `REPL - Console`)
+            )
           );
           logger.info(
             useColor('cyan', `You can execute code in the current context.`)
@@ -321,10 +327,11 @@ export class InGameSession implements Session {
 
   private async resolveFile(path: string) {
     if (this.instance == null) return;
-    
-    const resolvedPath = await resolveFileExtension(path, configurationManager.get<string[]>(
-      'fileExtensions'
-    ));
+
+    const resolvedPath = await resolveFileExtension(
+      path,
+      configurationManager.get<string[]>('fileExtensions')
+    );
 
     if (resolvedPath == null) {
       await this.instance.resolvedFile(path, null);
@@ -344,7 +351,7 @@ export class InGameSession implements Session {
       this.agent = null;
       await instance.dispose().catch(console.warn);
       agent.dispose().catch(console.warn);
-      
+
       try {
         fs.rmSync(tempFolderPath, {
           recursive: true,

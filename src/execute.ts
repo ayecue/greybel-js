@@ -17,10 +17,7 @@ export default async function execute(
   const fileExtensions = parseFileExtensions(options.fileExtensions);
 
   if (fileExtensions) {
-    configurationManager.set(
-      'fileExtensions',
-      fileExtensions
-    );
+    configurationManager.set('fileExtensions', fileExtensions);
   }
 
   const envMapper = new EnvironmentVariablesManager();

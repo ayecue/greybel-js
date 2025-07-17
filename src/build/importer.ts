@@ -80,12 +80,15 @@ class Importer {
   }
 
   async createAgent(): Promise<any> {
-    return new Agent({
-      warn: () => {},
-      error: () => {},
-      info: () => {},
-      debug: () => {}
-    }, this.port);
+    return new Agent(
+      {
+        warn: () => {},
+        error: () => {},
+        info: () => {},
+        debug: () => {}
+      },
+      this.port
+    );
   }
 
   async import(): Promise<ImportResult[]> {
@@ -161,9 +164,7 @@ enum CommonImportErrorReason {
   NewGameVersion = 'A new game update is available.'
 }
 
-const reportFailure = (
-  failedItems: ImportResultFailure[]
-): void => {
+const reportFailure = (failedItems: ImportResultFailure[]): void => {
   const uniqueErrorReasons = new Set(failedItems.map((it) => it.reason));
 
   if (uniqueErrorReasons.size === 1) {
