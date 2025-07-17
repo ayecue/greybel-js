@@ -1629,3 +1629,5 @@ All notable changes to this project will be documented in this file.
 
 - updated message-hook to use latest assembly and unity version - the prior message-hook version seems to work fine with the latest Grey Hack patch, therefore this update is rather optional
 - updated message-hook-client regarding login payload
+- significantly reduced build time by caching I/O operations - thanks for reporting to IDelta
+- prevented unnecessary deletion retries during auto-compile - thanks for reporting to Dough San and IDelta
