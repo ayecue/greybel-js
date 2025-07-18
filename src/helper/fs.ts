@@ -107,7 +107,7 @@ export class FileSystemManagerWithCache extends FileSystemManager {
     const key = target;
     const result = this.fileContentCache.get(key);
 
-    if (result) {
+    if (result !== undefined) {
       return result;
     }
 
@@ -123,7 +123,7 @@ export class FileSystemManagerWithCache extends FileSystemManager {
     const key = mainPath;
     const cachedPath = this.pathResolveCache.get(key);
 
-    if (cachedPath) {
+    if (cachedPath !== undefined) {
       return cachedPath;
     }
 
