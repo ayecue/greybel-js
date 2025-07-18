@@ -1,51 +1,21 @@
-import fs from 'fs';
 import pathUtil from 'path';
+
 import { configurationManager } from './configuration-manager.js';
-
-export function checkFileExists(file) {
-  return fs.promises
-    .access(file, fs.constants.F_OK)
-    .then(() => true)
-    .catch(() => false);
-}
-
-export async function findExistingPath(
-  mainPath: string,
-  ...altPaths: string[]
-): Promise<string | null> {
-  if (await checkFileExists(mainPath)) return mainPath;
-
-  if (altPaths.length === 0) {
-    return null;
-  }
-
-  try {
-    const altItemPath = await Promise.any(
-      altPaths.map(async (path) => {
-        if (await checkFileExists(path)) return path;
-        throw new Error('Alternative path could not resolve');
-      })
-    );
-
-    if (altItemPath != null) {
-      return altItemPath;
-    }
-
-    return null;
-  } catch (err) {
-    return null;
-  }
-}
+import { FileSystemManager, GlobalFileSystemManager } from './fs.js';
 
 export class DocumentURIBuilder {
   readonly rootPath: string;
   readonly fileExtensions: string[];
 
-  constructor(rootPath: string) {
+  private fileSystemManager: FileSystemManager;
+
+  constructor(
+    rootPath: string,
+    fileSystemManager: FileSystemManager = GlobalFileSystemManager
+  ) {
     this.rootPath = rootPath;
-    this.fileExtensions = configurationManager.get<string[]>(
-      'fileExtensions'
-    );
+    this.fileExtensions = configurationManager.get<string[]>('fileExtensions');
+    this.fileSystemManager = fileSystemManager;
   }
 
   private getFromRootPath(path: string): string {
@@ -67,7 +37,7 @@ export class DocumentURIBuilder {
   }
 
   getPath(path: string): Promise<string | null> {
-    return findExistingPath(
+    return this.fileSystemManager.findExistingPath(
       this.getOriginalPath(path),
       ...this.getAlternativePaths(path)
     );

@@ -112,7 +112,6 @@ export function transformInternalKeyEventToKeyEvent(
   }
 }
 
-
 export function transformInternalKeyEventToToIngameKeyCodeValue(
   InternalKeyEvent: InternalKeyEvent
 ): string {

@@ -19,6 +19,7 @@ import {
   parseBuildOptions
 } from './build/types.js';
 import { ansiProvider, useColor } from './execute/output.js';
+import { configurationManager } from './helper/configuration-manager.js';
 import {
   createBasePath,
   getMatchingSegments
@@ -28,7 +29,6 @@ import { EnvironmentVariablesManager } from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
 import { TranspilerResourceProvider } from './helper/resource.js';
 import { VersionManager } from './helper/version-manager.js';
-import { configurationManager } from './helper/configuration-manager.js';
 
 function getTranspilerOptions(options: BuildOptions) {
   let buildType = BuildType.DEFAULT;
@@ -81,8 +81,7 @@ async function transpileFile(
 ) {
   const target = path.resolve(filepath);
   const rootDir = path.dirname(target);
-
-  return await new Transpiler({
+  const result = await new Transpiler({
     resourceHandler: new TranspilerResourceProvider().getHandler(),
     target,
     buildType: transpilerOptions.buildType,
@@ -101,6 +100,8 @@ async function transpileFile(
       return path.posix.join(buildOptions.ingameDirectory, relativePath);
     }
   }).parse();
+
+  return result;
 }
 
 function mergeTranspileResults(
@@ -134,10 +135,7 @@ export default async function build(
   }
 
   if (options.fileExtensions) {
-    configurationManager.set(
-      'fileExtensions',
-      options.fileExtensions
-    );
+    configurationManager.set('fileExtensions', options.fileExtensions);
   }
 
   const rootPath = findRootPath(filepaths);
@@ -147,15 +145,31 @@ export default async function build(
   try {
     let allResults: TranspilerParseResult[];
 
-    if (buildOptions.outputFilename != null && buildOptions.outputFilename != '') {
+    if (
+      buildOptions.outputFilename != null &&
+      buildOptions.outputFilename != ''
+    ) {
       if (filepaths.length > 1) {
-        logger.warn(useColor('yellow', 'Cannot use output filename option when targeting multiple files!'));
+        logger.warn(
+          useColor(
+            'yellow',
+            'Cannot use output filename option when targeting multiple files!'
+          )
+        );
         return false;
       }
 
       const mainFilepath = filepaths[0];
-      const outFilepath = path.join(path.dirname(mainFilepath), buildOptions.outputFilename);
-      const mainResult = await transpileFile(mainFilepath, buildOptions, envMapper, transpilerOptions);
+      const outFilepath = path.join(
+        path.dirname(mainFilepath),
+        buildOptions.outputFilename
+      );
+      const mainResult = await transpileFile(
+        mainFilepath,
+        buildOptions,
+        envMapper,
+        transpilerOptions
+      );
 
       // Remove the main file from the result and add the output filename
       const mainContent = mainResult[mainFilepath];

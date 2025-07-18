@@ -81,7 +81,7 @@ export const generateAutoCompileCode = ({
 
       for filePath in filePaths
         absPath = rootDirectory + filePath
-        entity = tryGetFile(myComputer, absPath)
+        entity = File(myComputer, absPath)
 
         if not entity then
           print("Couldn't find " + absPath)
@@ -99,14 +99,13 @@ export const generateAutoCompileCode = ({
       currentFolderPath = pop(remainingFolderPaths)
 
       while currentFolderPath != null
-        if rootDirectory.indexOf(currentFolderPath) == 0 then
+        if indexOf(rootDirectory, currentFolderPath) == 0 then
           currentFolderPath = pop(remainingFolderPaths)
           continue
         end if
 
-        folder = tryGetFile(myComputer, currentFolderPath)
-
-        if folder and ((folder.get_files.len == 0 and folder.get_folders.len == 0) or purge) then
+        folder = File(myComputer, currentFolderPath)
+        if folder and ((len(get_files(folder)) == 0 and len(get_folders(folder)) == 0) or purge) then
           push(remainingFolderPaths, path(parent(folder)))
           delete(folder)
           print("Deleted " + folder.path)

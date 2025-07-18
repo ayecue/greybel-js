@@ -6,8 +6,8 @@ import path from 'path';
 import { executeImport } from './build/importer.js';
 import { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
-import { parseUploadOptions, UploadOptions } from './upload/types.js';
 import { VersionManager } from './helper/version-manager.js';
+import { parseUploadOptions, UploadOptions } from './upload/types.js';
 
 const getFiles = async (target: string): Promise<string[]> => {
   const stat = await fs.stat(target);
