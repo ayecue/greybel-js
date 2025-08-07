@@ -1,3 +1,4 @@
+import { TypeManager } from 'greybel-type-analyzer';
 import { greyscriptMeta } from 'greyscript-meta';
 import {
   ASTBase,
@@ -8,7 +9,6 @@ import {
   ASTSliceExpression,
   ASTType
 } from 'miniscript-core';
-import { TypeManager } from 'miniscript-type-analyzer';
 
 export const lookupIdentifier = (root: ASTBase): ASTBase | null => {
   // non greedy identifier to string method; can be used instead of ASTStringify

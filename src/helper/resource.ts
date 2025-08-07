@@ -1,4 +1,3 @@
-import { crlf, LF } from 'crlf-normalize';
 import { DefaultResourceHandler as DefaultInterpreterResourceHandler } from 'greybel-interpreter';
 import {
   ResourceHandler as TranspilerResourceHandler,

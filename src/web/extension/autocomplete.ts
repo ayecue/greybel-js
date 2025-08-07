@@ -1,10 +1,13 @@
 import {
+  CompletionItem,
+  CompletionItem as EntityCompletionItem
+} from 'greybel-type-analyzer';
+import {
   ASTBase,
   ASTIdentifier,
   ASTIndexExpression,
   ASTMemberExpression
 } from 'miniscript-core';
-import { CompletionItem as EntityCompletionItem } from 'miniscript-type-analyzer';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { getAvailableConstants } from './autocomplete/constants.js';
@@ -46,7 +49,17 @@ export const getPropertyCompletionList = (
     return [];
   }
 
-  return transformToCompletionItems(entity.getAvailableIdentifier(), range);
+  const items = entity.item.getAllProperties().reduce((result, it) => {
+    const sources = it.type.getSource();
+
+    result.set(it.name, {
+      kind: it.kind,
+      line: sources && sources.length > 0 ? sources[0].start.line - 1 : -1
+    });
+    return result;
+  }, new Map<string, CompletionItem>());
+
+  return transformToCompletionItems(items, range);
 };
 
 export const getDefaultCompletionList = (

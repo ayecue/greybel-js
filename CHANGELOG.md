@@ -1641,3 +1641,4 @@ All notable changes to this project will be documented in this file.
 ## [3.6.37] - 20.07.2025
 
 - show location of faulty import line when building failed due to an invalid dependency
+- refactored static code analyser resulting in better performance and more precise types

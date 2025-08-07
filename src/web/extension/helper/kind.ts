@@ -1,4 +1,4 @@
-import { CompletionItemKind as EntityCompletionItemKind } from 'miniscript-type-analyzer';
+import { CompletionItemKind as EntityCompletionItemKind } from 'greybel-type-analyzer';
 import type { languages } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 const CompletionItemKindMapping: Record<

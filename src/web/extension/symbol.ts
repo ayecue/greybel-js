@@ -1,13 +1,4 @@
-import {
-  ASTAssignmentStatement,
-  ASTForGenericStatement,
-  ASTType
-} from 'miniscript-core';
-import {
-  ASTDefinitionItem,
-  createExpressionId,
-  Document as MSDocument
-} from 'miniscript-type-analyzer';
+import { SymbolInfo } from 'greybel-type-analyzer';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { getSymbolItemKind } from './helper/kind.js';
@@ -16,44 +7,34 @@ import typeManager from './helper/type-manager.js';
 
 const handleItem = (
   monaco: typeof Monaco,
-  typeDoc: MSDocument,
-  item: ASTAssignmentStatement | ASTForGenericStatement
-): Monaco.languages.DocumentSymbol | null => {
-  const entity = typeDoc.resolveNamespace(item.variable, true);
-  if (entity == null) {
-    return null;
+  item: SymbolInfo
+): Monaco.languages.DocumentSymbol[] => {
+  if (item.source == null) {
+    return [];
   }
-  const label = createExpressionId(item.variable);
-  const kind = entity?.kind ? getSymbolItemKind(entity.kind) : 13; // SymbolKind.Variable
-  const range = new monaco.Range(
-    item.variable.start.line,
-    item.variable.start.character,
-    item.variable.end.line,
-    item.variable.end.character
-  );
-  return {
-    name: label,
-    detail: label,
-    kind,
-    range,
-    tags: [],
-    selectionRange: range
-  };
-};
 
-const handleDefinitionItem = (
-  monaco: typeof Monaco,
-  typeDoc: MSDocument,
-  item: ASTDefinitionItem
-): Monaco.languages.DocumentSymbol | null => {
-  switch (item.node.type) {
-    case ASTType.AssignmentStatement:
-      return handleItem(monaco, typeDoc, item.node as ASTAssignmentStatement);
-    case ASTType.ForGenericStatement:
-      return handleItem(monaco, typeDoc, item.node as ASTForGenericStatement);
-    default:
-      return null;
+  const result: Monaco.languages.DocumentSymbol[] = [];
+
+  const kind = item?.kind ? getSymbolItemKind(item.kind) : 13; // SymbolKind.Variable
+  for (const source of item.source) {
+    const range = new monaco.Range(
+      source.start.line,
+      source.start.character,
+      source.end.line,
+      source.end.character
+    );
+
+    result.push({
+      name: item.name,
+      detail: item.name,
+      kind,
+      range,
+      tags: [],
+      selectionRange: range
+    });
   }
+
+  return result;
 };
 
 const findAllAssignments = (
@@ -62,15 +43,11 @@ const findAllAssignments = (
   query: string
 ): Monaco.languages.DocumentSymbol[] => {
   const typeDoc = typeManager.get(document.uri.fsPath);
-  const assignments = typeDoc.resolveAllAssignmentsWithQuery(query);
+  const defs = typeDoc.resolveAllAssignmentsWithQuery(query);
   const result: Monaco.languages.DocumentSymbol[] = [];
 
-  for (const assignmentItem of assignments) {
-    const symbol = handleDefinitionItem(monaco, typeDoc, assignmentItem);
-
-    if (symbol != null) {
-      result.push(symbol);
-    }
+  for (const defItem of defs) {
+    result.push(...handleItem(monaco, defItem));
   }
 
   return result;
