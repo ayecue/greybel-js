@@ -1642,3 +1642,7 @@ All notable changes to this project will be documented in this file.
 
 - show location of faulty import line when building failed due to an invalid dependency
 - refactored static code analyser resulting in better performance and more precise types
+
+## [3.6.38] - 09.08.2025
+
+- fix default params element type in type analyser

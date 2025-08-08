@@ -5,11 +5,7 @@ import { PseudoCompletionItem } from '../helper/vs.js';
 export const AVAILABLE_CONSTANTS = [
   'true',
   'false',
-  'null',
-  'params',
-  'globals',
-  'locals',
-  'outer'
+  'null'
 ] as const;
 
 export const getAvailableConstants = (
