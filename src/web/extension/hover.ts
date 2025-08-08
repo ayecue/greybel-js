@@ -1,11 +1,14 @@
-import {
-  SignatureDefinitionBaseType,
-  SignatureDefinitionTypeMeta
-} from 'meta-utils';
+import { isFunctionType, isUnionType } from 'greybel-type-analyzer';
+import { SignatureDefinitionTypeMeta } from 'meta-utils';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';
-import { createHover, formatKind, formatTypes } from './helper/tooltip.js';
+import {
+  createHover,
+  createTypeBody,
+  formatKind,
+  formatTypes
+} from './helper/tooltip.js';
 import { PseudoHover, PseudoMarkdownString } from './helper/vs.js';
 
 export function activate(monaco: typeof Monaco) {
@@ -28,27 +31,27 @@ export function activate(monaco: typeof Monaco) {
         return;
       }
 
-      if (entity.isCallable()) {
+      if (
+        isFunctionType(entity.item) ||
+        (isUnionType(entity.item) && entity.item.variants.some(isFunctionType))
+      ) {
         return createHover(entity).valueOf();
       }
 
       const hoverText = new PseudoMarkdownString('');
-      const metaTypes = entity.toMeta().map(SignatureDefinitionTypeMeta.parse);
-      let label = `(${formatKind(entity.kind)}) ${entity.label}: ${formatTypes(
-        metaTypes
-      )}`;
+      const metaTypes = entity.item
+        .toMeta()
+        .map(SignatureDefinitionTypeMeta.parse);
+      const displayName = entity.value
+        ? entity.value
+        : entity.path;
+      let label = `(${formatKind(
+        entity.completionItemKind
+      )}) ${displayName}: ${formatTypes(metaTypes)}`;
+      const labelBody = createTypeBody(entity.item);
 
-      if (entity.types.has(SignatureDefinitionBaseType.Map)) {
-        const records: Record<string, string> = {};
-
-        for (const [key, item] of entity.values) {
-          const metaTypes = item
-            .toMeta()
-            .map(SignatureDefinitionTypeMeta.parse);
-          records[key.slice(2)] = formatTypes(metaTypes);
-        }
-
-        label += ' ' + JSON.stringify(records, null, 2);
+      if (labelBody) {
+        label += ` ${JSON.stringify(labelBody, null, 2)}`;
       }
 
       hoverText.appendCodeblock(label);

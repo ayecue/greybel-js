@@ -1,6 +1,10 @@
-import { SignatureDefinitionBaseType } from 'meta-utils';
 import {
-  ASTAssignmentStatement,
+  CompletionItem,
+  IResolveNamespaceResult,
+  IType,
+  SymbolInfo
+} from 'greybel-type-analyzer';
+import {
   ASTBase,
   ASTBaseBlockWithScope,
   ASTChunk,
@@ -8,20 +12,13 @@ import {
   ASTMemberExpression,
   ASTType
 } from 'miniscript-core';
-import {
-  ASTDefinitionItem,
-  CompletionItem,
-  CompletionItemKind,
-  IEntity,
-  injectIdentifers,
-  isValidIdentifierLiteral
-} from 'miniscript-type-analyzer';
 import type {
   editor,
   Position
 } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import * as ASTScraper from './ast-scraper.js';
+import { isValidIdentifierLiteral } from './is-valid-identifier-literal.js';
 import documentParseQueue from './model-manager.js';
 import typeManager, { lookupBase } from './type-manager.js';
 
@@ -42,37 +39,61 @@ export class LookupHelper {
   findAllAssignmentsOfIdentifier(
     identifier: string,
     root: ASTBaseBlockWithScope
-  ): ASTDefinitionItem[] {
-    return typeManager
-      .get(this.document.uri.fsPath)
-      .getScopeContext(root)
-      .aggregator.resolveAvailableAssignmentsWithQuery(identifier);
+  ): SymbolInfo[] {
+    const typeDoc = typeManager.get(this.document.uri.fsPath);
+    const context = typeDoc.scopeRefMapping.get(root);
+
+    if (context == null) {
+      return [];
+    }
+
+    return context.scope.resolveAllAvailableWithQuery(identifier);
   }
 
-  findAllAssignmentsOfItem(
-    item: ASTBase,
-    root: ASTBaseBlockWithScope
-  ): ASTDefinitionItem[] {
-    return typeManager
-      .get(this.document.uri.fsPath)
-      .getScopeContext(root)
-      .aggregator.resolveAvailableAssignments(item);
+  findAllAssignmentsOfItem(item: ASTBase): IType {
+    const typeDoc = typeManager.get(this.document.uri.fsPath);
+    const result = typeDoc.resolveNamespace(item, false);
+
+    if (result == null) {
+      return null;
+    }
+
+    return result.item;
   }
 
   findAllAvailableIdentifierInRoot(): Map<string, CompletionItem> {
-    return typeManager
-      .get(this.document.uri.fsPath)
-      .getRootScopeContext()
-      .scope.getAvailableIdentifier();
+    const typeDoc = typeManager.get(this.document.uri.fsPath);
+
+    return typeDoc.globals.getAllProperties().reduce((result, it) => {
+      const sources = it.type.getSource();
+
+      result.set(it.name, {
+        kind: it.kind,
+        line: sources && sources.length > 0 ? sources[0].start.line - 1 : -1
+      });
+      return result;
+    }, new Map<string, CompletionItem>());
   }
 
   findAllAvailableIdentifier(
     root: ASTBaseBlockWithScope
   ): Map<string, CompletionItem> {
-    return typeManager
-      .get(this.document.uri.fsPath)
-      .getScopeContext(root)
-      .scope.getAvailableIdentifier();
+    const typeDoc = typeManager.get(this.document.uri.fsPath);
+    const context = typeDoc.scopeRefMapping.get(root);
+
+    if (context == null) {
+      return new Map();
+    }
+
+    return context.scope.getAllProperties().reduce((result, it) => {
+      const sources = it.type.getSource();
+
+      result.set(it.name, {
+        kind: it.kind,
+        line: sources && sources.length > 0 ? sources[0].start.line - 1 : -1
+      });
+      return result;
+    }, new Map<string, CompletionItem>());
   }
 
   findAllAvailableIdentifierRelatedToPosition(
@@ -80,53 +101,49 @@ export class LookupHelper {
   ): Map<string, CompletionItem> {
     const typeDoc = typeManager.get(this.document.uri.fsPath);
     const result: Map<string, CompletionItem> = new Map();
-    const scopeContext = typeDoc.getScopeContext(item.scope);
+    const scopeContext = typeDoc.scopeRefMapping.get(item.scope);
+    const properties = scopeContext.scope.getAllProperties();
+    const alwaysVisibleProperties = [];
+    const locationDependendProperties = [];
 
-    if (scopeContext.scope.isSelfAvailable()) {
-      result.set('self', {
-        kind: CompletionItemKind.Constant,
+    for (let index = 0; index < properties.length; index++) {
+      const property = properties[index];
+      const sources = property.type.getSource();
+
+      if (
+        property.type.document != null &&
+        property.type.document.name === typeDoc.name &&
+        sources != null &&
+        sources.length > 0
+      ) {
+        locationDependendProperties.push(property);
+      } else {
+        alwaysVisibleProperties.push(property);
+      }
+    }
+
+    for (let index = 0; index < alwaysVisibleProperties.length; index++) {
+      const property = alwaysVisibleProperties[index];
+      result.set(property.name, {
+        kind: property.kind,
         line: -1
       });
     }
 
-    if (scopeContext.scope.isSuperAvailable()) {
-      result.set('super', {
-        kind: CompletionItemKind.Constant,
-        line: -1
+    locationDependendProperties.sort(
+      (a, b) =>
+        a.type.getSource()[0].start.line - b.type.getSource()[0].start.line
+    );
+
+    for (let index = 0; index < locationDependendProperties.length; index++) {
+      const property = locationDependendProperties[index];
+      const source = property.type.getSource()[0];
+
+      if (source.start.line >= item.end!.line) break;
+      result.set(property.name, {
+        kind: property.kind,
+        line: source.start.line - 1
       });
-    }
-
-    const localIdentifer = new Map<string, CompletionItem>();
-    injectIdentifers(localIdentifer, scopeContext.scope);
-
-    const assignments = Array.from(localIdentifer.entries())
-      .map(([key, item]) => {
-        return {
-          identifier: key,
-          ...item
-        };
-      })
-      .sort((a, b) => a.line - b.line);
-
-    for (let index = 0; index < assignments.length; index++) {
-      const assignment = assignments[index];
-
-      if (assignment.line >= item.end!.line) break;
-      result.set(assignment.identifier, {
-        kind: assignment.kind,
-        line: assignment.line
-      });
-    }
-
-    if (scopeContext.scope.locals !== scopeContext.scope.globals)
-      injectIdentifers(result, scopeContext.scope.globals);
-    if (scopeContext.scope.outer)
-      injectIdentifers(result, scopeContext.scope.outer);
-
-    for (const assignment of typeDoc.container.getAvailableIdentifier(
-      SignatureDefinitionBaseType.General
-    )) {
-      result.set(...assignment);
     }
 
     return result;
@@ -193,7 +210,7 @@ export class LookupHelper {
     return null;
   }
 
-  lookupBasePath(item: ASTBase): IEntity | null {
+  lookupBasePath(item: ASTBase): IResolveNamespaceResult | null {
     const typeDoc = typeManager.get(this.document.uri.fsPath);
 
     if (typeDoc === null) {
@@ -203,13 +220,16 @@ export class LookupHelper {
     const base = lookupBase(item);
 
     if (base) {
-      return typeDoc.resolveNamespace(base);
+      return typeDoc.resolveNamespace(base, true);
     }
 
     return null;
   }
 
-  lookupTypeInfo({ closest, outer }: LookupASTResult): IEntity | null {
+  lookupTypeInfo({
+    closest,
+    outer
+  }: LookupASTResult): IResolveNamespaceResult | null {
     const typeDoc = typeManager.get(this.document.uri.fsPath);
 
     if (typeDoc === null) {
@@ -222,19 +242,19 @@ export class LookupHelper {
       previous?.type === ASTType.MemberExpression &&
       closest === (previous as ASTMemberExpression).identifier
     ) {
-      return typeDoc.resolveType(previous, true);
+      return typeDoc.resolveNamespace(previous, false);
     } else if (
       previous?.type === ASTType.IndexExpression &&
       closest === (previous as ASTIndexExpression).index &&
       isValidIdentifierLiteral(closest)
     ) {
-      return typeDoc.resolveType(previous, true);
+      return typeDoc.resolveNamespace(previous, false);
     }
 
-    return typeDoc.resolveType(closest, true);
+    return typeDoc.resolveNamespace(closest, false);
   }
 
-  lookupType(position: Position): IEntity | null {
+  lookupType(position: Position): IResolveNamespaceResult | null {
     const me = this;
     const astResult = me.lookupAST(position);
 

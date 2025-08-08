@@ -1,3 +1,4 @@
+import { TypeSource } from 'greybel-type-analyzer';
 import {
   ASTBase,
   ASTBaseBlockWithScope,
@@ -6,7 +7,6 @@ import {
   ASTMemberExpression,
   ASTType
 } from 'miniscript-core';
-import { ASTDefinitionItem } from 'miniscript-type-analyzer';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
 import { LookupHelper } from './helper/lookup-type.js';
@@ -22,9 +22,9 @@ const definitionLinkToString = (
 const getLocation = (
   monaco: typeof Monaco,
   helper: LookupHelper,
-  item: ASTDefinitionItem
+  item: TypeSource
 ): Monaco.languages.LocationLink => {
-  const node = item.node;
+  const node = item.astRef;
   let range: Monaco.Range;
   switch (node.type) {
     case ASTType.ForGenericStatement: {
@@ -58,18 +58,24 @@ const findAllDefinitions = (
   item: ASTBase,
   root: ASTBaseBlockWithScope
 ): Monaco.languages.LocationLink[] => {
-  const assignments = helper.findAllAssignmentsOfItem(item, root);
+  const result = helper.findAllAssignmentsOfItem(item);
+  const sources = result?.getSource();
+
+  if (sources == null || sources.length === 0) {
+    return [];
+  }
+
   const definitions: Monaco.languages.LocationLink[] = [];
   const visited = new Set<string>();
 
-  for (const assignment of assignments) {
-    const node = assignment.node;
+  for (const source of sources) {
+    const node = source.astRef;
 
     if (!node.start || !node.end) {
       continue;
     }
 
-    const definitionLink = getLocation(monaco, helper, assignment);
+    const definitionLink = getLocation(monaco, helper, source);
     const linkString = definitionLinkToString(definitionLink);
 
     if (visited.has(linkString)) {

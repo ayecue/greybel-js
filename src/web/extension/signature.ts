@@ -1,3 +1,4 @@
+import { isFunctionType, isUnionType } from 'greybel-type-analyzer';
 import { ASTBase, ASTCallExpression, ASTType } from 'miniscript-core';
 import type Monaco from 'monaco-editor/esm/vs/editor/editor.api.js';
 
@@ -49,12 +50,17 @@ export function activate(monaco: typeof Monaco) {
         return;
       }
 
-      const item = helper.lookupTypeInfo({
+      const entity = helper.lookupTypeInfo({
         closest: closestCallExpr.base,
         outer: closest.scope ? [closest.scope] : []
       });
 
-      if (!item || !item.isCallable()) {
+      if (
+        !entity ||
+        (!isFunctionType(entity.item) &&
+          (!isUnionType(entity.item) ||
+            !entity.item.variants.some(isFunctionType)))
+      ) {
         return;
       }
 
@@ -72,7 +78,7 @@ export function activate(monaco: typeof Monaco) {
       signatureHelp.activeParameter = selectedIndex === -1 ? 0 : selectedIndex;
       signatureHelp.signatures = [];
       signatureHelp.activeSignature = 0;
-      signatureHelp.signatures.push(...createSignatureInfo(item));
+      signatureHelp.signatures.push(...createSignatureInfo(entity));
 
       return signatureHelp.valueOf();
     }
