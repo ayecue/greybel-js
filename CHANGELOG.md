@@ -1638,7 +1638,7 @@ All notable changes to this project will be documented in this file.
 - run resource loading for transpiler in parallel for better performance
 - optimized the transpiler to fetch metadata only when needed
 
-## [3.6.37] - 20.07.2025
+## [3.6.37] - 08.08.2025
 
 - show location of faulty import line when building failed due to an invalid dependency
 - refactored static code analyser resulting in better performance and more precise types
