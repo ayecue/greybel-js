@@ -43,11 +43,7 @@ export function activate(monaco: typeof Monaco) {
         .toMeta()
         .map(SignatureDefinitionTypeMeta.parse);
       const displayName = entity.value
-        ? entity.value.length > 10
-          ? `${entity.value.slice(0, 10)}...${
-              entity.value.startsWith('"') ? '"' : ''
-            }`
-          : entity.value
+        ? entity.value
         : entity.path;
       let label = `(${formatKind(
         entity.completionItemKind
