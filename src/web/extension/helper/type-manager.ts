@@ -1,5 +1,6 @@
-import { TypeManager } from 'greybel-type-analyzer';
+import { EntityInfo, IDocument, ITypeStorage, ListType, MapType, persistTypeInNativeFunction, Type, TypeKind, TypeManager } from 'greybel-type-analyzer';
 import { greyscriptMeta } from 'greyscript-meta';
+import { SignatureDefinitionBaseType } from 'meta-utils';
 import {
   ASTBase,
   ASTCallExpression,
@@ -43,6 +44,64 @@ export const lookupBase = (node: ASTBase | null = null): ASTBase | null => {
   }
 };
 
+function injectParams(document: IDocument): void {
+  if (document.globals.hasProperty('params')) {
+    return;
+  }
+
+  document.globals.setProperty(
+    'params',
+    new ListType(
+      document.typeStorage.generateId(TypeKind.ListType),
+      Type.createBaseType(
+        SignatureDefinitionBaseType.String,
+        document.typeStorage,
+        document,
+        document.globals
+      ),
+      document.typeStorage,
+      document,
+      document.globals
+    )
+  );
+}
+
+function injectGetCustomObject(
+  document: IDocument,
+  globalTypeStorage: ITypeStorage
+): void {
+  const generalInterface = document.typeStorage.getTypeById(
+    SignatureDefinitionBaseType.General
+  );
+
+  if (generalInterface.hasProperty('get_custom_object')) {
+    return;
+  }
+
+  const gcoMap = MapType.createDefault(
+    document.typeStorage,
+    document,
+    document.globals
+  );
+  const proxyGCOFn = persistTypeInNativeFunction(
+    SignatureDefinitionBaseType.General,
+    'get_custom_object',
+    gcoMap,
+    document,
+    globalTypeStorage
+  );
+
+  generalInterface.setProperty(
+    'get_custom_object',
+    new EntityInfo('get_custom_object', proxyGCOFn)
+  );
+  document.typeStorage.memory.set('$$get_custom_object', gcoMap);
+}
+
 export default new TypeManager({
-  container: greyscriptMeta
+  container: greyscriptMeta,
+  modifyTypeStorage: (document: IDocument, globalTypeStorage: ITypeStorage) => {
+    injectParams(document);
+    injectGetCustomObject(document, globalTypeStorage);
+  }
 });
