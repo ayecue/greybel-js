@@ -1646,4 +1646,8 @@ All notable changes to this project will be documented in this file.
 ## [3.6.38] - 09.08.2025
 
 - fix default params element type in type analyser
-- fix doubled occurrences of globals, outer, params and locals 
+- fix doubled occurrences of globals, outer, params and locals in autocomplete
+
+## [3.6.39] - 09.08.2025
+
+- resolve union types properly if only one variant is available in type analyser
