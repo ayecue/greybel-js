@@ -1651,3 +1651,8 @@ All notable changes to this project will be documented in this file.
 ## [3.6.39] - 09.08.2025
 
 - resolve union types properly if only one variant is available in type analyser
+
+## [3.6.40] - 09.08.2025
+
+- assume self type correctly when used in arguments and context is available (related to type analyser)
+- auto create map type if path does not yet have a map defined via virtual properties (related to type analyser)

@@ -1,6 +1,6 @@
 {
   "name": "greybel-js",
-  "version": "3.6.39",
+  "version": "3.6.40",
   "engines": {
     "node": ">=20.17.0"
   },
@@ -42,7 +42,7 @@
     "greyscript-meta": "~4.3.2",
     "greyscript-transpiler": "~1.8.2",
     "lru-cache": "^11.0.2",
-    "greybel-type-analyzer": "~1.0.8",
+    "greybel-type-analyzer": "~1.0.9",
     "mkdirp": "^3.0.1",
     "monaco-textmate-provider": "^1.4.0",
     "node-persist": "^4.0.4",
