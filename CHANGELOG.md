@@ -1656,3 +1656,9 @@ All notable changes to this project will be documented in this file.
 
 - assume self type correctly when used in arguments and context is available (related to type analyser)
 - auto create map type if path does not yet have a map defined via virtual properties (related to type analyser)
+
+## [3.6.41] - 10.08.2025
+
+- JSDoc arguments aren't applied anymore by position but rather by their name (related to type analyser)
+- fix language server crash on invalid syntax in assignment statement (related to type analyser)
+- skip operation in case of missing metadata (requires message-hook plugin to be updated)
