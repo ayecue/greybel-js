@@ -1667,3 +1667,7 @@ All notable changes to this project will be documented in this file.
 
 - allow duplicate class names, properties will be merged if there are any duplicates (related to type analyser)
 - fix language server crash on path generation when components are not matching assumed usage (related to type analyser)
+
+## [3.6.43] - 10.08.2025
+
+- show map related intrinsic options on autocomplete for the constants globals, locals and outer if they are the base of member expression (related to type analyser)
