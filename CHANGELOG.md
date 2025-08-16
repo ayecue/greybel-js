@@ -1680,3 +1680,4 @@ All notable changes to this project will be documented in this file.
 ## [3.6.45] - 14.08.2025
 
 - properly handle import not being found within interpreter in-game env - requires the message-hook to be updated
+- add virtual types - related to type analyser
