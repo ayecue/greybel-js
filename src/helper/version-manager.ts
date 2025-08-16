@@ -19,7 +19,7 @@ interface HealthCheckResult {
 }
 
 export class VersionManager {
-  static LATEST_MESSAGE_HOOK_VERSION: string = '0.6.19';
+  static LATEST_MESSAGE_HOOK_VERSION: string = '0.6.22';
   static RESOURCE_LINK: string =
     'https://github.com/ayecue/greybel-vs?tab=readme-ov-file#message-hook';
 
