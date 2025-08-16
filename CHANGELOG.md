@@ -1677,7 +1677,7 @@ All notable changes to this project will be documented in this file.
 - improve binary expression type infer - related to type analyser
 - improve for loop iterator type infer - related to type analyser
 
-## [3.6.45] - 14.08.2025
+## [3.6.45] - 16.08.2025
 
 - properly handle import not being found within interpreter in-game env - requires the message-hook to be updated
 - add virtual types - related to type analyser
