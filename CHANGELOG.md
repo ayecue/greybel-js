@@ -1681,3 +1681,7 @@ All notable changes to this project will be documented in this file.
 
 - properly handle import not being found within interpreter in-game env - requires the message-hook to be updated
 - add virtual types - related to type analyser
+
+## [3.6.46] - 20.08.2025
+
+- improve transpiler to use 1/0 instead of true/false constant if using default/uglify mode
