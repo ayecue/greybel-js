@@ -1689,3 +1689,8 @@ All notable changes to this project will be documented in this file.
 ## [3.6.47] - 22.08.2025
 
 - improve transpiler module wrapper approach, properly handles now if an export is not defined in a module - related to [#307](https://github.com/ayecue/greybel-js/issues/307) - thanks for reporting to [@M3rluzzo](https://github.com/M3rluzzo)
+
+## [3.6.48] - 23.08.2025
+
+- allow overidding of globals, locals and outer in interpreter runtime
+- remove check on map.push in case of already existing key to emulate in-game behaviour
