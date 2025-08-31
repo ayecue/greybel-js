@@ -1699,3 +1699,4 @@ All notable changes to this project will be documented in this file.
 
 - refactored file import and updated message-hook for latest version - requires the message-hook to be updated 
 - update meta docs for latest version
+- update textmate with methods for latest version
