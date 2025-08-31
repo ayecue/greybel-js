@@ -42,9 +42,7 @@ export function activate(monaco: typeof Monaco) {
       const metaTypes = entity.item
         .toMeta()
         .map(SignatureDefinitionTypeMeta.parse);
-      const displayName = entity.value
-        ? entity.value
-        : entity.path;
+      const displayName = entity.value ? entity.value : entity.path;
       let label = `(${formatKind(
         entity.completionItemKind
       )}) ${displayName}: ${formatTypes(metaTypes)}`;
