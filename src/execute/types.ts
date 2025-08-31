@@ -38,11 +38,11 @@ export enum SessionEnvironmentType {
 }
 
 export enum ClientMessageType {
-  SendFileSizeClientRpc = 75,
-  DecipherTimeClientRpc = 77,
-  ClearScreenClientRpc = 79,
-  InputSentClientRpc = 80,
-  PrintSentClientRpc = 81,
+  SendFileSizeClientRpc = 73,
+  DecipherTimeClientRpc = 75,
+  ClearScreenClientRpc = 77,
+  InputSentClientRpc = 78,
+  PrintSentClientRpc = 79,
   CreatedContextRpc = 1000,
   FinishedContextRpc = 1002,
   ContextRuntimeStateRpc = 1003,
@@ -52,7 +52,7 @@ export enum ClientMessageType {
   ContextUnexpectedErrorRpc = 1010,
   DisposedContextRpc = 1020,
   StatusRpc = 1200,
-  InvalidAction = 1300
+  InvalidAction = 1300,
 }
 
 export interface StackItem {
