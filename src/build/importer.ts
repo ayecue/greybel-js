@@ -5,6 +5,7 @@ import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
 import { generateAutoGenerateFoldersCode } from '../helper/auto-generate-folders.js';
 import { createBasePath } from '../helper/create-base-path.js';
 import { logger } from '../helper/logger.js';
+import EventEmitter from 'node:events';
 const { BuildAgent: Agent } = GreyHackMessageHookClientPkg;
 
 enum ClientMessageType {
@@ -117,18 +118,19 @@ class Importer {
   }
 
   private async addResources(): Promise<void> {
-    const defers: Promise<any>[] = [];
+    const items = Array.from(this.importRefs.values());
 
-    for (const item of this.importRefs.values()) {
-      defers.push(
-        this._instance.addResourceToBuild(
-          this.ingameDirectory + item.ingameFilepath,
-          item.content
-        )
+    // increase max listeners to avoid warning when importing many files
+    this.agent.buildClient.core._responseManager.setMaxListeners(items.length + 1);
+
+    await Promise.all(items.map((item) => {
+      return this._instance.addResourceToBuild(
+        this.ingameDirectory + item.ingameFilepath,
+        item.content
       );
-    }
+    }));
 
-    await Promise.all(defers);
+    this.agent.buildClient.core._responseManager.setMaxListeners(EventEmitter.defaultMaxListeners);
   }
 
   private async addAutoCompile(): Promise<void> {
