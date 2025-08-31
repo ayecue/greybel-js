@@ -166,7 +166,6 @@ class Importer {
 
       this._instance = result.value;
 
-      console.time('Preparation Time');
       await this.addPrepareFoldersScript();
       await this.addResources();
 
@@ -174,11 +173,7 @@ class Importer {
         await this.addAutoCompile();
       }
 
-      console.timeEnd('Preparation Time');
-
-      console.time('Build Time');
       await this._instance.performBuild();
-      console.timeEnd('Build Time');
 
       const buildResult = await this._instance.waitForResponse((id) => {
         return (
