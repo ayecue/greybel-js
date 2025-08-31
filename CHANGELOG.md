@@ -1694,3 +1694,6 @@ All notable changes to this project will be documented in this file.
 
 - allow overidding of globals, locals and outer in interpreter runtime
 - remove check on map.push in case of already existing key to emulate in-game behaviour
+
+## [3.7.0] - 31.08.2025
+

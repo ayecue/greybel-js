@@ -1,4 +1,14 @@
-import { EntityInfo, IDocument, ITypeStorage, ListType, MapType, persistTypeInNativeFunction, Type, TypeKind, TypeManager } from 'greybel-type-analyzer';
+import {
+  EntityInfo,
+  IDocument,
+  ITypeStorage,
+  ListType,
+  MapType,
+  persistTypeInNativeFunction,
+  Type,
+  TypeKind,
+  TypeManager
+} from 'greybel-type-analyzer';
 import { greyscriptMeta } from 'greyscript-meta';
 import { SignatureDefinitionBaseType } from 'meta-utils';
 import {
