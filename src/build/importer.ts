@@ -168,7 +168,7 @@ class Importer {
       await this.addPrepareFoldersScript();
       await this.addResources();
 
-      if (this.autoCompile) {
+      if (this.autoCompile.enabled) {
         await this.addAutoCompile();
       }
 

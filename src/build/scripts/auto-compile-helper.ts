@@ -66,7 +66,7 @@ export const generateAutoCompileCode = ({
         binaryFile = tryGetFile(myComputer, tmpFolder.path + "/${SHORTEST_NAME}")
         if binaryFile == null then exit("EXIT_CODE=1;EXIT_MESSAGE=Couldn't find binary file in " + tmpFolder.path + "/${SHORTEST_NAME};")
 
-        result = move(binaryFile, destination, binaryName)
+        result = move(binaryFile, BUILD_DESTINATION, binaryName)
         if result != 1 then exit("EXIT_CODE=1;EXIT_MESSAGE=Error when moving binary file into destination folder! Reason: " + result + ";")
       end for
 
