@@ -1,8 +1,8 @@
 import { TranspilerParseResult } from 'greybel-transpiler';
 import GreyHackMessageHookClientPkg from 'greyhack-message-hook-client';
 
-import { generateAutoCompileCode } from '../helper/auto-compile-helper.js';
-import { generateAutoGenerateFoldersCode } from '../helper/auto-generate-folders.js';
+import { generateAutoCompileCode } from './scripts/auto-compile-helper.js';
+import { generateAutoGenerateFoldersCode } from './scripts/auto-generate-folders.js';
 import { createBasePath } from '../helper/create-base-path.js';
 import { logger } from '../helper/logger.js';
 import EventEmitter from 'node:events';
@@ -44,12 +44,12 @@ export type ImportResult = {
 export interface ImporterOptions {
   rootDir: string;
   ingameDirectory: string;
+  resourceDirectory: string;
   rootPaths: string[];
   result: TranspilerParseResult;
   port: number;
   autoCompile: {
     enabled: boolean;
-    purge: boolean;
     allowImport: boolean;
   };
 }
@@ -61,10 +61,10 @@ class Importer {
   private _instance: any;
   private rootPaths: string[];
   private ingameDirectory: string;
+  private resourceDirectory: string;
   private port: number;
   private autoCompile: {
     enabled: boolean;
-    purge: boolean;
     allowImport: boolean;
   };
 
@@ -83,6 +83,7 @@ class Importer {
     this.rootPaths = options.rootPaths;
     this.port = options.port;
     this.ingameDirectory = options.ingameDirectory.trim().replace(/\/$/i, '');
+    this.resourceDirectory = options.resourceDirectory.trim().replace(/\/$/i, '');
     this.importRefs = this.createImportList(options.rootDir, options.result);
     this.autoCompile = options.autoCompile;
   }
@@ -113,7 +114,7 @@ class Importer {
 
     await this._instance.addScriptToBuild(
       10,
-      generateAutoGenerateFoldersCode(this.ingameDirectory, ingamePaths)
+      generateAutoGenerateFoldersCode(ingamePaths)
     );
   }
 
@@ -125,7 +126,7 @@ class Importer {
 
     await Promise.all(items.map((item) => {
       return this._instance.addResourceToBuild(
-        this.ingameDirectory + item.ingameFilepath,
+        item.ingameFilepath,
         item.content
       );
     }));
@@ -140,12 +141,10 @@ class Importer {
     await this._instance.addScriptToBuild(
       20,
       generateAutoCompileCode({
-        rootDirectory: this.ingameDirectory,
         rootFilePaths: rootImports.map((it) => it.ingameFilepath),
         importPaths: Array.from(this.importRefs.values()).map(
           (it) => it.ingameFilepath
         ),
-        purge: this.autoCompile.purge,
         allowImport: this.autoCompile.allowImport
       })
     );
@@ -153,7 +152,7 @@ class Importer {
 
   async import(): Promise<ImportResult> {
     try {
-      const result = await this.agent.tryToCreateBuild();
+      const result = await this.agent.tryToCreateBuild(this.ingameDirectory, this.resourceDirectory, this.autoCompile.enabled);
 
       if (!result.success) {
         return {

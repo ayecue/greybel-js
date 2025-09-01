@@ -29,6 +29,7 @@ import { EnvironmentVariablesManager } from './helper/env-mapper.js';
 import { logger } from './helper/logger.js';
 import { TranspilerResourceProvider } from './helper/resource.js';
 import { VersionManager } from './helper/version-manager.js';
+import { randomString } from './helper/random-string.js';
 
 function getTranspilerOptions(options: BuildOptions) {
   let buildType = BuildType.DEFAULT;
@@ -144,6 +145,8 @@ export default async function build(
 
   try {
     let allResults: TranspilerParseResult[];
+    const resourceDirectory = path.posix.join(buildOptions.ingameDirectory, randomString(5));
+    const fileImportRootPath = buildOptions.autoCompile ? resourceDirectory : buildOptions.ingameDirectory;
 
     if (
       buildOptions.outputFilename != null &&
@@ -166,7 +169,10 @@ export default async function build(
       );
       const mainResult = await transpileFile(
         mainFilepath,
-        buildOptions,
+        {
+          ...buildOptions,
+          ingameDirectory: fileImportRootPath
+        },
         envMapper,
         transpilerOptions
       );
@@ -181,7 +187,10 @@ export default async function build(
     } else {
       allResults = await Promise.all(
         filepaths.map((filepath) =>
-          transpileFile(filepath, buildOptions, envMapper, transpilerOptions)
+          transpileFile(filepath, {
+          ...buildOptions,
+          ingameDirectory: fileImportRootPath
+          }, envMapper, transpilerOptions)
         )
       );
     }
@@ -211,10 +220,10 @@ export default async function build(
         rootPaths: filepaths,
         autoCompile: {
           enabled: buildOptions.autoCompile,
-          purge: buildOptions.autoCompilePurge,
           allowImport: buildOptions.allowImport
         },
         ingameDirectory: buildOptions.ingameDirectory,
+        resourceDirectory,
         buildPath: outputPath,
         result,
         maxChars: buildOptions.maxChars
@@ -228,11 +237,11 @@ export default async function build(
         rootDir: rootPath,
         rootPaths: filepaths,
         ingameDirectory: buildOptions.ingameDirectory,
+        resourceDirectory,
         result,
         port: buildOptions.port,
         autoCompile: {
           enabled: buildOptions.autoCompile,
-          purge: buildOptions.autoCompilePurge,
           allowImport: buildOptions.allowImport
         }
       });

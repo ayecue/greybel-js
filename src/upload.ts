@@ -8,6 +8,7 @@ import { ansiProvider, useColor } from './execute/output.js';
 import { logger } from './helper/logger.js';
 import { VersionManager } from './helper/version-manager.js';
 import { parseUploadOptions, UploadOptions } from './upload/types.js';
+import { randomString } from './helper/random-string.js';
 
 const getFiles = async (target: string): Promise<string[]> => {
   const stat = await fs.stat(target);
@@ -41,6 +42,7 @@ export default async function upload(
     }
 
     const ingameDirectory = uploadOptions.ingameDirectory;
+    const resourceDirectory = path.posix.join(ingameDirectory, randomString(5));
     const filesWithContent = await Promise.all(
       files.map(async (filepath) => {
         const content = await fs.readFile(filepath, { encoding: 'utf-8' });
@@ -56,6 +58,7 @@ export default async function upload(
       rootDir: path.dirname(target),
       rootPaths: [],
       ingameDirectory: ingameDirectory.replace(/\/$/i, ''),
+      resourceDirectory,
       result: filesWithContent.reduce((result, item) => {
         result[item.path] = item.content;
         return result;
@@ -63,7 +66,6 @@ export default async function upload(
       port: options.port,
       autoCompile: {
         enabled: false,
-        purge: false,
         allowImport: false
       }
     });
