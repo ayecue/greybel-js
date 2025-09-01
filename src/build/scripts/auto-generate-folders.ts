@@ -1,5 +1,4 @@
 export const generateAutoGenerateFoldersCode = (
-  rootDirectory: string,
   importPaths: string[]
 ): string => {
   return `
@@ -15,7 +14,12 @@ export const generateAutoGenerateFoldersCode = (
         return folders
       end function
 
-      rootDirectory = "${rootDirectory.trim().replace(/\/$/, '')}"
+      if BUILD_AUTO_COMPILE then
+        rootDirectory = BUILD_RESOURCE_DESTINATION
+      else
+        rootDirectory = BUILD_DESTINATION
+      end if
+
       filePaths = [${importPaths.map((it) => `"${it}"`).join(',')}]
       myShell = get_shell
       myComputer = host_computer(myShell)
@@ -32,9 +36,17 @@ export const generateAutoGenerateFoldersCode = (
             visited[folder] = 1
             parentPath = replace_regex(parent_path(folder), "/$", "") + "/"
             basename = split(folder, "/")[-1]
+            existingEntity = File(myComputer, folder)
+            if existingEntity != null then
+              if is_folder(existingEntity) then
+                idx = idx - 1
+                continue
+              end if
+              exit("EXIT_CODE=1;EXIT_MESSAGE=Cannot create folder " + folder + " because a file with the same name already exists!;")
+            end if
             result = create_folder(myComputer, parentPath, basename)
             if result != 1 then
-              print("Error when creating folder for " + folder + "! Reason: " + result)
+              exit("EXIT_CODE=1;EXIT_MESSAGE=Error when creating folder for " + folder + "! Reason: " + result + ";")
             end if
           end if
           idx = idx - 1
