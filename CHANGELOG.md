@@ -1709,3 +1709,7 @@ All notable changes to this project will be documented in this file.
 - move files to temporary folder when auto compile is used - thanks for suggestion to [@redit0](https://github.com/redit0)
 - check if there is enough available RAM prior to creating windows - thanks for the suggestion [@midsubspace](https://github.com/midsubspace)
 - add missing parameter to scp definition in documentation - thanks for the report [@midsubspace](https://github.com/midsubspace)
+
+## [3.7.2] - 02.09.2025
+
+- fix missing files due to too npmignore rule

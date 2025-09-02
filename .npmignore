@@ -1,6 +1,6 @@
 assets
 node_modules
-scripts
+/scripts
 src
 .circleci
 web
