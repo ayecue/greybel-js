@@ -176,8 +176,13 @@ export const createHover = (entity: IResolveNamespaceResult): PseudoHover => {
   const texts: PseudoMarkdownString[] = [];
 
   for (const item of items) {
-    const text = new PseudoMarkdownString('');
     const fnDef = item.signature as SignatureDefinitionFunction;
+
+    if (fnDef.getDescription() == null) {
+      continue;
+    }
+
+    const text = new PseudoMarkdownString('');
 
     appendTooltipHeader(text, entity, fnDef);
     appendTooltipBody(text, fnDef);
