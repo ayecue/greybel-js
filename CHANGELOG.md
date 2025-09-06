@@ -1712,4 +1712,9 @@ All notable changes to this project will be documented in this file.
 
 ## [3.7.2] - 02.09.2025
 
-- fix missing files due to too npmignore rule
+- fix missing files due to npmignore rule
+
+## [3.7.3] - 06.09.2025
+
+- add @hidden tag to function comment docs to enable 3rd party extension to show their tooltips instead
+- update overflow description in documentation - thanks for reporting to [@redit0](https://github.com/redit0)
