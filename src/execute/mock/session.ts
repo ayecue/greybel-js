@@ -24,7 +24,20 @@ export interface MockSessionOptions extends SessionOptions {
   seed?: string;
 }
 
+function sessionExitHandler(options, exitCode) {
+  MockSession.singleton?.stop();
+}
+
+process.on('exit', sessionExitHandler);
+process.on('SIGINT', sessionExitHandler);
+process.on('SIGUSR1', sessionExitHandler);
+process.on('SIGUSR2', sessionExitHandler);
+process.on('SIGTERM', sessionExitHandler);
+process.on('uncaughtException', sessionExitHandler);
+
 export class MockSession implements Session {
+  static singleton: MockSession | null = null;
+
   private target: string;
   private debugMode: boolean;
   private envMapper: EnvironmentVariablesManager;
@@ -44,6 +57,7 @@ export class MockSession implements Session {
     this.resourceHandler = new InterpreterResourceProvider();
     this.envMapper = envMapper;
     this.runtime = null;
+    MockSession.singleton = this;
   }
 
   async prepare() {
@@ -76,6 +90,7 @@ export class MockSession implements Session {
     try {
       const startTime = Date.now();
       this.runtime.params = params;
+      
       await this.runtime.run();
       logger.debug(`Execution time: ${Date.now() - startTime}ms`);
     } catch (err: any) {
@@ -112,5 +127,11 @@ export class MockSession implements Session {
     }
 
     return true;
+  }
+
+  async stop(): Promise<void> {
+    if (this.runtime) {
+      await this.runtime.exit();
+    }
   }
 }

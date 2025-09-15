@@ -1718,3 +1718,8 @@ All notable changes to this project will be documented in this file.
 
 - add @hidden tag to function comment docs to enable 3rd party extension to show their tooltips instead
 - update overflow description in documentation - thanks for reporting to [@redit0](https://github.com/redit0)
+
+## [3.7.4] - 15.09.2025
+
+- fix exit signal not triggering program termination via mock-env runtime
+- update message-hook to use latest game assembly - please update your message-hook - thanks for reporting to IDelta
