@@ -1723,3 +1723,8 @@ All notable changes to this project will be documented in this file.
 
 - fix exit signal not triggering program termination via mock-env runtime
 - update message-hook to use latest game assembly - please update your message-hook - thanks for reporting to IDelta
+
+## [3.7.5] - 21.09.2025
+
+- update message-hook to add small delay before running pre and post script when running in-game import with auto-compile to prevent temporary script not existing when trying to execute script, causing the whole import to fail due to the inability to add resources - seems like this was randomly happening rather than a consistent issue
+- update meta version which contains some formatting changes for the overflow tooltip
