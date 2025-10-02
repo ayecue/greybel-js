@@ -1729,6 +1729,8 @@ All notable changes to this project will be documented in this file.
 - update message-hook to add small delay before running pre and post script when running in-game import with auto-compile to prevent temporary script not existing when trying to execute script, causing the whole import to fail due to the inability to add resources - seems like this was randomly happening rather than a consistent issue - note that you have to update the message-hook in order to get this fix
 - update meta version which contains some formatting changes for the overflow tooltip
 
-## [3.7.6] - 22.09.2025
+## [3.7.6] - 02.10.2025
 
 - add whitespace after colon sign when convering maps to strings in mock env - thanks for the report to [@smiley8D](https://github.com/smiley8D) - related to [#368](https://github.com/ayecue/greybel-vs/issues/368)
+- fix input value for enter key to be empty string instead of return carriage - thanks for reporting to IDelta
+- fix input for anyKey in in-game environment
