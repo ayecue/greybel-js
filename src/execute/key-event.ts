@@ -117,7 +117,7 @@ export function transformInternalKeyEventToToIngameKeyCodeValue(
 ): string {
   switch (InternalKeyEvent.name) {
     case InternalKey.Return:
-      return String.fromCharCode(13);
+      return '';
     case InternalKey.Escape:
       return 'Escape';
     case InternalKey.Space:

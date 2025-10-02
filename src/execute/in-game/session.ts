@@ -10,7 +10,7 @@ import { GlobalFileSystemManager } from '../../helper/fs.js';
 import { logger } from '../../helper/logger.js';
 import { randomString } from '../../helper/random-string.js';
 import { VersionManager } from '../../helper/version-manager.js';
-import { transformInternalKeyEventToKeyEvent } from '../key-event.js';
+import { transformInternalKeyEventToToIngameKeyCodeValue } from '../key-event.js';
 import { ansiProvider, Terminal, useColor } from '../output.js';
 import {
   ClientMessageType,
@@ -269,7 +269,7 @@ export class InGameSession implements Session {
               response.output,
               () => this.stop()
             );
-            this.instance.sendInput(transformInternalKeyEventToKeyEvent(key));
+            this.instance.sendInput(transformInternalKeyEventToToIngameKeyCodeValue(key));
             break;
           }
 
