@@ -112,8 +112,8 @@ export class InGameSession implements Session {
       `params=[${params
         .map((it) => `"${it.replace(/"/g, '""')}"`)
         .join(',')}];` + content,
-      this.target,
-      this.basePath,
+      this.target.replace(/\\/g, '/'),
+      this.basePath.replace(/\\/g, '/'),
       this.programName,
       this.debugMode,
       [],
@@ -138,7 +138,7 @@ export class InGameSession implements Session {
       fs.writeFileSync(resolvedPath, content);
 
       return {
-        resolvedPath,
+        resolvedPath: resolvedPath.replace(/\\/g, '/'),
         originalPath: path
       };
     }
@@ -149,7 +149,7 @@ export class InGameSession implements Session {
     );
 
     return {
-      resolvedPath: resolvedPath ?? path,
+      resolvedPath: resolvedPath ? resolvedPath.replace(/\\/g, '/') : path,
       originalPath: path
     };
   }
@@ -338,7 +338,7 @@ export class InGameSession implements Session {
       return;
     }
     const content = fs.readFileSync(resolvedPath, 'utf8');
-    await this.instance.resolvedFile(resolvedPath, content);
+    await this.instance.resolvedFile(resolvedPath.replace(/\\/g, '/'), content);
   }
 
   async stop() {

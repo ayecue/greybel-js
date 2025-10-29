@@ -1740,3 +1740,5 @@ All notable changes to this project will be documented in this file.
 - fix map.pop behaviour to return first item - thanks for reporting to IDelta
 - fix formatting of typeof meta description - thanks for reporting to IDelta
 - fix resolving of files with leading slash for in-game env - thanks for reporting to Satarno
+
+## [3.7.8] - 29.10.2025
