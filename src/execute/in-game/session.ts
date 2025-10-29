@@ -21,10 +21,20 @@ import {
 
 const { ContextAgent } = GreyHackMessageHookClientPkg;
 
-function normalizePathForNonWindows(path: string): string {
-  if (process.platform === 'win32') return path;
-  if (!/^[a-z]:\//i.test(path)) return path;
-  return path.slice(2);
+
+function isNonWindowsButRuntimeUsesWindowsPaths(path: string): boolean {
+  return process.platform !== 'win32' && /^[a-z]:\//i.test(path);
+}
+
+/*
+  Internally the message-hook normalizes windows-style paths to unix-style paths by replacing
+  backslashes with forward slashes. Therefore we can normalize all paths here to ensure consistency.
+
+  Note: The drive letter prefix (e.g. C:) is preserved as-is. There is only a workaround if the runtime
+  uses Windows-style paths on a non-Windows platform due to Wine or Proton.
+*/
+function normalizePath(path: string): string {
+  return path.replace(/\\/g, '/');
 }
 
 async function resolveFileExtension(
@@ -118,8 +128,8 @@ export class InGameSession implements Session {
       `params=[${params
         .map((it) => `"${it.replace(/"/g, '""')}"`)
         .join(',')}];` + content,
-      this.target.replace(/\\/g, '/'),
-      this.basePath.replace(/\\/g, '/'),
+      normalizePath(this.target),
+      normalizePath(this.basePath),
       this.programName,
       this.debugMode,
       [],
@@ -144,7 +154,7 @@ export class InGameSession implements Session {
       fs.writeFileSync(resolvedPath, content);
 
       return {
-        resolvedPath: resolvedPath.replace(/\\/g, '/'),
+        resolvedPath: normalizePath(resolvedPath),
         originalPath: path
       };
     }
@@ -155,7 +165,7 @@ export class InGameSession implements Session {
     );
 
     return {
-      resolvedPath: resolvedPath ? resolvedPath.replace(/\\/g, '/') : path,
+      resolvedPath: resolvedPath ? normalizePath(resolvedPath) : path,
       originalPath: path
     };
   }
@@ -333,9 +343,33 @@ export class InGameSession implements Session {
 
   private async resolveFile(path: string) {
     if (this.instance == null) return;
+    if (isNonWindowsButRuntimeUsesWindowsPaths(path)) {
+      // If the runtime is using Windows-style paths on a non-Windows platform that
+      // means the runtime is most likely running within a Windows VM.
+      //
+      // While the breakpoints, base and inital filepaths will use unix-style
+      // filepaths, since those are provided by the debugging platform, the loading of 
+      // additional files will use Windows-style paths. This is due to the usage of
+      // GetFullPath within the message-hook. Therefore we need to strip the drive letter
+      // prefix before resolving the file. It should be fine to forward the unix-style
+      // filepaths to the runtime since internally it should use the unix-style paths.
+      const withoutPrefix = path.slice(2);
+      const resolvedPath = await resolveFileExtension(
+        withoutPrefix,
+        configurationManager.get<string[]>('fileExtensions')
+      );
 
+      if (resolvedPath == null) {
+        await this.instance.resolvedFile(path, null);
+        return;
+      }
+      const content = fs.readFileSync(resolvedPath, 'utf8');
+      await this.instance.resolvedFile(normalizePath(resolvedPath), content);
+      return;
+    }
+    // Normal resolution for other platforms
     const resolvedPath = await resolveFileExtension(
-      normalizePathForNonWindows(path),
+      path,
       configurationManager.get<string[]>('fileExtensions')
     );
 
@@ -344,7 +378,7 @@ export class InGameSession implements Session {
       return;
     }
     const content = fs.readFileSync(resolvedPath, 'utf8');
-    await this.instance.resolvedFile(resolvedPath.replace(/\\/g, '/'), content);
+    await this.instance.resolvedFile(normalizePath(resolvedPath), content);
   }
 
   async stop() {
