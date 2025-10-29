@@ -21,6 +21,12 @@ import {
 
 const { ContextAgent } = GreyHackMessageHookClientPkg;
 
+function normalizePathForNonWindows(path: string): string {
+  if (process.platform === 'win32') return path;
+  if (!/^[a-z]:\//i.test(path)) return path;
+  return path.slice(2);
+}
+
 async function resolveFileExtension(
   path: string,
   allowedFileExtension: string[]
@@ -329,7 +335,7 @@ export class InGameSession implements Session {
     if (this.instance == null) return;
 
     const resolvedPath = await resolveFileExtension(
-      path,
+      normalizePathForNonWindows(path),
       configurationManager.get<string[]>('fileExtensions')
     );
 
