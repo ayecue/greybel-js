@@ -1744,3 +1744,10 @@ All notable changes to this project will be documented in this file.
 ## [3.7.8] - 29.10.2025
 
 - normalize filepath properly for the extension when using in-game runtime and the game running in Proton - thanks for reporting to Satarno
+
+## [3.7.9] - 21.11.2025
+
+- fix transpile output for multiline comments if devMode is not active - thanks for reporting to Ephy
+- fix in-game lexer not counting lines of multiline strings and comments properly, would cause the interpreter to show the wrong lines in the debugger - thanks for the reporting to Satarno
+- update documentation to include reboot and launch not being compatible with ssh encryption process anymore - thanks for reporting to bloodwhite
+- update assembly for message-hook to latest version
