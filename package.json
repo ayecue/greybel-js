@@ -1,6 +1,6 @@
 {
   "name": "greybel-js",
-  "version": "3.7.9",
+  "version": "3.7.10",
   "engines": {
     "node": ">=20.17.0"
   },
@@ -39,7 +39,7 @@
     "greyhack-message-hook-client": "~1.2.1",
     "greyscript-core": "~2.6.0",
     "greyscript-interpreter": "~2.6.2",
-    "greyscript-meta": "~4.4.6",
+    "greyscript-meta": "~4.4.7",
     "greyscript-transpiler": "~1.9.2",
     "lru-cache": "^11.0.2",
     "greybel-type-analyzer": "~1.1.2",

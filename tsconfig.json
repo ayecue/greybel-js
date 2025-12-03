@@ -8,7 +8,7 @@
       "DOM"
     ],
     "outDir": "out",
-    "sourceMap": true,
+    "sourceMap": false,
     "rootDir": "src",
     "resolveJsonModule": true,
     "esModuleInterop": true,
