@@ -6,3 +6,4 @@ test.js
 .node-persist
 # Local Netlify folder
 .netlify
+.vscode

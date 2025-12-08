@@ -1751,3 +1751,9 @@ All notable changes to this project will be documented in this file.
 - fix in-game lexer not counting lines of multiline strings and comments properly, would cause the interpreter to show the wrong lines in the debugger - thanks for the reporting to Satarno
 - update documentation to include reboot and launch not being compatible with ssh encryption process anymore - thanks for reporting to bloodwhite
 - update assembly for message-hook to latest version
+
+## [3.7.10] - 03.12.2025
+
+- fix various meta examples for list methods - thanks for reporting to W.T.Bois
+- fix aireplay behaviour for in-game runtime causing aireplay to not resolve - thanks for reporting to Kartoshkaya
+- fix type analyzer infer when resolving lists with singular variant
