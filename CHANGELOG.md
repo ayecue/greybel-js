@@ -1756,3 +1756,4 @@ All notable changes to this project will be documented in this file.
 
 - fix various meta examples for list methods - thanks for reporting to W.T.Bois
 - fix aireplay behaviour for in-game runtime causing aireplay to not resolve - thanks for reporting to Kartoshkaya
+- fix type analyzer infer when resolving lists with singular variant
