@@ -18,6 +18,7 @@ import {
   Session,
   SessionOptions
 } from '../types.js';
+import { wait } from '../../helper/wait.js';
 
 const { ContextAgent } = GreyHackMessageHookClientPkg;
 
@@ -261,6 +262,12 @@ export class InGameSession implements Session {
           await this.endDownload();
           break;
         }
+        case ClientMessageType.RoutersCercanosClientRpc: {
+          await wait(1000);
+          this.terminal.print('Read packages...');
+          await this.endAireplay();
+          break;
+        }
         case ClientMessageType.ContextLoadFileRpc: {
           await this.resolveFile(response.filepath);
           break;
@@ -329,6 +336,11 @@ export class InGameSession implements Session {
   async endDownload() {
     if (this.instance == null) return;
     await this.instance.endDownload();
+  }
+
+  async endAireplay() {
+    if (this.instance == null) return;
+    await this.instance.endAireplay();
   }
 
   async goToNextLine() {

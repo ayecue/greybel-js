@@ -36,7 +36,7 @@
     "glob": "^11.0.1",
     "greybel-gh-mock-intrinsics": "~5.6.3",
     "greybel-intrinsics": "~5.6.3",
-    "greyhack-message-hook-client": "~1.2.1",
+    "greyhack-message-hook-client": "~1.2.2",
     "greyscript-core": "~2.6.0",
     "greyscript-interpreter": "~2.6.2",
     "greyscript-meta": "~4.4.7",

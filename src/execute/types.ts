@@ -43,6 +43,7 @@ export enum ClientMessageType {
   ClearScreenClientRpc = 77,
   InputSentClientRpc = 78,
   PrintSentClientRpc = 79,
+  RoutersCercanosClientRpc = 84,
   CreatedContextRpc = 1000,
   FinishedContextRpc = 1002,
   ContextRuntimeStateRpc = 1003,
