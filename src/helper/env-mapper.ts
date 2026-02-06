@@ -82,4 +82,17 @@ export class EnvironmentVariablesManager {
 
     return new Map(entries);
   }
+
+  toObject(escape: boolean = false): Record<string, string> {
+    if (escape) {
+      const entries = Object.entries(this.map);
+
+      return entries.reduce<Record<string, string>>((acc, [key, value]) => {
+        acc[key] = escapeMSString(value);
+        return acc;
+      }, {});
+    }
+
+    return { ...this.map };
+  }
 }
