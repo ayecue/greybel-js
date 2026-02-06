@@ -23,6 +23,7 @@ CLI that provides a set of tools for working with GreyScript. GreyScript is a sc
 <small>Do you have a project that uses Greybel? If so, feel free to create a pull request to showcase it here.</small>
 
 **Grey Hack Tools**
+- [GreyHack Terminal UI](https://github.com/ayecue/greyhack-terminal-ui): A mod that extends GreyScript capabilities, allowing you to create custom GUI programs in both Singleplayer and Multiplayer.
 - [Image Transformer](https://github.com/ayecue/gh-image-transformer): Tool for transforming images in Grey Hack.
 - [Website Image Generator](https://github.com/ayecue/gh-website-image-generator): Tool for generating Grey Hack website images.
 

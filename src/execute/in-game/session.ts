@@ -134,7 +134,7 @@ export class InGameSession implements Session {
       this.programName,
       this.debugMode,
       [],
-      this.envMapper.toMap(true)
+      this.envMapper.toObject(true)
     );
     this.running = true;
     this.instance = value;
