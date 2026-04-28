@@ -1761,3 +1761,7 @@ All notable changes to this project will be documented in this file.
 ## [3.7.11] - 06.02.2026
 
 - fix env variables not being passed to in-game env due to wrong data type being used - thanks for reporting to apparatusdeus
+
+## [3.7.12] - 28.04.2026
+
+- update message-hook to be compability with latest game version
