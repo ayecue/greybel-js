@@ -1764,4 +1764,4 @@ All notable changes to this project will be documented in this file.
 
 ## [3.7.12] - 28.04.2026
 
-- update message-hook to be compability with latest game version
+- update message-hook to be compatibility with latest game version
