@@ -1,3 +1,8 @@
+> [!CAUTION]
+> **This repository is deprecated and no longer maintained.**
+> 
+> Please get the latest version via [greybel-rs](https://github.com/ayecue/greybel-rs).
+
 # Greybel-JS
 
 CLI that provides a set of tools for working with GreyScript. GreyScript is a scripting language used within [GreyHack](https://store.steampowered.com/app/605230/Grey_Hack/).
